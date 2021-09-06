@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.organization_check.mapper.ScoreHistoryMapper">
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.ScoreHistory">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="UserCode" property="usercode" jdbcType="VARCHAR"/>
+        <result column="Year" property="year" jdbcType="VARCHAR"/>
+        <result column="Month" property="month" jdbcType="VARCHAR"/>
+        <result column="ScoreStatus" property="scorestatus" jdbcType="VARCHAR"/>
+        <result column="AScore" property="ascore" jdbcType="DOUBLE"/>
+        <result column="BScore" property="bscore" jdbcType="DOUBLE"/>
+        <result column="CScore" property="cscore" jdbcType="DOUBLE"/>
+        <result column="DScore" property="dscore" jdbcType="DOUBLE"/>
+        <result column="TotalScore" property="totalscore" jdbcType="DOUBLE"/>
+        <result column="SumZdScore" property="sumZdScore" jdbcType="DOUBLE"/>
+        <result column="SumMbScore" property="sumMbScore" jdbcType="DOUBLE"/>
+        <result column="SumZfScore" property="sumZfScore" jdbcType="DOUBLE"/>
+        <result column="AvgZdScore" property="avgZdScore" jdbcType="DOUBLE"/>
+        <result column="AvgMbScore" property="avgMbScore" jdbcType="DOUBLE"/>
+        <result column="SumTotalScore" property="sumTotalScore" jdbcType="DOUBLE"/>
+        <result column="DfScore" property="dfScore" jdbcType="DOUBLE"/>
+        <result column="dbtype" property="dbtype" jdbcType="VARCHAR"/>
+        <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="BaseResultMap2" type="com.welb.organization_check.entity.ScoreHistory">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="UserCode" property="usercode" jdbcType="VARCHAR"/>
+        <result column="Year" property="year" jdbcType="VARCHAR"/>
+        <result column="Month" property="month" jdbcType="VARCHAR"/>
+        <result column="ScoreStatus" property="scorestatus" jdbcType="VARCHAR"/>
+        <result column="AScore" property="ascore" jdbcType="DOUBLE"/>
+        <result column="BScore" property="bscore" jdbcType="DOUBLE"/>
+        <result column="CScore" property="cscore" jdbcType="DOUBLE"/>
+        <result column="DScore" property="dscore" jdbcType="DOUBLE"/>
+        <result column="TotalScore" property="totalscore" jdbcType="DOUBLE"/>
+        <result column="SumZdScore" property="sumZdScore" jdbcType="DOUBLE"/>
+        <result column="SumMbScore" property="sumMbScore" jdbcType="DOUBLE"/>
+        <result column="SumZfScore" property="sumZfScore" jdbcType="DOUBLE"/>
+        <result column="AvgZdScore" property="avgZdScore" jdbcType="DOUBLE"/>
+        <result column="AvgMbScore" property="avgMbScore" jdbcType="DOUBLE"/>
+        <result column="SumTotalScore" property="sumTotalScore" jdbcType="DOUBLE"/>
+        <result column="DfScore" property="dfScore" jdbcType="DOUBLE"/>
+        <result column="RoleCode" property="rolecode" jdbcType="VARCHAR"/>
+        <result column="RoleName" property="rolename" jdbcType="VARCHAR"/>
+        <result column="EmployeeCode" property="employeecode" jdbcType="VARCHAR"/>
+        <result column="StationCode" jdbcType="VARCHAR" property="stationcode"/>
+        <result column="MoneyCard" jdbcType="VARCHAR" property="moneycard"/>
+        <result column="BranchCode" jdbcType="VARCHAR" property="branchcode"/>
+        <result column="dbtype" property="dbtype" jdbcType="VARCHAR"/>
+        <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, UserCode, Year, month, ScoreStatus, AScore, BScore, CScore, DScore, TotalScore, SumZdScore, SumMbScore, SumZfScore, AvgZdScore, AvgMbScore, SumTotalScore, DfScore, dbtype,dbbk
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from scorehistory
+        where Id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from scorehistory
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="insertSelective" parameterType="com.welb.organization_check.entity.ScoreHistory">
+        insert into scorehistory
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="usercode != null">
+                UserCode,
+            </if>
+            <if test="year != null">
+                Year,
+            </if>
+            <if test="month != null">
+                Month,
+            </if>
+            <if test="scorestatus != null">
+                ScoreStatus,
+            </if>
+            <if test="ascore != null">
+                AScore,
+            </if>
+            <if test="bscore != null">
+                BScore,
+            </if>
+            <if test="cscore != null">
+                CScore,
+            </if>
+            <if test="dscore != null">
+                DScore,
+            </if>
+            <if test="totalscore != null">
+                TotalScore,
+            </if>
+            <if test="sumZdScore != null">
+                SumZdScore,
+            </if>
+            <if test="sumMbScore != null">
+                SumMbScore,
+            </if>
+            <if test="sumZfScore != null">
+                SumZfScore,
+            </if>
+            <if test="sumTotalScore != null">
+                SumTotalScore,
+            </if>
+            <if test="dfScore != null">
+                DfScore,
+            </if>
+            <if test="dbtype != null">
+                dbtype,
+            </if>
+            <if test="dbbk != null">
+                dbbk,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="usercode != null">
+                #{usercode,jdbcType=VARCHAR},
+            </if>
+            <if test="year != null">
+                #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="month != null">
+                #{month,jdbcType=VARCHAR},
+            </if>
+            <if test="scorestatus != null">
+                #{scorestatus,jdbcType=VARCHAR},
+            </if>
+            <if test="ascore != null">
+                #{ascore,jdbcType=DOUBLE},
+            </if>
+            <if test="bscore != null">
+                #{bscore,jdbcType=DOUBLE},
+            </if>
+            <if test="cscore != null">
+                #{cscore,jdbcType=DOUBLE},
+            </if>
+            <if test="dscore != null">
+                #{dscore,jdbcType=DOUBLE},
+            </if>
+            <if test="totalscore != null">
+                #{totalscore,jdbcType=DOUBLE},
+            </if>
+            <if test="sumZdScore != null">
+                #{sumZdScore,jdbcType=DOUBLE},
+            </if>
+            <if test="sumMbScore != null">
+                #{sumMbScore,jdbcType=DOUBLE},
+            </if>
+            <if test="sumZfScore != null">
+                #{sumZfScore,jdbcType=DOUBLE},
+            </if>
+            <if test="sumTotalScore != null">
+                #{sumTotalScore,jdbcType=DOUBLE},
+            </if>
+            <if test="dfScore != null">
+                #{dfScore,jdbcType=DOUBLE},
+            </if>
+            <if test="dbtype != null">
+                #{dbtype,jdbcType=VARCHAR},
+            </if>
+            <if test="dbbk != null">
+                #{dbbk,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.ScoreHistory">
+        update scorehistory
+        <set>
+            <if test="usercode != null">
+                UserCode = #{usercode,jdbcType=VARCHAR},
+            </if>
+            <if test="year != null">
+                Year = #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="month != null">
+                Month = #{month,jdbcType=VARCHAR},
+            </if>
+            <if test="scorestatus != null">
+                ScoreStatus = #{scorestatus,jdbcType=VARCHAR},
+            </if>
+            <if test="ascore != null">
+                AScore = #{ascore,jdbcType=DOUBLE},
+            </if>
+            <if test="bscore != null">
+                BScore = #{bscore,jdbcType=DOUBLE},
+            </if>
+            <if test="cscore != null">
+                CScore = #{cscore,jdbcType=DOUBLE},
+            </if>
+            <if test="dscore != null">
+                DScore = #{dscore,jdbcType=DOUBLE},
+            </if>
+            <if test="totalscore != null">
+                TotalScore = #{totalscore,jdbcType=DOUBLE},
+            </if>
+            <if test="sumZdScore != null">
+                SumZdScore = #{sumZdScore,jdbcType=DOUBLE},
+            </if>
+            <if test="sumMbScore != null">
+                SumMbScore = #{sumMbScore,jdbcType=DOUBLE},
+            </if>
+            <if test="sumZfScore != null">
+                SumZfScore = #{sumZfScore,jdbcType=DOUBLE},
+            </if>
+            <if test="avgZdScore != null">
+                AvgZdScore = #{avgZdScore,jdbcType=DOUBLE},
+            </if>
+            <if test="avgMbScore != null">
+                AvgMbScore = #{avgMbScore,jdbcType=DOUBLE},
+            </if>
+            <if test="sumTotalScore != null">
+                SumTotalScore = #{sumTotalScore,jdbcType=DOUBLE},
+            </if>
+            <if test="dfScore != null">
+                DfScore = #{dfScore,jdbcType=DOUBLE},
+            </if>
+            <if test="dbtype != null">
+                dbtype = #{dbtype,jdbcType=VARCHAR},
+            </if>
+            <if test="dbbk != null">
+                dbbk = #{dbbk,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+    <select id="selectOneByHistory" resultType="com.welb.organization_check.entity.ScoreHistory">
+    select * from  scorehistory where UserCode=#{usercode} and Year=#{year} and Month=#{month} and dbtype=#{dbtype}
+  </select>
+
+    <select id="selectHistoryList" resultMap="BaseResultMap2">
+        select
+        h.Id,
+        h.UserCode,
+        h.Year,
+        h.Month,
+        h.ScoreStatus,
+        h.AScore,
+        h.BScore,
+        h.CScore,
+        h.DScore,
+        h.TotalScore,
+        h.SumZdScore,
+        h.SumMbScore,
+        h.AvgZdScore,
+        h.AvgMbScore,
+        h.SumTotalScore,
+        h.DfScore,
+        h.dbtype,
+        h.SumZfScore,
+        u.UserName,u.MoneyCard,
+        m.SerialNo,m.Year,m.Month,m.State,m.SavePath,m.FileName,m.Title,m.Content,
+        s.StationName,s.StationCode,d.DepartmentCode,d.DepartmentName,
+        r.RoleCode,r.RoleName,u.dbbk
+        from scorehistory h, user u ,monthsummary m,station s,department d,role r,user_role ur
+        <where>
+            <if test="history.username!=null and history.username!=''">
+                and u.UserName like concat('%',#{history.username},'%')
+            </if>
+            <if test="history.stationcode!=null and history.stationcode!=''">
+                and u.StationCode=#{history.stationcode}
+            </if>
+
+            <if test="history.year!=null and history.year!=''">
+                and h.Year=#{history.year}
+            </if>
+            <if test="history.month!=null and history.month !=''">
+                and h.Month=#{history.month}
+            </if>
+            <if test="history.state!=null and history.state !='' and history.state!='0'.toString()">
+                and m.State=#{history.state}
+
+            </if>
+            <if test='history.state=="0"'>
+                and (m.Title is null or m.Title='')
+                and (m.Content is null or m.Content='')
+
+            </if>
+            <if test="history.scorestatus!=null and history.scorestatus !=''">
+                and h.ScoreStatus=#{history.scorestatus}
+            </if>
+            <if test="history.dbtype != null and history.dbtype !=''">
+                and m.dbtype = #{history.dbtype,jdbcType=VARCHAR}
+            </if>
+            <if test="history.dbbk != null and history.dbbk !=''">
+                and m.dbbk = #{history.dbbk,jdbcType=VARCHAR}
+            </if>
+            and u.UserCode=h.UserCode
+            and u.UserCode =m.EmployeeCode
+            and u.RoleType="0"
+            and u.Flag="0"
+            and u.StationCode=s.StationCode
+            and s.DepartmentCode=d.DepartmentCode
+            and u.UserCode=ur.UserCode
+            and r.RoleCode=ur.RoleCode
+            <if test="roleList.size>0">
+            and r.RoleCode in
+            <foreach item="item" index="index" collection="roleList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            </if>
+            and h.Year=m.Year
+            and m.`Month`=h.`Month`
+        </where>
+        order by h.Year+0 desc, h.Month+0 desc
+    </select>
+
+    <select id="gradeList" resultMap="BaseResultMap2">
+        select h.*,
+        u.UserCode,u.UserName,u.MoneyCard,
+        m.SerialNo,m.Year,m.Month,m.State,m.ScoreStatus,
+        s.StationName,s.StationCode,d.DepartmentCode,d.DepartmentName,
+        r.RoleCode,r.RoleName
+        from scorehistory h, user u ,monthsummary m,station s,department d,role r,user_role ur
+        <where>
+            <if test="username!=null and username!=''">
+                and u.UserName like concat('%',#{username},'%')
+            </if>
+            <if test="stationcode!=null and stationcode!=''">
+                and u.StationCode=#{stationcode}
+            </if>
+
+            <if test="year!=null and year!=''">
+                and h.Year=#{year}
+            </if>
+            <if test="month!=null and month !=''">
+                and h.Month=#{month}
+            </if>
+            <if test="state!=null and state !='' and state!='0'.toString()">
+                and m.State=#{state}
+
+            </if>
+            <if test='state=="0"'>
+                and (m.Title is null or m.Title='')
+                and (m.Content is null or m.Content='')
+
+            </if>
+            <if test="scorestatus!=null and scorestatus !=''">
+                and h.ScoreStatus=#{scorestatus}
+            </if>
+            <if test="dbtype != null and dbtype !=''">
+                and m.dbtype = #{dbtype,jdbcType=VARCHAR}
+            </if>
+            <if test="dbbk != null and dbbk !=''">
+                and m.dbbk = #{dbbk,jdbcType=VARCHAR}
+            </if>
+            and u.UserCode=h.UserCode
+            and u.UserCode =m.EmployeeCode
+            and u.RoleType="0"
+            and u.Flag="0"
+            and u.StationCode=s.StationCode
+            and s.DepartmentCode=d.DepartmentCode
+            and u.UserCode=ur.UserCode
+            and r.RoleCode=ur.RoleCode
+            and u.userCode in(
+                select ScorringCode from score where dbtype= #{dbtype,jdbcType=VARCHAR}
+            )
+            and h.Year=m.Year
+            and m.`Month`=h.`Month`
+        </where>
+        order by h.Year+0 desc, h.Month+0 desc
+    </select>
+
+
+    <!--查询当前月度打分用户完成情况数据-->
+    <select id="selectGradeHisotyList" resultMap="BaseResultMap">
+    select h.* from  scorehistory h,user u,user_role ur
+    where h.UserCode=u.UserCode
+    and  u.UserCode=ur.UserCode
+        <if test='dbtype!=null and dbtype!="1"'>
+            and ur.RoleCode ='150'
+        </if>
+        <if test='dbtype!=null and dbtype!="2"'>
+            and u.dbbk!='' and u.dbbk is not null and u.dbbk !='党支部书记'
+        </if>
+
+    and  u.Flag="0"
+    and  u.UserState="1"
+    and  h.Year=#{year}
+    and  h.Month=#{month}
+        <if test='dbtype != null and dbtype !=""'>
+            and h.dbtype = #{dbtype}
+        </if>
+        <if test='dbbk != null and dbbk !=""'>
+            and h.dbbk = #{dbbk}
+        </if>
+  </select>
+    <!--查询当前月度打分用户完成情况数据-->
+    <select id="selectUserHisotyList" resultMap="BaseResultMap">
+    select h.* from  scorehistory h,user u,user_role ur
+    where h.UserCode=u.UserCode
+    and  u.UserCode=ur.UserCode
+        <if test="roleList.size()>0">
+    and  ur.RoleCode in
+    <foreach item="item" index="index" collection="roleList" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+        </if>
+    and  u.Flag="0"
+    and  u.UserState="1"
+    and  h.Year=#{history.year}
+    and  h.Month=#{history.month}
+        <if test="history.dbtype != null and history.dbtype !=''">
+            and h.dbtype = #{history.dbtype,jdbcType=VARCHAR}
+        </if>
+        <if test="history.dbbk != null and history.dbbk !=''">
+            and h.dbbk = #{history.dbbk,jdbcType=VARCHAR}
+        </if>
+  </select>
+
+
+    <insert id="batchInsert">
+        insert into scorehistory(Id, UserCode, Year, month, ScoreStatus, AScore, BScore, CScore, DScore, TotalScore,dbtype,dbbk)
+        values
+        <foreach collection="list" item="sh" separator=",">
+            (
+            #{sh.id},
+            #{sh.usercode},
+            #{sh.year},
+            #{sh.month},
+            #{sh.scorestatus},
+            #{sh.ascore},
+            #{sh.bscore},
+            #{sh.cscore},
+            #{sh.dscore},
+            #{sh.totalscore},
+            #{sh.dbtype,jdbcType=VARCHAR},
+            #{sh.dbbk,jdbcType=VARCHAR}
+            )
+        </foreach>
+
+    </insert>
+
+
+    <select id="selectScoreHistoryByUserCode" resultType="com.welb.organization_check.entity.ScoreHistory">
+        select * from scorehistory where UserCode=#{usercode} and dbtype = #{dbtype} order by Year+0 desc,Month+0 desc limit 0,1
+    </select>
+
+
+    <!--一键导出未评分和未完成数据-->
+    <select id="oneClickDown" resultMap="BaseResultMap">
+        select h.*,
+        u.UserCode,u.UserName,u.MoneyCard,
+        m.SerialNo,m.Year,m.Month,m.State,m.ScoreStatus,
+        s.StationName,s.StationCode,d.DepartmentCode,d.DepartmentName,
+        r.RoleCode,r.RoleName
+        from scorehistory h, user u ,monthsummary m,station s,department d,role r,user_role ur
+        <where>
+            <if test="year!=null and year!=''">
+                and h.Year=#{year}
+            </if>
+            <if test="month!=null and month !=''">
+                and h.Month=#{month}
+            </if>
+            <if test="dbtype != null and dbtype !=''">
+               and  h.dbtype = #{dbtype,jdbcType=VARCHAR},
+            </if>
+        </where>
+        and h.ScoreStatus !=3
+        and u.UserCode=h.UserCode
+        and u.UserCode =m.EmployeeCode
+        and u.RoleType="0"
+        and u.Flag="0"
+        and u.StationCode=s.StationCode
+        and s.DepartmentCode=d.DepartmentCode
+        and u.UserCode=ur.UserCode
+        and r.RoleCode=ur.RoleCode
+        <if test="roleList.size()>0">
+        and r.RoleCode in
+        <foreach item="item" index="index" collection="roleList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        </if>
+        and h.Year=m.Year
+        and m.`Month`=h.`Month`
+        order by h.Year+ 0 desc,h.Month+0 desc, h.ScoreStatus
+    </select>
+
+    <select id="selectHistoryByInUserCode" resultType="com.welb.organization_check.entity.ScoreHistory">
+        select * from scorehistory where Year=#{year} and Month=#{month} and dbtype =#{dbtype}
+        and UserCode in
+        <foreach item="item" index="index" collection="codeList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <!--一键导出未评分和未完成数据-->
+    <select id="findScoreHistoryList" resultMap="BaseResultMap">
+        select h.*,
+        u.UserCode,u.UserName,u.MoneyCard,
+        m.SerialNo,m.Year,m.Month,m.State,m.ScoreStatus,
+        s.StationName,s.StationCode,d.DepartmentCode,d.DepartmentName,
+        r.RoleCode,r.RoleName
+        from scorehistory h, user u ,monthsummary m,station s,department d,role r,user_role ur
+        <where>
+            <if test="year!=null and year!=''">
+                and h.Year=#{year}
+            </if>
+            <if test="month!=null and month !=''">
+                and h.Month=#{month}
+            </if>
+            <if test="dbtype != null and dbtype !=''">
+                and  h.dbtype = #{dbtype,jdbcType=VARCHAR}
+            </if>
+            <if test="dbbk != null and dbbk !=''">
+                and h.dbbk = #{dbbk,jdbcType=VARCHAR}
+            </if>
+        </where>
+        and u.UserCode=h.UserCode
+        and u.UserCode =m.EmployeeCode
+        and u.RoleType="0"
+        and u.Flag="0"
+        and u.StationCode=s.StationCode
+        and s.DepartmentCode=d.DepartmentCode
+        and u.UserCode=ur.UserCode
+        and r.RoleCode=ur.RoleCode
+        <if test="dbtype != null and dbtype !='1'">
+            and r.RoleCode in("100","150","200","300","50")
+        </if>
+
+        and h.Year=m.Year
+        and m.`Month`=h.`Month`
+        order by h.Year+ 0 desc,h.Month+0 desc, h.ScoreStatus
+    </select>
+    <select id="findUserScoreHistory" resultType="com.welb.organization_check.entity.ScoreHistory">
+    SELECT
+        h.Id, h.UserCode, h.Year, h.Month, h.ScoreStatus,
+        h.AScore, h.BScore, h.CScore, h.DScore, h.TotalScore,
+        h.SumZdScore, h.SumMbScore, h.AvgZdScore, h.AvgMbScore,
+        h.SumTotalScore, h.DfScore, u.dbtype, u.dbbk, h.SumZfScore, u.MoneyCard, u.BranchCode
+    FROM
+        scorehistory h,
+        USER u,
+        monthsummary m,
+        role r,
+        user_role ur
+    WHERE
+        u.UserCode = h.UserCode
+        AND u.UserCode = m.EmployeeCode
+        AND u.RoleType = "0"
+        AND u.Flag = "0"
+        AND u.UserCode = ur.UserCode
+        AND r.RoleCode = ur.RoleCode
+        <if test='dbtype != null and dbtype !="1"'>
+        AND r.RoleCode IN ( "100", "200", "300", "50" )
+        </if>
+        AND h.YEAR = m.YEAR
+        AND m.Month = h.Month
+        <if test="dbtype != null and dbtype !=''">
+            and  h.dbtype = #{dbtype,jdbcType=VARCHAR}
+        </if>
+        <if test="dbbk != null and dbbk !=''">
+            and h.dbbk = #{dbbk,jdbcType=VARCHAR}
+        </if>
+        AND h.Year=#{year}
+        AND h.Month=#{month}
+</select>
+
+    <select id="selectHistoryByMonthSummaryList" resultType="com.welb.organization_check.entity.ScoreHistory">
+        SELECT
+            s.*
+        FROM
+            monthsummary m,
+            scorehistory s
+        where
+            m.Year = s.Year
+            AND m.Month = s.Month
+            AND m.Year = #{year}
+            AND m.dbtype = #{dbtype}
+            AND m.EmployeeCode = s.UserCode
+            AND m.Month = #{month}
+            AND m.dbtype=#{dbtype}
+    </select>
+</mapper>

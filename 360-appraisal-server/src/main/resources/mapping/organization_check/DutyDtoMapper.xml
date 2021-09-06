@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.welb.organization_check.mapper.DutyDtoMapper">
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.dto.DutyDto">
+        <result column="DutyCode" property="dutycode" jdbcType="VARCHAR"/>
+        <result column="DutyName" property="dutyname" jdbcType="VARCHAR"/>
+        <result column="DutyType" property="dutytype" jdbcType="VARCHAR"/>
+        <result column="ScoreType" property="scoretype" jdbcType="VARCHAR"/>
+        <result column="ScorringName" property="scorringname" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectDutyDto" resultType="com.welb.organization_check.dto.DutyDto">
+        SELECT
+            d.DutyCode,
+            d.DutyName,
+            d.DutyType,
+            s.ScoreType,
+            GROUP_CONCAT(CONCAT(u.UserName,'(',d1.DepartmentName,'-',s1.StationName,')')) ScorringName
+        FROM
+            duty d
+            left join score s on
+                d.DutyCode = s.DutyCode
+                and s.ScoreType = 'D'
+                and s.ScorredCode = #{scorredcode}
+            left join user u on
+                u.UserCode = s.ScorringCode
+            left join station s1 on
+                u.StationCode = s1.StationCode
+            left join department d1 on
+                d1.DepartmentCode = s1.DepartmentCode
+        where
+            d.dbtype = #{dbtype}
+            and d.StationCode = #{station}
+            <if test="stationcode!=null and stationcode!=''">
+                and u.StationCode=#{stationcode}
+            </if>
+            <if test="username!=null and username!=''">
+                and u.username=#{username}
+            </if>
+        group by
+            d.DutyCode,
+            d.DutyName,
+            d.DutyType,
+            s.ScoreType
+        order by
+            d.DutyCode+0
+    </select>
+
+</mapper>
+

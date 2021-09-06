@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.welb.organization_check.mapper.UserScoreDtoMapper">
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.dto.UserDto">
+        <result column="Year" property="year" jdbcType="VARCHAR"/>
+        <result column="Month" property="month" jdbcType="VARCHAR"/>
+        <result column="ScoredCode" property="scoredCode" jdbcType="VARCHAR"/>
+        <result column="ScorringCode" property="scorringCode" jdbcType="VARCHAR"/>
+        <result column="ScoreType" property="scoreType" jdbcType="VARCHAR"/>
+        <result column="MserialNo" property="mserialNo" jdbcType="VARCHAR"/>
+        <result column="FserialNo" property="fserialNo" jdbcType="VARCHAR"/>
+        <result column="DserialNo" property="dserialNo" jdbcType="VARCHAR"/>
+        <result column="DutyType" property="dutyType" jdbcType="VARCHAR"/>
+        <result column="Ratio" property="ratio" jdbcType="DOUBLE"/>
+        <result column="Score" property="score" jdbcType="DOUBLE"/>
+        <result column="ARatio" property="aratio" jdbcType="DOUBLE"/>
+        <result column="BRatio" property="bratio" jdbcType="DOUBLE"/>
+        <result column="CRatio" property="cratio" jdbcType="DOUBLE"/>
+        <result column="DRatio" property="dratio" jdbcType="DOUBLE"/>
+        <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
+        <result column="BranchCode" property="branchCode" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="findUserScore" resultType="com.welb.organization_check.dto.UserScoreDto">
+        select
+        m.YEAR,
+        m.Month,
+        sf.ScoredCode,
+        sf.ScorringCode,
+        sf.ScoreType,
+        sf.MSerialNo,
+        sd.FSerialNo,
+        sd.DSerialNo,
+        dy.dutytype,
+        sf.Ratio,
+        sd.Score,
+        u.ARatio,
+        u.BRatio,
+        u.CRatio,
+        u.DRatio,
+        u.dbbk,
+        u.BranchCode
+        from
+        monthsummary m, scoreflow sf, scoredetail sd, duty dy, user u
+        where
+        m.SerialNo = sf.MSerialNo
+        and sf.SerialNo = sd.FSerialNo
+        and sd.DSerialNo = dy.DutyCode
+        and u.userCode = sf.ScoredCode
+        and m.dbtype = sf.dbtype
+        and m.dbtype = sd.dbtype
+        and m.dbtype = dy.dbtype
+        and m.YEAR = #{year}
+        and m.Month = #{month}
+        and m.dbtype = #{dbtype}
+        and dy.dutytype in
+            <foreach item="item" index="index" collection="typeList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+    </select>
+
+    <select id="findUserDutyScore" resultType="com.welb.organization_check.dto.UserScoreDto">
+        select
+        m.YEAR,
+        m.Month,
+        sf.ScoredCode,
+        sf.ScorringCode,
+        sd.ScoreType,
+        sf.MSerialNo,
+        sd.FSerialNo,
+        sd.DSerialNo,
+        dy.dutytype,
+        sd.Ratio,
+        sd.Score,
+        u.ARatio,
+        u.BRatio,
+        u.CRatio,
+        u.DRatio,
+        u.dbbk,
+        u.BranchCode
+        from
+        monthsummary m, scoreflow sf, scoredetail sd, duty dy, user u
+        where
+        m.SerialNo = sf.MSerialNo
+        and sf.SerialNo = sd.FSerialNo
+        AND sf.ScoreType = sd.ScoreType
+        and sd.DSerialNo = dy.DutyCode
+        and u.userCode = m.EmployeeCode
+        and m.YEAR = #{year}
+        and m.Month = #{month}
+        <if test="employeeCode != null" >
+            and m.EmployeeCode = #{employeeCode}
+        </if>
+        and m.dbtype = #{dbtype}
+        <if test="typeList!=null and typeList.size()>0">
+        and dy.dutytype in
+        <foreach item="item" index="index" collection="typeList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        </if>
+    </select>
+</mapper>
+

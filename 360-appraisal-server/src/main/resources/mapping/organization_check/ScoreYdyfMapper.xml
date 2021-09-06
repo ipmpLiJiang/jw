@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.organization_check.mapper.ScoreYdyfMapper">
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.ScoreYdyf">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="MoneyCard" property="moneyCard" jdbcType="VARCHAR"/>
+        <result column="Year" property="year" jdbcType="VARCHAR"/>
+        <result column="Month" property="month" jdbcType="VARCHAR"/>
+        <result column="Score" property="score" jdbcType="DOUBLE"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        Id, MoneyCard, Year, Month, Score
+      </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from scoreydyf
+        where Id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from scoreydyf
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="insertSelective" parameterType="com.welb.organization_check.entity.ScoreYdyf">
+        insert into scoreydyf
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="moneyCard != null">
+                MoneyCard,
+            </if>
+            <if test="year != null">
+                Year,
+            </if>
+            <if test="month != null">
+                Month,
+            </if>
+            <if test="score != null">
+                Score,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="moneyCard != null">
+                #{moneyCard,jdbcType=VARCHAR},
+            </if>
+            <if test="year != null">
+                #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="month != null">
+                #{month,jdbcType=VARCHAR},
+            </if>
+            <if test="score != null">
+                #{score,jdbcType=DOUBLE},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.ScoreYdyf">
+        update scoreydyf
+        <set>
+            <if test="moneyCard != null">
+                MoneyCard = #{moneyCard,jdbcType=VARCHAR},
+            </if>
+            <if test="year != null">
+                Year = #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="month != null">
+                Month = #{month,jdbcType=VARCHAR},
+            </if>
+            <if test="score != null">
+                Score = #{score,jdbcType=DOUBLE},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectYdyfList" resultType="com.welb.organization_check.entity.ScoreYdyf">
+    select
+        *
+    from
+        scoreydyf
+    where
+        Year=#{year} and Month=#{month}
+        <if test="moneyCard != null and moneyCard != ''">
+            and MoneyCard=#{moneyCard}
+        </if>
+  </select>
+
+</mapper>
