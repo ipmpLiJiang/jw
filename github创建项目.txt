@@ -1,0 +1,12 @@
+方法一
+https://github.com/
+1.登录
+2.创建仓库
+3.复制 地址 如：https://github.com/xxxxxxx/xxx.git
+4.确定 本地上传的目录位置
+5.反键  git bash here
+6.git clone https://github.com/xxxxxxx/xxx.git  如果失败
+解除ssl验证：git config --global http.sslVerify "false"
+7.此时在本地创建了一个文件夹  把需要上传的文件拷贝进去 反键 commit
+8.在GitHub Desktop中 file -> add local repository 选择 当前项目的目录
+ok

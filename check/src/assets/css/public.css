@@ -1,0 +1,217 @@
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+font,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+textarea,
+input {
+    margin: 0;
+    padding: 0;
+}
+
+address,
+cite,
+dfn,
+em,
+var,
+i {
+    font-style: normal;
+}
+
+body {
+    font-size: 14px;
+    line-height: 1.5;
+    font-family: 'Microsoft Yahei', 'simsun', 'arial', 'tahoma';
+    color: #222;
+    background: #f7f7f7;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+button,
+input,
+select,
+textarea {
+    font-size: 100%;
+}
+
+fieldset,
+img {
+    border: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #666;
+    background: none
+}
+
+ul,
+ol {
+    list-style: none;
+}
+
+:focus {
+    outline: none;
+}
+
+.clearfix {
+    clear: both;
+    content: "";
+    display: block;
+    overflow: hidden
+}
+
+.clear {
+    clear: both;
+}
+
+.float-left {
+    float: left !important;
+}
+.float-right {
+    float: right !important;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 4px;
+    /*高宽分别对应横竖滚动条的尺寸*/
+    height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 0px;
+    /*-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);*/
+    background: #b4b4b4;
+}
+
+::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    /*-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);*/
+    border-radius: 0px;
+    background: #EDEDED;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.line-top::after {
+    content: " ";
+    position: absolute;
+    pointer-events: none;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: 100%;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+    border-bottom: 1px solid #dcdcdc;
+}
+.line-bottom::after {
+    content: " ";
+    position: absolute;
+    pointer-events: none;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+    border-bottom: 1px solid #dcdcdc;
+}
+/*这一句是用来解决在安卓上的点击出现篮框问题*/
+body,span{ -webkit-tap-highlight-color:rgba(0,0,0,0);outline: none; }
+
+
+/*下面是解决ios上去除微信点击蓝色边框 */
+* {
+	outline: none;
+}
+
+.white-bg{
+    background-color: #fff;
+    -webkit-box-shadow: 0 1px 4px 0 rgba(0,0,0,.13);
+    -moz-box-shadow: 0 1px 4px 0 rgba(0,0,0,.13);
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,.13);
+}
+.white-bg h3{
+    font-size: 12px;
+    font-weight: 600;
+    color: #111;
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid #eaeaea;
+    padding: 0px 15px;
+}
