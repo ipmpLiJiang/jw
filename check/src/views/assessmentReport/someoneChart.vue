@@ -234,7 +234,6 @@ export default {
     chartData: {
       handler(newValue, oldValue) {
         this.tableData = newValue;
-        console.log(this.tableData)
         this.drawLine();
       },
       deep: true

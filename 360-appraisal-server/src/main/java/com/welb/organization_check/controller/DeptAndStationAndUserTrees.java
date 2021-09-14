@@ -104,7 +104,7 @@ public class DeptAndStationAndUserTrees {
                                 for (User user : users) {
                                     //满足前端的需要
                                     user.setCommoncode(user.getUsercode());
-                                    user.setCommonname(user.getUsername());
+                                    user.setCommonname(user.getUsername() + "  (" + user.getMoneycard()+")");
                                 }
                                 stations.get(j).setUserTree(users);
                                 stationList.add(stations.get(j));

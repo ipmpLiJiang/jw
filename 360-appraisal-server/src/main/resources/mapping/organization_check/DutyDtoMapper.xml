@@ -15,7 +15,7 @@
             d.DutyName,
             d.DutyType,
             s.ScoreType,
-            GROUP_CONCAT(CONCAT(u.UserName,'(',d1.DepartmentName,'-',s1.StationName,')')) ScorringName
+            GROUP_CONCAT(CONCAT(u.UserName,'(',u.MoneyCard,')','(',d1.DepartmentName,'-',s1.StationName,')')) ScorringName
         FROM
             duty d
             left join score s on

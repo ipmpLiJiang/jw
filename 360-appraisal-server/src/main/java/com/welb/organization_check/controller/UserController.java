@@ -168,7 +168,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping(value = "/dutyScorringUserlist", produces = "application/json;charset=utf-8")
-    public Object dutyScorringUserlist(HttpServletRequest req, String dutycode,String scoretype,String dbtype, int pageNum, int pageSize) {
+    public Object dutyScorringUserlist(HttpServletRequest req,String scorredCode, String dutycode,String scoretype,String dbtype, int pageNum, int pageSize) {
         ModelMap map = new ModelMap();
         String userCode = (String) req.getSession().getAttribute("usercode");
         if (userCode != null) {
@@ -176,7 +176,7 @@ public class UserController extends BaseController {
             PageHelper.startPage(pageNum, pageSize);
             List<User> users;
             try {
-                users = userService.findDutyScorringUserList(dutycode,scoretype,dbtype);
+                users = userService.findDutyScorringUserList(scorredCode,dutycode,scoretype,dbtype);
                 PageInfo<User> pageInfo = new PageInfo<>(users);
                 users = pageInfo.getList();
                 users = this.handleUsersMsg(users);

@@ -87,7 +87,7 @@
           label="被评分员工"
           show-overflow-tooltip
         >
-          {{page.uname}}({{page.udeptname}}-{{page.ustationname}})
+          {{page.uname}}({{page.moneycard}})({{page.udeptname}}-{{page.ustationname}})
         </el-table-column>
         <el-table-column
           prop="scoretype"
@@ -207,6 +207,7 @@ export default {
     this.page.uname = this.$route.query.uname;
     this.page.ustationname = this.$route.query.ustationname;
     this.page.udeptname = this.$route.query.udeptname;
+    this.page.moneycard = this.$route.query.moneycard
     this.getList();
   },
   methods: {

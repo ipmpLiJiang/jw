@@ -80,6 +80,12 @@
           prop="username"
           label="员工姓名"
         >
+        <template
+            slot-scope="scope"
+            v-if="scope.row.username"
+          >
+            {{scope.row.username}}({{scope.row.moneycard}})
+          </template>
         </el-table-column>
         <el-table-column
           prop="departmentname"

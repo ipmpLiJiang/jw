@@ -45,6 +45,16 @@ public class Duty {
 
     private String dbtype;
 
+    private Double defScore;
+
+    public Double getDefScore() {
+        return defScore;
+    }
+
+    public void setDefScore(Double defScore) {
+        this.defScore = defScore;
+    }
+
     public String getDbtype() {
         return dbtype;
     }

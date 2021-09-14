@@ -6,6 +6,7 @@ import com.welb.organization_check.dto.UserScoreDto;
 import com.welb.organization_check.entity.*;
 import com.welb.organization_check.service.*;
 import com.welb.util.*;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JsonConfig;
 import org.apache.logging.log4j.LogManager;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
  * @description: 首页控制器
  * @date 2019/6/1122:02
  */
+
 @RestController
 @RequestMapping("/homepage")
 @Transactional
@@ -315,26 +317,26 @@ public class HomePageController {
 //            List<Duty> dutyJichu = dutyService.queryDutyByType("0", dto.getStationcode());
             List<Duty> dutyJichu = dutyList.stream().filter(s -> s.getDutytype().equals("0")).collect(Collectors.toList());
             for (Duty duty : dutyJichu) {
-                duty.setScore("");
+                duty.setScore(duty.getDefScore()==null? "" : duty.getDefScore().toString());
             }
             //获取关键量化指标的相关信息
 //            List<Duty> dutyYiban = dutyService.queryDutyByType("1", dto.getStationcode());
             List<Duty> dutyYiban = dutyList.stream().filter(s -> s.getDutytype().equals("1")).collect(Collectors.toList());
             for (Duty duty : dutyYiban) {
-                duty.setScore("");
+                duty.setScore(duty.getDefScore()==null? "" : duty.getDefScore().toString());
             }
             //获取关键量化指标的相关信息
 //            List<Duty> dutyZhongdian = dutyService.queryDutyByType("2", dto.getStationcode());
             List<Duty> dutyZhongdian = dutyList.stream().filter(s -> s.getDutytype().equals("2")).collect(Collectors.toList());
             for (Duty duty : dutyZhongdian) {
-                duty.setScore("");
+                duty.setScore(duty.getDefScore()==null? "" : duty.getDefScore().toString());
             }
 
             //获取关键量化指标的相关信息
 //            List<Duty> dutyMubiao = dutyService.queryDutyByType("3", dto.getStationcode());
             List<Duty> dutyMubiao = dutyList.stream().filter(s -> s.getDutytype().equals("3")).collect(Collectors.toList());
             for (Duty duty : dutyMubiao) {
-                duty.setScore("");
+                duty.setScore(duty.getDefScore()==null? "" : duty.getDefScore().toString());
             }
             if (dto.getState().equals("7")) {
                 dto.setIsedit("1");
@@ -410,28 +412,28 @@ public class HomePageController {
 
             List<Duty> dutyJichu = dutyList.stream().filter(p -> p.getDutytype().equals("4")).collect(Collectors.toList());
             for (Duty duty : dutyJichu) {
-                duty.setScore("");
+                duty.setScore(duty.getDefScore()==null? "" : duty.getDefScore().toString());
             }
             //获取关键量化指标的相关信息
             List<Duty> dutyYiban = dutyList.stream().filter(p -> p.getDutytype().equals("5")).collect(Collectors.toList());
             for (Duty duty : dutyYiban) {
-                duty.setScore("");
+                duty.setScore(duty.getDefScore()==null? "" : duty.getDefScore().toString());
             }
             //获取关键量化指标的相关信息
             List<Duty> dutyZhongdian = dutyList.stream().filter(p -> p.getDutytype().equals("6")).collect(Collectors.toList());
             for (Duty duty : dutyZhongdian) {
-                duty.setScore("");
+                duty.setScore(duty.getDefScore()==null? "" : duty.getDefScore().toString());
             }
 
             //获取关键量化指标的相关信息
             List<Duty> dutyMubiao = dutyList.stream().filter(p -> p.getDutytype().equals("7")).collect(Collectors.toList());
             for (Duty duty : dutyMubiao) {
-                duty.setScore("");
+                duty.setScore(duty.getDefScore()==null? "" : duty.getDefScore().toString());
             }
 
             List<Duty> dutyZuofeng = dutyList.stream().filter(p -> p.getDutytype().equals("8")).collect(Collectors.toList());
             for (Duty duty : dutyZuofeng) {
-                duty.setScore("");
+                duty.setScore(duty.getDefScore()==null? "" : duty.getDefScore().toString());
             }
 
             if (dto.getState().equals("7")) {
@@ -461,7 +463,7 @@ public class HomePageController {
             if (detail != null) {
                 duty.setScore(detail.getScore());
             } else {
-                duty.setScore("");
+                duty.setScore(duty.getDefScore() == null ? "":duty.getDefScore().toString());
             }
 
         }
@@ -476,7 +478,7 @@ public class HomePageController {
                     duty.setScore(detail.getScore());
                     break;
                 } else {
-                    duty.setScore("");
+                    duty.setScore(duty.getDefScore() == null ? "":duty.getDefScore().toString());
                 }
             }
 

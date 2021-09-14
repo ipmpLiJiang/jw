@@ -95,9 +95,6 @@ public class MonthSummaryController {
                 month = quarter;
                 getSummaryList(summary, pageNum, pageSize, map, usercode, setTime.getYear(), setTime.getMonth());
 
-
-
-
         }
     }
 
@@ -192,8 +189,7 @@ public class MonthSummaryController {
         //当前上一个月度
         int count = Integer.parseInt(month.trim()) - 1;
         String sysTime = DateUtil.getTime();
-
-            manualAddSummary(summary, map, usercode, year, month, count, sysTime);
+        manualAddSummary(summary, map, usercode, year, month, count, sysTime);
 
         return map;
     }
@@ -212,8 +208,6 @@ public class MonthSummaryController {
                 String serialno = summary.getYear() + "-" + summary.getMonth() + "-" + summary.getDbtype() + "-" + usercode;
                 MonthSummary summary1 = summaryService.selectByPrimaryKey(serialno);
                 addOrUpdateSummary(summary, map, usercode, serialno, summary1);
-
-
         }
     }
 
@@ -356,7 +350,6 @@ public class MonthSummaryController {
 
     @RequestMapping("/getOneHistoryContent")
     public String getOneHistoryContent(String serialno) throws IOException {
-
         MonthSummary summary = summaryService.selectByPrimaryKey(serialno);
         byte[] formattext = summary.getFormattext();
         //将字节数组转换成inputstream流
@@ -371,6 +364,5 @@ public class MonthSummaryController {
         //转换成字符串
         String content = result.toString(StandardCharsets.UTF_8.name());
         return content;
-
     }
 }

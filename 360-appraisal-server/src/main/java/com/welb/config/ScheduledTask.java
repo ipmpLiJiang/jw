@@ -87,10 +87,11 @@ public class ScheduledTask {
     @Autowired
     private HUserService service;
 
+    //    此处不清楚做什么
     /**
      * 动态获取打分状态
      */
-    @Scheduled(cron = "0 0 13,18 * * ?") //每天13点、18点执行一次
+//    @Scheduled(cron = "0 0 13,18 * * ?") //每天13点、18点执行一次
     public void getScoreStatusScheduledTask() {
         AssessmentState assessmentState = stateService.selectByPrimaryKey(1);
         String state = assessmentState.getState();
@@ -109,8 +110,8 @@ public class ScheduledTask {
             log.error(LogUtil.getTrace(e));
         }
     }
-
-    @Scheduled(cron = "0 30 23 * * ?") //
+//    此处不清楚做什么
+//    @Scheduled(cron = "0 30 23 * * ?") //
     public void autoSynHrpData(){
         int upd = 0;
         int add = 0;
@@ -299,8 +300,8 @@ public class ScheduledTask {
 
     }
 */
-
-    @Scheduled(cron = "0 0 2 * * ?")//每天凌晨2点执行一次
+//    此处不清楚做什么
+//    @Scheduled(cron = "0 0 2 * * ?")//每天凌晨2点执行一次
     public void getEvaluateMaxScoreAndMinScore() {
         AssessmentState assessmentState = stateService.selectByPrimaryKey(1);
         String state = assessmentState.getState();
@@ -505,8 +506,8 @@ public class ScheduledTask {
             log.error(LogUtil.getTrace(e));
         }
     }
-
-    @Scheduled(cron = "0 45 17 ? * MON ")//每周一12点30分触发；
+    //    此处不清楚做什么
+//    @Scheduled(cron = "0 45 17 ? * MON ")//每周一12点30分触发；
     public void monthScoreScheduled() {
         AssessmentState assessmentState = stateService.selectByPrimaryKey(1);
         String state = assessmentState.getState();
@@ -660,10 +661,11 @@ public class ScheduledTask {
 
     }
 
+    //    此处不清楚做什么
     /**
      * 人事部代理人开始考核
      */
-    @Scheduled(cron = "0 0 0,5 * * ?") //每天0点、5点执行一次
+//    @Scheduled(cron = "0 0 0,5 * * ?") //每天0点、5点执行一次
     public void openAuthorization() {
         List<UserRoleKey> list = new ArrayList<>();
         List<String> agents = new ArrayList<>();
@@ -698,10 +700,11 @@ public class ScheduledTask {
         return key;
     }
 
+    //    此处不清楚做什么
     /**
      * 人事部代理人结束考核
      */
-    @Scheduled(cron = "0 0 0,5 * * ?") //每天0点、5点执行一次
+//    @Scheduled(cron = "0 0 0,5 * * ?") //每天0点、5点执行一次
     public void closeAuthorization() {
         //获取当前系统时间
         String endtime = DateUtil.getTime();

@@ -56,7 +56,7 @@
 
     <!--通过被评分人的code,年份，月度查找相关数据-->
     <select id="selectUserSummaryByLike" resultMap="BaseResultMap">
-        select u.UserCode,u.UserName,
+        select u.UserCode,u.UserName,u.Moneycard,
         m.SerialNo,m.Title,m.Content,m.Year,m.Month,m.Content,m.State,m.FileName,m.SavePath,m.EmployeeCode,
         s.StationCode,s.StationName,d.DepartmentCode,d.DepartmentName,m.dbtype
         from user u,monthsummary m,station s,department d

@@ -3,7 +3,7 @@
     <el-row class="box-wrap">
       <h2 class="title">{{detailData.year}}年第{{detailData.month}}{{dbtype=='1'?'季度':'月份'}}测评报告</h2>
       <el-col :span="16">
-        <h4>{{detailData.username}}<span>{{detailData.departmentname}}（{{detailData.stationname}}）</span></h4>
+        <h4>{{detailData.username}}<span>({{detailData.moneycard}})({{detailData.departmentname}}-{{detailData.stationname}})</span></h4>
         <el-col :span="2">
           <h5>{{detailData.totalscore}}</h5>
           <p>总得分</p>

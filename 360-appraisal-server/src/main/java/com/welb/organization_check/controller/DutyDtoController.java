@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.welb.organization_check.dto.DutyDto;
 import com.welb.organization_check.service.IDutyDtoService;
 import com.welb.util.LogUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.ui.ModelMap;

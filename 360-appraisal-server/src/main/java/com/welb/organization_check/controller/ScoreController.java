@@ -177,6 +177,7 @@ public class ScoreController {
             User user = userService.findUserByUserCode(score1.getScorredcode());
             if (user == null) {
             } else {
+                score1.setScorredMoneycard(user.getMoneycard());
                 score1.setScorredname(user.getUsername());
                 Station station = stationService.selectByStationCode(user.getStationcode());
                 if (station != null) {//查找被评分人的岗位和部门
@@ -199,6 +200,7 @@ public class ScoreController {
             User user1 = userService.findUserByUserCode(score1.getScorringcode());
             if (user1 == null) {
             } else {
+                score1.setScorringMoneycard(user1.getMoneycard());
                 score1.setScorringname(user1.getUsername());
                 Station station = stationService.selectByStationCode(user1.getStationcode());
                 if (station != null) {//查找评分人的岗位和部门

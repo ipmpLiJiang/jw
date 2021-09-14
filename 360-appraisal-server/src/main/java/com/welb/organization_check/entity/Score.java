@@ -15,9 +15,13 @@ public class Score {
 
     private String id;
 
+    private String scorringMoneycard;
+
     private String scorringcode;
 
     private String scorringname;
+
+    private String scorredMoneycard;
 
     private String scorredcode;
 
@@ -78,12 +82,28 @@ public class Score {
         this.id = id == null ? null : id.trim();
     }
 
+    public String getScorringMoneycard() {
+        return scorringMoneycard;
+    }
+
+    public void setScorringMoneycard(String scorringMoneycard) {
+        this.scorringMoneycard = scorringMoneycard == null ? null : scorringMoneycard.trim();
+    }
+
     public String getScorringcode() {
         return scorringcode;
     }
 
     public void setScorringcode(String scorringcode) {
         this.scorringcode = scorringcode == null ? null : scorringcode.trim();
+    }
+
+    public String getScorredMoneycard() {
+        return scorredMoneycard;
+    }
+
+    public void setScorredMoneycard(String scorredMoneycard) {
+        this.scorredMoneycard = scorredMoneycard == null ? null : scorredMoneycard.trim();
     }
 
     public String getScorredcode() {

@@ -48,6 +48,8 @@ public class EvaluationReport {
     //单纯添加额外属性  方便获取
     private String username;
 
+    private String moneycard;
+
     private String stationname;
 
     private String departmentname;
@@ -254,6 +256,14 @@ public class EvaluationReport {
 
     public void setMincomparemark(Double mincomparemark) {
         this.mincomparemark = mincomparemark;
+    }
+
+    public String getMoneycard() {
+        return moneycard;
+    }
+
+    public void setMoneycard(String moneycard) {
+        this.moneycard = moneycard;
     }
 
     public String getUsername() {

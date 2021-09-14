@@ -100,6 +100,7 @@ export default {
     //查询列表
     getList() {
       let data = this.page;
+      data.scorredCode = this.form.scorredcode
       data.dutycode = this.form.dutycode
       data.scoretype = this.form.scoretype
       data.dbtype = this.dbtype

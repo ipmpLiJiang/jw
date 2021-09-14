@@ -70,7 +70,7 @@
             slot-scope="scope"
             v-if="scope.row.scorringname"
           >
-            {{scope.row.scorringname}}({{scope.row.departmentname1}}-{{scope.row.stationname1}})
+            {{scope.row.scorringname}}({{scope.row.scorringMoneycard}})({{scope.row.departmentname1}}-{{scope.row.stationname1}})
           </template>
         </el-table-column>
         <el-table-column
@@ -81,7 +81,7 @@
             slot-scope="scope"
             v-if="scope.row.scorredname"
           >
-            {{scope.row.scorredname}}({{scope.row.departmentname2}}-{{scope.row.stationname2}})
+            {{scope.row.scorredname}}({{scope.row.scorredMoneycard}})({{scope.row.departmentname2}}-{{scope.row.stationname2}})
           </template>
         </el-table-column>
         <el-table-column

@@ -345,7 +345,7 @@ export default {
       this.$router.push({
         path: "/home/scorePeople/gradeDutyUserList",
         query: { code: row.usercode, type: type, uname: row.username, ustationname: row.stationname, 
-                udeptname: row.departmentname,station: row.stationcode, linkType: 'd' 
+                udeptname: row.departmentname,station: row.stationcode,moneycard:row.moneycard, linkType: 'd' 
             },
       });
     },

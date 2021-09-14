@@ -5,6 +5,7 @@ import com.welb.organization_check.mapper.DutyMapper;
 import com.welb.organization_check.service.IDutyService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -19,6 +20,7 @@ import java.util.List;
  */
 @Service
 @Transactional
+//@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class DutyServiceImpl implements IDutyService {
     @Resource
     DutyMapper dutyMapper;
@@ -29,6 +31,7 @@ public class DutyServiceImpl implements IDutyService {
     }
 
     @Override
+//    @Transactional
     public int insertSelective(Duty duty) {
         //实现dutycode自增
         String dutyCode = dutyMapper.selectMaxDutyCode();
@@ -40,7 +43,8 @@ public class DutyServiceImpl implements IDutyService {
             String dutycode = String.valueOf(num);
             duty.setDutycode(dutycode);
         }
-        return dutyMapper.insertSelective(duty);
+        int count = dutyMapper.insertSelective(duty);
+        return count;
     }
 
     @Override

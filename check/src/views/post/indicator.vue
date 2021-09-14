@@ -103,6 +103,12 @@
         >
         </el-table-column>
         <el-table-column
+          prop="defScore"
+          label="默认评分"
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
           fixed="right"
           label="操作"
           width="100"

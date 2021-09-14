@@ -13,7 +13,7 @@
         <ul class="personal-information">
           <li>
             <div class="label">姓名:</div>
-            <div class="value">{{detailData.username}}</div>
+            <div class="value">{{detailData.username}}({{detailData.moneycard}})</div>
           </li>
           <li>
             <div class="label">标题:</div>
@@ -72,8 +72,8 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in userList"
-                  :key="item.value"
+                  v-for="(item,index) in userList"
+                  :key="'r'+index"
                   :label="item.label"
                   :value="item.value"
                 >
@@ -97,8 +97,7 @@
             <div class="title">基础指标(总分15)</div>
           </li>
           <li
-            v-for="(item,index) in dutyJichu"
-            :key="index"
+            v-for="(item,index) in dutyJichu" :key="'jc' + index"
           >
             <div
               class="label"
@@ -118,8 +117,7 @@
             <div class="title">岗位职责(总分20)</div>
           </li>
           <li
-            v-for="(item,index) in dutyYiban"
-            :key="index"
+            v-for="(item,index) in dutyYiban" :key="'gw' + index"
           >
             <div
               class="label"
@@ -139,8 +137,7 @@
             <div class="title">重点任务(总分25)</div>
           </li>
           <li
-            v-for="(item,index) in dutyZhongdian"
-            :key="index"
+            v-for="(item,index) in dutyZhongdian" :key="'zd' + index"
           >
             <div
               class="label"
@@ -160,8 +157,7 @@
             <div class="title">目标任务(总分25)</div>
           </li>
           <li
-            v-for="(item,index) in dutyMubiao"
-            :key="index"
+            v-for="(item,index) in dutyMubiao" :key="'mb' + index"
           >
             <div
               class="label"

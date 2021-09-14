@@ -64,7 +64,15 @@
             v-model="form.dscore"
           ></el-input>
         </el-form-item>
-
+        <el-form-item label="默认评分">
+          <el-input-number
+            placeholder="请输入分数"
+            v-model="form.defScore"
+            clearable
+            style="width: 150px;"
+          >
+          </el-input-number>
+        </el-form-item>
       </el-form>
       <span
         slot="footer"
@@ -154,10 +162,10 @@ export default {
   methods: {
     //初始化
     into() {
-      this.score.a = "";
-      this.score.b = "";
-      this.score.c = "";
-      this.score.d = "";
+      // this.score.a = "";
+      // this.score.b = "";
+      // this.score.c = "";
+      // this.score.d = "";
       this.form={}
     },
     //获取部门选择

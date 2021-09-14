@@ -10,6 +10,8 @@ package com.welb.organization_check.dto;
 public class UserEvaluationDto {
     private Integer id;
 
+    private String moneycard;
+
     private String usercode;
 
     private String username;
@@ -105,6 +107,14 @@ public class UserEvaluationDto {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getMoneycard() {
+        return moneycard;
+    }
+
+    public void setMoneycard(String moneycard) {
+        this.moneycard = moneycard;
     }
 
     public String getUsercode() {

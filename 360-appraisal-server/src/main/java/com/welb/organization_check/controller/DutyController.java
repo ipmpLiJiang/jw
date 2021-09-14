@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.welb.organization_check.entity.Duty;
 import com.welb.organization_check.service.IDutyService;
 import com.welb.util.LogUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.ui.ModelMap;
@@ -22,6 +23,7 @@ import java.util.List;
  * @description: TODO
  * @date 2019/5/2115:38
  */
+
 @RestController
 @RequestMapping("/duty")
 public class DutyController {

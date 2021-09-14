@@ -69,7 +69,7 @@ public interface UserMapper {
 
     List<User> selectUserPfr(String dbtype);
 
-    List<User> findDutyScorringUserList(@Param("dutycode") String dutycode,@Param("scoretype") String scoretype,@Param("dbtype") String dbtype);
+    List<User> findDutyScorringUserList(@Param("scorredCode") String scorredCode,@Param("dutycode") String dutycode,@Param("scoretype") String scoretype,@Param("dbtype") String dbtype);
 
     List<User> findUserByCodeList(@Param("codeList") String[] codeList);
 }

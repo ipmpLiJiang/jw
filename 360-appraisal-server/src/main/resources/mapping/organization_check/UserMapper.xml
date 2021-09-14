@@ -624,7 +624,7 @@
     </select>
     <!--通过stationcode查找用户-->
     <select id="selectUserByStationCode" resultMap="BaseResultMap">
-        select u.UserName,u.UserCode,u.StationCode
+        select u.UserName,u.UserCode,u.StationCode,u.MoneyCard
         from user u,station s
         where u.StationCode=s.StationCode
 <!--        <if test='dbtype!=null and dbtype!=""'>-->
@@ -781,6 +781,8 @@
         and u.UserCode=ur.UserCode
         and u.StationCode=s.StationCode
         and s.DepartmentCode=d.DepartmentCode
+        and s1.ScorredCode = #{scorredCode}
+        and s1.DutyCode = #{dutycode}
         and s1.DutyCode = #{dutycode}
         and s1.ScoreType = #{scoretype}
         and s1.dbtype = #{dbtype}

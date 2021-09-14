@@ -32,8 +32,8 @@
                 clearable
               >
                 <el-option
-                  v-for="item in quarterOptions"
-                  :key="item.value"
+                  v-for="(item,index) in quarterOptions"
+                  :key="'r'+index"
                   :label="item.label"
                   :value="item.value"
                 >
@@ -52,7 +52,7 @@
         <ul class="personal-information">
           <li>
             <div class="label">姓名:</div>
-            <div class="value">{{detailData.username}}</div>
+            <div class="value">{{detailData.username}}({{detailData.moneycard}})</div>
           </li>
           <li>
             <div class="label">标题:</div>
@@ -125,7 +125,7 @@
           </li>
           <li
             v-for="(item,index) in dutyJichu"
-            :key="index"
+            :key="'a'+index"
           >
             <div
               class="label"
@@ -153,7 +153,7 @@
           </li>
           <li
             v-for="(item,index) in dutyYiban"
-            :key="index"
+            :key="'b'+index"
           >
             <div
               class="label"
@@ -181,7 +181,7 @@
           </li>
           <li
             v-for="(item,index) in dutyZhongdian"
-            :key="index"
+            :key="'c'+index"
           >
             <div
               class="label"
@@ -209,7 +209,7 @@
           </li>
           <li
             v-for="(item,index) in dutyMubiao"
-            :key="index"
+            :key="'d'+index"
           >
             <div
               class="label"

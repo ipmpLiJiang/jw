@@ -13,12 +13,13 @@
         <result column="CScore" property="cscore" jdbcType="VARCHAR"/>
         <result column="DScore" property="dscore" jdbcType="VARCHAR"/>
         <result column="FullStationCode" property="fullstationcode" jdbcType="VARCHAR"/>
+        <result column="defScore" property="defScore" jdbcType="DOUBLE"/>
         <result column="dbtype" property="dbtype" jdbcType="VARCHAR"/>
         <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
     DutyCode, StationCode, DutyName, DutyType, OrderId, UpDutyCode, BScore,
-    AScore, CScore, DScore,FullStationCode,dbtype,dbbk
+    AScore, CScore, DScore, FullStationCode, defScore, dbtype, dbbk
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
@@ -34,12 +35,12 @@
     insert into duty (DutyCode, StationCode, DutyName,
       DutyType, OrderId,
       UpDutyCode, BScore, AScore,
-      CScore, DScore,FullStationCode,dbtype,dbbk)
+      CScore, DScore,FullStationCode,defScore,dbtype,dbbk)
     values (#{dutycode,jdbcType=VARCHAR}, #{stationcode,jdbcType=VARCHAR}, #{dutyname,jdbcType=VARCHAR},
       #{dutytype,jdbcType=VARCHAR}, #{orderid,jdbcType=INTEGER},
       #{updutycode,jdbcType=VARCHAR}, #{bscore,jdbcType=VARCHAR}, #{ascore,jdbcType=VARCHAR},
       #{cscore,jdbcType=VARCHAR}, #{dscore,jdbcType=VARCHAR},#{fullstationcode,jdbcType=VARCHAR}
-      , #{dbtype,jdbcType=VARCHAR},#{dbbk,jdbcType=VARCHAR})
+      , #{defScore,jdbcType=DOUBLE},#{dbtype,jdbcType=VARCHAR},#{dbbk,jdbcType=VARCHAR})
   </insert>
     <insert id="insertSelective" parameterType="com.welb.organization_check.entity.Duty">
         insert into duty
@@ -76,6 +77,9 @@
             </if>
             <if test="fullstationcode != null">
                 FullStationCode,
+            </if>
+            <if test="defScore != null">
+                defScore,
             </if>
             <if test="dbtype != null">
                 dbtype,
@@ -119,6 +123,9 @@
             <if test="fullstationcode != null">
                 #{fullstationcode,jdbcType=VARCHAR},
             </if>
+            <if test="defScore != null">
+                #{defScore,jdbcType=DOUBLE},
+            </if>
             <if test="dbtype != null">
                 #{dbtype,jdbcType=VARCHAR},
             </if>
@@ -160,7 +167,9 @@
             <if test="fullstationcode != null">
                 FullStationCode = #{fullstationcode,jdbcType=VARCHAR},
             </if>
-
+            <if test="defScore != null">
+                defScore = #{defScore,jdbcType=DOUBLE},
+            </if>
             <if test="dbtype != null">
                 dbtype = #{dbtype,jdbcType=VARCHAR},
             </if>
@@ -182,6 +191,7 @@
       CScore = #{cscore,jdbcType=VARCHAR},
       DScore = #{dscore,jdbcType=VARCHAR},
       FullStationCode=#{fullstationcode,jdbcType=VARCHAR},
+      defScore = #{defScore,jdbcType=DOUBLE},
       dbtype = #{dbtype,jdbcType=VARCHAR},
       dbbk = #{dbbk,jdbcType=VARCHAR}
     where DutyCode = #{dutycode,jdbcType=VARCHAR}
@@ -231,27 +241,27 @@
 
     <!--通过stationcode查询指标类型为基础量化指标的数据-->
     <select id="queryJiChu" resultMap="BaseResultMap">
-        select DutyCode, DutyName ,AScore,BScore,CScore,DScore from duty
+        select DutyCode, DutyName ,AScore,BScore,CScore,DScore,defScore from duty
         where DutyType='0'  and StationCode =#{stationcode}
         order by OrderId
     </select>
     <!--通过stationcode查询指标类型为关键量化指标的数据-->
     <select id="queryYiBan" resultMap="BaseResultMap">
-        select DutyCode, DutyName ,AScore,BScore,CScore,DScore from duty
+        select DutyCode, DutyName ,AScore,BScore,CScore,DScore,defScore from duty
         where DutyType='1'  and StationCode =#{stationcode}
         order by OrderId
     </select>
 
     <!--通过stationcode查询指标类型为关键量化指标的数据-->
     <select id="queryDutyByType" resultMap="BaseResultMap">
-        select DutyCode, DutyName ,AScore,BScore,CScore,DScore from duty
+        select DutyCode, DutyName ,AScore,BScore,CScore,DScore,defScore from duty
         where DutyType=#{dutyType}  and StationCode =#{stationcode}
         order by OrderId
     </select>
 
     <!--通过stationcode查询指标类型为关键量化指标的数据-->
     <select id="queryDutyByStationCode" resultMap="BaseResultMap">
-        select DutyCode, DutyName, DutyType, AScore, BScore, CScore, DScore from duty
+        select DutyCode, DutyName, DutyType, AScore, BScore, CScore, DScore,defScore from duty
         where StationCode =#{stationcode} and dbtype=#{dbtype}
         order by OrderId
     </select>

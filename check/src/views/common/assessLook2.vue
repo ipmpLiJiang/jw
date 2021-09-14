@@ -13,7 +13,7 @@
         <ul class="personal-information">
           <li>
             <div class="label">姓名:</div>
-            <div class="value">{{detailData.username}}</div>
+            <div class="value">{{detailData.username}}({{detailData.moneycard}})</div>
           </li>
           <li>
             <div class="label">标题:</div>
@@ -72,8 +72,8 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in userList"
-                  :key="item.value"
+                  v-for="(item,index) in userList"
+                  :key="'r'+index"
                   :label="item.label"
                   :value="item.value"
                 >
@@ -98,7 +98,7 @@
           </li>
           <li
             v-for="(item,index) in dutyJichu"
-            :key="index"
+            :key="'zz'+index"
           >
             <div
               class="label"
@@ -119,7 +119,7 @@
           </li>
           <li
             v-for="(item,index) in dutyYiban"
-            :key="index"
+            :key="'sx'+index"
           >
             <div
               class="label"
@@ -140,7 +140,7 @@
           </li>
           <li
             v-for="(item,index) in dutyZhongdian"
-            :key="index"
+            :key="'zzjs'+index"
           >
             <div
               class="label"
@@ -161,7 +161,7 @@
           </li>
           <li
             v-for="(item,index) in dutyMubiao"
-            :key="index"
+            :key="'djcx'+index"
           >
             <div
               class="label"
@@ -182,7 +182,7 @@
           </li>
            <li
             v-for="(item,index) in dutyZuofeng"
-            :key="index"
+            :key="'zfjs'+index"
           >
             <div
               class="label"
@@ -268,7 +268,7 @@ export default {
               if (response.data.data.length > 0) {
                   let userArr = response.data.data
                   userArr.forEach(item => {
-                    this.userList.push({value: item.usercode, label: item.username})
+                    this.userList.push({value: item.usercode, label: item.username + '('+item.moneycard+')'})
                   }); 
                   this.userValue = response.data.data[0].usercode
                   this.getDetail()

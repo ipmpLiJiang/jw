@@ -201,6 +201,7 @@ public class EvaluationReportController {
 //            getResultReport(evaluationReport, r2, resultReport2);
             List<ResultReport> reports = resultReportService.selectResultReportByEvaluationCode(evaluationReport.getId());
             EvaluationReport newReprot = evaluationReportService.selectByPrimaryKey(evaluationReport.getId());
+            newReprot.setMoneycard(report.getMoneycard());
             newReprot.setUsername(report.getUsername());
             newReprot.setStationname(report.getStationname());
             newReprot.setDepartmentname(report.getDepartmentname());
@@ -250,6 +251,7 @@ public class EvaluationReportController {
 
     private void getUserInfo(EvaluationReport report, User user) {
         report.setUsername(user.getUsername());
+        report.setMoneycard(user.getMoneycard());
 //        获取岗位和部门名称
         Station station = stationService.selectByStationCode(user.getStationcode());
         EvaluationReportController.getStationInfo(report, station, departmentService);
@@ -512,6 +514,7 @@ public class EvaluationReportController {
                         dto.setUsername(evaluation.getUsername());
                         dto.setUsercode(evaluation.getUsercode());
                         dto.setDbtype(dbtype);
+
                         List<UserDto> userDtos = userDtoService.selectUserDtoByUserCode(dto,roleList);
                         //获取岗位信息
                         getStationName(userDtos, dto, evaluationDto);
@@ -609,6 +612,7 @@ public class EvaluationReportController {
                     evaluation.setCscore(dto1.getCScore());
                     evaluation.setDscore(dto1.getDScore());
                     evaluation.setDbtype(dbtype);
+                    evaluation.setMoneycard(dto1.getMoneycard());
                     evaluation.setStationname(dto1.getStationname());
                     evaluation.setDepartmentname(dto1.getDepartmentname());
                     evaluation.setMserialno(dto1.getSerialno());
