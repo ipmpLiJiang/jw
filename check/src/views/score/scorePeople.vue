@@ -142,15 +142,49 @@
           </template>
         </el-table-column>
         <el-table-column
+          label="E类评分人"
+          align="center"
+          width="100"
+        >
+          <template slot-scope="scope">
+            <el-button
+              @click="gradeUser(scope.row,'E')"
+              type="text"
+              size="small"
+            >编辑</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="F类评分人"
+          align="center"
+          width="100"
+        >
+          <template slot-scope="scope">
+            <el-button
+              @click="gradeUser(scope.row,'F')"
+              type="text"
+              size="small"
+            >编辑</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column
           label="评分系数"
+          width="200"
           show-overflow-tooltip
         >
           <template slot-scope="scope">
             <el-button
+              v-show="dbtype=='1'?true:false"
               @click="setWeight(scope.row)"
               type="text"
               size="small"
-            >A:{{scope.row.aratio ? scope.row.aratio : "0"}} B:{{scope.row.bratio ? scope.row.bratio : "0"}} C:{{scope.row.cratio ? scope.row.cratio : "0"}} D:{{scope.row.dratio ? scope.row.dratio : "0"}}</el-button>
+            >A:{{scope.row.aratio ? scope.row.aratio : "0"}} B:{{scope.row.bratio ? scope.row.bratio : "0"}} C:{{scope.row.cratio ? scope.row.cratio : "0"}} D:{{scope.row.dratio ? scope.row.dratio : "0"}} E:{{scope.row.eratio ? scope.row.eratio : "0"}} F:{{scope.row.fratio ? scope.row.fratio : "0"}}</el-button>
+            <el-button
+              v-show="dbtype=='2'?true:false"
+              @click="setWeight(scope.row)"
+              type="text"
+              size="small"
+            >A:{{scope.row.aratio2 ? scope.row.aratio2 : "0"}} B:{{scope.row.bratio2 ? scope.row.bratio2 : "0"}} C:{{scope.row.cratio2 ? scope.row.cratio2 : "0"}} D:{{scope.row.dratio2 ? scope.row.dratio2 : "0"}} E:{{scope.row.eratio2 ? scope.row.eratio2 : "0"}} F:{{scope.row.fratio2 ? scope.row.fratio2 : "0"}}</el-button>
           </template>
         </el-table-column>
         <!-- <el-table-column
@@ -350,11 +384,7 @@ export default {
       });
     },
     gradeUser (row, type) {
-      if (this.dbtype == '1') {
-        this.setGradeUser(row, type);
-      } else {
-        this.setDutyGradeUser(row,type);
-      }
+      this.setGradeUser(row, type);
     },
     //设置被评分人
     setByGradeUser(row) {

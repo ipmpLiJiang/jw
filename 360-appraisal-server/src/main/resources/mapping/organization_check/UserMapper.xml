@@ -22,6 +22,14 @@
         <result column="BRatio" jdbcType="DOUBLE" property="bratio"/>
         <result column="CRatio" jdbcType="DOUBLE" property="cratio"/>
         <result column="DRatio" jdbcType="DOUBLE" property="dratio"/>
+        <result column="ERatio" jdbcType="DOUBLE" property="eratio"/>
+        <result column="FRatio" jdbcType="DOUBLE" property="fratio"/>
+        <result column="ARatio2" jdbcType="DOUBLE" property="aratio2"/>
+        <result column="BRatio2" jdbcType="DOUBLE" property="bratio2"/>
+        <result column="CRatio2" jdbcType="DOUBLE" property="cratio2"/>
+        <result column="DRatio2" jdbcType="DOUBLE" property="dratio2"/>
+        <result column="ERatio2" jdbcType="DOUBLE" property="eratio2"/>
+        <result column="FRatio2" jdbcType="DOUBLE" property="fratio2"/>
         <result column="FullStationCode" jdbcType="VARCHAR" property="fullstationcode"/>
         <result column="RoleType" jdbcType="VARCHAR" property="roletype"/>
         <result column="Flag" jdbcType="VARCHAR" property="flag"/>
@@ -56,6 +64,14 @@
         <result column="BRatio" jdbcType="DOUBLE" property="bratio"/>
         <result column="CRatio" jdbcType="DOUBLE" property="cratio"/>
         <result column="DRatio" jdbcType="DOUBLE" property="dratio"/>
+        <result column="ERatio" jdbcType="DOUBLE" property="eratio"/>
+        <result column="FRatio" jdbcType="DOUBLE" property="fratio"/>
+        <result column="ARatio2" jdbcType="DOUBLE" property="aratio2"/>
+        <result column="BRatio2" jdbcType="DOUBLE" property="bratio2"/>
+        <result column="CRatio2" jdbcType="DOUBLE" property="cratio2"/>
+        <result column="DRatio2" jdbcType="DOUBLE" property="dratio2"/>
+        <result column="ERatio2" jdbcType="DOUBLE" property="eratio2"/>
+        <result column="FRatio2" jdbcType="DOUBLE" property="fratio2"/>
         <result column="FullStationCode" jdbcType="VARCHAR" property="fullstationcode"/>
         <result column="RoleType" jdbcType="VARCHAR" property="roletype"/>
         <result column="Flag" jdbcType="VARCHAR" property="flag"/>
@@ -66,7 +82,8 @@
     <sql id="Base_Column_List">
     UserCode, UserName, Password, UserState, Mobile, Operator, StationCode, PicturePath,
     Sex, Nation, Education, Email, Political, MoneyCard, BranchCode, ARatio, BRatio,
-    CRatio, DRatio,FullStationCode,FullBranchCode,Flag,RoleType,IsAgent,dbtype,dbbk
+    CRatio, DRatio,ERatio, FRatio,ARatio2, BRatio2, CRatio2, DRatio2,ERatio2, FRatio2,
+    FullStationCode,FullBranchCode,Flag,RoleType,IsAgent,dbtype,dbbk
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
@@ -168,6 +185,30 @@
             <if test="dratio != null">
                 DRatio,
             </if>
+            <if test="eratio != null">
+                ERatio,
+            </if>
+            <if test="fratio != null">
+                FRatio,
+            </if>
+            <if test="aratio2 != null">
+                ARatio2,
+            </if>
+            <if test="bratio2 != null">
+                BRatio2,
+            </if>
+            <if test="cratio2 != null">
+                CRatio2,
+            </if>
+            <if test="dratio2 != null">
+                DRatio2,
+            </if>
+            <if test="eratio2 != null">
+                ERatio2,
+            </if>
+            <if test="fratio2 != null">
+                FRatio2,
+            </if>
             <if test="fullstationcode != null">
                 FullStationCode,
             </if>
@@ -244,6 +285,30 @@
             </if>
             <if test="dratio != null">
                 #{dratio,jdbcType=DOUBLE},
+            </if>
+            <if test="eratio != null">
+                #{eratio,jdbcType=DOUBLE},
+            </if>
+            <if test="fratio != null">
+                #{fratio,jdbcType=DOUBLE},
+            </if>
+            <if test="aratio2 != null">
+                #{aratio2,jdbcType=DOUBLE},
+            </if>
+            <if test="bratio2 != null">
+                #{bratio2,jdbcType=DOUBLE},
+            </if>
+            <if test="cratio2 != null">
+                #{cratio2,jdbcType=DOUBLE},
+            </if>
+            <if test="dratio2 != null">
+                #{dratio2,jdbcType=DOUBLE},
+            </if>
+            <if test="eratio2 != null">
+                #{eratio2,jdbcType=DOUBLE},
+            </if>
+            <if test="fratio2 != null">
+                #{fratio2,jdbcType=DOUBLE},
             </if>
             <if test="fullstationcode != null">
                 #{fullstationcode},
@@ -327,6 +392,30 @@
             <if test="dratio != null">
                 DRatio,
             </if>
+            <if test="eratio != null">
+                ERatio,
+            </if>
+            <if test="fratio != null">
+                FRatio,
+            </if>
+            <if test="aratio2 != null">
+                ARatio2,
+            </if>
+            <if test="bratio2 != null">
+                BRatio2,
+            </if>
+            <if test="cratio2 != null">
+                CRatio2,
+            </if>
+            <if test="dratio2 != null">
+                DRatio2,
+            </if>
+            <if test="eratio2 != null">
+                ERatio2,
+            </if>
+            <if test="fratio2 != null">
+                FRatio2,
+            </if>
             <if test="fullstationcode != null">
                 FullStationCode,
             </if>
@@ -403,6 +492,30 @@
             </if>
             <if test="dratio != null">
                 #{dratio,jdbcType=DOUBLE},
+            </if>
+            <if test="eratio != null">
+                #{eratio,jdbcType=DOUBLE},
+            </if>
+            <if test="fratio != null">
+                #{fratio,jdbcType=DOUBLE},
+            </if>
+            <if test="aratio2 != null">
+                #{aratio2,jdbcType=DOUBLE},
+            </if>
+            <if test="bratio2 != null">
+                #{bratio2,jdbcType=DOUBLE},
+            </if>
+            <if test="cratio2 != null">
+                #{cratio2,jdbcType=DOUBLE},
+            </if>
+            <if test="dratio2 != null">
+                #{dratio2,jdbcType=DOUBLE},
+            </if>
+            <if test="eratio2 != null">
+                #{eratio2,jdbcType=DOUBLE},
+            </if>
+            <if test="fratio2 != null">
+                #{fratio2,jdbcType=DOUBLE},
             </if>
             <if test="fullstationcode != null">
                 #{fullstationcode},
@@ -483,6 +596,30 @@
             </if>
             <if test="dratio != null">
                 DRatio = #{dratio,jdbcType=DOUBLE},
+            </if>
+            <if test="eratio != null">
+                ERatio = #{eratio,jdbcType=DOUBLE},
+            </if>
+            <if test="fratio != null">
+                FRatio = #{fratio,jdbcType=DOUBLE},
+            </if>
+            <if test="aratio2 != null">
+                ARatio2 = #{aratio2,jdbcType=DOUBLE},
+            </if>
+            <if test="bratio2 != null">
+                BRatio2 = #{bratio2,jdbcType=DOUBLE},
+            </if>
+            <if test="cratio2 != null">
+                CRatio2 = #{cratio2,jdbcType=DOUBLE},
+            </if>
+            <if test="dratio2 != null">
+                DRatio2 = #{dratio2,jdbcType=DOUBLE},
+            </if>
+            <if test="eratio2 != null">
+                ERatio2 = #{eratio2,jdbcType=DOUBLE},
+            </if>
+            <if test="fratio2 != null">
+                FRatio2 = #{fratio2,jdbcType=DOUBLE},
             </if>
             <if test="fullstationcode != null">
                 FullStationCode = #{fullstationcode,jdbcType=VARCHAR},
@@ -567,7 +704,8 @@
     <select id="selectUserAll" resultMap="BaseResultMap">
         select u.UserCode,u.UserName,u.StationCode,u.Mobile,u.Sex,u.Nation,u.UserState,
         u.Education,u.Email,u.Political,u.MoneyCard,u.BranchCode,u.FullStationCode, u.ARatio,
-        u.BRatio,u.CRatio, u.DRatio,u.FullBranchCode,u.dbtype,u.dbbk
+        u.BRatio,u.CRatio, u.DRatio,u.ERatio, u.FRatio,u.ARatio2, u.BRatio2,u.CRatio2,
+        u.DRatio2,u.ERatio2, u.FRatio2,u.FullBranchCode,u.dbtype,u.dbbk
         from user u
         <where>
             <if test='user.dbtype!=null and user.dbtype!="" and user.dbtype=="1"'>
@@ -609,7 +747,8 @@
     <select id="selectUserPfr" resultMap="BaseResultMap">
         select u.UserCode,u.UserName,u.StationCode,u.Mobile,u.Sex,u.Nation,u.UserState,
         u.Education,u.Email,u.Political,u.MoneyCard,u.BranchCode,u.FullStationCode, u.ARatio,
-        u.BRatio,u.CRatio, u.DRatio,u.FullBranchCode,u.dbtype,u.dbbk
+        u.BRatio,u.CRatio, u.DRatio,u.ERatio, u.FRatio,u.ARatio2, u.BRatio2,u.CRatio2, u.DRatio2,
+        u.ERatio2, u.FRatio2,u.FullBranchCode,u.dbtype,u.dbbk
         from user u,role r,user_role ur
         where
         u.Flag ="0"
@@ -695,7 +834,7 @@
         </foreach>
        </if>
         <if test='dbtype!=null and dbtype !="2"'>
-            and u.dbbk= '党支部书记'
+            and u.dbbk in('1','2','3')
         </if>
        and u.Flag="0"
        and u.UserState="1"
@@ -796,7 +935,7 @@
      and ur.RoleCode ='150'
      </if>
         <if test='dbtype!=null and dbtype!="2"'>
-            and u.dbbk!='' and u.dbbk is not null and u.dbbk !='党支部书记'
+            and u.dbbk!='' and u.dbbk is not null and u.dbbk not in('1','2','3')
         </if>
      and u.Flag="0"
      and u.UserState="1"

@@ -11,6 +11,9 @@ public class DutyCodeAndScore {
     private String topicId;
     private String score;
     private String scoretype;
+    private String cpsm;
+    private String zpsm;
+
 
     public String getTopicId() {
         return topicId;
@@ -34,5 +37,21 @@ public class DutyCodeAndScore {
 
     public void setScoretype(String scoretype) {
         this.scoretype = scoretype;
+    }
+
+    public String getZpsm() {
+        return zpsm;
+    }
+
+    public void setZpsm(String zpsm) {
+        this.zpsm = zpsm;
+    }
+
+    public String getCpsm() {
+        return cpsm;
+    }
+
+    public void setCpsm(String cpsm) {
+        this.cpsm = cpsm;
     }
 }

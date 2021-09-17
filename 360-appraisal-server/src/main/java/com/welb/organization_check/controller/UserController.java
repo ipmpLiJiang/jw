@@ -145,7 +145,9 @@ public class UserController extends BaseController {
                 }
                 users = userService.selectUserAll(user,roleList);
                 if (user.getDbtype() != null && user.getDbtype().equals("1")) {
-                    users = users.stream().filter(p -> p.getDbbk() != null && p.getDbbk().equals("党支部书记")).collect(Collectors.toList());
+                    users = users.stream().filter(p -> p.getDbbk() != null && (
+                            p.getDbbk().equals("1") || p.getDbbk().equals("2") || p.getDbbk().equals("3")
+                            )).collect(Collectors.toList());
                 }
                 PageInfo<User> pageInfo = new PageInfo<>(users);
                 users = pageInfo.getList();

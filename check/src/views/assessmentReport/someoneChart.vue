@@ -34,6 +34,16 @@
       >
       </el-table-column>
       <el-table-column
+        prop="escore"
+        label="E类评分人"
+      >
+      </el-table-column>
+      <el-table-column
+        prop="fscore"
+        label="F类评分人"
+      >
+      </el-table-column>
+      <el-table-column
         prop="sumMbAvgScore"
         v-if="dbtype=='1'?false:true"
         label="目标平均"
@@ -113,18 +123,24 @@ export default {
         let serDataB = []
         let serDataC = []
         let serDataD = []
+        let serDataE = []
+        let serDataF = []
         let serData = []
         if(this.tableData !=undefined && this.tableData.length > 0) {
           serDataA = [this.tableData[0].ascore, this.tableData[1].ascore, this.tableData[2].ascore, this.tableData[3].ascore]
           serDataB = [this.tableData[0].bscore, this.tableData[1].bscore, this.tableData[2].bscore, this.tableData[3].bscore]
           serDataC = [this.tableData[0].cscore, this.tableData[1].cscore, this.tableData[2].cscore, this.tableData[3].cscore]
           serDataD = [this.tableData[0].dscore, this.tableData[1].dscore, this.tableData[2].dscore, this.tableData[3].dscore]
+          serDataE = [this.tableData[0].escore, this.tableData[1].escore, this.tableData[2].escore, this.tableData[3].escore]
+          serDataF = [this.tableData[0].fscore, this.tableData[1].fscore, this.tableData[2].fscore, this.tableData[3].fscore]
           serData = [this.tableData[0].score, this.tableData[1].score, this.tableData[2].score, this.tableData[3].score]
           if(this.dbtype =='1') {
             serDataA.push(this.tableData[4].ascore)
             serDataB.push(this.tableData[4].bscore)
             serDataC.push(this.tableData[4].cscore)
             serDataD.push(this.tableData[4].dscore)
+            serDataE.push(this.tableData[4].escore)
+            serDataF.push(this.tableData[4].fscore)
             serData.push(this.tableData[4].score)
           }
         }
@@ -162,6 +178,16 @@ export default {
             name: "D类评分人",
             type: "bar",
             data: serDataD
+          },
+          {
+            name: "E类评分人",
+            type: "bar",
+            data: serDataE
+          },
+          {
+            name: "F类评分人",
+            type: "bar",
+            data: serDataF
           }
           // {
           //   name: "总体平均分",
@@ -177,9 +203,9 @@ export default {
             type: "bar",
             data: serDataAvgMb
           });
-        this.myColor = ["#4cabce", "#e5323e", "#f00220","#003366","#6495ED","#006699"]
+        this.myColor = ["#4cabce", "#e5323e", "#f00220","#003366","#B3D9D9","	#D8D8EB","#6495ED","#006699"]
       }else{
-        this.myColor = ["#4cabce", "#e5323e", "#f00220","#003366", "#006699"]
+        this.myColor = ["#4cabce", "#e5323e", "#f00220","#003366","#B3D9D9","	#D8D8EB", "#006699"]
       }
       this.series.push({
             name: "个人得分",

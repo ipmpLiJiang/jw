@@ -11,6 +11,7 @@ public class ScoreHistory {
     public static HashMap<String, String> months = new LinkedHashMap<>();
     public static HashMap<String, String> scorestatusList = new LinkedHashMap<>();
     public static Map<String, String> roles = new LinkedHashMap<>();
+    public static Map<String, String> dbbks = new LinkedHashMap<>();
 
 
     static {
@@ -47,6 +48,10 @@ public class ScoreHistory {
         roles.put("400","考勤超级管理员");
         roles.put("500","考勤管理员");
 
+        dbbks.put("1","组织委员纪检委员");
+        dbbks.put("2","宣传委员青年委员");
+        dbbks.put("3","党支部书记");
+        dbbks.put("4","总党支部书记");
 
     }
 
@@ -105,6 +110,10 @@ public class ScoreHistory {
     private Double cscore;
 
     private Double dscore;
+
+    private Double escore;
+
+    private Double fscore;
 
     private Double totalscore;
 
@@ -186,6 +195,22 @@ public class ScoreHistory {
 
     public void setDscore(Double dscore) {
         this.dscore = dscore;
+    }
+
+    public Double getEscore() {
+        return escore;
+    }
+
+    public void setEscore(Double escore) {
+        this.escore = escore;
+    }
+
+    public Double getFscore() {
+        return fscore;
+    }
+
+    public void setFscore(Double fscore) {
+        this.fscore = fscore;
     }
 
     public Double getTotalscore() {
@@ -274,12 +299,34 @@ public class ScoreHistory {
         this.dbtype = dbtype == null ? null : dbtype.trim();
     }
 
+    public static Map<String, String> getDbbks() {
+        return dbbks;
+    }
+
+    public static void setDbbks(Map<String, String> dbbks) {
+        User.dbbks = dbbks;
+    }
+
+
     public String getDbbk() {
         return dbbk;
     }
 
     public void setDbbk(String dbbk) {
         this.dbbk = dbbk == null ? null : dbbk.trim();
+    }
+
+    private String dbbkName;
+
+    public String getDbbkName() {
+        if (dbbk!=null){
+            return dbbks.get(this.dbbk);
+        }
+        return dbbkName;
+    }
+
+    public void setDbbkName(String dbbkName) {
+        this.dbbkName = dbbkName;
     }
 
     public Integer getMbCount() { return mbCount; }

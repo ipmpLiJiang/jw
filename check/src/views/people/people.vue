@@ -108,7 +108,7 @@
         </el-table-column>
         <el-table-column
           label="党内身份"
-          prop="dbbk"
+          prop="dbbkName"
         >
         </el-table-column>
         <el-table-column

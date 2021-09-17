@@ -68,58 +68,58 @@ public class UserScoreDtoServiceImpl implements IUserScoreDtoService {
                             sumScore = sumScore / query.size();
                         }
                         if (type.equals("A")) {
-                            dar.setARatio(query.get(0).getRatio());
-                            dar.setAScore(sumScore);
+                            dar.setAratio(query.get(0).getRatio());
+                            dar.setAscore(sumScore);
                         }
                         if (type.equals("B")) {
-                            dar.setBRatio(query.get(0).getRatio());
-                            dar.setBScore(sumScore);
+                            dar.setBratio(query.get(0).getRatio());
+                            dar.setBscore(sumScore);
                         }
                         if (type.equals("C")) {
-                            dar.setCRatio(query.get(0).getRatio());
-                            dar.setCScore(sumScore);
+                            dar.setCratio(query.get(0).getRatio());
+                            dar.setCscore(sumScore);
                         }
                         if (type.equals("D")) {
-                            dar.setDRatio(query.get(0).getRatio());
-                            dar.setDScore(sumScore);
+                            dar.setDratio(query.get(0).getRatio());
+                            dar.setDscore(sumScore);
                         }
                     } else {
                         if (type.equals("A")) {
-                            dar.setARatio(0.0);
-                            dar.setAScore(0.0);
+                            dar.setAratio(0.0);
+                            dar.setAscore(0.0);
                         }
                         if (type.equals("B")) {
-                            dar.setBRatio(0.0);
-                            dar.setBScore(0.0);
+                            dar.setBratio(0.0);
+                            dar.setBscore(0.0);
                         }
                         if (type.equals("C")) {
-                            dar.setCRatio(0.0);
-                            dar.setCScore(0.0);
+                            dar.setCratio(0.0);
+                            dar.setCscore(0.0);
                         }
                         if (type.equals("D")) {
-                            dar.setDRatio(0.0);
-                            dar.setDScore(0.0);
+                            dar.setDratio(0.0);
+                            dar.setDscore(0.0);
                         }
                     }
                 }
-                dar.setRatio(dar.getARatio() + dar.getBRatio() + dar.getCRatio() + dar.getDRatio());
+                dar.setRatio(dar.getAratio() + dar.getBratio() + dar.getCratio() + dar.getDratio());
                 if (dar.getRatio() > 0) {
                     if (isJiSuan) {
-                        dar.setAScore(dar.getAScore() * dar.getARatio() / dar.getRatio());
-                        dar.setBScore(dar.getBScore() * dar.getBRatio() / dar.getRatio());
-                        dar.setCScore(dar.getCScore() * dar.getCRatio() / dar.getRatio());
-                        dar.setDScore(dar.getDScore() * dar.getDRatio() / dar.getRatio());
+                        dar.setAscore(dar.getAscore() * dar.getAratio() / dar.getRatio());
+                        dar.setBscore(dar.getBscore() * dar.getBratio() / dar.getRatio());
+                        dar.setCscore(dar.getCscore() * dar.getCratio() / dar.getRatio());
+                        dar.setDscore(dar.getDscore() * dar.getDratio() / dar.getRatio());
 
-                        dar.setScore(dar.getAScore() + dar.getBScore() + dar.getCScore() + dar.getDScore());
+                        dar.setScore(dar.getAscore() + dar.getBscore() + dar.getCscore() + dar.getDscore());
                     } else {
-                        dar.setAScore(dar.getAScore());
-                        dar.setBScore(dar.getBScore());
-                        dar.setCScore(dar.getCScore());
-                        dar.setDScore(dar.getDScore());
-                        aScore = dar.getAScore() * dar.getARatio() / dar.getRatio();
-                        bScore = dar.getBScore() * dar.getBRatio() / dar.getRatio();
-                        cScore = dar.getCScore() * dar.getCRatio() / dar.getRatio();
-                        dScore = dar.getDScore() * dar.getDRatio() / dar.getRatio();
+                        dar.setAscore(dar.getAscore());
+                        dar.setBscore(dar.getBscore());
+                        dar.setCscore(dar.getCscore());
+                        dar.setDscore(dar.getDscore());
+                        aScore = dar.getAscore() * dar.getAratio() / dar.getRatio();
+                        bScore = dar.getBscore() * dar.getBratio() / dar.getRatio();
+                        cScore = dar.getCscore() * dar.getCratio() / dar.getRatio();
+                        dScore = dar.getDscore() * dar.getDratio() / dar.getRatio();
                         dar.setScore(aScore + bScore + cScore + dScore );
                     }
                 } else {

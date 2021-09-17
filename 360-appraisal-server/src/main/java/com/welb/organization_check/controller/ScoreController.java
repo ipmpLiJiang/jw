@@ -350,14 +350,16 @@ public class ScoreController {
                     User user = userService.findUserRoleByUserCode(scorringcodes[i]);
                     String moneycard = user.getMoneycard();
                     String username = user.getUsername();
-                    if (dbtype.equals("1") && user.getDbbk().equals("总党支部书记")) {
+                    //4 总党支部书记
+                    if (dbtype.equals("1") && user.getDbbk().equals("4")) {
                         temp1 = true;
                         sb1.append(username + "(" + moneycard + "-" + scoretype + ")").append(";");
                     } else {
-                        if (dbtype.equals("2") && !user.getRolecode().equals("150")) {
-                            temp1 = true;
-                            sb1.append(username + "(" + moneycard + "-" + scoretype + ")").append(";");
-                        } else {
+                        //干部考核 判断 打分人不能是 普通用户 需求更改 temp1 只能等于 false 下面代码不删除
+//                        if (dbtype.equals("2") && !user.getRolecode().equals("150")) {
+//                            temp1 = true;
+//                            sb1.append(username + "(" + moneycard + "-" + scoretype + ")").append(";");
+//                        } else {
                             score1.setScorredcode(score.getScorredcode());
                             score1.setScoretype(scoretype);
                             score1.setDbtype(dbtype);
@@ -375,7 +377,7 @@ public class ScoreController {
                                 scorringcode.add(score1.getScorringcode());
                             }
                         }
-                    }
+//                    }
                 }
                 if (flag == 1) {
                     map.put("msg", "不能添加自己作为评分人。");

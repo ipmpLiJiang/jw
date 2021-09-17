@@ -32,6 +32,8 @@
         <result column="BScore" property="bscore" jdbcType="DOUBLE"/>
         <result column="CScore" property="cscore" jdbcType="DOUBLE"/>
         <result column="DScore" property="dscore" jdbcType="DOUBLE"/>
+        <result column="EScore" property="escore" jdbcType="DOUBLE"/>
+        <result column="FScore" property="fscore" jdbcType="DOUBLE"/>
         <result column="TotalScore" property="totalscore" jdbcType="DOUBLE"/>
         <result column="SumZdScore" property="sumZdScore" jdbcType="DOUBLE"/>
         <result column="SumMbScore" property="sumMbScore" jdbcType="DOUBLE"/>
@@ -50,7 +52,7 @@
         <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-    Id, UserCode, Year, month, ScoreStatus, AScore, BScore, CScore, DScore, TotalScore, SumZdScore, SumMbScore, SumZfScore, AvgZdScore, AvgMbScore, SumTotalScore, DfScore, dbtype,dbbk
+    Id, UserCode, Year, month, ScoreStatus, AScore, BScore, CScore, DScore, EScore, FScore, TotalScore, SumZdScore, SumMbScore, SumZfScore, AvgZdScore, AvgMbScore, SumTotalScore, DfScore, dbtype,dbbk
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -92,6 +94,12 @@
             </if>
             <if test="dscore != null">
                 DScore,
+            </if>
+            <if test="escore != null">
+                EScore,
+            </if>
+            <if test="fscore != null">
+                FScore,
             </if>
             <if test="totalscore != null">
                 TotalScore,
@@ -146,6 +154,12 @@
             <if test="dscore != null">
                 #{dscore,jdbcType=DOUBLE},
             </if>
+            <if test="escore != null">
+                #{escore,jdbcType=DOUBLE},
+            </if>
+            <if test="fscore != null">
+                #{fscore,jdbcType=DOUBLE},
+            </if>
             <if test="totalscore != null">
                 #{totalscore,jdbcType=DOUBLE},
             </if>
@@ -199,6 +213,12 @@
             <if test="dscore != null">
                 DScore = #{dscore,jdbcType=DOUBLE},
             </if>
+            <if test="escore != null">
+                EScore = #{escore,jdbcType=DOUBLE},
+            </if>
+            <if test="fscore != null">
+                FScore = #{fscore,jdbcType=DOUBLE},
+            </if>
             <if test="totalscore != null">
                 TotalScore = #{totalscore,jdbcType=DOUBLE},
             </if>
@@ -249,6 +269,8 @@
         h.BScore,
         h.CScore,
         h.DScore,
+        h.EScore,
+        h.FScore,
         h.TotalScore,
         h.SumZdScore,
         h.SumMbScore,
@@ -381,7 +403,7 @@
             and ur.RoleCode ='150'
         </if>
         <if test='dbtype!=null and dbtype!="2"'>
-            and u.dbbk!='' and u.dbbk is not null and u.dbbk !='党支部书记'
+            and u.dbbk!='' and u.dbbk is not null and u.dbbk not in('1','2','3')
         </if>
 
     and  u.Flag="0"
@@ -420,7 +442,7 @@
 
 
     <insert id="batchInsert">
-        insert into scorehistory(Id, UserCode, Year, month, ScoreStatus, AScore, BScore, CScore, DScore, TotalScore,dbtype,dbbk)
+        insert into scorehistory(Id, UserCode, Year, month, ScoreStatus, AScore, BScore, CScore, DScore, EScore, FScore,TotalScore,dbtype,dbbk)
         values
         <foreach collection="list" item="sh" separator=",">
             (
@@ -433,6 +455,8 @@
             #{sh.bscore},
             #{sh.cscore},
             #{sh.dscore},
+            #{sh.escore},
+            #{sh.fscore},
             #{sh.totalscore},
             #{sh.dbtype,jdbcType=VARCHAR},
             #{sh.dbbk,jdbcType=VARCHAR}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.welb.organization_check.mapper.UserScoreDtoMapper">
-    <resultMap id="BaseResultMap" type="com.welb.organization_check.dto.UserDto">
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.dto.UserScoreDto">
         <result column="Year" property="year" jdbcType="VARCHAR"/>
         <result column="Month" property="month" jdbcType="VARCHAR"/>
         <result column="ScoredCode" property="scoredCode" jdbcType="VARCHAR"/>
@@ -17,6 +17,8 @@
         <result column="BRatio" property="bratio" jdbcType="DOUBLE"/>
         <result column="CRatio" property="cratio" jdbcType="DOUBLE"/>
         <result column="DRatio" property="dratio" jdbcType="DOUBLE"/>
+        <result column="ERatio" property="eratio" jdbcType="DOUBLE"/>
+        <result column="FRatio" property="fratio" jdbcType="DOUBLE"/>
         <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
         <result column="BranchCode" property="branchCode" jdbcType="VARCHAR"/>
     </resultMap>
@@ -38,6 +40,8 @@
         u.BRatio,
         u.CRatio,
         u.DRatio,
+        u.ERatio,
+        u.FRatio,
         u.dbbk,
         u.BranchCode
         from
@@ -76,6 +80,8 @@
         u.BRatio,
         u.CRatio,
         u.DRatio,
+        u.ERatio,
+        u.FRatio,
         u.dbbk,
         u.BranchCode
         from

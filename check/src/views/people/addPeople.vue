@@ -189,15 +189,19 @@ export default {
     return {
       dbbk: [
          {
-          value: "党支部工作人员",
-          label: "党支部工作人员"
+          value: "1",
+          label: "组织委员纪检委员"
         },
-       {
-          value: "党支部书记",
+        {
+          value: "2",
+          label: "宣传委员青年委员"
+        },
+        {
+          value: "3",
           label: "党支部书记"
         },
         {
-          value: "总党支部书记",
+          value: "4",
           label: "总党支部书记"
         }
       ],

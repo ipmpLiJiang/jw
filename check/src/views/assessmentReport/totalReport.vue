@@ -98,7 +98,7 @@
         >
         </el-table-column>
         <el-table-column
-          prop="dbbk"
+          prop="dbbkName"
           v-if="dbtype=='2'?false:true"
           label="党内身份"
         >
@@ -149,6 +149,30 @@
               type="text"
               size="small"
             >{{ scope.row.dscore }}</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="escore"
+          label="E类得分"
+        >
+        <template slot-scope="scope">
+            <el-button
+              @click="lookAssess(scope.row,'E')"
+              type="text"
+              size="small"
+            >{{ scope.row.escore }}</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="fscore"
+          label="F类得分"
+        >
+        <template slot-scope="scope">
+            <el-button
+              @click="lookAssess(scope.row,'F')"
+              type="text"
+              size="small"
+            >{{ scope.row.fscore }}</el-button>
           </template>
         </el-table-column>
         <el-table-column
@@ -363,6 +387,12 @@ export default {
         isOK = true
       }
       if(!isOK && row.dscore !=0 && scoreType=='D'){
+        isOK = true
+      }
+      if(!isOK && row.escore !=0 && scoreType=='E'){
+        isOK = true
+      }
+      if(!isOK && row.fscore !=0 && scoreType=='F'){
         isOK = true
       }
       if(isOK){

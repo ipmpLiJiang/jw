@@ -25,6 +25,10 @@ public class Duty {
 
     private String scoretype;
 
+    private String cpsm;
+
+    private String zpsm;
+
     private String typename;
 
     private Integer orderid;
@@ -204,5 +208,21 @@ public class Duty {
 
     public void setScore(String score) {
         this.score = score;
+    }
+
+    public String getCpsm() {
+        return cpsm;
+    }
+
+    public void setCpsm(String cpsm) {
+        this.cpsm = cpsm == null ? null : cpsm.trim();
+    }
+
+    public String getZpsm() {
+        return zpsm;
+    }
+
+    public void setZpsm(String zpsm) {
+        this.zpsm = zpsm == null ? null : zpsm.trim();
     }
 }

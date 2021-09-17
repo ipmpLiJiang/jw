@@ -99,6 +99,27 @@
             </el-form-item>
           </el-col>
           <el-col
+            :span="6"
+            v-if="dbtype=='1'?false:true"
+            style="margin-top:20px;"
+          >
+            <el-form-item label="角色权限">
+              <el-select
+                v-model="search.rolecode"
+                clearable
+                placeholder="请选择"
+              >
+              <el-option
+                v-for="item in roleOption"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col
             :span="24"
             class="edit-btn"
           >
@@ -161,7 +182,7 @@
         >
         </el-table-column>
         <el-table-column
-          prop="dbbk"
+          prop="dbbkName"
           v-if="dbtype=='2'?false:true"
           label="党内身份"
         >
@@ -237,6 +258,32 @@
               type="text"
               size="small"
             >{{ scope.row.dscore }}</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="E"
+          prop="score"
+          show-overflow-tooltip
+        >
+        <template slot-scope="scope">
+            <el-button
+              @click="lookAssess(scope.row,'E')"
+              type="text"
+              size="small"
+            >{{ scope.row.escore }}</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="F"
+          prop="score"
+          show-overflow-tooltip
+        >
+        <template slot-scope="scope">
+            <el-button
+              @click="lookAssess(scope.row,'F')"
+              type="text"
+              size="small"
+            >{{ scope.row.fscore }}</el-button>
           </template>
         </el-table-column>
         <el-table-column
@@ -419,9 +466,18 @@ export default {
         },
       ],
       title: "",
+      roleOption: [{
+          value: "150",
+          label: "打分用户"
+        },
+        {
+          value: "300",
+          label: "普通用户"
+        }],
       search: {
         stationcode: "",
         username: "",
+        rolecode: this.$store.state.user.user.dbtype == '2'? '300':'',
         month: "",
         year: "",
         state: "",
@@ -506,6 +562,12 @@ export default {
       if(!isOK && row.dscore !=0 && scoreType=='D'){
         isOK = true
       }
+      if(!isOK && row.escore !=0 && scoreType=='E'){
+        isOK = true
+      }
+      if(!isOK && row.fscore !=0 && scoreType=='F'){
+        isOK = true
+      }
       if(isOK){
         if (this.dbtype == '2') {
           this.swDialogVisible = true;
@@ -549,6 +611,7 @@ export default {
       params.month = this.search.month;
       params.year = this.search.year;
       params.state = this.search.state;
+      params.rolecode = this.search.rolecode;
       params.scorestatus = this.search.scorestatus;
       params.dbtype = this.dbtype;
       new Promise((response, reject) => {

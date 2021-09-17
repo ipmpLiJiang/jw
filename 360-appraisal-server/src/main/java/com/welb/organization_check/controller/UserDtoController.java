@@ -164,37 +164,42 @@ public class UserDtoController {
             List<User> users = new ArrayList<>();
             long count = 0;
             List<User> scorringUserList = userService.selectUserPfr(dbtype);
-            if (dbtype.equals("2")) {
-                List<String> roleList = new ArrayList<>();
-                roleList.add("300"); //普通用户
-                roleList.add("150"); //打分用户
-                users = userService.findUserByRoleCode(roleList, dbtype);
-            } else { //党部考核
-                List<String> roleList = new ArrayList<>();
-                roleList.add("100");
-                roleList.add("150");
-                roleList.add("200");
-                roleList.add("300");
-                roleList.add("50");
-                User user = new User();
-                user.setDbtype(dbtype);
-                users = userService.selectUserAll(user, roleList);
-            }
-            for (User u : scorringUserList) {
-                count = users.stream().filter(s -> s.getUsercode().equals(u.getUsercode())).count();
-                if (count == 0) {
-                    users.add(u);
+            if(scorringUserList.size()>0) {
+                if (dbtype.equals("2")) {
+                    List<String> roleList = new ArrayList<>();
+                    roleList.add("300"); //普通用户
+                    roleList.add("150"); //打分用户
+                    users = userService.findUserByRoleCode(roleList, dbtype);
+                } else { //党部考核
+                    List<String> roleList = new ArrayList<>();
+                    roleList.add("100");
+                    roleList.add("150");
+                    roleList.add("200");
+                    roleList.add("300");
+                    roleList.add("50");
+                    User user = new User();
+                    user.setDbtype(dbtype);
+                    users = userService.selectUserAll(user, roleList);
                 }
-            }
-            if (users.size() > 0) {
-                List<MonthSummary> summaryList = summaryService.selectSummaryListByYearAndMonth(setTime.getYear(), setTime.getMonth(), dbtype);
-                // summaryList =summaryList.stream().filter(p->p.getDbtype()!=null && p.getDbtype().equals(dbtype)).collect(Collectors.toList());
-                if (summaryList.size() != users.size()) {
-                    addMonthSummary(setTime.getYear(), setTime.getMonth(), users, dbtype);
+                for (User u : scorringUserList) {
+                    count = users.stream().filter(s -> s.getUsercode().equals(u.getUsercode())).count();
+                    if (count == 0) {
+                        users.add(u);
+                    }
+                }
+                if (users.size() > 0) {
+                    List<MonthSummary> summaryList = summaryService.selectSummaryListByYearAndMonth(setTime.getYear(), setTime.getMonth(), dbtype);
+                    // summaryList =summaryList.stream().filter(p->p.getDbtype()!=null && p.getDbtype().equals(dbtype)).collect(Collectors.toList());
+                    if (summaryList.size() != users.size()) {
+                        addMonthSummary(setTime.getYear(), setTime.getMonth(), users, dbtype);
+
+                    }
+                    getUserDtos(dto, map, setTime.getYear(), setTime.getMonth(), pageNum, pageSize, dbtype);
 
                 }
-                getUserDtos(dto, map, setTime.getYear(), setTime.getMonth(), pageNum, pageSize, dbtype);
-
+            }else{
+                map.put("msg", "未创建评分人关系.");
+                map.put("code", 1);
             }
         }
     }
@@ -236,7 +241,7 @@ public class UserDtoController {
             userDtos = dtoService.selectUserDtoLike(dto, roleList);
         }
 
-//        this.getShengCheng(year, month, dbtype);
+        this.getShengCheng(year, month, dbtype);
         //getStationName(userDtos);
         PageInfo<UserDto> pageInfo = new PageInfo<>(userDtos);
         userDtos = pageInfo.getList();
@@ -255,7 +260,8 @@ public class UserDtoController {
         List<UserDto> bdfrUserDboList = new ArrayList<>();
         //筛选出被打分人
         if (dbtype.equals("1")) {
-            bdfrUserDboList = userDtoList.stream().filter(s -> s.getDbbk().equals("党支部书记")).collect(Collectors.toList());
+            bdfrUserDboList = userDtoList.stream().filter(s -> s.getDbbk() != null && (s.getDbbk().equals("1") ||
+                    s.getDbbk().equals("2") || s.getDbbk().equals("3"))).collect(Collectors.toList());
         } else {
             bdfrUserDboList = userDtoList.stream().filter(s -> s.getRolecode().equals("300")).collect(Collectors.toList());
         }
@@ -289,16 +295,13 @@ public class UserDtoController {
             scoreTypeList.add("B");
             scoreTypeList.add("C");
             scoreTypeList.add("D");
+            scoreTypeList.add("E");
+            scoreTypeList.add("F");
 
-            if (dbtype.equals("1")) {
-                this.getShengChengResult(year, month, scoreTypeList, bdfrUserDboList, dutyList, queryDutyList, scoreList, queryScoreList, historyList,
-                        bdfrHistoryList, queryHistoryList, bdfrFlowList, queryFlowList, queryHbFlowList, bdfrDetailList, queryDetailList,
-                        insertFlowList, updateFlowList, insertHistoryList, updateHistoryList, insertDetailList, dbtype);
-            } else {
-                this.getDutyShengChengResult(year, month, scoreTypeList, bdfrUserDboList, dutyList, queryDutyList, scoreList, queryScoreList, historyList,
-                        bdfrHistoryList, queryHistoryList, bdfrFlowList, queryFlowList, queryHbFlowList, bdfrDetailList, queryDetailList,
-                        insertFlowList, updateFlowList, insertHistoryList, updateHistoryList, insertDetailList, dbtype);
-            }
+            this.getShengChengResult(year, month, scoreTypeList, bdfrUserDboList, dutyList, queryDutyList, scoreList, queryScoreList, historyList,
+                    bdfrHistoryList, queryHistoryList, bdfrFlowList, queryFlowList, queryHbFlowList, bdfrDetailList, queryDetailList,
+                    insertFlowList, updateFlowList, insertHistoryList, updateHistoryList, insertDetailList, dbtype);
+
             if (insertHistoryList.size() > 0) {
                 historyService.batchInsert(insertHistoryList);
             }
@@ -319,7 +322,7 @@ public class UserDtoController {
         }
     }
 
-    //干部考核
+    //需求更改此方面 不用
     private void getDutyShengChengResult(String year, String month, List<String> scoreTypeList, List<UserDto> bdfrUserDboList,
                                          List<Duty> dutyList, List<Duty> queryDutyList,
                                          List<Score> scoreList, List<Score> queryScoreList,
@@ -486,10 +489,10 @@ public class UserDtoController {
             }
             dutyAndRatioList = userScoreDtoService.getTypeUserDutyScore(dutyAndRatioList, false);
             sumScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getScore).sum();
-            aScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getAScore).sum();
-            bScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getBScore).sum();
-            cScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getCScore).sum();
-            dScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getDScore).sum();
+            aScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getAscore).sum();
+            bScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getBscore).sum();
+            cScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getCscore).sum();
+            dScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getDscore).sum();
 
             history.setTotalscore(sumScore);
             history.setAscore(aScore);
@@ -510,7 +513,7 @@ public class UserDtoController {
         }
     }
 
-    //党办考核
+
     private void getShengChengResult(String year, String month, List<String> scoreTypeList, List<UserDto> bdfrUserDboList,
                                      List<Duty> dutyList, List<Duty> queryDutyList,
                                      List<Score> scoreList, List<Score> queryScoreList,
@@ -540,6 +543,8 @@ public class UserDtoController {
                 history.setBscore(0.0);
                 history.setCscore(0.0);
                 history.setDscore(0.0);
+                history.setEscore(0.0);
+                history.setFscore(0.0);
                 history.setTotalscore(0.0);
                 history.setDbtype(dbtype);
                 historyList.add(history);
@@ -575,6 +580,12 @@ public class UserDtoController {
                                 }
                                 if (scoreType.equals("D")) {
                                     ratio = dto.getDratio();
+                                }
+                                if (scoreType.equals("E")) {
+                                    ratio = dto.getEratio();
+                                }
+                                if (scoreType.equals("F")) {
+                                    ratio = dto.getFratio();
                                 }
                                 scoreFlow.setRatio(ratio);
                                 scoreFlow.setDbtype(dbtype);
@@ -639,10 +650,14 @@ public class UserDtoController {
         Double BRatio = 0.0;
         Double CRatio = 0.0;
         Double DRatio = 0.0;
+        Double ERatio = 0.0;
+        Double FRatio = 0.0;
         Double AScore = 0.0;
         Double BScore = 0.0;
         Double CScore = 0.0;
         Double DScore = 0.0;
+        Double EScore = 0.0;
+        Double FScore = 0.0;
 
         Double totalScore = 0.0;
         Double totalRatio = 0.0;
@@ -671,6 +686,14 @@ public class UserDtoController {
                             DRatio = ratio;
                             DScore = sumScore == 0 ? 0.0 : sumScore / queryHbFlowList.size();
                         }
+                        if (scoreType.equals("E")) {
+                            ERatio = ratio;
+                            EScore = sumScore == 0 ? 0.0 : sumScore / queryHbFlowList.size();
+                        }
+                        if (scoreType.equals("F")) {
+                            FRatio = ratio;
+                            FScore = sumScore == 0 ? 0.0 : sumScore / queryHbFlowList.size();
+                        }
                         totalRatio += ratio;
                     }
                 }
@@ -678,8 +701,11 @@ public class UserDtoController {
                 h.setBscore(BScore);
                 h.setCscore(CScore);
                 h.setDscore(DScore);
+                h.setEscore(EScore);
+                h.setFscore(FScore);
                 totalScore = (AScore == 0 ? 0 : AScore * ARatio / totalRatio) + (BScore == 0 ? 0 : BScore * BRatio / totalRatio) +
-                        (CScore == 0 ? 0 : CScore * CRatio / totalRatio) + (DScore == 0 ? 0 : DScore * DRatio / totalRatio);
+                        (CScore == 0 ? 0 : CScore * CRatio / totalRatio) + (DScore == 0 ? 0 : DScore * DRatio / totalRatio) +
+                        (EScore == 0 ? 0 : EScore * ERatio / totalRatio) + (FScore == 0 ? 0 : FScore * FRatio / totalRatio);
                 h.setTotalscore(totalScore);
                 if (h.getId() == null) {
                     insertHistoryList.add(h);
@@ -691,10 +717,14 @@ public class UserDtoController {
                 BRatio = 0.0;
                 CRatio = 0.0;
                 DRatio = 0.0;
+                ERatio = 0.0;
+                FRatio = 0.0;
                 AScore = 0.0;
                 BScore = 0.0;
                 CScore = 0.0;
                 DScore = 0.0;
+                EScore = 0.0;
+                FScore = 0.0;
             }
         }
     }
@@ -1285,8 +1315,17 @@ public class UserDtoController {
             try {
                 List<String> roleList = new ArrayList<>();
                 if (history.getDbtype().equals("2")) {
-                    roleList.add("300");//普通用戶
-                    roleList.add("150");//打分用戶
+                    if(history.getRolecode() == null || history.getRolecode().equals("")) {
+                        roleList.add("300"); //普通用户
+                        roleList.add("150"); //打分用户
+                    } else {
+                        if(history.getRolecode() != null && history.getRolecode().equals("150")) {
+                            roleList.add("150"); //打分用户
+                        }
+                        if(history.getRolecode() != null && history.getRolecode().equals("300")) {
+                            roleList.add("300"); //普通用户
+                        }
+                    }
                 }
                 ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth("", "", history.getDbtype());
                 if (history.getYear() != null && !history.getYear().equals("") && history.getMonth() != null && !history.getMonth().equals("")) {
@@ -1362,6 +1401,8 @@ public class UserDtoController {
                     score.setCscore(0.0);
                     score.setDbtype(manualSetTime.getDbtype());
                     score.setDscore(0.0);
+                    score.setEscore(0.0);
+                    score.setFscore(0.0);
                     score.setTotalscore(0.0);
                     scoreHistoryList.add(score);
                 }

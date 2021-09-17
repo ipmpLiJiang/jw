@@ -211,7 +211,7 @@ public class UserSummaryDtoController {
                 String sysTime = DateUtil.getTime();
 
                 //手动考核-查看所有季节总结
-                manualSelectUserSummaryLike(summaryDto, map, usercode, year, quarter, count, sysTime, pageNum, pageSize, summaryDto.getDbtype());
+                manualSelectUserSummaryLike(summaryDto, map, usercode, year, quarter, count, sysTime, pageNum, pageSize);
 
             } else {
                 try {//当年份或者月度不为空的时候   查询的是历史的个人评分数据
@@ -237,16 +237,16 @@ public class UserSummaryDtoController {
         return map;
     }
 
-    private void manualSelectUserSummaryLike(UserSummaryDto summaryDto, ModelMap map, String usercode, String year, String quarter, int count, String sysTime, int pageNum, int pageSize, String dbtype) {
+    private void manualSelectUserSummaryLike(UserSummaryDto summaryDto, ModelMap map, String usercode, String year, String quarter, int count, String sysTime, int pageNum, int pageSize) {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "",summaryDto.getDbtype());
         if (setTime != null) {
             //新一月度考核-手动设置的考核时间未超过系统自动考核时间
             try {
                 //开始新的月度考核
 
                 month = quarter;
-                getSummary(summaryDto, map, usercode, setTime.getYear(), setTime.getMonth(), pageNum, pageSize, dbtype);
+                getSummary(summaryDto, map, usercode, setTime.getYear(), setTime.getMonth(), pageNum, pageSize);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -270,20 +270,15 @@ public class UserSummaryDtoController {
         }
     }
 
-    private void getSummary(UserSummaryDto summaryDto, ModelMap map, String usercode, String year, String month, int pageNum, int pageSize, String dbtype) {
+    private void getSummary(UserSummaryDto summaryDto, ModelMap map, String usercode, String year, String month, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<UserSummaryDto> dtos;
         try {
             summaryDto.setYear(year);
             summaryDto.setMonth(month);
-            summaryDto.setDbtype(dbtype);
+            summaryDto.setDbtype(summaryDto.getDbtype());
             summaryDto.setScorringcode(usercode);
-            if(summaryDto.getDbtype().equals("1")) {
-                dtos = summaryDtoService.selectUserSummary(summaryDto);
-            }else {
-                dtos = summaryDtoService.selectUserSummaryNew(summaryDto);
-            }
-            getSummaryInfo(dtos, dbtype);
+            List<UserSummaryDto> dtos = summaryDtoService.selectUserSummary(summaryDto);
+            getSummaryInfo(dtos, summaryDto.getDbtype());
             PageInfo<UserSummaryDto> pageInfo = new PageInfo<>(dtos);
             dtos = pageInfo.getList();
             map.put("totalPages", pageInfo.getTotal());

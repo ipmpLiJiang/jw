@@ -17,14 +17,6 @@ export function getDetail(data) {
         data: data
     })
 }
-//考核详情Duty
-export function getDutyDetail(data) {
-    return fetch({
-        url: 'homepage/getDutyDetail',
-        method: 'post',
-        data: data
-    })
-}
 //提交考核
 export function scoring(data) {
     return fetch({
@@ -33,14 +25,7 @@ export function scoring(data) {
         data: data
     })
 }
-//提交考核Duty
-export function dutyScoring(data) {
-    return fetch({
-        url: 'homepage/getDutyTotalScore',
-        method: 'post',
-        data: data
-    })
-}
+
 //个人历史考核查询
 export function queryByUser(data) {
     return fetch({

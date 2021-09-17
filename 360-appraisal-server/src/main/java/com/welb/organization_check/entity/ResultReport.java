@@ -17,6 +17,10 @@ public class ResultReport {
 
     private Double dscore;
 
+    private Double escore;
+
+    private Double fscore;
+
     private Double score;
 
     private Double avgscore;
@@ -86,6 +90,22 @@ public class ResultReport {
 
     public void setDscore(Double dscore) {
         this.dscore = dscore;
+    }
+
+    public Double getEscore() {
+        return escore;
+    }
+
+    public void setEscore(Double escore) {
+        this.escore = escore;
+    }
+
+    public Double getFscore() {
+        return fscore;
+    }
+
+    public void setFscore(Double fscore) {
+        this.fscore = fscore;
     }
 
     public Double getScore() {

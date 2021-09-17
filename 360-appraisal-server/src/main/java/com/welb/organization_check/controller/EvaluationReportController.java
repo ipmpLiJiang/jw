@@ -611,6 +611,8 @@ public class EvaluationReportController {
                     evaluation.setBscore(dto1.getBScore());
                     evaluation.setCscore(dto1.getCScore());
                     evaluation.setDscore(dto1.getDScore());
+                    evaluation.setEscore(dto1.getEScore());
+                    evaluation.setFscore(dto1.getFScore());
                     evaluation.setDbtype(dbtype);
                     evaluation.setMoneycard(dto1.getMoneycard());
                     evaluation.setStationname(dto1.getStationname());
@@ -625,6 +627,8 @@ public class EvaluationReportController {
             evaluation.setBscore(0.0);
             evaluation.setCscore(0.0);
             evaluation.setDscore(0.0);
+            evaluation.setEscore(0.0);
+            evaluation.setFscore(0.0);
         }
     }
 
@@ -635,7 +639,7 @@ public class EvaluationReportController {
         try {
             for (UserDto userDto : userDtoList) {
                 if (userDto.getUsercode().equals(dto.getUsercode())) {
-                    if(dto.getDbtype().equals("1")) {
+//                    if(dto.getDbtype().equals("1")) {
                         //获取各类评分的总人数和分数
                         Double Ascore = flowService.getScoreByType(userDto.getSerialno(), "A", dto.getDbtype());
                         int Acount = flowService.getScoreByTypeCount(userDto.getSerialno(), "A", dto.getDbtype());
@@ -682,29 +686,52 @@ public class EvaluationReportController {
                             userDto.setDScore(Double.parseDouble(df.format(Dscore1)));
                             totalRatio += userDto.getDratio();
                         }
+                        Double Escore = flowService.getScoreByType(userDto.getSerialno(), "E", dto.getDbtype());
+                        int Ecount = flowService.getScoreByTypeCount(userDto.getSerialno(), "E", dto.getDbtype());
+                        Double Escore1;
+                        if (Escore == null) {
+                            Escore1 = 0.0;
+                            userDto.setEScore(Escore1);
+                        } else {
+                            Escore1 = Escore == 0 ? 0.0 : Escore / Ecount;
+                            userDto.setEScore(Double.parseDouble(df.format(Escore1)));
+                            totalRatio += userDto.getEratio();
+                        }
+                        Double Fscore = flowService.getScoreByType(userDto.getSerialno(), "F", dto.getDbtype());
+                        int Fcount = flowService.getScoreByTypeCount(userDto.getSerialno(), "F", dto.getDbtype());
+                        Double Fscore1;
+                        if (Fscore == null) {
+                            Fscore1 = 0.0;
+                            userDto.setFScore(Fscore1);
+                        } else {
+                            Fscore1 = Fscore == 0 ? 0.0 : Fscore / Fcount;
+                            userDto.setFScore(Double.parseDouble(df.format(Fscore1)));
+                            totalRatio += userDto.getFratio();
+                        }
                         //获取总分  总分= A类总分 X A类评分人系数 +  B类总分 X B类评分人系数 + C类总分 X C类评分人系数 + D类总分 X D类评分人系数
 
                         Double totalscore = userDto.getAScore() * userDto.getAratio() + userDto.getBScore() * userDto.getBratio() +
-                                userDto.getCScore() * userDto.getCratio() + userDto.getDScore() * userDto.getDratio();
+                                userDto.getCScore() * userDto.getCratio() + userDto.getDScore() * userDto.getDratio() +
+                                userDto.getEScore() * userDto.getEratio() + userDto.getFScore() * userDto.getFratio();
                         if (totalscore == 0.0 || totalscore == null) {
                             userDto.setTotalScore(0.0);
                         } else {
                             userDto.setTotalScore(Double.parseDouble(df.format(totalscore == 0 ? 0.0 : totalscore / totalRatio)));
                         }
-                    }else{
-                        List<UserScoreDto> scoreDtoList = userScoreDtoService.findUserDutyScore(dto.getYear(),dto.getMonth(),dto.getUsercode(),null,dto.getDbtype());
-                        List<UserScoreDto> dutyAndRatioList = userScoreDtoService.getTypeUserDutyScore(scoreDtoList,false);
-                        Double sumScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getScore).sum();
-                        Double aScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getAScore).sum();
-                        Double bScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getBScore).sum();
-                        Double cScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getCScore).sum();
-                        Double dScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getDScore).sum();
-                        userDto.setAScore(Double.parseDouble(df.format(aScore)));
-                        userDto.setBScore(Double.parseDouble(df.format(bScore)));
-                        userDto.setCScore(Double.parseDouble(df.format(cScore)));
-                        userDto.setDScore(Double.parseDouble(df.format(dScore)));
-                        userDto.setTotalScore(Double.parseDouble(df.format(sumScore)));
-                    }
+//                    }else{
+//                        List<UserScoreDto> scoreDtoList = userScoreDtoService.findUserDutyScore(dto.getYear(),dto.getMonth(),dto.getUsercode(),null,dto.getDbtype());
+//                        List<UserScoreDto> dutyAndRatioList = userScoreDtoService.getTypeUserDutyScore(scoreDtoList,false);
+//                        Double sumScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getScore).sum();
+//                        Double aScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getAscore).sum();
+//                        Double bScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getBscore).sum();
+//                        Double cScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getCscore).sum();
+//                        Double dScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getDscore).sum();
+//                        userDto.setAScore(Double.parseDouble(df.format(aScore)));
+//                        userDto.setBScore(Double.parseDouble(df.format(bScore)));
+//                        userDto.setCScore(Double.parseDouble(df.format(cScore)));
+//                        userDto.setDScore(Double.parseDouble(df.format(dScore)));
+//                        userDto.setTotalScore(Double.parseDouble(df.format(sumScore)));
+//                    }
                 }
             }
         } catch (Exception e) {

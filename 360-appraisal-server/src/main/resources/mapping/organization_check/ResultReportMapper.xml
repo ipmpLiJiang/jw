@@ -10,12 +10,14 @@
     <result column="BScore" jdbcType="DOUBLE" property="bscore" />
     <result column="CScore" jdbcType="DOUBLE" property="cscore" />
     <result column="DScore" jdbcType="DOUBLE" property="dscore" />
+    <result column="EScore" property="escore" jdbcType="DOUBLE"/>
+    <result column="FScore" property="fscore" jdbcType="DOUBLE"/>
     <result column="Score" jdbcType="DOUBLE" property="score" />
     <result column="AvgScore" jdbcType="DOUBLE" property="avgscore" />
     <result column="SumMbAvgScore" jdbcType="DOUBLE" property="sumMbAvgScore" />
   </resultMap>
   <sql id="Base_Column_List">
-    Id,ResultReportCode, ResultReportName, EvaluationReportCode, AScore, BScore, CScore, DScore, Score,
+    Id,ResultReportCode, ResultReportName, EvaluationReportCode, AScore, BScore, CScore, DScore, EScore, FScore, Score,
     AvgScore, SumMbAvgScore
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -55,6 +57,12 @@
       <if test="dscore != null">
         DScore,
       </if>
+      <if test="escore != null">
+        EScore,
+      </if>
+      <if test="fscore != null">
+        FScore,
+      </if>
       <if test="score != null">
         Score,
       </if>
@@ -90,6 +98,12 @@
       <if test="dscore != null">
         #{dscore,jdbcType=DOUBLE},
       </if>
+      <if test="escore != null">
+        #{escore,jdbcType=DOUBLE},
+      </if>
+      <if test="fscore != null">
+        #{fscore,jdbcType=DOUBLE},
+      </if>
       <if test="score != null">
         #{score,jdbcType=DOUBLE},
       </if>
@@ -124,6 +138,12 @@
       </if>
       <if test="dscore != null">
         DScore = #{dscore,jdbcType=DOUBLE},
+      </if>
+      <if test="escore != null">
+        EScore = #{escore,jdbcType=DOUBLE},
+      </if>
+      <if test="fscore != null">
+        FScore = #{fscore,jdbcType=DOUBLE},
       </if>
       <if test="score != null">
         Score = #{score,jdbcType=DOUBLE},

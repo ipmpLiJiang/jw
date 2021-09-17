@@ -92,13 +92,14 @@ public class HomePageController {
                 map.put("msg", "用户登录过期，请重新登录");
                 map.put("code", 810);
             } else {
+                boolean isDuty = dtos.getDbtype().equals("1") ? false : true;
                 try {
                     if (dtos.getMonth() != null && dtos.getYear() != null) {
                         dto = dtoService.selectUserSummaryByLike(dtos);
                         if (dto != null) {
                             //查找岗位
                             dto.setMonth(dtos.getMonth());
-                            getMapList(map, usercode, data, dto, scorringUserCode, false);
+                            getMapList(map, usercode, data, dto, scorringUserCode, isDuty);
                         } else {
                             map.put("msg", "数据为空");
                             map.put("code", 0);
@@ -116,66 +117,7 @@ public class HomePageController {
                         String sysTime = DateUtil.getTime();
 
                         //手动考核  --个人考核详情页面
-                        manualGetDetail(dtos, map, usercode, data, year, quarter, count, sysTime, false);
-
-                    }
-                } catch (Exception e) {
-                    log.error(LogUtil.getTrace(e));
-                    map.put("msg", "查询个人考核详情失败");
-                    map.put("code", 1);
-                }
-            }
-        } else {
-            map.put("msg", "登录用户超时,请重新登录");
-            map.put("code", 810);
-        }
-        return map;
-    }
-
-
-    /**
-     * 个人考核详情页面
-     *
-     * @return
-     */
-    @RequestMapping(value = "/getDutyDetail", produces = "application/json;charset=utf-8")
-    public Object getDutyDetail(HttpServletRequest req, UserSummaryDto dtos, String scorringUserCode) {
-        //获取当前登录用户的编号
-        ModelMap map = new ModelMap();
-        String usercode = (String) req.getSession().getAttribute("usercode");
-        String state = (String) req.getSession().getAttribute("state");
-        if (usercode != null) {
-            Map<String, Object> data = new LinkedHashMap<>();
-            UserSummaryDto dto;
-            if (usercode == null) {
-                map.put("msg", "用户登录过期，请重新登录");
-                map.put("code", 810);
-            } else {
-                try {
-                    if (dtos.getMonth() != null && dtos.getYear() != null) {
-                        dto = dtoService.selectUserSummaryByLike(dtos);
-                        if (dto != null) {
-                            //查找岗位
-                            dto.setMonth(dtos.getMonth());
-                            getMapList(map, usercode, data, dto, scorringUserCode, true);
-                        } else {
-                            map.put("msg", "数据为空");
-                            map.put("code", 0);
-                        }
-                    } else {
-//                    当前年份
-                        String year = CalendarUtil.getYear();
-//                    当前月份h
-                        String month = CalendarUtil.getMonth();
-//                    当前月度
-                        String quarter = month;//CalendarUtil.getQuarter(month);
-                        //当前上一月度
-                        int count = Integer.parseInt(month.trim()) - 1;
-                        //获取当前系统时间
-                        String sysTime = DateUtil.getTime();
-
-                        //手动考核  --个人考核详情页面
-                        manualGetDetail(dtos, map, usercode, data, year, quarter, count, sysTime, true);
+                        manualGetDetail(dtos, map, usercode, data, year, quarter, count, sysTime, isDuty);
 
                     }
                 } catch (Exception e) {
@@ -202,10 +144,7 @@ public class HomePageController {
             flow = flowService.selectByScoreFlow(dto.getSerialno(), usercode, dto.getDbtype());
         }
         if (isDuty) {
-            if (scorringUserCode != null && !scorringUserCode.equals("")) {
-                usercode = scorringUserCode;
-            }
-            getDutyFlow(map, data, dto, station, flow, usercode);
+            getFlow2(map, data, dto, station, flow);
         } else {
             getFlow(map, data, dto, station, flow);
         }
@@ -361,6 +300,90 @@ public class HomePageController {
         }
     }
 
+    private void getFlow2(ModelMap map, Map<String, Object> data, UserSummaryDto dto, Station station, List<ScoreFlow> scoreFlow) {
+        if (scoreFlow.size() > 0) {
+
+            for (ScoreFlow flow : scoreFlow) {
+                data.put("total", flow.getScore() + "分");
+
+                Duty du = new Duty();
+                du.setDbtype(dto.getDbtype());
+                List<Duty> dutyList = dutyService.selectDutyAll(du);
+
+                List<Duty> dutyJichu = dutyList.stream().filter(p -> p.getDutytype().equals("0")).collect(Collectors.toList());
+                getDutyInfo(flow, dutyJichu);
+
+                List<Duty> dutyYiban = dutyList.stream().filter(p -> p.getDutytype().equals("1")).collect(Collectors.toList());
+                getDutyInfo(flow, dutyYiban);
+
+                List<Duty> dutyZhongdian = dutyList.stream().filter(p -> p.getDutytype().equals("2")).collect(Collectors.toList());
+                getDutyInfo(flow, dutyZhongdian);
+
+                List<Duty> dutyMubiao = dutyList.stream().filter(p -> p.getDutytype().equals("3")).collect(Collectors.toList());
+                getDutyInfo(flow, dutyMubiao);
+
+                //判断是否可编辑
+                if (dto.getState().equals("7")) {
+                    dto.setIsedit("1");
+                } else {
+                    dto.setIsedit("0");
+                }
+                data.put("detail", dto);
+                data.put("stations", station);
+                data.put("dutyJichu", dutyJichu);
+                data.put("dutyYiban", dutyYiban);
+                data.put("dutyZhongdian", dutyZhongdian);
+                data.put("dutyMubiao", dutyMubiao);
+                map.put("msg", "查询个人考核详情成功");
+                map.put("data", data);
+                map.put("code", 0);
+            }
+        } else {
+            data.put("total", "");
+
+            Duty du = new Duty();
+            du.setDbtype("1");
+            List<Duty> dutyList = dutyService.selectDutyAll(du);
+
+            List<Duty> dutyJichu = dutyList.stream().filter(p -> p.getDutytype().equals("0")).collect(Collectors.toList());
+            for (Duty duty : dutyJichu) {
+                duty.setScore(duty.getDefScore()==null? "" : duty.getDefScore().toString());
+            }
+
+            List<Duty> dutyYiban = dutyList.stream().filter(p -> p.getDutytype().equals("1")).collect(Collectors.toList());
+            for (Duty duty : dutyYiban) {
+                duty.setScore(duty.getDefScore()==null? "" : duty.getDefScore().toString());
+            }
+
+            List<Duty> dutyZhongdian = dutyList.stream().filter(p -> p.getDutytype().equals("2")).collect(Collectors.toList());
+            for (Duty duty : dutyZhongdian) {
+                duty.setScore(duty.getDefScore()==null? "" : duty.getDefScore().toString());
+            }
+
+            List<Duty> dutyMubiao = dutyList.stream().filter(p -> p.getDutytype().equals("3")).collect(Collectors.toList());
+            for (Duty duty : dutyMubiao) {
+                duty.setScore(duty.getDefScore()==null? "" : duty.getDefScore().toString());
+            }
+
+            if (dto.getState().equals("7")) {
+                dto.setIsedit("1");
+            } else {
+                dto.setIsedit("0");
+            }
+            //获取基础量化指标相关信息
+            data.put("detail", dto);
+            data.put("stations", station);
+            data.put("dutyJichu", dutyJichu);
+            data.put("dutyYiban", dutyYiban);
+            data.put("dutyZhongdian", dutyZhongdian);
+            data.put("dutyMubiao", dutyMubiao);
+
+            map.put("msg", "查询个人考核详情成功");
+            map.put("data", data);
+            map.put("code", 0);
+        }
+    }
+
     private void getFlow(ModelMap map, Map<String, Object> data, UserSummaryDto dto, Station station, List<ScoreFlow> scoreFlow) {
         if (scoreFlow.size() > 0) {
 
@@ -368,7 +391,7 @@ public class HomePageController {
                 data.put("total", flow.getScore() + "分");
 
                 Duty du = new Duty();
-                du.setDbtype("1");
+                du.setDbtype(dto.getDbtype());
                 List<Duty> dutyList = dutyService.selectDutyAll(du);
 
                 //获取 政治建设
@@ -457,11 +480,14 @@ public class HomePageController {
         }
     }
 
+
     private void getDutyInfo(ScoreFlow flow, List<Duty> dutyJichu) {
         for (Duty duty : dutyJichu) {
             ScoreDetail detail = detailService.selectDetailBySerialNo(duty.getDutycode(), flow.getSerialno());
             if (detail != null) {
                 duty.setScore(detail.getScore());
+                duty.setCpsm(detail.getCpsm());
+                duty.setZpsm(detail.getZpsm());
             } else {
                 duty.setScore(duty.getDefScore() == null ? "":duty.getDefScore().toString());
             }
@@ -543,6 +569,10 @@ public class HomePageController {
                 flow.setRatio(user.getCratio());
             } else if ("D".equals(flow.getScoretype())) {
                 flow.setRatio(user.getDratio());
+            } else if ("E".equals(flow.getScoretype())) {
+                flow.setRatio(user.getEratio());
+            } else if ("F".equals(flow.getScoretype())) {
+                flow.setRatio(user.getFratio());
             }
             List<ScoreFlow> flow1 = flowService.selectByScoreFlow(dto.getSerialno(), scorringcode, dto.getDbtype());
             if (flow1.size() > 0) {//不为空  则修改评分信息
@@ -705,11 +735,7 @@ public class HomePageController {
         history.setUsercode(dto.getEmployeecode());
 
         ScoreHistory scoreHistory = historyService.selectOneByHistory(history);
-        if (dto.getDbtype().equals("1")) {
-            getTypeUserScore(dto, df, user, history);
-        } else {
-            getDutyTypeUserScore(dto, history);
-        }
+        getTypeUserScore(dto, df, user, history);
         if (scoreHistory == null) {//新增操作
             history.setScorestatus("1");
             historyService.insertSelective(history);
@@ -759,10 +785,31 @@ public class HomePageController {
             totalRatio += user.getDratio();
         }
 
+        //E类评分
+        Double EScore = flowService.getTypeAvgScore(dto.getSerialno(), "E", dto.getDbtype());
+        if (EScore == null) {
+            EScore = 0.0;
+            history.setEscore(EScore);
+        } else {
+            history.setEscore(Double.parseDouble(df.format(EScore)));
+            totalRatio += user.getEratio();
+        }
+
+        //F类评分
+        Double FScore = flowService.getTypeAvgScore(dto.getSerialno(), "F", dto.getDbtype());
+        if (FScore == null) {
+            FScore = 0.0;
+            history.setFscore(FScore);
+        } else {
+            history.setFscore(Double.parseDouble(df.format(FScore)));
+            totalRatio += user.getFratio();
+        }
+
         //获取总分  总分= A类总分 X A类评分人系数 +  B类总分 X B类评分人系数 + C类总分 X C类评分人系数 + D类总分 X D类评分人系数
 
         Double totalscore = history.getAscore() * user.getAratio() + history.getBscore() * user.getBratio() +
-                history.getCscore() * user.getCratio() + history.getDscore() * user.getDratio();
+                history.getCscore() * user.getCratio() + history.getDscore() * user.getDratio() +
+                history.getEscore() * user.getEratio() + history.getFscore() * user.getFratio();
         if (totalscore == 0.0 || totalscore == null) {
             history.setTotalscore(0.0);
         } else {
@@ -774,10 +821,10 @@ public class HomePageController {
         List<UserScoreDto> list = userScoreDtoService.findUserDutyScore(dto.getYear(), dto.getMonth(), dto.getEmployeecode(), null, dto.getDbtype());
         List<UserScoreDto> dutyAndRatioList = userScoreDtoService.getTypeUserDutyScore(list,false);
         Double sumScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getScore).sum();
-        Double aScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getAScore).sum();
-        Double bScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getBScore).sum();
-        Double cScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getCScore).sum();
-        Double dScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getDScore).sum();
+        Double aScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getAscore).sum();
+        Double bScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getBscore).sum();
+        Double cScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getCscore).sum();
+        Double dScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getDscore).sum();
 
         history.setTotalscore(sumScore);
         history.setAscore(aScore);
@@ -866,9 +913,11 @@ public class HomePageController {
         List mubiao = JSONArray.toList(array3, new DutyCodeAndScore(), new JsonConfig());
         judgeAddOrUpdate(flow1, detail, mubiao);
 
-        JSONArray array4 = JSONArray.fromObject(dutyZuofeng);
-        List zuofeng = JSONArray.toList(array4, new DutyCodeAndScore(), new JsonConfig());
-        judgeAddOrUpdate(flow1, detail, zuofeng);
+        if(flow1.getDbtype().equals("1")) {
+            JSONArray array4 = JSONArray.fromObject(dutyZuofeng);
+            List zuofeng = JSONArray.toList(array4, new DutyCodeAndScore(), new JsonConfig());
+            judgeAddOrUpdate(flow1, detail, zuofeng);
+        }
     }
 
     private void getDutyScore(String dutyJiChu, String dutyYiBan, String dutyZhongdian, String dutyMubiao, List<ScoreFlow> flowList, List<Score> scoreList) {
@@ -915,6 +964,8 @@ public class HomePageController {
             ScoreDetail scoreDetail = new ScoreDetail();
             scoreDetail.setFSerialNo(flow1.getSerialno());
             scoreDetail.setDSerialNo(jichu.get(i).getTopicId());
+            scoreDetail.setCpsm(jichu.get(i).getCpsm());
+            scoreDetail.setZpsm(jichu.get(i).getZpsm());
             scoreDetail.setScore(jichu.get(i).getScore());
             scoreDetail.setDbtype(flow1.getDbtype());
             ScoreDetail detail1 = detailService.selectDetailBySerialNo(scoreDetail.getDSerialNo(), scoreDetail.getFSerialNo());
@@ -1006,11 +1057,10 @@ public class HomePageController {
                     if (monthSummaryList != null) {
                         long count = monthSummaryList.stream().filter(s -> !s.getState().equals("7")).count();
                         if (count == 0) {
-                            String dzbsj = "党支部书记";
-                            String zdzb = "总党支部书记";
                             List<ScoreHistory> shList = historyService.findUserScoreHistory(year, month, dbtype, null);
-                            List<ScoreHistory> scoreHistoryList = shList.stream().filter(s -> s.getDbbk() != null && s.getDbbk() != "" && s.getDbbk().equals(dzbsj)).collect(Collectors.toList());
-                            List<ScoreHistory> zongList = shList.stream().filter(s -> s.getDbbk() != null && s.getDbbk() != "" && s.getDbbk().equals(zdzb)).collect(Collectors.toList());
+                            List<ScoreHistory> scoreHistoryList = shList.stream().filter(s -> s.getDbbk() != null && s.getDbbk() != "" && (
+                                    s.getDbbk().equals("1") || s.getDbbk().equals("2") || s.getDbbk().equals("3") )).collect(Collectors.toList());
+                            List<ScoreHistory> zongList = shList.stream().filter(s -> s.getDbbk() != null && s.getDbbk() != "" && s.getDbbk().equals("4")).collect(Collectors.toList());
                             if (scoreHistoryList.size() > 0) {
                                 List<String> typeList = new ArrayList<>();
                                 typeList.add("4");
@@ -1027,6 +1077,8 @@ public class HomePageController {
                                     typeList.add("B");
                                     typeList.add("C");
                                     typeList.add("D");
+                                    typeList.add("E");
+                                    typeList.add("F");
                                     List<UserScoreDto> userQueryList = new ArrayList<>();
                                     Double totalRatio = 0.0;
                                     Double totalSumScore = 0.0;
@@ -1065,6 +1117,18 @@ public class HomePageController {
                                     Double score2D = 0.0;
                                     Double score3D = 0.0;
                                     Double score4D = 0.0;
+                                    Double ratioE = 0.0;
+                                    Double score0E = 0.0;
+                                    Double score1E = 0.0;
+                                    Double score2E = 0.0;
+                                    Double score3E = 0.0;
+                                    Double score4E = 0.0;
+                                    Double ratioF = 0.0;
+                                    Double score0F = 0.0;
+                                    Double score1F = 0.0;
+                                    Double score2F = 0.0;
+                                    Double score3F = 0.0;
+                                    Double score4F = 0.0;
                                     List<ResultReport> rrList = new ArrayList<>();
                                     for (ScoreHistory item : scoreHistoryList) {
                                         totalRatio = 0.0;
@@ -1103,30 +1167,49 @@ public class HomePageController {
                                                 score2C = score2;
                                                 score3C = score3;
                                                 score4C = score4;
-                                            } else {
+                                            } else if (type.equals("D")) {
                                                 ratioD = ratio;
                                                 score0D = score0;
                                                 score1D = score1;
                                                 score2D = score2;
                                                 score3D = score3;
                                                 score4D = score4;
+                                            } else if (type.equals("E")) {
+                                                ratioE = ratio;
+                                                score0E = score0;
+                                                score1E = score1;
+                                                score2E = score2;
+                                                score3E = score3;
+                                                score4E = score4;
+                                            } else if (type.equals("F")) {
+                                                ratioF = ratio;
+                                                score0F = score0;
+                                                score1F = score1;
+                                                score2F = score2;
+                                                score3F = score3;
+                                                score4F = score4;
                                             }
                                         }
 
                                         sum0Score = score0A * ratioA + score0B * ratioB +
-                                                score0C * ratioC + score0D * ratioD;
+                                                score0C * ratioC + score0D * ratioD +
+                                                score0E * ratioE + score0F * ratioF;
 
                                         sum1Score = score1A * ratioA + score1B * ratioB +
-                                                score1C * ratioC + score1D * ratioD;
+                                                score1C * ratioC + score1D * ratioD +
+                                                score1E * ratioE + score1F * ratioF;
 
                                         sum2Score = score2A * ratioA + score2B * ratioB +
-                                                score2C * ratioC + score2D * ratioD;
+                                                score2C * ratioC + score2D * ratioD +
+                                                score2E * ratioE + score2F * ratioF;
 
                                         sum3Score = score3A * ratioA + score3B * ratioB +
-                                                score3C * ratioC + score3D * ratioD;
+                                                score3C * ratioC + score3D * ratioD +
+                                                score3E * ratioE + score3F * ratioF;
 
                                         sum4Score = score4A * ratioA + score4B * ratioB +
-                                                score4C * ratioC + score4D * ratioD;
+                                                score4C * ratioC + score4D * ratioD +
+                                                score4E * ratioE + score4F * ratioF;
 
                                         sum0Score = sum0Score == 0 ? 0 : sum0Score / totalRatio;
                                         sum1Score = sum1Score == 0 ? 0 : sum1Score / totalRatio;
@@ -1139,32 +1222,42 @@ public class HomePageController {
                                         score0B = score0B * ratioB / totalRatio;
                                         score0C = score0C * ratioC / totalRatio;
                                         score0D = score0D * ratioD / totalRatio;
+                                        score0E = score0E * ratioE / totalRatio;
+                                        score0F = score0F * ratioF / totalRatio;
 
                                         score1A = score1A * ratioA / totalRatio;
                                         score1B = score1B * ratioB / totalRatio;
                                         score1C = score1C * ratioC / totalRatio;
                                         score1D = score1D * ratioD / totalRatio;
+                                        score1E = score1E * ratioE / totalRatio;
+                                        score1F = score1F * ratioF / totalRatio;
 
                                         score2A = score2A * ratioA / totalRatio;
                                         score2B = score2B * ratioB / totalRatio;
                                         score2C = score2C * ratioC / totalRatio;
                                         score2D = score2D * ratioD / totalRatio;
+                                        score2E = score2E * ratioE / totalRatio;
+                                        score2F = score2F * ratioF / totalRatio;
 
                                         score3A = score3A * ratioA / totalRatio;
                                         score3B = score3B * ratioB / totalRatio;
                                         score3C = score3C * ratioC / totalRatio;
                                         score3D = score3D * ratioD / totalRatio;
+                                        score3E = score3E * ratioE / totalRatio;
+                                        score3F = score3F * ratioF / totalRatio;
 
                                         score4A = score4A * ratioA / totalRatio;
                                         score4B = score4B * ratioB / totalRatio;
                                         score4C = score4C * ratioC / totalRatio;
                                         score4D = score4D * ratioD / totalRatio;
+                                        score4E = score4E * ratioE / totalRatio;
+                                        score4F = score4F * ratioF / totalRatio;
 
-                                        this.getResultReport("4", "政治建设", item, score0A, score0B, score0C, score0D, sum0Score, 0, rrList);
-                                        this.getResultReport("5", "思想建设", item, score1A, score1B, score1C, score1D, sum1Score, 0, rrList);
-                                        this.getResultReport("6", "组织建设", item, score2A, score2B, score2C, score2D, sum2Score, 0, rrList);
-                                        this.getResultReport("7", "党建创新", item, score3A, score3B, score3C, score3D, sum3Score, 0, rrList);
-                                        this.getResultReport("8", "作风建设", item, score4A, score4B, score4C, score4D, sum4Score, 0, rrList);
+                                        this.getResultReport("4", "政治建设", item, score0A, score0B, score0C, score0D, score0E, score0F, sum0Score, 0, rrList);
+                                        this.getResultReport("5", "思想建设", item, score1A, score1B, score1C, score1D, score1E, score1F, sum1Score, 0, rrList);
+                                        this.getResultReport("6", "组织建设", item, score2A, score2B, score2C, score2D, score2E, score2F, sum2Score, 0, rrList);
+                                        this.getResultReport("7", "党建创新", item, score3A, score3B, score3C, score3D, score3E, score3F, sum3Score, 0, rrList);
+                                        this.getResultReport("8", "作风建设", item, score4A, score4B, score4C, score4D, score4E, score4F, sum4Score, 0, rrList);
 
                                         item.setSumJcScore(sum0Score);
                                         item.setSumGwScore(sum1Score);
@@ -1181,7 +1274,7 @@ public class HomePageController {
                                     query.setDbtype(dbtype);
                                     List<EvaluationReport> evaluationReportList = evaluationReportService.selectEvaluationReportList(query);
                                     List<EvaluationReport> queryErList = new ArrayList<>();
-                                    this.getZongScoreHistoryData(year, month, dbtype, zdzb, zongList, scoreHistoryList);
+                                    this.getZongScoreHistoryData(year, month, dbtype,"4", zongList, scoreHistoryList);
                                     for (ScoreHistory item : scoreHistoryList) {
                                         totalSumScore += item.getTotalscore();
                                     }
@@ -1374,6 +1467,288 @@ public class HomePageController {
 
     }
 
+    public Object jisuan2(HttpServletRequest req, String dbtype) {
+        //获取当前登录用户的编号
+        ModelMap map = new ModelMap();
+        String usercode = (String) req.getSession().getAttribute("usercode");
+        if (usercode != null) {
+            Map<String, Object> data = new LinkedHashMap<>();
+            try {
+                String msg = "";
+                ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
+                if (setTime != null) {
+                    String year = setTime.getYear();
+                    String month = setTime.getMonth();
+                    List<MonthSummary> monthSummaryList = monthSummaryService.selectListByYearAndMonth(year, month, dbtype);
+                    if (monthSummaryList != null) {
+                        long count = monthSummaryList.stream().filter(s -> !s.getState().equals("7")).count();
+                        if (count == 0) {
+                            List<ScoreHistory> scoreHistoryList = historyService.findUserScoreHistory(year, month, dbtype, null);
+                            if (scoreHistoryList.size() > 0) {
+                                List<String> typeList = new ArrayList<>();
+                                typeList.add("0");
+                                typeList.add("1");
+                                typeList.add("2");
+                                typeList.add("3");
+                                List<UserScoreDto> userScoreDtoList = userScoreDtoService.findUserScore(year, month, typeList, dbtype);
+                                if (userScoreDtoList.size() > 0) {
+//                                    Map<String, List<UserScoreDto>> byAuthor = userScoreDtoList.stream().map()
+//                                            .collect(Collectors.groupingBy(UserScoreDto::getScoreType));
+                                    typeList = new ArrayList<>();
+                                    typeList.add("A");
+                                    typeList.add("B");
+                                    typeList.add("C");
+                                    typeList.add("D");
+                                    typeList.add("E");
+                                    typeList.add("F");
+                                    List<UserScoreDto> userQueryList = new ArrayList<>();
+                                    Double totalRatio = 0.0;
+                                    Double totalSumScore = 0.0;
+                                    Double sum0Score = 0.0;
+                                    Double sum1Score = 0.0;
+                                    Double sum2Score = 0.0;
+                                    Double sum3Score = 0.0;
+                                    Double ratio = 0.0;
+                                    Double score0 = 0.0;
+                                    Double score1 = 0.0;
+                                    Double score2 = 0.0;
+                                    Double score3 = 0.0;
+                                    Double ratioA = 0.0;
+                                    Double score0A = 0.0;
+                                    Double score1A = 0.0;
+                                    Double score2A = 0.0;
+                                    Double score3A = 0.0;
+                                    Double ratioB = 0.0;
+                                    Double score0B = 0.0;
+                                    Double score1B = 0.0;
+                                    Double score2B = 0.0;
+                                    Double score3B = 0.0;
+                                    Double ratioC = 0.0;
+                                    Double score0C = 0.0;
+                                    Double score1C = 0.0;
+                                    Double score2C = 0.0;
+                                    Double score3C = 0.0;
+                                    Double ratioD = 0.0;
+                                    Double score0D = 0.0;
+                                    Double score1D = 0.0;
+                                    Double score2D = 0.0;
+                                    Double score3D = 0.0;
+                                    Double ratioE = 0.0;
+                                    Double score0E = 0.0;
+                                    Double score1E = 0.0;
+                                    Double score2E = 0.0;
+                                    Double score3E = 0.0;
+                                    Double ratioF = 0.0;
+                                    Double score0F = 0.0;
+                                    Double score1F = 0.0;
+                                    Double score2F = 0.0;
+                                    Double score3F = 0.0;
+                                    List<ResultReport> rrList = new ArrayList<>();
+                                    for (ScoreHistory item : scoreHistoryList) {
+                                        totalRatio = 0.0;
+                                        userQueryList = userScoreDtoList.stream().filter(
+                                                s -> s.getScoredCode().equals(item.getUsercode())
+                                        ).collect(Collectors.toList());
+
+                                        for (String type : typeList) {
+                                            score0 = this.getScore(userQueryList, type, "0");
+                                            score1 = this.getScore(userQueryList, type, "1");
+                                            score2 = this.getScore(userQueryList, type, "2");
+                                            score3 = this.getScore(userQueryList, type, "3");
+                                            ratio = userQueryList.stream().filter(s -> s.getScoreType().equals(type)).map(
+                                                    UserScoreDto::getRatio).findFirst().orElse(0.0);
+                                            totalRatio += ratio;
+
+                                            if (type.equals("A")) {
+                                                ratioA = ratio;
+                                                score0A = score0;
+                                                score1A = score1;
+                                                score2A = score2;
+                                                score3A = score3;
+                                            } else if (type.equals("B")) {
+                                                ratioB = ratio;
+                                                score0B = score0;
+                                                score1B = score1;
+                                                score2B = score2;
+                                                score3B = score3;
+                                            } else if (type.equals("C")) {
+                                                ratioC = ratio;
+                                                score0C = score0;
+                                                score1C = score1;
+                                                score2C = score2;
+                                                score3C = score3;
+                                            } else if (type.equals("D")) {
+                                                ratioD = ratio;
+                                                score0D = score0;
+                                                score1D = score1;
+                                                score2D = score2;
+                                                score3D = score3;
+                                            } else if (type.equals("E")) {
+                                                ratioE = ratio;
+                                                score0E = score0;
+                                                score1E = score1;
+                                                score2E = score2;
+                                                score3E = score3;
+                                            } else if (type.equals("F")) {
+                                                ratioF = ratio;
+                                                score0F = score0;
+                                                score1F = score1;
+                                                score2F = score2;
+                                                score3F = score3;
+                                            }
+                                        }
+
+                                        sum0Score = score0A * ratioA + score0B * ratioB +
+                                                score0C * ratioC + score0D * ratioD +
+                                                score0E * ratioE + score0F * ratioF;
+
+                                        sum1Score = score1A * ratioA + score1B * ratioB +
+                                                score1C * ratioC + score1D * ratioD +
+                                                score1E * ratioE + score1F * ratioF;
+
+                                        sum2Score = score2A * ratioA + score2B * ratioB +
+                                                score2C * ratioC + score2D * ratioD +
+                                                score2E * ratioE + score2F * ratioF;
+
+                                        sum3Score = score3A * ratioA + score3B * ratioB +
+                                                score3C * ratioC + score3D * ratioD +
+                                                score3E * ratioE + score3F * ratioF;
+
+                                        sum0Score = sum0Score == 0 ? 0 : sum0Score / totalRatio;
+                                        sum1Score = sum1Score == 0 ? 0 : sum1Score / totalRatio;
+                                        sum2Score = sum2Score == 0 ? 0 : sum2Score / totalRatio;
+                                        sum3Score = sum3Score == 0 ? 0 : sum3Score / totalRatio;
+
+                                        // ResultReport表 得出计算后结果
+                                        score0A = score0A * ratioA / totalRatio;
+                                        score0B = score0B * ratioB / totalRatio;
+                                        score0C = score0C * ratioC / totalRatio;
+                                        score0D = score0D * ratioD / totalRatio;
+                                        score0E = score0E * ratioE / totalRatio;
+                                        score0F = score0F * ratioF / totalRatio;
+
+                                        score1A = score1A * ratioA / totalRatio;
+                                        score1B = score1B * ratioB / totalRatio;
+                                        score1C = score1C * ratioC / totalRatio;
+                                        score1D = score1D * ratioD / totalRatio;
+                                        score1E = score1E * ratioE / totalRatio;
+                                        score1F = score1F * ratioF / totalRatio;
+
+                                        score2A = score2A * ratioA / totalRatio;
+                                        score2B = score2B * ratioB / totalRatio;
+                                        score2C = score2C * ratioC / totalRatio;
+                                        score2D = score2D * ratioD / totalRatio;
+                                        score2E = score2E * ratioE / totalRatio;
+                                        score2F = score2F * ratioF / totalRatio;
+
+                                        score3A = score3A * ratioA / totalRatio;
+                                        score3B = score3B * ratioB / totalRatio;
+                                        score3C = score3C * ratioC / totalRatio;
+                                        score3D = score3D * ratioD / totalRatio;
+                                        score3E = score3E * ratioE / totalRatio;
+                                        score3F = score3F * ratioF / totalRatio;
+
+                                        this.getResultReport("4", "政治建设", item, score0A, score0B, score0C, score0D, score0E, score0F, sum0Score, 0, rrList);
+                                        this.getResultReport("5", "思想建设", item, score1A, score1B, score1C, score1D, score1E, score1F, sum1Score, 0, rrList);
+                                        this.getResultReport("6", "组织建设", item, score2A, score2B, score2C, score2D, score2E, score2F, sum2Score, 0, rrList);
+                                        this.getResultReport("7", "党建创新", item, score3A, score3B, score3C, score3D, score3E, score3F, sum3Score, 0, rrList);
+
+                                        item.setSumJcScore(sum0Score);
+                                        item.setSumGwScore(sum1Score);
+                                        item.setSumZdScore(sum2Score);
+                                        item.setSumMbScore(sum3Score);
+                                        item.setTotalscore(sum0Score + sum1Score + sum2Score + sum3Score);
+
+                                    }
+
+                                    EvaluationReport query = new EvaluationReport();
+                                    query.setYear(year);
+                                    query.setMonth(month);
+                                    query.setDbtype(dbtype);
+                                    List<EvaluationReport> evaluationReportList = evaluationReportService.selectEvaluationReportList(query);
+                                    List<EvaluationReport> queryErList = new ArrayList<>();
+
+                                    for (ScoreHistory item : scoreHistoryList) {
+                                        totalSumScore += item.getTotalscore();
+                                    }
+                                    Double avgScore = totalSumScore / scoreHistoryList.size();
+                                    for (ScoreHistory item : scoreHistoryList) {
+                                        if (item.getId() != null) {
+                                            ScoreHistory scoreHistory = new ScoreHistory();
+                                            scoreHistory.setId(item.getId());
+                                            scoreHistory.setDfScore(item.getDfScore());
+                                            scoreHistory.setSumTotalScore(item.getTotalscore());
+                                            scoreHistory.setTotalscore(item.getTotalscore());
+                                            scoreHistory.setSumMbScore(item.getSumMbScore());
+                                            scoreHistory.setSumZfScore(item.getSumZfScore());
+                                            historyService.updateByPrimaryKeySelective(scoreHistory);
+                                        } else {
+                                            item.setSumTotalScore(item.getTotalscore());
+                                            historyService.insertSelective(item);
+                                        }
+                                        queryErList = evaluationReportList.stream().filter(s -> s.getUsercode().equals(item.getUsercode())).collect(Collectors.toList());
+                                        if (queryErList.size() > 0) {
+                                            EvaluationReport updateEr = new EvaluationReport();
+                                            updateEr.setId(queryErList.get(0).getId());
+                                            updateEr.setBasicscore(item.getSumJcScore());
+                                            updateEr.setKeyscore(item.getSumGwScore());
+                                            updateEr.setZdScore(item.getSumZdScore());
+                                            updateEr.setMbScore(item.getSumMbScore());
+                                            updateEr.setZfScore(item.getSumZfScore());
+                                            updateEr.setTotalscore(item.getTotalscore());
+                                            updateEr.setDfScore(item.getDfScore());
+                                            updateEr.setAvgscore(avgScore);
+                                            evaluationReportService.updateByPrimaryKeySelective(updateEr);
+                                        } else {
+                                            EvaluationReport insertEr = new EvaluationReport();
+                                            insertEr.setYear(year);
+                                            insertEr.setMonth(month);
+                                            insertEr.setUsercode(item.getUsercode());
+                                            insertEr.setBasicscore(item.getSumJcScore());
+                                            insertEr.setKeyscore(item.getSumGwScore());
+                                            insertEr.setZdScore(item.getSumZdScore());
+                                            insertEr.setMbScore(item.getSumMbScore());
+                                            insertEr.setZfScore(item.getSumZfScore());
+                                            insertEr.setTotalscore(item.getTotalscore());
+                                            insertEr.setAvgscore(avgScore);
+                                            insertEr.setDfScore(item.getDfScore());
+                                            insertEr.setDbtype(dbtype);
+                                            evaluationReportService.insertSelective(insertEr);
+                                        }
+                                    }
+                                    if (rrList.size() > 0) {
+                                        this.updateOrInsertResultReport(rrList, year, month, dbtype);
+                                    }
+                                    msg = "OK";
+                                } else {
+                                    msg = "考核季度明细数据为空";
+                                }
+                            } else {
+                                msg = "考核季度历史数据为空";
+                            }
+                        } else {
+                            msg = "考核季度数据还有评分未完成";
+                        }
+                    } else {
+                        msg = "考核季度数据为空";
+                    }
+                } else {
+                    msg = "考核季度为空";
+                }
+                map.put("msg", msg.equals("OK") ? "计算完成." : msg);
+                map.put("code", msg.equals("OK") ? 0 : 1);
+            } catch (Exception e) {
+                log.error(LogUtil.getTrace(e));
+                map.put("msg", "查询个人考核详情失败");
+                map.put("code", 1);
+            }
+        } else {
+            map.put("msg", "登录用户超时,请重新登录");
+            map.put("code", 810);
+        }
+        return map;
+    }
+
     public Object jisuanDuty(HttpServletRequest req, String dbtype) {
         //获取当前登录用户的编号
         ModelMap map = new ModelMap();
@@ -1450,22 +1825,22 @@ public class HomePageController {
 
                                         List<UserScoreDto> dutyAndRatioList = userScoreDtoService.getTypeUserDutyScore(userQueryList,true);
 
-                                        score0A = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("0")).mapToDouble(UserScoreDto::getAScore).sum();
-                                        score1A = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("1")).mapToDouble(UserScoreDto::getAScore).sum();
-                                        score2A = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("2")).mapToDouble(UserScoreDto::getAScore).sum();
-                                        score3A = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("3")).mapToDouble(UserScoreDto::getAScore).sum();
-                                        score0B = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("0")).mapToDouble(UserScoreDto::getBScore).sum();
-                                        score1B = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("1")).mapToDouble(UserScoreDto::getBScore).sum();
-                                        score2B = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("2")).mapToDouble(UserScoreDto::getBScore).sum();
-                                        score3B = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("3")).mapToDouble(UserScoreDto::getBScore).sum();
-                                        score0C = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("0")).mapToDouble(UserScoreDto::getCScore).sum();
-                                        score1C = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("1")).mapToDouble(UserScoreDto::getCScore).sum();
-                                        score2C = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("2")).mapToDouble(UserScoreDto::getCScore).sum();
-                                        score3C = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("3")).mapToDouble(UserScoreDto::getCScore).sum();
-                                        score0D = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("0")).mapToDouble(UserScoreDto::getDScore).sum();
-                                        score1D = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("1")).mapToDouble(UserScoreDto::getDScore).sum();
-                                        score2D = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("2")).mapToDouble(UserScoreDto::getDScore).sum();
-                                        score3D = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("3")).mapToDouble(UserScoreDto::getDScore).sum();
+                                        score0A = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("0")).mapToDouble(UserScoreDto::getAscore).sum();
+                                        score1A = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("1")).mapToDouble(UserScoreDto::getAscore).sum();
+                                        score2A = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("2")).mapToDouble(UserScoreDto::getAscore).sum();
+                                        score3A = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("3")).mapToDouble(UserScoreDto::getAscore).sum();
+                                        score0B = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("0")).mapToDouble(UserScoreDto::getBscore).sum();
+                                        score1B = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("1")).mapToDouble(UserScoreDto::getBscore).sum();
+                                        score2B = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("2")).mapToDouble(UserScoreDto::getBscore).sum();
+                                        score3B = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("3")).mapToDouble(UserScoreDto::getBscore).sum();
+                                        score0C = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("0")).mapToDouble(UserScoreDto::getCscore).sum();
+                                        score1C = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("1")).mapToDouble(UserScoreDto::getCscore).sum();
+                                        score2C = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("2")).mapToDouble(UserScoreDto::getCscore).sum();
+                                        score3C = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("3")).mapToDouble(UserScoreDto::getCscore).sum();
+                                        score0D = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("0")).mapToDouble(UserScoreDto::getDscore).sum();
+                                        score1D = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("1")).mapToDouble(UserScoreDto::getDscore).sum();
+                                        score2D = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("2")).mapToDouble(UserScoreDto::getDscore).sum();
+                                        score3D = dutyAndRatioList.stream().filter(s -> s.getDutyType().equals("3")).mapToDouble(UserScoreDto::getDscore).sum();
 
                                         sumJcScore = score0A + score0B + score0C + score0D;
 
@@ -1481,10 +1856,10 @@ public class HomePageController {
                                         } else {
                                             mbCount = mbMaxCount;
                                         }
-                                        this.getResultReport("0", "基础评分", item, score0A, score0B, score0C, score0D, sumJcScore, 0, rrList);
-                                        this.getResultReport("1", "岗位评分", item, score1A, score1B, score1C, score1D, sumGwScore, 0, rrList);
-                                        this.getResultReport("2", "重点评分", item, score2A, score2B, score2C, score2D, sumZdScore, 0, rrList);
-                                        this.getResultReport("3", "目标评分", item, score3A, score3B, score3C, score3D, sumMbScore, mbCount, rrList);
+                                        this.getResultReport("0", "基础评分", item, score0A, score0B, score0C, score0D,0,0, sumJcScore, 0, rrList);
+                                        this.getResultReport("1", "岗位评分", item, score1A, score1B, score1C, score1D, 0,0, sumGwScore, 0, rrList);
+                                        this.getResultReport("2", "重点评分", item, score2A, score2B, score2C, score2D, 0,0, sumZdScore, 0, rrList);
+                                        this.getResultReport("3", "目标评分", item, score3A, score3B, score3C, score3D, 0,0, sumMbScore, mbCount, rrList);
 
                                         item.setSumJcScore(sumJcScore);
                                         item.setSumGwScore(sumGwScore);
@@ -1609,7 +1984,6 @@ public class HomePageController {
         return map;
     }
 
-
     private double getScore(List<UserScoreDto> userQueryList, String stype, String dtype) {
         long pingfenCount = userQueryList.stream().filter(
                 s -> s.getScoreType().equals(stype) && s.getDutyType().equals(dtype))
@@ -1710,7 +2084,8 @@ public class HomePageController {
     }
 
 
-    private void getResultReport(String code, String name, ScoreHistory item, double A, double B, double C, double D, double sum, Integer mbCount, List<ResultReport> list) {
+    private void getResultReport(String code, String name, ScoreHistory item, double A, double B, double C, double D,
+                                 double E, double F, double sum, Integer mbCount, List<ResultReport> list) {
         ResultReport rr = new ResultReport();
         rr.setResultreportcode(code);
         rr.setResultreportname(name);
@@ -1719,6 +2094,8 @@ public class HomePageController {
         rr.setBscore(B);
         rr.setCscore(C);
         rr.setDscore(D);
+        rr.setEscore(E);
+        rr.setFscore(F);
         rr.setScore(sum);
         rr.setMbCount(mbCount);
         list.add(rr);

@@ -197,7 +197,7 @@
 
 </template>
 <script>
-import { getDutyDetail } from "@/api/home/home";
+import { getDetail } from "@/api/home/home";
 import { getUserByScoreFlow } from "@/api/people/people";
 import qs from "qs";
 export default {
@@ -281,7 +281,7 @@ export default {
         dbtype: this.$store.state.user.user.dbtype
       };
       new Promise((response, reject) => {
-        getDutyDetail(qs.stringify(data))
+        getDetail(qs.stringify(data))
           .then(response => {
             if (response.data.code == 0) {
               this.detailData = response.data.data.detail;

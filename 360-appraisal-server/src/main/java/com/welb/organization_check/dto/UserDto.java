@@ -18,7 +18,7 @@ public class UserDto {
     public static HashMap<String, String> months = new LinkedHashMap<>();
     public static HashMap<String, String> scorestatusList = new LinkedHashMap<>();
     public static Map<String, String> roles = new LinkedHashMap<>();
-
+    public static Map<String, String> dbbks = new LinkedHashMap<>();
 
     static {
         states.put("", "--");
@@ -54,6 +54,10 @@ public class UserDto {
         roles.put("400","考勤超级管理员");
         roles.put("500","考勤管理员");
 
+        dbbks.put("1","组织委员纪检委员");
+        dbbks.put("2","宣传委员青年委员");
+        dbbks.put("3","党支部书记");
+        dbbks.put("4","总党支部书记");
 
     }
 
@@ -114,6 +118,10 @@ public class UserDto {
 
     private Double dratio;
 
+    private Double eratio;
+
+    private Double fratio;
+
     private Double AScore;
 
     private Double BScore;
@@ -121,6 +129,10 @@ public class UserDto {
     private Double CScore;
 
     private Double DScore;
+
+    private Double EScore;
+
+    private Double FScore;
 
     private Double TotalScore;
 
@@ -144,6 +156,13 @@ public class UserDto {
         this.dbtype = dbtype == null ? null : dbtype.trim();
     }
 
+    public static Map<String, String> getDbbks() {
+        return dbbks;
+    }
+
+    public static void setDbbks(Map<String, String> dbbks) {
+        UserDto.dbbks = dbbks;
+    }
 
     private String dbbk;
 
@@ -156,6 +175,18 @@ public class UserDto {
     }
 
 
+    private String dbbkName;
+
+    public String getDbbkName() {
+        if (dbbk!=null){
+            return dbbks.get(this.dbbk);
+        }
+        return dbbkName;
+    }
+
+    public void setDbbkName(String dbbkName) {
+        this.dbbkName = dbbkName;
+    }
 
     public String getScorestatus() {
         return scorestatus;
@@ -398,6 +429,22 @@ public class UserDto {
         this.dratio = dratio;
     }
 
+    public Double getEratio() {
+        return eratio;
+    }
+
+    public void setEratio(Double eratio) {
+        this.eratio = eratio;
+    }
+
+    public Double getFratio() {
+        return fratio;
+    }
+
+    public void setFratio(Double fratio) {
+        this.fratio = fratio;
+    }
+
     public Double getAScore() {
         return AScore;
     }
@@ -428,6 +475,22 @@ public class UserDto {
 
     public void setDScore(Double DScore) {
         this.DScore = DScore;
+    }
+
+    public Double getEScore() {
+        return EScore;
+    }
+
+    public void setEScore(Double EScore) {
+        this.EScore = EScore;
+    }
+
+    public Double getFScore() {
+        return FScore;
+    }
+
+    public void setFScore(Double FScore) {
+        this.FScore = FScore;
     }
 
     public Double getTotalScore() {

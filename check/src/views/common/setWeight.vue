@@ -9,7 +9,7 @@
       width="700px"
       center
     >
-      <el-col class="slider">
+      <el-col class="slider" v-show="dbtype=='1'?true:false">
         <el-col
           :span="5"
           class="title"
@@ -25,7 +25,23 @@
           </el-slider>
         </el-col>
       </el-col>
-      <el-col class="slider">
+      <el-col class="slider" v-show="dbtype=='2'?true:false">
+        <el-col
+          :span="5"
+          class="title"
+        >A类评分人权重:</el-col>
+        <el-col :span="19">
+          <el-slider
+            v-model="form.aratio2"
+            :format-tooltip="formatTooltip"
+            :step="5"
+            show-stops
+            show-input
+          >
+          </el-slider>
+        </el-col>
+      </el-col>
+      <el-col class="slider" v-show="dbtype=='1'?true:false">
         <el-col
           :span="5"
           class="title"
@@ -41,7 +57,23 @@
           </el-slider>
         </el-col>
       </el-col>
-      <el-col class="slider">
+      <el-col class="slider" v-show="dbtype=='2'?true:false">
+        <el-col
+          :span="5"
+          class="title"
+        >B类评分人权重:</el-col>
+        <el-col :span="19">
+          <el-slider
+            v-model="form.bratio2"
+            :format-tooltip="formatTooltip"
+            :step="5"
+            show-stops
+            show-input
+          >
+          </el-slider>
+        </el-col>
+      </el-col>
+      <el-col class="slider" v-show="dbtype=='1'?true:false">
         <el-col
           :span="5"
           class="title"
@@ -57,7 +89,23 @@
           </el-slider>
         </el-col>
       </el-col>
-      <el-col class="slider">
+      <el-col class="slider" v-show="dbtype=='2'?true:false">
+        <el-col
+          :span="5"
+          class="title"
+        >C类评分人权重:</el-col>
+        <el-col :span="19">
+          <el-slider
+            v-model="form.cratio2"
+            :format-tooltip="formatTooltip"
+            :step="5"
+            show-stops
+            show-input
+          >
+          </el-slider>
+        </el-col>
+      </el-col>
+      <el-col class="slider" v-show="dbtype=='1'?true:false">
         <el-col
           :span="5"
           class="title"
@@ -65,6 +113,86 @@
         <el-col :span="19">
           <el-slider
             v-model="form.dratio"
+            :format-tooltip="formatTooltip"
+            :step="5"
+            show-stops
+            show-input
+          >
+          </el-slider>
+        </el-col>
+      </el-col>
+      <el-col class="slider" v-show="dbtype=='2'?true:false">
+        <el-col
+          :span="5"
+          class="title"
+        >D类评分人权重:</el-col>
+        <el-col :span="19">
+          <el-slider
+            v-model="form.dratio2"
+            :format-tooltip="formatTooltip"
+            :step="5"
+            show-stops
+            show-input
+          >
+          </el-slider>
+        </el-col>
+      </el-col>
+      <el-col class="slider" v-show="dbtype=='1'?true:false">
+        <el-col
+          :span="5"
+          class="title"
+        >E类评分人权重:</el-col>
+        <el-col :span="19">
+          <el-slider
+            v-model="form.eratio"
+            :format-tooltip="formatTooltip"
+            :step="5"
+            show-stops
+            show-input
+          >
+          </el-slider>
+        </el-col>
+      </el-col>
+      <el-col class="slider" v-show="dbtype=='2'?true:false">
+        <el-col
+          :span="5"
+          class="title"
+        >E类评分人权重:</el-col>
+        <el-col :span="19">
+          <el-slider
+            v-model="form.eratio2"
+            :format-tooltip="formatTooltip"
+            :step="5"
+            show-stops
+            show-input
+          >
+          </el-slider>
+        </el-col>
+      </el-col>
+      <el-col class="slider" v-show="dbtype=='1'?true:false">
+        <el-col
+          :span="5"
+          class="title"
+        >F类评分人权重:</el-col>
+        <el-col :span="19">
+          <el-slider
+            v-model="form.fratio"
+            :format-tooltip="formatTooltip"
+            :step="5"
+            show-stops
+            show-input
+          >
+          </el-slider>
+        </el-col>
+      </el-col>
+      <el-col class="slider" v-show="dbtype=='2'?true:false">
+        <el-col
+          :span="5"
+          class="title"
+        >F类评分人权重:</el-col>
+        <el-col :span="19">
+          <el-slider
+            v-model="form.fratio2"
             :format-tooltip="formatTooltip"
             :step="5"
             show-stops
@@ -95,6 +223,7 @@ export default {
   data() {
     return {
       selfDialogVisible: this.swDialogVisible,
+      dbtype: this.$store.state.user.user.dbtype,
       form: {}
     };
   },
@@ -122,22 +251,44 @@ export default {
     },
     //修改评分人
     editSubmit() {
-      let totalScore =
-        this.form.aratio +
+      let totalScore = 0
+      if(this.dbtype == '1'){
+        totalScore = this.form.aratio +
         this.form.bratio +
         this.form.cratio +
-        this.form.dratio;
+        this.form.dratio +
+        this.form.eratio +
+        this.form.fratio;
+      } else{
+        totalScore = this.form.aratio2 +
+        this.form.bratio2 +
+        this.form.cratio2 +
+        this.form.dratio2 +
+        this.form.eratio2 +
+        this.form.fratio2;
+      }
       if (totalScore != 100) {
         this.$message.warning("权重总数必须为100");
         return;
       }
       let data = {
-        usercode: this.form.usercode,
-        aratio: this.form.aratio,
-        bratio: this.form.bratio,
-        cratio: this.form.cratio,
-        dratio: this.form.dratio
-      };
+        usercode: this.form.usercode};
+        if(this.dbtype == '1'){
+          data.aratio = this.form.aratio,
+          data.bratio = this.form.bratio,
+          data.cratio = this.form.cratio,
+          data.dratio = this.form.dratio,
+          data.eratio = this.form.eratio,
+          data.fratio = this.form.fratio
+        } else {
+          data.aratio2 = this.form.aratio2,
+          data.bratio2 = this.form.bratio2,
+          data.cratio2 = this.form.cratio2,
+          data.dratio2 = this.form.dratio2,
+          data.eratio2 = this.form.eratio2,
+          data.fratio2 = this.form.fratio2
+        }
+      
       new Promise((response, reject) => {
         updateWeight(qs.stringify(data))
           .then(response => {

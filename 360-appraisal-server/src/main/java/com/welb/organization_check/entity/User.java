@@ -17,6 +17,7 @@ public class User {
     public static Map<String, String> politicals = new LinkedHashMap<>();
     public static Map<String, String> educations = new LinkedHashMap<>();
     public static Map<String, String> userstates = new LinkedHashMap<>();
+    public static Map<String, String> dbbks = new LinkedHashMap<>();
     public static Map<String, String> roles = new LinkedHashMap<>();
 
     static {
@@ -46,6 +47,11 @@ public class User {
         roles.put("300","普通用户");
         roles.put("400","考勤超级管理员");
         roles.put("500","考勤管理员");
+
+        dbbks.put("1","组织委员纪检委员");
+        dbbks.put("2","宣传委员青年委员");
+        dbbks.put("3","党支部书记");
+        dbbks.put("4","总党支部书记");
 
     }
 
@@ -85,13 +91,29 @@ public class User {
 
     private String branchname;
 
-    private Double aratio=30.0;
+    private Double aratio=15.0;
 
-    private Double bratio=20.0;
+    private Double bratio=15.0;
 
-    private Double cratio=20.0;
+    private Double cratio=10.0;
 
-    private Double dratio=30.0;
+    private Double dratio=10.0;
+
+    private Double eratio=40.0;
+
+    private Double fratio=10.0;
+
+    private Double aratio2=15.0;
+
+    private Double bratio2=20.0;
+
+    private Double cratio2=5.0;
+
+    private Double dratio2=10.0;
+
+    private Double eratio2=40.0;
+
+    private Double fratio2=10.0;
 
     private String fullstationcode;
 
@@ -140,7 +162,13 @@ public class User {
         this.dbtype = dbtype == null ? null : dbtype.trim();
     }
 
+    public static Map<String, String> getDbbks() {
+        return dbbks;
+    }
 
+    public static void setDbbks(Map<String, String> dbbks) {
+        User.dbbks = dbbks;
+    }
 
     private String dbbk;
 
@@ -150,6 +178,19 @@ public class User {
 
     public void setDbbk(String dbbk) {
         this.dbbk = dbbk == null ? null : dbbk.trim();
+    }
+
+    private String dbbkName;
+
+    public String getDbbkName() {
+        if (dbbk!=null){
+            return dbbks.get(this.dbbk);
+        }
+        return dbbkName;
+    }
+
+    public void setDbbkName(String dbbkName) {
+        this.dbbkName = dbbkName;
     }
 
     public String getUsercode() {
@@ -265,6 +306,7 @@ public class User {
         this.branchcode = branchcode == null ? null : branchcode.trim();
     }
 
+    //党办考核
     public Double getAratio() {
         return aratio;
     }
@@ -295,6 +337,71 @@ public class User {
 
     public void setDratio(Double dratio) {
         this.dratio = dratio;
+    }
+
+    public Double getEratio() {
+        return eratio;
+    }
+
+    public void setEratio(Double eratio) {
+        this.eratio = eratio;
+    }
+
+    public Double getFratio() {
+        return fratio;
+    }
+
+    public void setFratio(Double fratio) {
+        this.fratio = fratio;
+    }
+
+    //干部考核
+    public Double getAratio2() {
+        return aratio2;
+    }
+
+    public void setAratio2(Double aratio2) {
+        this.aratio2 = aratio2;
+    }
+
+    public Double getBratio2() {
+        return bratio2;
+    }
+
+    public void setBratio2(Double bratio2) {
+        this.bratio2 = bratio2;
+    }
+
+    public Double getCratio2() {
+        return cratio2;
+    }
+
+    public void setCratio2(Double cratio2) {
+        this.cratio2 = cratio2;
+    }
+
+    public Double getDratio2() {
+        return dratio2;
+    }
+
+    public void setDratio2(Double dratio2) {
+        this.dratio2 = dratio2;
+    }
+
+    public Double getEratio2() {
+        return eratio2;
+    }
+
+    public void setEratio2(Double eratio2) {
+        this.eratio2 = eratio2;
+    }
+
+    public Double getFratio2() {
+        return fratio2;
+    }
+
+    public void setFratio2(Double fratio2) {
+        this.fratio2 = fratio2;
     }
 
     public static Map<String, String> getRoles() {

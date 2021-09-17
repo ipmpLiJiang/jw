@@ -22,38 +22,6 @@
         <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <!--查询所有评分汇总数据/待评分列表数据-->
-    <select id="selectUserSummary" resultMap="BaseResultMap">
-        select u.*,m.*,s.* from user u ,monthsummary m,score s
-        <where>
-            <if test="username!=null and username!=''">
-                and u.UserName like concat('%',#{username},'%')
-            </if>
-            <if test="stationcode!=null and stationcode!=''">
-                and u.StationCode=#{stationcode}
-            </if>
-            <if test="year!=null and year!=''">
-                and m.Year=#{year}
-            </if>
-            <if test='dbtype!=null and dbtype!=""'>
-                and m.dbtype=#{dbtype}
-            </if>
-            <if test='month!=null and month !=""'>
-                and m.Month=#{month}
-            </if>
-            and u.UserCode =m.EmployeeCode
-            and m.EmployeeCode=s.ScorredCode
-            and m.dbtype = s.dbtype
-            and s.ScorringCode=#{scorringcode}
-            and m.State in ("6","7")
-            and u.RoleType="0"
-            and u.Flag="0"
-
-            and u.UserState="1"
-        </where>
-
-    </select>
-
     <!--通过被评分人的code,年份，月度查找相关数据-->
     <select id="selectUserSummaryByLike" resultMap="BaseResultMap">
         select u.UserCode,u.UserName,u.Moneycard,
@@ -140,6 +108,37 @@
             and s.ScorringCode=#{scorringcode}
             and m.dbtype = #{dbtype}
             and m.State ="6"
+            and u.RoleType="0"
+            and u.Flag="0"
+            and u.UserState="1"
+        </where>
+
+    </select>
+
+    <!--查询所有评分汇总数据/待评分列表数据-->
+    <select id="selectUserSummary" resultMap="BaseResultMap">
+        select u.*,m.*,s.* from user u ,monthsummary m,score s
+        <where>
+            <if test="username!=null and username!=''">
+                and u.UserName like concat('%',#{username},'%')
+            </if>
+            <if test="stationcode!=null and stationcode!=''">
+                and u.StationCode=#{stationcode}
+            </if>
+            <if test="year!=null and year!=''">
+                and m.Year=#{year}
+            </if>
+            <if test='dbtype!=null and dbtype!=""'>
+                and m.dbtype=#{dbtype}
+            </if>
+            <if test='month!=null and month !=""'>
+                and m.Month=#{month}
+            </if>
+            and u.UserCode =m.EmployeeCode
+            and m.EmployeeCode=s.ScorredCode
+            and m.dbtype = s.dbtype
+            and s.ScorringCode=#{scorringcode}
+            and m.State in ("6","7")
             and u.RoleType="0"
             and u.Flag="0"
             and u.UserState="1"

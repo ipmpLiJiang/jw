@@ -1,5 +1,8 @@
 package com.welb.organization_check.dto;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * @author luoyaozu
  * @title: UserEvaluationDto
@@ -8,6 +11,14 @@ package com.welb.organization_check.dto;
  * @date 2019/7/1111:41
  */
 public class UserEvaluationDto {
+
+    public static Map<String, String> dbbks = new LinkedHashMap<>();
+    static {
+        dbbks.put("1","组织委员纪检委员");
+        dbbks.put("2","宣传委员青年委员");
+        dbbks.put("3","党支部书记");
+        dbbks.put("4","总党支部书记");
+    }
     private Integer id;
 
     private String moneycard;
@@ -66,6 +77,10 @@ public class UserEvaluationDto {
 
     private Double dscore;
 
+    private Double escore;
+
+    private Double fscore;
+
     private Double dfScore;
 
     private Double zfScore;
@@ -80,8 +95,18 @@ public class UserEvaluationDto {
         this.dbtype = dbtype == null ? null : dbtype.trim();
     }
 
+    private String dbbkName;
 
     private String dbbk;
+
+    public static Map<String, String> getDbbks() {
+        return dbbks;
+    }
+
+    public static void setDbbks(Map<String, String> dbbks) {
+        UserEvaluationDto.dbbks = dbbks;
+    }
+
 
     public String getDbbk() {
         return dbbk;
@@ -89,6 +114,18 @@ public class UserEvaluationDto {
 
     public void setDbbk(String dbbk) {
         this.dbbk = dbbk == null ? null : dbbk.trim();
+    }
+
+
+    public String getDbbkName() {
+        if (dbbk!=null){
+            return dbbks.get(this.dbbk);
+        }
+        return dbbkName;
+    }
+
+    public void setDbbkName(String dbbkName) {
+        this.dbbkName = dbbkName;
     }
 
     private String mserialno;
@@ -339,6 +376,22 @@ public class UserEvaluationDto {
 
     public void setDscore(Double dscore) {
         this.dscore = dscore;
+    }
+
+    public Double getEscore() {
+        return escore;
+    }
+
+    public void setEscore(Double escore) {
+        this.escore = escore;
+    }
+
+    public Double getFscore() {
+        return fscore;
+    }
+
+    public void setFscore(Double fscore) {
+        this.fscore = fscore;
     }
 
     public Double getSumMbAvgScore() {

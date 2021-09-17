@@ -36,11 +36,15 @@ public class UserScoreDto {
     private Double bratio;
     private Double cratio;
     private Double dratio;
+    private Double eratio;
+    private Double fratio;
 
     private Double ascore;
     private Double bscore;
     private Double cscore;
     private Double dscore;
+    private Double escore;
+    private Double fscore;
 
     private String dbbk;
     private String branchCode;
@@ -102,11 +106,11 @@ public class UserScoreDto {
         this.scoreType = scoreType == null ? null : scoreType.trim();
     }
 
-    public String getFSerialNo() {
+    public String getFserialNo() {
         return fserialNo;
     }
 
-    public void setFSerialNo(String fserialNo) {
+    public void setFserialNo(String fserialNo) {
         this.fserialNo = fserialNo == null ? null : fserialNo.trim();
     }
 
@@ -150,68 +154,99 @@ public class UserScoreDto {
         this.score = score;
     }
 
-    public Double getARatio() {
+    public Double getAratio() {
         return aratio;
     }
 
-    public void setARatio(Double aratio) {
+    public void setAratio(Double aratio) {
         this.aratio = aratio;
     }
 
-    public Double getBRatio() {
+    public Double getBratio() {
         return bratio;
     }
 
-    public void setBRatio(Double bratio) {
+    public void setBratio(Double bratio) {
         this.bratio = bratio;
     }
 
-    public Double getCRatio() {
+    public Double getCratio() {
         return cratio;
     }
 
-    public void setCRatio(Double cratio) {
+    public void setCratio(Double cratio) {
         this.cratio = cratio;
     }
 
-    public Double getDRatio() {
+    public Double getDratio() {
         return dratio;
     }
 
-    public void setDRatio(Double dratio) {
+    public void setDratio(Double dratio) {
         this.dratio = dratio;
     }
 
+    public Double getEratio() {
+        return eratio;
+    }
 
-    public Double getAScore() {
+    public void setEratio(Double eratio) {
+        this.eratio = eratio;
+    }
+
+    public Double getFratio() {
+        return fratio;
+    }
+
+    public void setFratio(Double fratio) {
+        this.fratio = fratio;
+    }
+
+    public Double getAscore() {
         return ascore;
     }
 
-    public void setAScore(Double ascore) {
+    public void setAscore(Double ascore) {
         this.ascore = ascore;
     }
 
-    public Double getBScore() {
+    public Double getBscore() {
         return bscore;
     }
 
-    public void setBScore(Double bscore) {
+    public void setBscore(Double bscore) {
         this.bscore = bscore;
     }
 
-    public Double getCScore() {
+    public Double getCscore() {
         return cscore;
     }
 
-    public void setCScore(Double cscore) {
+    public void setCscore(Double cscore) {
         this.cscore = cscore;
     }
 
-    public Double getDScore() {
+    public Double getDscore() {
         return dscore;
     }
 
-    public void setDScore(Double dscore) {
+    public void setDscore(Double dscore) {
         this.dscore = dscore;
+    }
+
+    public Double getEscore() {
+        return escore;
+    }
+
+    public void setEscore(Double escore) {
+        this.escore = escore;
+    }
+
+    public Double getFscore() {
+        return fscore;
+    }
+
+    public void setFscore(Double fscore) {
+        this.fscore = fscore;
     }
 }

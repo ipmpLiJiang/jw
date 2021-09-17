@@ -15,6 +15,10 @@ public class ScoreDetail
     private Double ratio;
     private String score;
     private String scoretype;
+
+    private String cpsm;
+    private String zpsm;
+
     private String dbtype;
     private String dbbk;
 
@@ -90,5 +94,22 @@ public class ScoreDetail
 
     public void setScoretype(String scoretype) {
         this.scoretype = scoretype == null ? null : scoretype.trim();
+    }
+
+
+    public String getCpsm() {
+        return cpsm;
+    }
+
+    public void setCpsm(String cpsm) {
+        this.cpsm = cpsm == null ? null : cpsm.trim();
+    }
+
+    public String getZpsm() {
+        return zpsm;
+    }
+
+    public void setZpsm(String zpsm) {
+        this.zpsm = zpsm == null ? null : zpsm.trim();
     }
 }

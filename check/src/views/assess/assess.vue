@@ -131,13 +131,31 @@
               class="label"
               v-html="item.dutyname"
             ></div>
+            <el-row>
+              <el-col :span="2">
+                自评说明:
+              </el-col>
+                <el-col :span="15">
+              <el-input v-model="item.zpsm"></el-input>
+                </el-col>
+              </el-row>
             <div class="value">
-              <div class="core">优秀({{item.ascore}})</div>
-              <div class="core">良好({{item.bscore}})</div>
-              <div class="core">一般({{item.cscore}})</div>
-              <div class="core">较差({{item.dscore}})</div>
-              <div class="core">
-                <el-input-number
+              <el-radio-group v-model="item.score" style="display:list-item">
+              <el-row type="flex" justify="space-around">
+                <el-col :span="5">
+<el-radio-button :label="item.ascore">优秀</el-radio-button>
+                </el-col>
+                <el-col :span="5">
+ <el-radio-button :label="item.bscore">良好</el-radio-button>
+                </el-col>
+                <el-col :span="5">
+<el-radio-button :label="item.cscore">一般</el-radio-button>
+                </el-col>
+                <el-col :span="5">
+<el-radio-button :label="item.dscore">较差</el-radio-button>
+                </el-col>
+                <el-col :span="4">
+                 <el-input-number
                   placeholder="请输入分数"
                   v-model="item.score"
                   clearable
@@ -145,8 +163,18 @@
                   :disabled="detailData.isedit == 1 ? true : false"
                 >
                 </el-input-number>
-              </div>
+                </el-col>
+              </el-row>
+              </el-radio-group>
             </div>
+              <el-row v-show="item.score == item.dscore?true:false">
+                <el-col :span="2">
+                差评说明原因:
+              </el-col>
+                <el-col :span="15">
+              <el-input v-model="item.cpsm"></el-input>
+                </el-col>
+              </el-row>
           </li>
           <li class="li-title">
             <div class="title">岗位职责(总分20)</div>
@@ -159,13 +187,31 @@
               class="label"
               v-html="item.dutyname"
             ></div>
+            <el-row>
+              <el-col :span="2">
+                自评说明:
+              </el-col>
+                <el-col :span="15">
+              <el-input v-model="item.zpsm"></el-input>
+                </el-col>
+              </el-row>
             <div class="value">
-              <div class="core">优秀({{item.ascore}})</div>
-              <div class="core">良好({{item.bscore}})</div>
-              <div class="core">一般({{item.cscore}})</div>
-              <div class="core">较差({{item.dscore}})</div>
-              <div class="core">
-                <el-input-number
+              <el-radio-group v-model="item.score" style="display:list-item">
+              <el-row type="flex" justify="space-around">
+                <el-col :span="5">
+<el-radio-button :label="item.ascore">优秀</el-radio-button>
+                </el-col>
+                <el-col :span="5">
+ <el-radio-button :label="item.bscore">良好</el-radio-button>
+                </el-col>
+                <el-col :span="5">
+<el-radio-button :label="item.cscore">一般</el-radio-button>
+                </el-col>
+                <el-col :span="5">
+<el-radio-button :label="item.dscore">较差</el-radio-button>
+                </el-col>
+                <el-col :span="4">
+                 <el-input-number
                   placeholder="请输入分数"
                   v-model="item.score"
                   clearable
@@ -173,8 +219,18 @@
                   :disabled="detailData.isedit == 1 ? true : false"
                 >
                 </el-input-number>
-              </div>
+                </el-col>
+              </el-row>
+              </el-radio-group>
             </div>
+              <el-row v-show="item.score == item.dscore?true:false">
+                <el-col :span="2">
+                差评说明原因:
+              </el-col>
+                <el-col :span="15">
+              <el-input v-model="item.cpsm"></el-input>
+                </el-col>
+              </el-row>
           </li>
           <li class="li-title">
             <div class="title">重点任务(总分25)</div>
@@ -187,13 +243,31 @@
               class="label"
               v-html="item.dutyname"
             ></div>
+            <el-row>
+              <el-col :span="2">
+                自评说明:
+              </el-col>
+                <el-col :span="15">
+              <el-input v-model="item.zpsm"></el-input>
+                </el-col>
+              </el-row>
             <div class="value">
-              <div class="core">优秀({{item.ascore}})</div>
-              <div class="core">良好({{item.bscore}})</div>
-              <div class="core">一般({{item.cscore}})</div>
-              <div class="core">较差({{item.dscore}})</div>
-              <div class="core">
-                <el-input-number
+              <el-radio-group v-model="item.score" style="display:list-item">
+              <el-row type="flex" justify="space-around">
+                <el-col :span="5">
+<el-radio-button :label="item.ascore">优秀</el-radio-button>
+                </el-col>
+                <el-col :span="5">
+ <el-radio-button :label="item.bscore">良好</el-radio-button>
+                </el-col>
+                <el-col :span="5">
+<el-radio-button :label="item.cscore">一般</el-radio-button>
+                </el-col>
+                <el-col :span="5">
+<el-radio-button :label="item.dscore">较差</el-radio-button>
+                </el-col>
+                <el-col :span="4">
+                 <el-input-number
                   placeholder="请输入分数"
                   v-model="item.score"
                   clearable
@@ -201,8 +275,18 @@
                   :disabled="detailData.isedit == 1 ? true : false"
                 >
                 </el-input-number>
-              </div>
+                </el-col>
+              </el-row>
+              </el-radio-group>
             </div>
+              <el-row v-show="item.score == item.dscore?true:false">
+                <el-col :span="2">
+                差评说明原因:
+              </el-col>
+                <el-col :span="15">
+              <el-input v-model="item.cpsm"></el-input>
+                </el-col>
+              </el-row>
           </li>
           <li class="li-title">
             <div class="title">目标任务(总分25)</div>
@@ -215,13 +299,31 @@
               class="label"
               v-html="item.dutyname"
             ></div>
+            <el-row>
+              <el-col :span="2">
+                自评说明:
+              </el-col>
+                <el-col :span="15">
+              <el-input v-model="item.zpsm"></el-input>
+                </el-col>
+              </el-row>
             <div class="value">
-              <div class="core">优秀({{item.ascore}})</div>
-              <div class="core">良好({{item.bscore}})</div>
-              <div class="core">一般({{item.cscore}})</div>
-              <div class="core">较差({{item.dscore}})</div>
-              <div class="core">
-                <el-input-number
+              <el-radio-group v-model="item.score" style="display:list-item">
+              <el-row type="flex" justify="space-around">
+                <el-col :span="5">
+<el-radio-button :label="item.ascore">优秀</el-radio-button>
+                </el-col>
+                <el-col :span="5">
+ <el-radio-button :label="item.bscore">良好</el-radio-button>
+                </el-col>
+                <el-col :span="5">
+<el-radio-button :label="item.cscore">一般</el-radio-button>
+                </el-col>
+                <el-col :span="5">
+<el-radio-button :label="item.dscore">较差</el-radio-button>
+                </el-col>
+                <el-col :span="4">
+                 <el-input-number
                   placeholder="请输入分数"
                   v-model="item.score"
                   clearable
@@ -229,8 +331,18 @@
                   :disabled="detailData.isedit == 1 ? true : false"
                 >
                 </el-input-number>
-              </div>
+                </el-col>
+              </el-row>
+              </el-radio-group>
             </div>
+              <el-row v-show="item.score == item.dscore?true:false">
+                <el-col :span="2">
+                差评说明原因:
+              </el-col>
+                <el-col :span="15">
+              <el-input v-model="item.cpsm"></el-input>
+                </el-col>
+              </el-row>
           </li>
           <li
             class="w100 operation"
@@ -347,7 +459,7 @@
   </div>
 </template>
 <script>
-import { getDutyDetail, queryByUser, dutyScoring } from "@/api/home/home";
+import { getDetail, queryByUser, scoring } from "@/api/home/home";
 import { download } from "@/api/common/common";
 import qs from "qs";
 export default {
@@ -438,7 +550,7 @@ export default {
         data.month = this.$route.query.month;
       }
       new Promise((response, reject) => {
-        getDutyDetail(qs.stringify(data))
+        getDetail(qs.stringify(data))
           .then(response => {
             if (response.data.code == 0) {
               this.detailData = response.data.data.detail;
@@ -699,7 +811,7 @@ export default {
         dbtype: this.$store.state.user.user.dbtype
       };
       new Promise((response, reject) => {
-        getDutyDetail(qs.stringify(data))
+        getDetail(qs.stringify(data))
           .then(response => {
             if (response.data.code == 0) {
               if (response.data.data) {
@@ -750,16 +862,16 @@ export default {
         data.dutyZhongdian = [];
         data.dutyMubiao = [];
         this.dutyJichu.forEach(row => {
-          data.dutyJiChu.push({ topicId: row.dutycode, score: row.score, scoretype: row.scoretype });
+          data.dutyJiChu.push({ topicId: row.dutycode, score: row.score, scoretype: row.scoretype, cpsm: row.score != row.dscore?'':row.cpsm, zpsm: row.zpsm });
         });
         this.dutyYiban.forEach(row => {
-          data.dutyYiban.push({ topicId: row.dutycode, score: row.score, scoretype: row.scoretype });
+          data.dutyYiban.push({ topicId: row.dutycode, score: row.score, scoretype: row.scoretype, cpsm: row.score != row.dscore?'':row.cpsm, zpsm: row.zpsm });
         });
         this.dutyZhongdian.forEach(row => {
-          data.dutyZhongdian.push({ topicId: row.dutycode, score: row.score, scoretype: row.scoretype });
+          data.dutyZhongdian.push({ topicId: row.dutycode, score: row.score, scoretype: row.scoretype, cpsm: row.score != row.dscore?'':row.cpsm, zpsm: row.zpsm });
         });
         this.dutyMubiao.forEach(row => {
-          data.dutyMubiao.push({ topicId: row.dutycode, score: row.score, scoretype: row.scoretype });
+          data.dutyMubiao.push({ topicId: row.dutycode, score: row.score, scoretype: row.scoretype, cpsm: row.score != row.dscore?'':row.cpsm, zpsm: row.zpsm });
         });
         data.dutyJiChu = JSON.stringify(data.dutyJiChu);
         data.dutyYiban = JSON.stringify(data.dutyYiban);
@@ -769,7 +881,7 @@ export default {
         data.year =this.detailData.year;
         data.dbtype =this.$store.state.user.user.dbtype;
         new Promise((response, reject) => {
-          dutyScoring(qs.stringify(data))
+          scoring(qs.stringify(data))
             .then(response => {
               if (response.data.code == 0) {
                 this.$message({
