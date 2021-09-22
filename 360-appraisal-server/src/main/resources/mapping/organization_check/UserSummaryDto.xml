@@ -119,20 +119,20 @@
     <select id="selectUserSummary" resultMap="BaseResultMap">
         select u.*,m.*,s.* from user u ,monthsummary m,score s
         <where>
+            <if test="year!=null and year!=''">
+                and m.Year=#{year}
+            </if>
+            <if test='month!=null and month !=""'>
+                and m.Month=#{month}
+            </if>
+            <if test='dbtype!=null and dbtype!=""'>
+                and m.dbtype=#{dbtype}
+            </if>
             <if test="username!=null and username!=''">
                 and u.UserName like concat('%',#{username},'%')
             </if>
             <if test="stationcode!=null and stationcode!=''">
                 and u.StationCode=#{stationcode}
-            </if>
-            <if test="year!=null and year!=''">
-                and m.Year=#{year}
-            </if>
-            <if test='dbtype!=null and dbtype!=""'>
-                and m.dbtype=#{dbtype}
-            </if>
-            <if test='month!=null and month !=""'>
-                and m.Month=#{month}
             </if>
             and u.UserCode =m.EmployeeCode
             and m.EmployeeCode=s.ScorredCode
@@ -146,23 +146,46 @@
 
     </select>
 
+    <select id="selectUserSummaryScorredCode" resultMap="BaseResultMap">
+        select u.*,m.*,u.UserCode ScorredCode from user u ,monthsummary m
+        <where>
+            <if test="year!=null and year!=''">
+                and m.Year=#{year}
+            </if>
+            <if test='month!=null and month !=""'>
+                and m.Month=#{month}
+            </if>
+            and m.dbtype=#{dbtype}
+            and u.UserCode =m.EmployeeCode
+            AND m.EmployeeCode in (
+                select ScorredCode from score where dbtype = #{dbtype} and ScorredCode=#{scorredcode}
+            )
+            and m.State in ("6","7")
+            and u.RoleType="0"
+            and u.Flag="0"
+            and u.UserState="1"
+        </where>
+
+    </select>
+
+
     <!--查询所有评分汇总数据/待评分列表数据-->
     <select id="selectUserSummaryNew" resultMap="BaseResultMap">
         select distinct u.UserCode,u.UserName,
         m.SerialNo,m.Year,m.Month,m.Title,m.State,m.EmployeeCode,s1.StationCode,s1.StationName,d.DepartmentCode,d.DepartmentName,
         s.ScorringCode,s.ScorredCode,UUID() Id, null ScoreType, null DutyCode from user u ,monthsummary m,score s,station s1,department d
         <where>
-            <if test="username!=null and username!=''">
-                and u.UserName like concat('%',#{username},'%')
-            </if>
-            <if test="stationcode!=null and stationcode!=''">
-                and u.StationCode=#{stationcode}
-            </if>
             <if test="year!=null and year!=''">
                 and m.Year=#{year}
             </if>
             <if test="month!=null and month !=''">
                 and m.Month=#{month}
+            </if>
+            <if test="username!=null and username!=''">
+                and u.UserName like concat('%',#{username},'%')
+            </if>
+            <if test="stationcode!=null and stationcode!=''">
+                and u.StationCode=#{stationcode}
             </if>
             and u.UserCode =m.EmployeeCode
             and m.EmployeeCode=s.ScorredCode

@@ -2,7 +2,7 @@
   <div>
 
     <el-dialog
-      title="月结管理"
+      title="季结管理"
       :visible.sync="dialogVisible"
       :before-close="cancel"
       width="50%"
@@ -15,14 +15,14 @@
             disabled="true"
           ></el-input>
         </el-form-item>
-        <el-form-item label="当前月度">
+        <el-form-item label="当前季度">
           <el-input
             v-model="form.stationname"
             disabled="true"
           ></el-input>
         </el-form-item> -->
         <el-form-item
-          label="月结标题"
+          label="季结标题"
           :rules="[
               { required: true},
             ]"
@@ -33,7 +33,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item
-          label="月结内容"
+          label="季结内容"
           :rules="[
               { required: true},
             ]"

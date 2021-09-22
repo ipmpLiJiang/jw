@@ -94,7 +94,7 @@ public class EvaluationReportController {
                     getEvaluation(usercode, year, month, map, data, report, r1, r2, user, df,dbtype);
 
                 } else {
-                    map.put("msg", "年份和月度必须一起选择才可以搜索");
+                    map.put("msg", "年份和季度必须一起选择才可以搜索");
                     map.put("code", 1);
                 }
             } catch (Exception e) {

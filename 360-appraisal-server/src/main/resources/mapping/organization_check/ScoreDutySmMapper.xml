@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.organization_check.mapper.ScoreDutySmMapper">
+        <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.ScoreDutySm" >
+            <id column="Id" property="id" jdbcType="INTEGER"/>
+            <result column="Year" property="year" jdbcType="VARCHAR"/>
+            <result column="Month" property="month" jdbcType="VARCHAR"/>
+            <result column="DutyCode" property="dutycode" jdbcType="VARCHAR"/>
+            <result column="ScorredCode" property="scorredcode" jdbcType="VARCHAR"/>
+            <result column="zpsm" property="zpsm" jdbcType="VARCHAR"/>
+            <result column="dbtype" property="dbtype" jdbcType="VARCHAR"/>
+            <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
+        </resultMap>
+
+        <sql id="Base_Column_List">
+        Id, Year, Month, DutyCode, ScorredCode, zpsm ,dbtype,dbbk
+      </sql>
+
+        <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+            select
+            <include refid="Base_Column_List"/>
+            from scoreDutySm
+            where Id = #{id,jdbcType=INTEGER}
+        </select>
+
+        <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from scoreDutySm
+        where  Id = #{id,jdbcType=INTEGER}
+      </delete>
+        <insert id="insert" parameterType="com.welb.organization_check.entity.ScoreDutySm" >
+        insert into scoreDutySm (Year, Month,DutyCode, ScorredCode, zpsm ,dbtype,dbbk)
+        values (#{year,jdbcType=VARCHAR}, #{month,jdbcType=VARCHAR},#{dutycode,jdbcType=VARCHAR},
+        #{scorredcode,jdbcType=VARCHAR}, #{zpsm,jdbcType=VARCHAR},
+        #{dbtype,jdbcType=VARCHAR},#{dbbk,jdbcType=VARCHAR})
+      </insert>
+        <insert id="insertSelective" parameterType="com.welb.organization_check.entity.ScoreDutySm">
+            insert into scoreDutySm
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">
+                    Id,
+                </if>
+                <if test="year != null">
+                    Year,
+                </if>
+                <if test="month != null">
+                    Month,
+                </if>
+                <if test="dutycode != null">
+                    DutyCode,
+                </if>
+                <if test="scorredcode != null">
+                    ScorredCode,
+                </if>
+                <if test="zpsm != null">
+                    zpsm,
+                </if>
+                <if test="dbtype != null">
+                    dbtype,
+                </if>
+                <if test="dbbk != null">
+                    dbbk,
+                </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">
+                    #{id,jdbcType=VARCHAR},
+                </if>
+                <if test="year != null">
+                    #{year,jdbcType=VARCHAR},
+                </if>
+                <if test="month != null">
+                    #{month,jdbcType=VARCHAR},
+                </if>
+                <if test="dutycode != null">
+                    #{dutycode,jdbcType=VARCHAR},
+                </if>
+                <if test="scorredcode != null">
+                    #{scorredcode,jdbcType=VARCHAR},
+                </if>
+                <if test="zpsm != null">
+                    #{zpsm,jdbcType=VARCHAR},
+                </if>
+                <if test="dbtype != null">
+                    #{dbtype,jdbcType=VARCHAR},
+                </if>
+                <if test="dbbk != null">
+                    #{dbbk,jdbcType=VARCHAR},
+                </if>
+            </trim>
+        </insert>
+
+    <insert id="batchInset">
+        insert into scoreDutySm(Year, Month,DutyCode, ScorredCode, zpsm ,dbtype,dbbk) values
+        <foreach collection="list" item="detail"  separator=",">
+            (#{detail.year,jdbcType=VARCHAR}, #{detail.month,jdbcType=VARCHAR},#{detail.dutycode,jdbcType=VARCHAR},
+            #{detail.scorredcode,jdbcType=VARCHAR}, #{detail.zpsm,jdbcType=VARCHAR},
+            #{detail.dbtype,jdbcType=VARCHAR},#{detail.dbbk,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+        <update id="updateByPrimaryKey" parameterType="com.welb.organization_check.entity.ScoreDutySm">
+        update scoreDutySm
+        set zpsm = #{zpsm,jdbcType=VARCHAR}
+        where Id = #{id,jdbcType=INTEGER}
+      </update>
+        <update id="updateByYmSc" parameterType="com.welb.organization_check.entity.ScoreDutySm">
+        update scoreDutySm
+        set zpsm = #{zpsm,jdbcType=VARCHAR}
+        where Year = #{year,jdbcType=VARCHAR} and Month = #{month,jdbcType=VARCHAR} and DutyCode = #{dutycode,jdbcType=VARCHAR}
+        and ScorredCode =  #{scorredcode,jdbcType=VARCHAR} and dbtype = #{dbtype,jdbcType=VARCHAR}
+      </update>
+
+    <select id="selectScoreDutySmList" resultMap="BaseResultMap" parameterType="com.welb.organization_check.entity.ScoreDutySm">
+        SELECT
+            *
+        FROM
+            scoreDutySm
+        WHERE
+            Year = #{year,jdbcType=VARCHAR}
+            and Month = #{month,jdbcType=VARCHAR}
+            <if test="scorredcode != null">
+                and ScorredCode =  #{scorredcode,jdbcType=VARCHAR}
+            </if>
+             and dbtype = #{dbtype,jdbcType=VARCHAR}
+    </select>
+</mapper>

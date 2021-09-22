@@ -31,7 +31,7 @@
         </el-table-column>
         <el-table-column
           prop="mserialno"
-          label="月结编号"
+          label="季结编号"
         >
         </el-table-column>
         <el-table-column

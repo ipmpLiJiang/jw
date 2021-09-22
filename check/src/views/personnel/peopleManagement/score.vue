@@ -35,7 +35,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="月份">
+            <el-form-item label="季度">
               <el-select
                 v-model="search.month"
                 clearable
@@ -128,7 +128,7 @@
         </el-table-column>
         <el-table-column
           prop="month"
-          label="月份"
+          label="季度"
           show-overflow-tooltip
         >
         </el-table-column>

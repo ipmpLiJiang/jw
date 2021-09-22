@@ -132,7 +132,7 @@
         </el-table-column>
         <el-table-column
           prop="month"
-          label="月份"
+          label="季度"
           show-overflow-tooltip
         >
         </el-table-column>
@@ -301,7 +301,7 @@ export default {
         return;
       }
       if (!this.warn.month) {
-        this.$message.warning("请选择月份");
+        this.$message.warning("请选择季度");
         return;
       }
       this.$router.push({

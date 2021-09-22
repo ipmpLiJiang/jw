@@ -38,7 +38,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item :label="dbtype=='1'?'季度':'月度'">
+            <el-form-item label="季度">
               <el-select
                 v-model="search.month"
                 clearable
@@ -130,12 +130,12 @@
         >
         </el-table-column>
         <el-table-column
-          :label="dbtype=='1'?'打分季度':'打分月度'"
+          label="打分季度"
           prop="statename"
           show-overflow-tooltip
         >
           <template slot-scope="scope">
-            {{scope.row.year}}{{dbtype=='1'? '(第'+scope.row.month+'季度)':'-'+scope.row.month}}
+            {{scope.row.year}}{{'(第'+scope.row.month+'季度)'}}
           </template>
         </el-table-column>
       </el-table>

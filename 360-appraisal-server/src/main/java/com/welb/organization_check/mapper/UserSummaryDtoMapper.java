@@ -15,7 +15,9 @@ import java.util.List;
 @Mapper
 public interface UserSummaryDtoMapper {
 
-    List<UserSummaryDto>selectUserSummary(UserSummaryDto dto);
+    List<UserSummaryDto> selectUserSummary(UserSummaryDto dto);
+
+    List<UserSummaryDto> selectUserSummaryScorredCode(UserSummaryDto dto);
 
     List<UserSummaryDto>selectUserSummaryNew(UserSummaryDto dto);
 

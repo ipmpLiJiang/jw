@@ -72,6 +72,8 @@ public class UserDtoController {
     IScoreService scoreService;
     @Autowired
     IUserScoreDtoService userScoreDtoService;
+    @Autowired
+    IScoreDutySmService scoreDutySmService;
     /**
      * 历史评分汇总查询列表 查询所有年份的所有年度
      *
@@ -272,14 +274,13 @@ public class UserDtoController {
             Duty dutyQuery = new Duty();
             dutyQuery.setDbtype(dbtype);
             List<Duty> dutyList = dutyService.selectDutyAll(dutyQuery);
-            List<Duty> queryDutyList = new ArrayList<>();
             List<Score> scoreList = scoreService.findScoreAll(dbtype);
-            List<Score> queryScoreList = new ArrayList<>();
-            // 查询
-            List<ScoreHistory> queryHistoryList = new ArrayList<>();
-            List<ScoreFlow> queryFlowList = new ArrayList<>();
-            List<ScoreFlow> queryHbFlowList = new ArrayList<>();
-            List<ScoreDetail> queryDetailList = new ArrayList<>();
+            ScoreDutySm queryDutySm  = new ScoreDutySm();
+            queryDutySm.setYear(year);
+            queryDutySm.setMonth(month);
+            queryDutySm.setDbtype(dbtype);
+            List<ScoreDutySm> dutySmList =  scoreDutySmService.selectScoreDutySmList(queryDutySm);
+
             // History
             List<ScoreHistory> insertHistoryList = new ArrayList<>();
             List<ScoreHistory> updateHistoryList = new ArrayList<>();
@@ -289,7 +290,8 @@ public class UserDtoController {
             List<ScoreFlow> updateFlowList = new ArrayList<>();
             // Detail
             List<ScoreDetail> insertDetailList = new ArrayList<>();
-
+            //DutySm
+            List<ScoreDutySm> insertDutySmList = new ArrayList<>();
             List<String> scoreTypeList = new ArrayList<>();
             scoreTypeList.add("A");
             scoreTypeList.add("B");
@@ -298,9 +300,8 @@ public class UserDtoController {
             scoreTypeList.add("E");
             scoreTypeList.add("F");
 
-            this.getShengChengResult(year, month, scoreTypeList, bdfrUserDboList, dutyList, queryDutyList, scoreList, queryScoreList, historyList,
-                    bdfrHistoryList, queryHistoryList, bdfrFlowList, queryFlowList, queryHbFlowList, bdfrDetailList, queryDetailList,
-                    insertFlowList, updateFlowList, insertHistoryList, updateHistoryList, insertDetailList, dbtype);
+            this.getShengChengResult(year, month, scoreTypeList, bdfrUserDboList, dutyList, scoreList, historyList,
+                    bdfrHistoryList, bdfrFlowList, bdfrDetailList, insertFlowList, updateFlowList, insertHistoryList, updateHistoryList, insertDetailList,dutySmList,insertDutySmList, dbtype);
 
             if (insertHistoryList.size() > 0) {
                 historyService.batchInsert(insertHistoryList);
@@ -318,6 +319,9 @@ public class UserDtoController {
             }
             if (insertDetailList.size() > 0) {
                 scoreDetailService.batchInset(insertDetailList);
+            }
+            if(insertDutySmList.size() > 0) {
+                scoreDutySmService.batchInset(insertDutySmList);
             }
         }
     }
@@ -515,23 +519,35 @@ public class UserDtoController {
 
 
     private void getShengChengResult(String year, String month, List<String> scoreTypeList, List<UserDto> bdfrUserDboList,
-                                     List<Duty> dutyList, List<Duty> queryDutyList,
-                                     List<Score> scoreList, List<Score> queryScoreList,
-                                     List<ScoreHistory> historyList, List<ScoreHistory> bdfrHistoryList, List<ScoreHistory> queryHistoryList,
-                                     List<ScoreFlow> bdfrFlowList, List<ScoreFlow> queryFlowList, List<ScoreFlow> queryHbFlowList,
-                                     List<ScoreDetail> bdfrDetailList, List<ScoreDetail> queryDetailList,
+                                     List<Duty> dutyList,  List<Score> scoreList,
+                                     List<ScoreHistory> historyList, List<ScoreHistory> bdfrHistoryList,
+                                     List<ScoreFlow> bdfrFlowList, List<ScoreDetail> bdfrDetailList,
                                      List<ScoreFlow> insertFlowList, List<ScoreFlow> updateFlowList,
                                      List<ScoreHistory> insertHistoryList, List<ScoreHistory> updateHistoryList,
-                                     List<ScoreDetail> insertDetailList, String dbtype) {
+                                     List<ScoreDetail> insertDetailList,List<ScoreDutySm> dutySmList,List<ScoreDutySm> insertDutySmList, String dbtype) {
+        // 查询
+        List<Duty> queryDutyList = new ArrayList<>();
+        List<Score> queryScoreList = new ArrayList<>();
+        List<ScoreHistory> queryHistoryList = new ArrayList<>();
+        List<ScoreFlow> queryFlowList = new ArrayList<>();
+        List<ScoreFlow> queryHbFlowList = new ArrayList<>();
+        List<ScoreDetail> queryDetailList = new ArrayList<>();
+        List<ScoreDutySm> queryDutySmList = new ArrayList<>();
 
         Double sumScore = 0.0;
         Double ratio = 0.0;
         boolean isQueryDuty = false;
+        boolean isDutySm = false;
         for (UserDto dto : bdfrUserDboList) {
-            if (!isQueryDuty) {
-                queryDutyList = dutyList;
-                isQueryDuty = true;
+            if(dbtype.equals("1")) {
+                if (!isQueryDuty) {
+                    queryDutyList = dutyList;
+                    isQueryDuty = true;
+                }
+            } else {
+                queryDutyList = dutyList.stream().filter(s -> s.getStationcode().equals(dto.getStationcode())).collect(Collectors.toList());
             }
+            isDutySm = false;
             queryHistoryList = bdfrHistoryList.stream().filter(s -> s.getUsercode().equals(dto.getUsercode())).collect(Collectors.toList());
             if (queryHistoryList.size() == 0) {
                 ScoreHistory history = new ScoreHistory();
@@ -551,7 +567,9 @@ public class UserDtoController {
             } else {
                 historyList.add(queryHistoryList.get(0));
             }
+
             if (queryDutyList.size() > 0) {
+                queryDutySmList = dutySmList.stream().filter(s->s.getScorredcode().equals(dto.getUsercode())).collect(Collectors.toList());
                 for (String scoreType : scoreTypeList) {
                     queryScoreList = scoreList.stream().filter(s -> s.getScoretype().equals(scoreType) &&
                             s.getScorredcode().equals(dto.getUsercode())).collect(Collectors.toList());
@@ -599,10 +617,20 @@ public class UserDtoController {
                                     detail.setDbtype(dbtype);
                                     insertDetailList.add(detail);
                                     sumScore += duty.getDefScore() == null ? 0 : duty.getDefScore();
+
+                                    if(queryDutySmList.size()==0 && !isDutySm) {
+                                        ScoreDutySm dutySm = new ScoreDutySm();
+                                        dutySm.setYear(year);
+                                        dutySm.setMonth(month);
+                                        dutySm.setDutycode(duty.getDutycode());
+                                        dutySm.setScorredcode(dto.getUsercode());
+                                        dutySm.setZpsm("无");
+                                        dutySm.setDbtype(dbtype);
+                                        insertDutySmList.add(dutySm);
+                                    }
                                 }
                                 scoreFlow.setScore(sumScore);
                                 insertFlowList.add(scoreFlow);
-
                             } else {
                                 ScoreFlow updateFlow = queryFlowList.get(0);
                                 sumScore = 0.0;
@@ -618,6 +646,17 @@ public class UserDtoController {
                                         detail.setDbtype(dbtype);
                                         insertDetailList.add(detail);
                                         sumScore += duty.getDefScore() == null ? 0 : duty.getDefScore();
+
+                                        if(queryDutySmList.size()==0 && !isDutySm) {
+                                            ScoreDutySm dutySm = new ScoreDutySm();
+                                            dutySm.setYear(year);
+                                            dutySm.setMonth(month);
+                                            dutySm.setDutycode(duty.getDutycode());
+                                            dutySm.setScorredcode(dto.getUsercode());
+                                            dutySm.setZpsm("无");
+                                            dutySm.setDbtype(dbtype);
+                                            insertDutySmList.add(dutySm);
+                                        }
                                     }
                                 }
                                 if (sumScore != 0.0) {
@@ -625,6 +664,7 @@ public class UserDtoController {
                                     updateFlowList.add(updateFlow);
                                 }
                             }
+                            isDutySm = true;
                         }
                     }
                 }
@@ -828,10 +868,10 @@ public class UserDtoController {
             counts += count;
         }
         if (counts > 0) {
-            map.put("msg", "批量修改月结评分完成状态成功");
+            map.put("msg", "批量修改季结评分完成状态成功");
             map.put("code", 0);
         } else {
-            map.put("msg", "批量修改月结评分完成状态失败");
+            map.put("msg", "批量修改季结评分完成状态失败");
             map.put("code", 1);
         }
         return map;
@@ -847,10 +887,10 @@ public class UserDtoController {
         ModelMap map = new ModelMap();
         int count = summaryService.updateFinishGradeAll(dbtype);
         if (count > 0) {
-            map.put("msg", "全部修改月结评分完成成功");
+            map.put("msg", "全部修改季结评分完成成功");
             map.put("code", 0);
         } else {
-            map.put("msg", "全部修改月结评分完成失败");
+            map.put("msg", "全部修改季结评分完成失败");
             map.put("code", 1);
         }
         return map;
@@ -867,7 +907,7 @@ public class UserDtoController {
         // 定义表的标题
         String title = "评分汇总-员工列表";
         //定义表的列名
-        String[] rowsName = new String[]{"序号", "用户姓名", "发薪号", "所属部门", "所属岗位", "月结状态", "A", "B", "C", "D", "总分"};
+        String[] rowsName = new String[]{"序号", "用户姓名", "发薪号", "所属部门", "所属岗位", "季结状态", "A", "B", "C", "D", "总分"};
         //定义表的内容
         List<Object[]> dataList = new ArrayList<>();
         Object[] objs = null;
@@ -910,7 +950,7 @@ public class UserDtoController {
         // 定义表的标题
         String title = "评分汇总-员工列表";
         //定义表的列名
-        String[] rowsName = new String[]{"序号", "用户姓名", "发薪号", "所属部门", "所属岗位", "月结状态", "A", "B", "C", "D", "总分"};
+        String[] rowsName = new String[]{"序号", "用户姓名", "发薪号", "所属部门", "所属岗位", "季结状态", "A", "B", "C", "D", "总分"};
         //定义表的内容
         List<Object[]> dataList = new ArrayList<>();
         Object[] objs;
@@ -1555,7 +1595,7 @@ public class UserDtoController {
         // 阈值，内存中的对象数量最大值，超过这个值会生成一个临时文件存放到硬盘中
         SXSSFWorkbook wb = new SXSSFWorkbook(100);
         Sheet sheet = wb.createSheet("历史评分汇总");
-        String[] titles = {"序号", "用户姓名", "发薪号", "所属部门", "所属岗位", "打分状态", "打分月度"};
+        String[] titles = {"序号", "用户姓名", "发薪号", "所属部门", "所属岗位", "打分状态", "打分季度"};
         Row titleRow = sheet.createRow(0);
         for (int i = 0; i < titles.length; i++) {
             Cell cell = titleRow.createCell(i);
@@ -1639,9 +1679,9 @@ public class UserDtoController {
         Sheet sheet = wb.createSheet("sheet1");
         String[] titles = null;
         if (dbtype.equals("2")) {
-            titles = new String[]{"序号", "用户姓名", "发薪号", "所属部门", "所属岗位", "角色", "打分状态", "月结状态", "月节月度", "A", "B", "C", "D", "总分", "平均目标", "目标", "医德医风", "总分和"};
+            titles = new String[]{"序号", "用户姓名", "发薪号", "所属部门", "所属岗位", "角色", "打分状态", "季结状态", "季结季度", "A", "B", "C", "D", "总分", "平均目标", "目标", "医德医风", "总分和"};
         } else {
-            titles = new String[]{"序号", "用户姓名", "发薪号", "所属部门", "所属岗位", "角色", "打分状态", "月结状态", "月节月度", "A", "B", "C", "D", "总分"};
+            titles = new String[]{"序号", "用户姓名", "发薪号", "所属部门", "所属岗位", "角色", "打分状态", "季结状态", "季结季度", "A", "B", "C", "D", "总分"};
         }
         Row titleRow = sheet.createRow(0);
         for (int i = 0; i < titles.length; i++) {

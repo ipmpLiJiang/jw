@@ -94,12 +94,18 @@ import leaderUser from '@/views/score/leader.vue'//打分用户管理
 import updatePsd from '@/views/user/updatePsd.vue' //修改密码
 import userQuarter from '@/views/user/quarter.vue' //个人月度总结
 import userGrade from '@/views/user/grade.vue' //个人评分
-
+import userSelf from '@/views/user/userSelfEvaluate.vue' //人员自评
 //考核
 import assess from '@/views/assess/assess.vue' //考核
 
 //考核
 import assess2 from '@/views/assess/assess2.vue' //考核
+
+//考核自评
+import assessZp from '@/views/assess/assessZp.vue' //考核
+
+//考核自评
+import assessZp2 from '@/views/assess/assessZp2.vue' //考核
 //登录提示
 import notice from '@/views/notice/notice.vue' //考核
 
@@ -360,12 +366,16 @@ export default new Router({
             component: updatePsd,
         }, {
             path: 'userQuarter',
-            name: "个人月结管理",
+            name: "个人季结管理",
             component: userQuarter,
         }, {
             path: 'userGrade',
             name: "个人评分",
             component: userGrade,
+        }, {
+            path: 'userSelf',
+            name: "个人自评",
+            component: userSelf,
         }, {
             path: 'assess',
             name: "考核打分",
@@ -374,6 +384,14 @@ export default new Router({
             path: 'assess2',
             name: "考核打分",
             component: assess2,
+        },{
+            path: 'assessZp',
+            name: "考核自评",
+            component: assessZp,
+        },  {
+            path: 'assessZp2',
+            name: "考核自评",
+            component: assessZp2,
         },{
             path: 'notice',
             name: "登录提示",

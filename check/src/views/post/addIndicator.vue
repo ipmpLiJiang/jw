@@ -45,31 +45,35 @@
           </el-select>
         </el-form-item>
         <el-form-item label="优秀分值">
-          <el-input
+          <el-input-number
             v-model="form.ascore"
-          ></el-input>
+            style="width: 50%;"
+          ></el-input-number>
         </el-form-item>
         <el-form-item label="良好分值">
-          <el-input
+          <el-input-number
             v-model="form.bscore"
-          ></el-input>
+            style="width: 50%;"
+          ></el-input-number>
         </el-form-item>
         <el-form-item label="一般分值">
-          <el-input
+          <el-input-number
             v-model="form.cscore"
-          ></el-input>
+            style="width: 50%;"
+          ></el-input-number>
         </el-form-item>
         <el-form-item label="较差分值">
-          <el-input
+          <el-input-number
             v-model="form.dscore"
-          ></el-input>
+            style="width: 50%;"
+          ></el-input-number>
         </el-form-item>
         <el-form-item label="默认评分">
           <el-input-number
             placeholder="请输入分数"
             v-model="form.defScore"
             clearable
-            style="width: 150px;"
+            style="width: 50%;"
           >
           </el-input-number>
         </el-form-item>

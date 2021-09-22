@@ -139,11 +139,11 @@
         >
         </el-table-column>
         <el-table-column
-          :label="dbtype=='1'?'评分季度':'评分月份'"
+          label="评分季度"
           show-overflow-tooltip
         >
           <template slot-scope="scope">
-            {{scope.row.year}}{{dbtype=='1'? '(第'+scope.row.month+'季度)':'-'+scope.row.month}}
+            {{scope.row.year}}{{'(第'+scope.row.month+'季度)'}}
           </template>
         </el-table-column>
         <el-table-column
@@ -280,7 +280,7 @@ export default {
   data() {
     return {
       dbtype: this.$store.state.user.user.dbtype,
-      khtitle: this.$store.state.user.user.dbtype =='1' ? '季结':'月结',
+      khtitle: '季结',
       quarterOptions: [
         {
           value: "0",
@@ -320,11 +320,11 @@ export default {
       statusOptions: [
         {
           value: "6",
-          label: this.$store.state.user.user.dbtype == '1' ? '季结评分':'月结评分'
+          label: '季结评分'
         },
         {
           value: "7",
-          label: this.$store.state.user.user.dbtype == '1' ? '季结评分完成':'月结评分完成'
+          label: '季结评分完成'
         }
       ],
       title: "",

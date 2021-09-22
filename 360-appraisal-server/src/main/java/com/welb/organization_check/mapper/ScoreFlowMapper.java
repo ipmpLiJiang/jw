@@ -22,6 +22,8 @@ public interface ScoreFlowMapper {
 
     List<ScoreFlow> selectByScoreFlow(@Param("mserialno") String mserialno,@Param("scorringcode")String scorringcode,@Param("dbtype")String dbtype);
 
+    List<ScoreFlow> selectByScoredCodeFlow(@Param("mserialno") String mserialno,@Param("scoredcode")String scoredcode,@Param("dbtype")String dbtype);
+
     ScoreFlow getTotal(ScoreFlow scoreflow);
 
     Double getScoreByType(@Param("mserialno")String mserialno,@Param("scoretype")String scoretype,@Param("dbtype")String dbtype);

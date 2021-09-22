@@ -17,10 +17,27 @@ export function getDetail(data) {
         data: data
     })
 }
+//考核详情
+export function getDetail2(data) {
+    return fetch({
+        url: 'homepage/getDetail2',
+        method: 'post',
+        data: data
+    })
+}
 //提交考核
 export function scoring(data) {
     return fetch({
         url: 'homepage/getTotalScore',
+        method: 'post',
+        data: data
+    })
+}
+
+//提交考核
+export function scoring2(data) {
+    return fetch({
+        url: 'homepage/saveDutySm',
         method: 'post',
         data: data
     })
@@ -59,6 +76,14 @@ export function selfGetList(data) {
         data: data
     })
 }
+export function selfScorredCodeGetList(data) {
+    return fetch({
+        url: 'usersummary/selectUserSummaryScorredCode',
+        method: 'post',
+        data: data
+    })
+}
+
 //个人评分列表
 export function selfDutyGetList(data) {
     return fetch({

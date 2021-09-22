@@ -40,7 +40,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item :label="dbtype=='1'?'季度':'月度'">
+            <el-form-item label="季度">
               <el-select
                 v-model="search.month"
                 clearable
@@ -60,7 +60,7 @@
             :span="6"
             style="margin-top:20px;"
           >
-            <el-form-item :label="dbtype=='1'?'季结状态':'月结状态'">
+            <el-form-item label="季结状态">
               <el-select
                 v-model="search.state"
                 clearable
@@ -194,18 +194,18 @@
         >
         </el-table-column>
         <el-table-column
-          :label="dbtype=='1'?'季结状态':'月结状态'"
+          label="季结状态"
           prop="statename"
           show-overflow-tooltip
         >
         </el-table-column>
         <el-table-column
-          :label="dbtype=='1'?'季结季度':'月结月度'"
+          label="季结季度"
           prop="statename"
           show-overflow-tooltip
         >
           <template slot-scope="scope">
-            {{scope.row.year}}{{dbtype=='1'? '(第'+scope.row.month+'季度)':'-'+scope.row.month}}
+            {{scope.row.year}}{{'(第'+scope.row.month+'季度)'}}
           </template>
         </el-table-column>
         <el-table-column
@@ -300,13 +300,6 @@
         >
         </el-table-column>
         <el-table-column
-          label="目标"
-          v-if="dbtype=='1'?false:true"
-          prop="sumMbScore"
-          show-overflow-tooltip
-        >
-        </el-table-column>
-        <el-table-column
           label="医德医风"
           v-if="dbtype=='1'?false:true"
           prop="dfScore"
@@ -386,7 +379,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item :label="dbtype=='1'?'季度':'月度'">
+            <el-form-item label="季度">
               <el-select
                 v-model="exportNot.month"
                 clearable
@@ -663,7 +656,7 @@ export default {
         return;
       }
       if(!this.exportNot.month){
-        this.$message.warning("请选择"+ dbtype=='1'?'季度':'月度');
+        this.$message.warning("请选择季度");
         return;
       }
       window.location.href =

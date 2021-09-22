@@ -63,7 +63,7 @@
       >
         <template slot="title">
           <i class="el-icon-s-check"></i>
-          <span>月结管理</span>
+          <span>季结管理</span>
         </template>
         <router-link to="/home/scorePeople">
           <el-menu-item index="/home/scorePeople">评分关系管理</el-menu-item>
@@ -100,6 +100,12 @@
         <el-menu-item index="/home/userGrade">
           <i class="iconfont icon-pingfenshoucang-"></i>
           <span slot="title">人员评分管理</span>
+        </el-menu-item>
+      </router-link>
+      <router-link to="/home/userSelf">
+        <el-menu-item index="/home/userSelf">
+          <i class="el-icon-user-solid"></i>
+          <span slot="title">人员自评</span>
         </el-menu-item>
       </router-link>
       <!-- <router-link to="/home/userQuarter" v-if="role != '150'">

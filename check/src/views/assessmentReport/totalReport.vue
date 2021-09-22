@@ -38,7 +38,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item :label="dbtype=='1'?'评分季':'评分月'">
+            <el-form-item label="评分季度">
               <el-select
                 v-model="search.month"
                 clearable
@@ -179,12 +179,6 @@
           prop="sumMbAvgScore"
           v-if="dbtype=='1'?false:true"
           label="目标平均"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="mbScore"
-          v-if="dbtype=='1'?false:true"
-          label="目标得分"
         >
         </el-table-column>
         <el-table-column

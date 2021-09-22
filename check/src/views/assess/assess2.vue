@@ -131,12 +131,12 @@
               class="label"
               v-html="item.dutyname"
             ></div>
-            <el-row>
+            <el-row style="padding-top:5px;padding-bottom:10px;">
               <el-col :span="2">
                 自评说明:
               </el-col>
                 <el-col :span="15">
-              <el-input v-model="item.zpsm"></el-input>
+              {{item.zpsm}}
                 </el-col>
               </el-row>
             <div class="value">
@@ -167,7 +167,7 @@
               </el-row>
               </el-radio-group>
             </div>
-              <el-row v-show="item.score == item.dscore?true:false">
+              <el-row style="padding-top:10px;" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
                 差评说明原因:
               </el-col>
@@ -187,12 +187,12 @@
               class="label"
               v-html="item.dutyname"
             ></div>
-            <el-row>
+            <el-row style="padding-top:5px;padding-bottom:10px;">
               <el-col :span="2">
                 自评说明:
               </el-col>
                 <el-col :span="15">
-              <el-input v-model="item.zpsm"></el-input>
+              {{item.zpsm}}
                 </el-col>
               </el-row>
             <div class="value">
@@ -223,7 +223,7 @@
               </el-row>
               </el-radio-group>
             </div>
-              <el-row v-show="item.score == item.dscore?true:false">
+              <el-row style="padding-top:10px;" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
                 差评说明原因:
               </el-col>
@@ -243,12 +243,12 @@
               class="label"
               v-html="item.dutyname"
             ></div>
-            <el-row>
+            <el-row style="padding-top:5px;padding-bottom:10px;">
               <el-col :span="2">
                 自评说明:
               </el-col>
                 <el-col :span="15">
-              <el-input v-model="item.zpsm"></el-input>
+              {{item.zpsm}}
                 </el-col>
               </el-row>
             <div class="value">
@@ -279,7 +279,7 @@
               </el-row>
               </el-radio-group>
             </div>
-              <el-row v-show="item.score == item.dscore?true:false">
+              <el-row style="padding-top:10px;" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
                 差评说明原因:
               </el-col>
@@ -299,12 +299,12 @@
               class="label"
               v-html="item.dutyname"
             ></div>
-            <el-row>
+            <el-row style="padding-top:5px;padding-bottom:10px;">
               <el-col :span="2">
                 自评说明:
               </el-col>
                 <el-col :span="15">
-              <el-input v-model="item.zpsm"></el-input>
+              {{item.zpsm}}
                 </el-col>
               </el-row>
             <div class="value">
@@ -335,7 +335,7 @@
               </el-row>
               </el-radio-group>
             </div>
-              <el-row v-show="item.score == item.dscore?true:false">
+              <el-row style="padding-top:10px;" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
                 差评说明原因:
               </el-col>
@@ -355,12 +355,12 @@
               class="label"
               v-html="item.dutyname"
             ></div>
-            <el-row>
+            <el-row style="padding-top:5px;padding-bottom:10px;">
               <el-col :span="2">
                 自评说明:
               </el-col>
                 <el-col :span="15">
-              <el-input v-model="item.zpsm"></el-input>
+              {{item.zpsm}}
                 </el-col>
               </el-row>
             <div class="value">
@@ -391,7 +391,7 @@
               </el-row>
               </el-radio-group>
             </div>
-              <el-row v-show="item.score == item.dscore?true:false">
+              <el-row style="padding-top:10px;" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
                 差评说明原因:
               </el-col>
@@ -717,10 +717,6 @@ export default {
       let scoreArr = [];
       for (let i = 0; i < this.dutyJichu.length; i++) {
         let val = this.dutyJichu[i];
-        if (!val.score) {
-          this.$message.warning("请先打完分数");
-          return false;
-        } else {
           if (!isNaN(val.score)) {
             let arScore = this.getMaxMin(val)
             if (arScore.length == 2) {
@@ -739,14 +735,10 @@ export default {
           } else {
             this.$message.warning("政治建设请填写正确数字");
           }
-        }
+        
       }
       for (let i = 0; i < this.dutyYiban.length; i++) {
         let val = this.dutyYiban[i];
-        if (!val.score) {
-          this.$message.warning("请先打完分数");
-          return false;
-        } else {
           if (!isNaN(val.score)) {
             let arScore = this.getMaxMin(val)
             if (arScore.length == 2) {
@@ -765,14 +757,9 @@ export default {
           } else {
             this.$message.warning("思想建设请填写正确数字");
           }
-        }
       }
       for (let i = 0; i < this.dutyZhongdian.length; i++) {
         let val = this.dutyZhongdian[i];
-        if (!val.score) {
-          this.$message.warning("请先打完分数");
-          return false;
-        } else {
           if (!isNaN(val.score)) {
             let arScore = this.getMaxMin(val)
             if (arScore.length == 2) {
@@ -791,14 +778,9 @@ export default {
           } else {
             this.$message.warning("组织建设请填写正确数字");
           }
-        }
       }
       for (let i = 0; i < this.dutyMubiao.length; i++) {
         let val = this.dutyMubiao[i];
-        if (!val.score) {
-          this.$message.warning("请先打完分数");
-          return false;
-        } else {
           if (!isNaN(val.score)) {
             let arScore = this.getMaxMin(val)
             if (arScore.length == 2) {
@@ -817,14 +799,10 @@ export default {
           } else {
             this.$message.warning("党建创新请填写正确数字");
           }
-        }
+        
       }
        for (let i = 0; i < this.dutyZuofeng.length; i++) {
         let val = this.dutyZuofeng[i];
-        if (!val.score) {
-          this.$message.warning("请先打完分数");
-          return false;
-        } else {
           if (!isNaN(val.score)) {
             let arScore = this.getMaxMin(val)
             if (arScore.length == 2) {
@@ -843,7 +821,7 @@ export default {
           } else {
             this.$message.warning("作风建设请填写正确数字");
           }
-        }
+        
       }
       this.scoreShow = true;
       this.totalScore = totalScore;
@@ -852,7 +830,7 @@ export default {
     //历史查询
     historySearch() {
       if (!this.search.year || !this.search.month) {
-        this.$message.warning("请选择年份和月份后在搜索");
+        this.$message.warning("请选择年份和季度后在搜索");
         return;
       }
       this.searchLoading = true;

@@ -24,7 +24,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="评分月">
+            <el-form-item label="评分季度">
               <el-select
                 v-model="search.month"
                 clearable
@@ -60,7 +60,7 @@
               ><i class="el-icon-chat-line-round"></i>一键短信提醒用户</el-button>
             </el-form-item>
             <el-form-item class="notice">
-              <span>友情提示：搜索框的年份和月份都为空就是查询全部数据</span>
+              <span>友情提示：搜索框的年份和季度都为空就是查询全部数据</span>
             </el-form-item>
           </el-col>
         </el-form>
@@ -157,7 +157,7 @@
         </el-table-column>
         <el-table-column
           prop="month"
-          label="月份"
+          label="季度"
           show-overflow-tooltip
         >
         </el-table-column>
@@ -197,7 +197,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="月份">
+          <el-form-item label="季度">
             <el-select
               v-model="warn.month"
               clearable
@@ -334,7 +334,7 @@ export default {
         return;
       }
       if (!this.warn.month) {
-        this.$message.warning("请选择月份");
+        this.$message.warning("请选择季度");
         return;
       }
       this.$router.push({

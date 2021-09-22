@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h4 class="title"><router-link to="/home"><span>首页</span></router-link><i class="el-icon-arrow-right"></i>个人月结管理</h4>
+    <h4 class="title"><router-link to="/home"><span>首页</span></router-link><i class="el-icon-arrow-right"></i>个人季结管理</h4>
     <el-row class="search">
       <el-col>
         <el-form
@@ -8,7 +8,7 @@
           show-overflow-tooltip="true"
         >
           <el-col :span="6">
-            <el-form-item label="月结标题">
+            <el-form-item label="季结标题">
               <el-input
                 placeholder="请输入标题"
                 v-model="search.title"
@@ -30,7 +30,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="月份">
+            <el-form-item label="季度">
               <el-select
                 v-model="search.month"
                 clearable
@@ -69,20 +69,20 @@
       >
         <el-table-column
           prop="serialno"
-          label="月结编码"
+          label="季结编码"
           show-overflow-tooltip
           width="200px"
         >
         </el-table-column>
         <el-table-column
           prop="title"
-          label="月结标题"
+          label="季结标题"
           show-overflow-tooltip
           width="150px"
         >
         </el-table-column>
         <el-table-column
-          label="月结月份"
+          label="季结季度"
           show-overflow-tooltip
         >
           <template slot-scope="scope">

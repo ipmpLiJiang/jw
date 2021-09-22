@@ -9,12 +9,11 @@
     <result column="Ratio" property="ratio" jdbcType="DOUBLE"/>
     <result column="ScoreType" property="scoretype" jdbcType="VARCHAR"/>
     <result column="cpsm" property="cpsm" jdbcType="VARCHAR"/>
-    <result column="zpsm" property="zpsm" jdbcType="VARCHAR"/>
     <result column="dbtype" property="dbtype" jdbcType="VARCHAR"/>
     <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
   </resultMap>
   <sql id="Base_Column_List" >
-    SerialNo, FSerialNo, DSerialNo, Score,Ratio,ScoreType, cpsm,zpsm,dbtype, dbbk
+    SerialNo, FSerialNo, DSerialNo, Score,Ratio,ScoreType, cpsm,dbtype, dbbk
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
@@ -27,10 +26,10 @@
     where SerialNo = #{serialNo,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.welb.organization_check.entity.ScoreDetail" >
-    insert into scoredetail (FSerialNo, DSerialNo, Score,Ratio, ScoreType, cpsm,zpsm,dbtype, dbbk)
+    insert into scoredetail (FSerialNo, DSerialNo, Score,Ratio, ScoreType, cpsm,dbtype, dbbk)
     values (#{FSerialNo,jdbcType=VARCHAR}, #{DSerialNo,jdbcType=VARCHAR},
     #{score,jdbcType=VARCHAR},#{ratio,jdbcType=DOUBLE}, #{scoretype,jdbcType=VARCHAR},
-    #{cpsm,jdbcType=VARCHAR},#{zpsm,jdbcType=VARCHAR},#{dbtype,jdbcType=VARCHAR},#{dbbk,jdbcType=VARCHAR})
+    #{cpsm,jdbcType=VARCHAR},#{dbtype,jdbcType=VARCHAR},#{dbbk,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.welb.organization_check.entity.ScoreDetail" >
     insert into scoredetail
@@ -55,9 +54,6 @@
       </if>
       <if test="cpsm != null" >
         cpsm,
-      </if>
-      <if test="zpsm != null" >
-        zpsm,
       </if>
       <if test="dbtype != null">
         dbtype,
@@ -88,9 +84,6 @@
       <if test="cpsm != null" >
         #{cpsm,jdbcType=VARCHAR},
       </if>
-      <if test="zpsm != null" >
-        #{zpsm,jdbcType=VARCHAR},
-      </if>
       <if test="dbtype != null">
         #{dbtype,jdbcType=VARCHAR},
       </if>
@@ -119,9 +112,6 @@
       </if>
       <if test="cpsm != null" >
         cpsm = #{cpsm,jdbcType=VARCHAR},
-      </if>
-      <if test="zpsm != null" >
-        zpsm = #{zpsm,jdbcType=VARCHAR},
       </if>
       <if test="dbtype != null">
         dbtype = #{dbtype,jdbcType=VARCHAR},
@@ -214,7 +204,7 @@
   </select>
 
   <insert id="batchInset">
-    insert into scoredetail(SerialNo,FSerialNo, DSerialNo, Score,Ratio,ScoreType,cpsm,zpsm, dbtype) values
+    insert into scoredetail(SerialNo,FSerialNo, DSerialNo, Score,Ratio,ScoreType,cpsm, dbtype) values
     <foreach collection="list" item="detail"  separator=",">
       (#{detail.serialNo,jdbcType=VARCHAR},
       #{detail.FSerialNo,jdbcType=VARCHAR},
@@ -223,7 +213,6 @@
       #{detail.ratio,jdbcType=DOUBLE},
       #{detail.scoretype,jdbcType=VARCHAR},
       #{detail.cpsm,jdbcType=VARCHAR},
-      #{detail.zpsm,jdbcType=VARCHAR},
       #{detail.dbtype,jdbcType=VARCHAR})
     </foreach>
   </insert>
@@ -251,9 +240,6 @@
           </if>
           <if test="detail.cpsm != null" >
             cpsm = #{detail.cpsm,jdbcType=VARCHAR},
-          </if>
-          <if test="detail.zpsm != null" >
-            zpsm = #{detail.zpsm,jdbcType=VARCHAR},
           </if>
           <if test="detail.dbtype != null">
             dbtype = #{detail.dbtype,jdbcType=VARCHAR},
@@ -288,9 +274,6 @@
           </if>
           <if test="detail.cpsm != null" >
             cpsm = #{detail.cpsm,jdbcType=VARCHAR},
-          </if>
-          <if test="detail.zpsm != null" >
-            zpsm = #{detail.zpsm,jdbcType=VARCHAR},
           </if>
           <if test="detail.dbtype != null">
             dbtype = #{detail.dbtype,jdbcType=VARCHAR},

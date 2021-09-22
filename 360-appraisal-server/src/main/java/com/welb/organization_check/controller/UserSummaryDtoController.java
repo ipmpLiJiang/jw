@@ -237,6 +237,51 @@ public class UserSummaryDtoController {
         return map;
     }
 
+    @RequestMapping(value = "/selectUserSummaryScorredCode", produces = "application/json;charset=utf-8")
+    public Object selectUserSummaryScorredCode(UserSummaryDto summaryDto, int pageNum, int pageSize, HttpServletRequest req) {
+        ModelMap map = new ModelMap();
+        String usercode = (String) req.getSession().getAttribute("usercode");
+        String state = (String) req.getSession().getAttribute("state");
+        if (usercode != null) {
+            ManualSetTime setTime = null;
+            //如果年份和月度同时为空  默认查当前月度的个人评分
+            if (summaryDto.getYear().equals("") && summaryDto.getMonth().equals("") ||
+                    summaryDto.getYear() == null && summaryDto.getMonth() == null) {
+                setTime = setTimeService.selectManualByYearAndMonth("", "",summaryDto.getDbtype());
+                if (setTime != null) {
+                    summaryDto.setYear(setTime.getYear());
+                    summaryDto.setMonth(setTime.getMonth());
+                }
+            }
+            if(setTime != null) {
+                PageHelper.startPage(pageNum, pageSize);
+                try {//当年份或者月度不为空的时候   查询的是历史的个人评分数据
+                    summaryDto.setScorredcode(usercode);
+                    List<UserSummaryDto> dtos = summaryDtoService.selectUserSummaryScorredCode(summaryDto);
+                    getSummaryInfo(dtos, summaryDto.getDbtype());
+                    PageInfo<UserSummaryDto> pageInfo = new PageInfo<>(dtos);
+                    dtos = pageInfo.getList();
+                    map.put("totalPages", pageInfo.getTotal());
+                    map.put("msg", "查询待评分列表数据成功");
+                    map.put("data", dtos);
+                    map.put("code", 0);
+                } catch (Exception e) {
+                    log.error(LogUtil.getTrace(e));
+                    map.put("msg", "查询待评分列表数据失败");
+                    map.put("code", 1);
+                }
+            } else {
+                map.put("msg", "当前年月没有季度评分数据");
+                map.put("code", 1);
+            }
+        } else {
+            map.put("msg", "登录用户超时,请重新登录");
+            map.put("code", 810);
+        }
+        return map;
+    }
+
+
     private void manualSelectUserSummaryLike(UserSummaryDto summaryDto, ModelMap map, String usercode, String year, String quarter, int count, String sysTime, int pageNum, int pageSize) {
         String month;
         ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "",summaryDto.getDbtype());

@@ -29,6 +29,11 @@ public class ScoreFlowServiceImpl implements IScoreFlowService {
     }
 
     @Override
+    public List<ScoreFlow> selectByScoredCodeFlow(String mserialno,String scoredcode,String dbtype){
+        return flowMapper.selectByScoredCodeFlow(mserialno, scoredcode, dbtype);
+    }
+
+    @Override
     public Double getScoreByType(String mserialno, String scoretype,String dbtype) {
         return flowMapper.getScoreByType(mserialno, scoretype,dbtype);
     }

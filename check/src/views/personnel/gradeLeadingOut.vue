@@ -19,7 +19,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="月份">
+            <el-form-item label="季度">
               <el-select
                 v-model="search.month"
                 clearable
@@ -64,7 +64,7 @@
               ><i class="icon iconfont icon-daochu-tianchong"></i>导出excel</el-button>
             </el-form-item>
             <el-form-item class="notice">
-              <span>友情提示：搜索框的年份和月份都为空就是查询全部数据</span>
+              <span>友情提示：搜索框的年份和季度都为空就是查询全部数据</span>
             </el-form-item>
           </el-col>
         </el-form>
@@ -109,7 +109,7 @@
         </el-table-column>
         <el-table-column
           prop="month"
-          label="月份"
+          label="季度"
           show-overflow-tooltip
         >
         </el-table-column>

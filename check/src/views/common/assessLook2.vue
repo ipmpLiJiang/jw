@@ -104,6 +104,14 @@
               class="label"
               v-html="item.dutyname"
             ></div>
+            <el-row style="padding-top:5px;padding-bottom:10px;">
+              <el-col :span="2">
+                自评说明:
+              </el-col>
+                <el-col :span="15">
+              {{item.zpsm}}
+                </el-col>
+              </el-row>
             <div class="value">
               <div class="core">优秀({{item.ascore}})</div>
               <div class="core">良好({{item.bscore}})</div>
@@ -113,6 +121,14 @@
                 {{item.score}}
               </div>
             </div>
+            <el-row style="padding-top:15px;">
+              <el-col :span="2">
+                差评说明原因:
+              </el-col>
+                <el-col :span="15">
+              {{item.cpsm}}
+                </el-col>
+              </el-row>
           </li>
           <li class="li-title">
             <div class="title">思想建设(总分20)</div>
@@ -125,6 +141,14 @@
               class="label"
               v-html="item.dutyname"
             ></div>
+            <el-row style="padding-top:5px;padding-bottom:10px;">
+              <el-col :span="2">
+                自评说明:
+              </el-col>
+                <el-col :span="15">
+              {{item.zpsm}}
+                </el-col>
+              </el-row>
             <div class="value">
               <div class="core">优秀({{item.ascore}})</div>
               <div class="core">良好({{item.bscore}})</div>
@@ -134,6 +158,14 @@
                 {{item.score}}
               </div>
             </div>
+            <el-row style="padding-top:15px;">
+              <el-col :span="2">
+                差评说明原因:
+              </el-col>
+                <el-col :span="15">
+              {{item.cpsm}}
+                </el-col>
+              </el-row>
           </li>
           <li class="li-title">
             <div class="title">组织建设(总分25)</div>
@@ -146,6 +178,14 @@
               class="label"
               v-html="item.dutyname"
             ></div>
+            <el-row style="padding-top:5px;padding-bottom:10px;">
+              <el-col :span="2">
+                自评说明:
+              </el-col>
+                <el-col :span="15">
+              {{item.zpsm}}
+                </el-col>
+              </el-row>
             <div class="value">
               <div class="core">优秀({{item.ascore}})</div>
               <div class="core">良好({{item.bscore}})</div>
@@ -155,6 +195,14 @@
                 {{item.score}}
               </div>
             </div>
+            <el-row style="padding-top:15px;">
+              <el-col :span="2">
+                差评说明原因:
+              </el-col>
+                <el-col :span="15">
+              {{item.cpsm}}
+                </el-col>
+              </el-row>
           </li>
           <li class="li-title">
             <div class="title">党建创新(总分25)</div>
@@ -167,6 +215,14 @@
               class="label"
               v-html="item.dutyname"
             ></div>
+            <el-row style="padding-top:5px;padding-bottom:10px;">
+              <el-col :span="2">
+                自评说明:
+              </el-col>
+                <el-col :span="15">
+              {{item.zpsm}}
+                </el-col>
+              </el-row>
             <div class="value">
               <div class="core">优秀({{item.ascore}})</div>
               <div class="core">良好({{item.bscore}})</div>
@@ -176,6 +232,14 @@
                 {{item.score}}
               </div>
             </div>
+            <el-row style="padding-top:15px;">
+              <el-col :span="2">
+                差评说明原因:
+              </el-col>
+                <el-col :span="15">
+              {{item.cpsm}}
+                </el-col>
+              </el-row>
           </li>
            <li class="li-title">
             <div class="title">作风建设(总分25)</div>
@@ -188,6 +252,14 @@
               class="label"
               v-html="item.dutyname"
             ></div>
+            <el-row style="padding-top:5px;padding-bottom:10px;">
+              <el-col :span="2">
+                自评说明:
+              </el-col>
+                <el-col :span="15">
+              {{item.zpsm}}
+                </el-col>
+              </el-row>
             <div class="value">
               <div class="core">优秀({{item.ascore}})</div>
               <div class="core">良好({{item.bscore}})</div>
@@ -197,6 +269,14 @@
                 {{item.score}}
               </div>
             </div>
+            <el-row style="padding-top:15px;">
+              <el-col :span="2">
+                差评说明原因:
+              </el-col>
+                <el-col :span="15">
+              {{item.cpsm}}
+                </el-col>
+              </el-row>
           </li>
           <li
             class="w100 operation"

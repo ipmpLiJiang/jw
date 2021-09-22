@@ -129,13 +129,13 @@ public class QuarterController {
             PageInfo<UserDto> pageInfo = new PageInfo<>(userDtoList);
             userDtoList = pageInfo.getList();
             map.put("totalPages", pageInfo.getTotal());
-            map.put("msg", "查询月度总结成功");
+            map.put("msg", "查询季度总结成功");
             map.put("data", userDtoList);
             map.put("code", 0);
 
         } catch (Exception e) {
             log.error(LogUtil.getTrace(e));
-            map.put("msg", "查询月度总结失败");
+            map.put("msg", "查询季度总结失败");
             map.put("code", 1);
         }
     }
@@ -180,10 +180,10 @@ public class QuarterController {
                 counts += count;
             }
             if (counts > 0) {
-                map.put("msg", "批量月结提交成功");
+                map.put("msg", "批量季结提交成功");
                 map.put("code", 0);
             } else {
-                map.put("msg", "批量月结提交失败");
+                map.put("msg", "批量季结提交失败");
                 map.put("code", 1);
             }
         } else {
@@ -209,10 +209,10 @@ public class QuarterController {
             counts += count;
         }
         if (counts > 0) {
-            map.put("msg", "批量月结评分状态修改成功");
+            map.put("msg", "批量季结评分状态修改成功");
             map.put("code", 0);
         } else {
-            map.put("msg", "批量月结评分状态修改失败");
+            map.put("msg", "批量季结评分状态修改失败");
             map.put("code", 1);
         }
         return map;
@@ -228,10 +228,10 @@ public class QuarterController {
         ModelMap map = new ModelMap();
         int count = summaryService.updateStateAll(dbtype);
         if (count > 0) {
-            map.put("msg", "全部月结评分修改成功");
+            map.put("msg", "全部季结评分修改成功");
             map.put("code", 0);
         } else {
-            map.put("msg", "全部月结评分修改失败");
+            map.put("msg", "全部季结评分修改失败");
             map.put("code", 1);
         }
         return map;
@@ -258,14 +258,14 @@ public class QuarterController {
             update.setState(state);
             int count = summaryService.updateStateBySerialNo(update);
             if (count > 0) {
-                map.put("msg", "修改月结状态成功");
+                map.put("msg", "修改季结状态成功");
                 map.put("code", 0);
             } else {
-                map.put("msg", "修改月结状态失败");
+                map.put("msg", "修改季结状态失败");
                 map.put("code", 1);
             }
         } else {
-            map.put("msg", "当前用户(" + username + ") 未分配评分关系,修改月结状态失败");
+            map.put("msg", "当前用户(" + username + ") 未分配评分关系,修改季结状态失败");
             map.put("code", 1);
         }
         return map;
@@ -282,12 +282,12 @@ public class QuarterController {
         ModelMap map = new ModelMap();
         try {
             MonthSummary summary = summaryService.selectByPrimaryKey(serialno);
-            map.put("msg", "查看月节内容成功");
+            map.put("msg", "查看季结内容成功");
             map.put("data", summary);
             map.put("code", 0);
         } catch (Exception e) {
             log.error(LogUtil.getTrace(e));
-            map.put("msg", "查看月节内容失败");
+            map.put("msg", "查看季结内容失败");
             map.put("code", 1);
         }
 

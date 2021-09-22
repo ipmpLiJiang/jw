@@ -1,7 +1,7 @@
 <template>
   <div>
     <h4 class="title">
-      <router-link to="/home"><span>首页</span></router-link><i class="el-icon-arrow-right"></i>月度总结管理
+      <router-link to="/home"><span>首页</span></router-link><i class="el-icon-arrow-right"></i>季度总结管理
     </h4>
     <el-row class="search">
       <el-col>
@@ -21,7 +21,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="月结状态">
+            <el-form-item label="季结状态">
               <el-select
                 v-model="search.state"
                 clearable
@@ -50,15 +50,15 @@
         <el-button
           type="primary"
           @click="updateSubmit"
-        >批量修改月结提交</el-button>
+        >批量修改季结提交</el-button>
         <el-button
           type="primary"
           @click="updateGrade"
-        >批量修改月结评分</el-button>
+        >批量修改季结评分</el-button>
         <el-button
           type="warning"
           @click="updateAllStatus"
-        >全部月结评分</el-button>
+        >全部季结评分</el-button>
         <el-button
           type="primary"
           @click="manual"
@@ -108,7 +108,7 @@
         >
         </el-table-column>
         <el-table-column
-          label="月结月度"
+          label="季结季度"
           show-overflow-tooltip
         >
           <template slot-scope="scope">
@@ -117,7 +117,7 @@
         </el-table-column>
         <el-table-column
           prop="statename"
-          label="月结状态"
+          label="季结状态"
           show-overflow-tooltip
         >
         </el-table-column>
@@ -134,7 +134,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="月结修改/查看"
+          label="季结修改/查看"
           align="center"
         >
           <template slot-scope="scope">
@@ -297,11 +297,11 @@ export default {
       statusOptions: [
         {
           value: "5",
-          label: "月结提交"
+          label: "季结提交"
         },
         {
           value: "6",
-          label: "月结评分"
+          label: "季结评分"
         }
       ],
       gradeStatus: [
@@ -466,9 +466,9 @@ export default {
       });
       this.statusDialogVisible = false;
     },
-    //全部月结评分
+    //全部季结评分
     updateAllStatus() {
-      this.$confirm("此操作将所有人月结状态改成月结评分, 是否继续?", "提示", {
+      this.$confirm("此操作将所有人季结状态改成季结评分, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -511,7 +511,7 @@ export default {
       let data = {
         serialnos: tData.join(",")
       };
-      this.$confirm("此操作将月结状态改成月结提交, 是否继续?", "提示", {
+      this.$confirm("此操作将季结状态改成季结提交, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -554,7 +554,7 @@ export default {
       let data = {
         serialnos: tData.join(",")
       };
-      this.$confirm("此操作将月结状态改成月结评分, 是否继续?", "提示", {
+      this.$confirm("此操作将季结状态改成季结评分, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -600,7 +600,7 @@ export default {
         templatecontent: templatecode
       };
       this.$confirm(
-        "此操作将给所有人(不包含打分用户)发送考核开始的提醒短信，并且一个月度只能使用一次此功能，是否继续?",
+        "此操作将给所有人(不包含打分用户)发送考核开始的提醒短信，并且一个季度只能使用一次此功能，是否继续?",
         "提示",
         {
           confirmButtonText: "确定",

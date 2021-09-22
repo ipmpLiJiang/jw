@@ -86,16 +86,16 @@ public class ManualSetTimeController {
             ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth("", "",setTime.getDbtype());
             if (manualSetTime!=null){
                 //修改
-                if(setTime.getDbtype().equals("2")) {
-                    if (manualSetTime.getMonth().equals("12")) {
-                        setTime.setMonth("1");
-                        setTime.setYear(String.valueOf(Integer.parseInt(manualSetTime.getYear()) + 1));
-                    } else {
-                        setTime.setMonth(String.valueOf(Integer.parseInt(manualSetTime.getMonth()) + 1));
-                        setTime.setYear(manualSetTime.getYear());
-                    }
-                }
-                else{
+//                if(setTime.getDbtype().equals("2")) {
+//                    if (manualSetTime.getMonth().equals("12")) {
+//                        setTime.setMonth("1");
+//                        setTime.setYear(String.valueOf(Integer.parseInt(manualSetTime.getYear()) + 1));
+//                    } else {
+//                        setTime.setMonth(String.valueOf(Integer.parseInt(manualSetTime.getMonth()) + 1));
+//                        setTime.setYear(manualSetTime.getYear());
+//                    }
+//                }
+//                else{
                     if (manualSetTime.getMonth().equals("4")) {
                         setTime.setMonth("1");
                         setTime.setYear(String.valueOf(Integer.parseInt(manualSetTime.getYear()) + 1));
@@ -103,7 +103,7 @@ public class ManualSetTimeController {
                         setTime.setMonth(String.valueOf(Integer.parseInt(manualSetTime.getMonth()) + 1));
                         setTime.setYear(manualSetTime.getYear());
                     }
-                }
+//                }
                 setTime.setId(manualSetTime.getId());
                 setTimeService.updateByPrimaryKeySelective(setTime);
             }else {

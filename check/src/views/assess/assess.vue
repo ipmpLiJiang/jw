@@ -24,7 +24,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="评分月">
+            <el-form-item label="评分季度">
               <el-select
                 v-model="search.month"
                 filterable
@@ -71,8 +71,8 @@
             <div class="value">{{detailData.year}}</div>
           </li>
           <li>
-            <div class="label">月度:</div>
-            <div class="value">第{{detailData.month}}月</div>
+            <div class="label">季度:</div>
+            <div class="value">第{{detailData.month}}季度</div>
           </li>
           <!-- <li>
             <div class="label">照片:</div>
@@ -102,7 +102,7 @@
             ><a>{{detailData.filename}}</a></div>
           </li>
           <li class="w100">
-            <div class="label">月结内容:</div>
+            <div class="label">季结内容:</div>
             <div
               class="value"
               v-html="detailData.content"
@@ -131,12 +131,12 @@
               class="label"
               v-html="item.dutyname"
             ></div>
-            <el-row>
+            <el-row style="padding-top:5px;padding-bottom:10px;">
               <el-col :span="2">
                 自评说明:
               </el-col>
                 <el-col :span="15">
-              <el-input v-model="item.zpsm"></el-input>
+              {{item.zpsm}}
                 </el-col>
               </el-row>
             <div class="value">
@@ -167,7 +167,7 @@
               </el-row>
               </el-radio-group>
             </div>
-              <el-row v-show="item.score == item.dscore?true:false">
+              <el-row style="padding-top:10px;" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
                 差评说明原因:
               </el-col>
@@ -187,12 +187,12 @@
               class="label"
               v-html="item.dutyname"
             ></div>
-            <el-row>
+            <el-row style="padding-top:5px;padding-bottom:10px;">
               <el-col :span="2">
                 自评说明:
               </el-col>
                 <el-col :span="15">
-              <el-input v-model="item.zpsm"></el-input>
+              {{item.zpsm}}
                 </el-col>
               </el-row>
             <div class="value">
@@ -223,7 +223,7 @@
               </el-row>
               </el-radio-group>
             </div>
-              <el-row v-show="item.score == item.dscore?true:false">
+              <el-row style="padding-top:10px;" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
                 差评说明原因:
               </el-col>
@@ -243,12 +243,12 @@
               class="label"
               v-html="item.dutyname"
             ></div>
-            <el-row>
+            <el-row style="padding-top:5px;padding-bottom:10px;">
               <el-col :span="2">
                 自评说明:
               </el-col>
                 <el-col :span="15">
-              <el-input v-model="item.zpsm"></el-input>
+              {{item.zpsm}}
                 </el-col>
               </el-row>
             <div class="value">
@@ -279,7 +279,7 @@
               </el-row>
               </el-radio-group>
             </div>
-              <el-row v-show="item.score == item.dscore?true:false">
+              <el-row style="padding-top:10px;" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
                 差评说明原因:
               </el-col>
@@ -299,12 +299,12 @@
               class="label"
               v-html="item.dutyname"
             ></div>
-            <el-row>
+            <el-row style="padding-top:5px;padding-bottom:10px;">
               <el-col :span="2">
                 自评说明:
               </el-col>
                 <el-col :span="15">
-              <el-input v-model="item.zpsm"></el-input>
+              {{item.zpsm}}
                 </el-col>
               </el-row>
             <div class="value">
@@ -335,7 +335,7 @@
               </el-row>
               </el-radio-group>
             </div>
-              <el-row v-show="item.score == item.dscore?true:false">
+              <el-row style="padding-top:10px;" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
                 差评说明原因:
               </el-col>
@@ -469,53 +469,19 @@ export default {
       quarterOptions: [
        {
           value: "1",
-          label: "1月"
+          label: "第1季度"
         },
         {
           value: "2",
-          label: "2月"
+          label: "第2季度"
         },
         {
           value: "3",
-          label: "3月"
+          label: "第3季度"
         },
         {
           value: "4",
-          label: "4月"
-        },
-        {
-          value: "5",
-          label: "5月"
-        }
-        ,
-        {
-          value: "6",
-          label: "6月"
-        }
-        ,
-        {
-          value: "7",
-          label: "7月"
-        },
-        {
-          value: "8",
-          label: "8月"
-        },
-        {
-          value: "9",
-          label: "9月"
-        },
-        {
-          value: "10",
-          label: "10月"
-        },
-        {
-          value: "11",
-          label: "11月"
-        },
-        {
-          value: "12",
-          label: "12月"
+          label: "第4季度"
         }
       ],
       totalScore: 0,
@@ -691,36 +657,27 @@ export default {
       let scoreArr = [];
       for (let i = 0; i < this.dutyJichu.length; i++) {
         let val = this.dutyJichu[i];
-        if (!val.score) {
-          this.$message.warning("请先打完分数");
-          return false;
-        } else {
-          if (!isNaN(val.score)) {
-            let arScore = this.getMaxMin(val)
-            if (arScore.length == 2) {
-              let min = arScore[0];
-              let max = arScore[1];
-              if (val.score > max || val.score < min) {
-                this.$message.warning("基础指标请填写"+ min +"-"+max+"之间数字");
-                return false;
-              }
-              totalScore += parseInt(val.score);
-              scoreArr.push(val.score);
-            } else {
-              this.$message.warning("基础指标在创建指标时,设置有误.");
+        if (!isNaN(val.score)) {
+          let arScore = this.getMaxMin(val)
+          if (arScore.length == 2) {
+            let min = arScore[0];
+            let max = arScore[1];
+            if (val.score > max || val.score < min) {
+              this.$message.warning("基础指标请填写"+ min +"-"+max+"之间数字");
               return false;
             }
+            totalScore += parseInt(val.score);
+            scoreArr.push(val.score);
           } else {
-            this.$message.warning("基础指标请填写正确数字");
+            this.$message.warning("基础指标在创建指标时,设置有误.");
+            return false;
           }
+        } else {
+          this.$message.warning("基础指标请填写正确数字");
         }
       }
       for (let i = 0; i < this.dutyYiban.length; i++) {
         let val = this.dutyYiban[i];
-        if (!val.score) {
-          this.$message.warning("请先打完分数");
-          return false;
-        } else {
           if (!isNaN(val.score)) {
             let arScore = this.getMaxMin(val)
             if (arScore.length == 2) {
@@ -739,14 +696,10 @@ export default {
           } else {
             this.$message.warning("岗位职责请填写正确数字");
           }
-        }
+        
       }
       for (let i = 0; i < this.dutyZhongdian.length; i++) {
         let val = this.dutyZhongdian[i];
-        if (!val.score) {
-          this.$message.warning("请先打完分数");
-          return false;
-        } else {
           if (!isNaN(val.score)) {
             let arScore = this.getMaxMin(val)
             if (arScore.length == 2) {
@@ -765,14 +718,10 @@ export default {
           } else {
             this.$message.warning("重点任务请填写正确数字");
           }
-        }
+        
       }
       for (let i = 0; i < this.dutyMubiao.length; i++) {
         let val = this.dutyMubiao[i];
-        if (!val.score) {
-          this.$message.warning("请先打完分数");
-          return false;
-        } else {
           if (!isNaN(val.score)) {
             let arScore = this.getMaxMin(val)
             if (arScore.length == 2) {
@@ -791,7 +740,7 @@ export default {
           } else {
             this.$message.warning("目标任务请填写正确数字");
           }
-        }
+        
       }
       this.scoreShow = true;
       this.totalScore = totalScore;
@@ -800,7 +749,7 @@ export default {
     //历史查询
     historySearch() {
       if (!this.search.year || !this.search.month) {
-        this.$message.warning("请选择年份和月份后在搜索");
+        this.$message.warning("请选择年份和季份后在搜索");
         return;
       }
       this.searchLoading = true;

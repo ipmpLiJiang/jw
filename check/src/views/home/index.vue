@@ -25,7 +25,7 @@
           </el-col>
 
           <div>
-            您有<span class="total">{{total}}</span>个月结需要评分
+            您有<span class="total">{{total}}</span>个季结需要评分
           </div>
         </el-form>
 
@@ -48,7 +48,7 @@
         </el-table-column>
         <el-table-column
           prop="monthname"
-          label="绩效月份"
+          label="绩效季度"
           show-overflow-tooltip
           width="150px"
         >

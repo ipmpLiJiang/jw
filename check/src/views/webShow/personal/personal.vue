@@ -5,7 +5,7 @@
       <p>暂未生成个人评估报告</p>
     </el-row>
     <el-row v-else>
-      <el-col class="title">武汉市精神卫生中心360°考核系统{{detailData.year}}年第{{detailData.month}}月份个人评估报告</el-col>
+      <el-col class="title">武汉市精神卫生中心360°考核系统{{detailData.year}}年第{{detailData.month}}季度个人评估报告</el-col>
 
       <el-col class="top">
         <el-col

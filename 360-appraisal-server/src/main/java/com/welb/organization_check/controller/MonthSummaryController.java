@@ -155,11 +155,11 @@ public class MonthSummaryController {
             //数据总量
             map.put("totalPages", pageInfo.getTotal());
             map.put("data", summaryList);
-            map.put("msg", "查询个人月节总结成功 ");
+            map.put("msg", "查询个人季结总结成功 ");
             map.put("code", 0);
         } catch (Exception e) {
             log.error(LogUtil.getTrace(e));
-            map.put("msg", "查询个人月节总结失败 ");
+            map.put("msg", "查询个人季结总结失败 ");
             map.put("code", 1);
         }
     }
@@ -261,10 +261,10 @@ public class MonthSummaryController {
 
     private void getCount(ModelMap map, int count1) {
         if (count1 > 0) {
-            map.put("msg", "添加个人月节总结成功");
+            map.put("msg", "添加个人季结总结成功");
             map.put("code", 0);
         } else {
-            map.put("msg", "添加个人月节总结失败");
+            map.put("msg", "添加个人季结总结失败");
             map.put("code", 1);
         }
     }
@@ -295,10 +295,10 @@ public class MonthSummaryController {
         } else {
             int count = summaryService.updateByPrimaryKeySelective(summary);
             if (count > 0) {
-                map.put("msg", "修改个人月节总结成功");
+                map.put("msg", "修改个人季结总结成功");
                 map.put("code", 0);
             } else {
-                map.put("msg", "修改个人月节总结失败");
+                map.put("msg", "修改个人季结总结失败");
                 map.put("code", 1);
             }
         }

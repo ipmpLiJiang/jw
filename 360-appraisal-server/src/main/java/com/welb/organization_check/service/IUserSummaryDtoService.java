@@ -17,7 +17,9 @@ public interface IUserSummaryDtoService {
      * @param dto
      * @return
      */
-    List<UserSummaryDto>selectUserSummary(UserSummaryDto dto);
+    List<UserSummaryDto> selectUserSummary(UserSummaryDto dto);
+
+    List<UserSummaryDto> selectUserSummaryScorredCode(UserSummaryDto dto);
     /**
      * 查询待评分人数据和评分完成数据
      * @param dto

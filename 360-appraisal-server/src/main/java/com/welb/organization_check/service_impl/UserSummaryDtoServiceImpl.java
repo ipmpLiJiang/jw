@@ -25,6 +25,11 @@ public class UserSummaryDtoServiceImpl implements IUserSummaryDtoService {
     public List<UserSummaryDto> selectUserSummary(UserSummaryDto dto) {
         return summaryDtoMapper.selectUserSummary(dto);
     }
+
+    @Override
+    public List<UserSummaryDto> selectUserSummaryScorredCode(UserSummaryDto dto){
+        return summaryDtoMapper.selectUserSummaryScorredCode(dto);
+    }
     @Override
     public List<UserSummaryDto> selectUserSummaryNew(UserSummaryDto dto) {
         return summaryDtoMapper.selectUserSummaryNew(dto);

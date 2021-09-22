@@ -24,7 +24,7 @@
           </div>
         </el-col>
         <el-col class="toptic-title">
-          月结内容
+          季结内容
         </el-col>
         <el-col>
           <div class="season-text">

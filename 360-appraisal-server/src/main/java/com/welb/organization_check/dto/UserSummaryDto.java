@@ -23,18 +23,22 @@ public class UserSummaryDto {
         states.put("6", "评分中");
         states.put("7", "评分完成");
 
-        months.put("1", "1月");
-        months.put("2", "2月");
-        months.put("3", "3月");
-        months.put("4", "4月");
-        months.put("5", "5月");
-        months.put("6", "6月");
-        months.put("7", "7月");
-        months.put("8", "8月");
-        months.put("9", "9月");
-        months.put("10", "10月");
-        months.put("11", "11月");
-        months.put("12", "12月");
+        months.put("1", "第1季度");
+        months.put("2", "第2季度");
+        months.put("3", "第3季度");
+        months.put("4", "第4季度");
+//        months.put("1", "1月");
+//        months.put("2", "2月");
+//        months.put("3", "3月");
+//        months.put("4", "4月");
+//        months.put("5", "5月");
+//        months.put("6", "6月");
+//        months.put("7", "7月");
+//        months.put("8", "8月");
+//        months.put("9", "9月");
+//        months.put("10", "10月");
+//        months.put("11", "11月");
+//        months.put("12", "12月");
     }
 
     private String employeecode;

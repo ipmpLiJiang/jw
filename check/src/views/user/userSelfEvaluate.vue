@@ -1,7 +1,7 @@
 <template>
   <div>
     <h4 class="title">
-      <router-link to="/home"><span>首页</span></router-link><i class="el-icon-arrow-right"></i>个人评分管理
+      <router-link to="/home"><span>首页</span></router-link><i class="el-icon-arrow-right"></i>人员自评
     </h4>
     <el-row class="search">
       <el-col>
@@ -9,25 +9,6 @@
           label-width="100px"
           show-overflow-tooltip="true"
         >
-          <el-col :span="5">
-            <el-form-item label="用户姓名">
-              <el-input
-                placeholder="请输入姓名"
-                v-model="search.username"
-                clearable
-                @keyup.enter.native="getList"
-              >
-              </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="5">
-            <el-form-item label="岗位">
-              <PostList
-                @childSelectDepartment="getSelectStation"
-                :selectedOptions="fullstationcode"
-              ></PostList>
-            </el-form-item>
-          </el-col>
           <el-col :span="6">
             <el-form-item label="年份">
               <el-date-picker
@@ -150,41 +131,16 @@
     </el-row>
   </div>
 </template>
-
 <script>
 import PostList from "../common/postList";
-import { selfGetList } from "@/api/home/home";
+import { selfScorredCodeGetList } from "@/api/home/home";
 import qs from "qs";
 export default {
   data() {
     return {
       seasonOptions: this.common.seasonOptions(),
       dbtype: this.$store.state.user.user.dbtype,
-      quarterOptions: [
-        {
-          value: "0",
-          label: "未提交"
-        },
-        {
-          value: "1",
-          label: "已提交"
-        },
-        {
-          value: "5",
-          label: "季结待提交"
-        },
-        {
-          value: "6",
-          label: "季结评分"
-        },
-        {
-          value: "7",
-          label: "季结评分完成"
-        }
-      ],
       search: {
-        username: "",
-        stationcode: "",
         month: "",
         year: ""
       },
@@ -194,8 +150,7 @@ export default {
         pageSize: 10
       },
       total: 0,
-      fullstationcode: [""],
-      tableLoading: true
+      tableLoading: false
     };
   },
   components: {
@@ -229,12 +184,6 @@ export default {
     //查询列表
     getList() {
       let params = this.page;
-      if (this.search.stationcode.length > 0) {
-        params.stationcode = this.search.stationcode[0];
-      } else {
-        params.stationcode = "";
-      }
-      params.username = this.search.username;
       params.dbtype = this.dbtype;
       if (
         (this.search.month && this.search.year) ||
@@ -247,7 +196,7 @@ export default {
         return;
       }
       new Promise((response, reject) => {
-        selfGetList(qs.stringify(params))
+        selfScorredCodeGetList(qs.stringify(params))
           .then(response => {
             if (response.data.code == 0) {
               this.tableData = response.data.data;
@@ -269,21 +218,15 @@ export default {
     childClose(val) {
       this.dialogVisible = val;
     },
-    getSelectStation(data, row) {
-      this.search.stationcode = [];
-      this.search.stationcode.push(data);
-      this.fullstationcode = row;
-    },
     //进入考核
     assess(row) {
-      var url= "/home/assess2";
+      var url= "/home/assessZp2";
       if(this.dbtype=='2'){
-        url= "/home/assess";
+        url= "/home/assessZp";
       }
       this.$router.push({
         path: url,
         query: {
-          serialNo: row.serialno,
           userCode: row.scorredcode,
           year: row.year,
           month: row.month
@@ -293,7 +236,6 @@ export default {
   }
 };
 </script>
-
 
 <style lang="scss" scoped>
 .title {
