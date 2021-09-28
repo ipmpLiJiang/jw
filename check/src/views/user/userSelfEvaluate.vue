@@ -58,6 +58,12 @@
           label="用户姓名"
           show-overflow-tooltip
         >
+          <template
+            slot-scope="scope"
+            v-if="scope.row.scorredname"
+          >
+            {{scope.row.scorredname}}({{scope.row.moneycard}})
+          </template>
         </el-table-column>
         <el-table-column
           prop="stationname"
@@ -80,21 +86,22 @@
             {{scope.row.year}}{{'(第'+scope.row.month+'季度)'}}
           </template>
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           fixed="right"
           label="分数"
         >
           <template slot-scope="scope">
             <span v-if="scope.row.status == '评分'">未评分</span>
-            <span v-else>{{scope.row.status}}</span>
+            <span v-else>已评分</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           fixed="right"
           label="状态"
         >
           <template slot-scope="scope">
             <span v-if="scope.row.state == 6">进行中</span>
+            <span v-else-if="scope.row.state == 5">自评中</span>
             <span v-else-if="scope.row.state == 7">已完成</span>
           </template>
         </el-table-column>
@@ -107,7 +114,7 @@
               @click="assess(scope.row)"
               type="text"
               size="small"
-              v-if="scope.row.state != 7"
+              v-if="scope.row.state == 5"
             >修改</el-button>
             <el-button
               @click="assess(scope.row)"

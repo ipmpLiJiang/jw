@@ -98,144 +98,140 @@
           </li>
           <li
             v-for="(item,index) in dutyJichu" :key="'jc' + index"
+            style="border-bottom:1px solid #409eff"
           >
-            <div
-              class="label"
-              v-html="item.dutyname"
-            ></div>
-            <el-row style="padding-top:5px;padding-bottom:10px;">
-              <el-col :span="2">
-                自评说明:
+            <el-row style="padding-bottom:5px;">
+              <el-col :span="19">
+                <span v-html="item.dutyname"></span>
               </el-col>
-                <el-col :span="15">
-              {{item.zpsm}}
-                </el-col>
-              </el-row>
-            <div class="value">
-              <div class="core">优秀({{item.ascore}})</div>
-              <div class="core">良好({{item.bscore}})</div>
-              <div class="core">一般({{item.cscore}})</div>
-              <div class="core">较差({{item.dscore}})</div>
-              <div class="core">
-                {{item.score}}
-              </div>
-            </div>
-            <el-row style="padding-top:15px;">
+            </el-row>
+            <el-row style="padding-top:10px;padding-bottom:15px;">
               <el-col :span="2">
-                差评说明原因:
+                自评说明：
               </el-col>
-                <el-col :span="15">
-              {{item.cpsm}}
-                </el-col>
-              </el-row>
+              <el-col :span="17">
+                {{item.zpsm=='' || item.zpsm==null?'无':item.zpsm}}
+              </el-col>
+            </el-row>
+            <el-row class="pingjia">
+              <el-col :span="5"> 优秀({{item.ascore}}) </el-col>
+              <el-col :span="5"> 良好({{item.bscore}}) </el-col>
+              <el-col :span="5"> 一般({{item.cscore}}) </el-col>
+              <el-col :span="5"> 较差({{item.dscore}}) </el-col>
+              <el-col :span="4"> {{item.score}} </el-col>
+            </el-row>
+            <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
+              <el-col :span="2"> 差评原因：</el-col>
+              <el-col :span="17"> {{item.cpsm}} </el-col>
+            </el-row>
+            <el-col class="cpsmKong" v-show="item.score == item.dscore?false:true">
+              &nbsp;
+            </el-col>
           </li>
           <li class="li-title">
             <div class="title">岗位职责(总分20)</div>
           </li>
           <li
             v-for="(item,index) in dutyYiban" :key="'gw' + index"
+            style="border-bottom:1px solid #409eff"
           >
-            <div
-              class="label"
-              v-html="item.dutyname"
-            ></div>
-            <el-row style="padding-top:5px;padding-bottom:10px;">
-              <el-col :span="2">
-                自评说明:
+            <el-row style="padding-bottom:5px;">
+              <el-col :span="19">
+                <span v-html="item.dutyname"></span>
               </el-col>
-                <el-col :span="15">
-              {{item.zpsm}}
-                </el-col>
-              </el-row>
-            <div class="value">
-              <div class="core">优秀({{item.ascore}})</div>
-              <div class="core">良好({{item.bscore}})</div>
-              <div class="core">一般({{item.cscore}})</div>
-              <div class="core">较差({{item.dscore}})</div>
-              <div class="core">
-                {{item.score}}
-              </div>
-            </div>
-            <el-row style="padding-top:15px;">
+            </el-row>
+            <el-row style="padding-top:10px;padding-bottom:15px;">
               <el-col :span="2">
-                差评说明原因:
+                自评说明：
               </el-col>
-                <el-col :span="15">
-              {{item.cpsm}}
-                </el-col>
-              </el-row>
+              <el-col :span="17">
+                {{item.zpsm=='' || item.zpsm==null?'无':item.zpsm}}
+              </el-col>
+            </el-row>
+            <el-row class="pingjia">
+              <el-col :span="5"> 优秀({{item.ascore}}) </el-col>
+              <el-col :span="5"> 良好({{item.bscore}}) </el-col>
+              <el-col :span="5"> 一般({{item.cscore}}) </el-col>
+              <el-col :span="5"> 较差({{item.dscore}}) </el-col>
+              <el-col :span="4"> {{item.score}} </el-col>
+            </el-row>
+            <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
+              <el-col :span="2"> 差评原因：</el-col>
+              <el-col :span="17"> {{item.cpsm}} </el-col>
+            </el-row>
+            <el-col class="cpsmKong" v-show="item.score == item.dscore?false:true">
+              &nbsp;
+            </el-col>
           </li>
           <li class="li-title">
             <div class="title">重点任务(总分25)</div>
           </li>
           <li
             v-for="(item,index) in dutyZhongdian" :key="'zd' + index"
+            style="border-bottom:1px solid #409eff"
           >
-            <div
-              class="label"
-              v-html="item.dutyname"
-            ></div>
-            <el-row style="padding-top:5px;padding-bottom:10px;">
-              <el-col :span="2">
-                自评说明:
+            <el-row style="padding-bottom:5px;">
+              <el-col :span="19">
+                <span v-html="item.dutyname"></span>
               </el-col>
-                <el-col :span="15">
-              {{item.zpsm}}
-                </el-col>
-              </el-row>
-            <div class="value">
-              <div class="core">优秀({{item.ascore}})</div>
-              <div class="core">良好({{item.bscore}})</div>
-              <div class="core">一般({{item.cscore}})</div>
-              <div class="core">较差({{item.dscore}})</div>
-              <div class="core">
-                {{item.score}}
-              </div>
-            </div>
-            <el-row style="padding-top:15px;">
+            </el-row>
+            <el-row style="padding-top:10px;padding-bottom:15px;">
               <el-col :span="2">
-                差评说明原因:
+                自评说明：
               </el-col>
-                <el-col :span="15">
-              {{item.cpsm}}
-                </el-col>
-              </el-row>
+              <el-col :span="17">
+                {{item.zpsm=='' || item.zpsm==null?'无':item.zpsm}}
+              </el-col>
+            </el-row>
+            <el-row class="pingjia">
+              <el-col :span="5"> 优秀({{item.ascore}}) </el-col>
+              <el-col :span="5"> 良好({{item.bscore}}) </el-col>
+              <el-col :span="5"> 一般({{item.cscore}}) </el-col>
+              <el-col :span="5"> 较差({{item.dscore}}) </el-col>
+              <el-col :span="4"> {{item.score}} </el-col>
+            </el-row>
+            <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
+              <el-col :span="2"> 差评原因：</el-col>
+              <el-col :span="17"> {{item.cpsm}} </el-col>
+            </el-row>
+            <el-col class="cpsmKong" v-show="item.score == item.dscore?false:true">
+              &nbsp;
+            </el-col>
           </li>
           <li class="li-title">
             <div class="title">目标任务(总分25)</div>
           </li>
           <li
             v-for="(item,index) in dutyMubiao" :key="'mb' + index"
+            style="border-bottom:1px solid #409eff"
           >
-            <div
-              class="label"
-              v-html="item.dutyname"
-            ></div>
-            <el-row style="padding-top:5px;padding-bottom:10px;">
-              <el-col :span="2">
-                自评说明:
+            <el-row style="padding-bottom:5px;">
+              <el-col :span="19">
+                <span v-html="item.dutyname"></span>
               </el-col>
-                <el-col :span="15">
-              {{item.zpsm}}
-                </el-col>
-              </el-row>
-            <div class="value">
-              <div class="core">优秀({{item.ascore}})</div>
-              <div class="core">良好({{item.bscore}})</div>
-              <div class="core">一般({{item.cscore}})</div>
-              <div class="core">较差({{item.dscore}})</div>
-              <div class="core">
-                {{item.score}}
-              </div>
-            </div>
-            <el-row style="padding-top:15px;">
+            </el-row>
+            <el-row style="padding-top:10px;padding-bottom:15px;">
               <el-col :span="2">
-                差评说明原因:
+                自评说明：
               </el-col>
-                <el-col :span="15">
-              {{item.cpsm}}
-                </el-col>
-              </el-row>
+              <el-col :span="17">
+                {{item.zpsm=='' || item.zpsm==null?'无':item.zpsm}}
+              </el-col>
+            </el-row>
+            <el-row class="pingjia">
+              <el-col :span="5"> 优秀({{item.ascore}}) </el-col>
+              <el-col :span="5"> 良好({{item.bscore}}) </el-col>
+              <el-col :span="5"> 一般({{item.cscore}}) </el-col>
+              <el-col :span="5"> 较差({{item.dscore}}) </el-col>
+              <el-col :span="4"> {{item.score}} </el-col>
+            </el-row>
+            <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
+              <el-col :span="2"> 差评原因：</el-col>
+              <el-col :span="17"> {{item.cpsm}} </el-col>
+            </el-row>
+            <el-col class="cpsmKong" v-show="item.score == item.dscore?false:true">
+              &nbsp;
+            </el-col>
           </li>
           <li
             class="w100 operation"
@@ -446,7 +442,7 @@ export default {
   }
   li {
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     padding: 0 20px;
     .label {
       font-weight: 500;
@@ -459,6 +455,19 @@ export default {
     .core-input {
       width: 150px;
     }
+  }
+  .cpsm {
+    padding-top:15px;
+    padding-bottom:15px;
+  }
+  .cpsmKong {
+    padding-top:1px;
+    padding-bottom:1px;
+  }
+  .pingjia {
+    background:#D2E9FF;
+    padding-top:10px;
+    padding-bottom:10px;
   }
 }
 </style>

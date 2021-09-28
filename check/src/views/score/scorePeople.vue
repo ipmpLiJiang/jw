@@ -323,8 +323,6 @@ export default {
     //查询列表
     getList() {
       let params = this.page;
-      console.log(params);
-      // console.log(stringify(params))
       if (this.search.stationcode.length > 0) {
         params.stationcode = this.search.stationcode[0];
       } else {

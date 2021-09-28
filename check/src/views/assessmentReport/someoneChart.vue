@@ -50,6 +50,11 @@
       >
       </el-table-column>
       <el-table-column
+        prop="avgscore"
+        :label="avgTitle"
+      >
+      </el-table-column>
+      <el-table-column
         prop="score"
         label="个人得分"
       >
@@ -99,7 +104,7 @@ export default {
       myColor:[]
     };
   },
-  props: ["chartData","id","year","month","dutyType"],
+  props: ["chartData","id","year","month","dutyType",'avgTitle'],
   created() {
     this.dutyChartType = this.dutyType
     this.tableData = this.chartData;
@@ -119,6 +124,10 @@ export default {
       this.dialogVisible = false;
     },
     drawLine() {
+      if (this.tableData ==undefined || this.tableData.length == 0) {
+        return;
+      }
+      /*
       let serDataA = []
         let serDataB = []
         let serDataC = []
@@ -143,21 +152,30 @@ export default {
             serDataF.push(this.tableData[4].fscore)
             serData.push(this.tableData[4].score)
           }
-        }
-      // if (this.type == 300) {
-      //   this.series = [
-      //     {
-      //       name: "个人得分",
-      //       type: "bar",
-      //       data: [this.tableData[0].score, this.tableData[1].score]
-      //     }
-      //     // {
-      //     //   name: "总体平均分",
-      //     //   type: "bar",
-      //     //   data: [this.tableData[0].avgscore, this.tableData[1].avgscore]
-      //     // }
-      //   ];
-      // } else {
+        }*/
+        let serDataPjz = [this.tableData[0].avgscore,this.tableData[1].avgscore,this.tableData[2].avgscore,this.tableData[3].avgscore,this.tableData[4].avgscore]
+        let serDataDf = [this.tableData[0].score, this.tableData[1].score, this.tableData[2].score, this.tableData[3].score, this.tableData[4].score]
+        this.series = [
+          {
+            name: this.avgTitle,
+            type: "bar",
+            data: serDataPjz,
+            label: {
+              show: true,
+              position: 'top'
+            }
+          },
+          {
+            name: "得分",
+            type: "bar",
+            data: serDataDf,
+            label: {
+              show: true,
+              position: 'top'
+            }
+          }]
+        this.myColor = ["#4cabce", "#e5323e"]
+        /*
         this.series = [
           {
             name: "A类评分人",
@@ -189,15 +207,9 @@ export default {
             type: "bar",
             data: serDataF
           }
-          // {
-          //   name: "总体平均分",
-          //   type: "bar",
-          //   data: [this.tableData[0].avgscore, this.tableData[1].avgscore, this.tableData[2].avgscore, this.tableData[3].avgscore]
-          // }
         ];
-      // }
       if(this.dbtype =='2') {
-        let serDataAvgMb = [0, 0, 0, this.tableData[3].sumMbAvgScore]
+        let serDataAvgMb = [0, 0, 0, this.tableData.length == 0 ? 0:this.tableData[3].sumMbAvgScore]
         this.series.push({
             name: "目标平均",
             type: "bar",
@@ -211,17 +223,17 @@ export default {
             name: "个人得分",
             type: "bar",
             data: serData
-          });
-      if (this.tableData ==undefined || this.tableData.length == 0) {
-        return;
-      }
+          });*/
       // 基于准备好的dom，初始化echarts实例
       let myChart = this.$echarts.init(document.getElementById("chart1"));
       // 绘制图表
       myChart.setOption({
         color: this.myColor,
         tooltip: {
-          trigger: "axis"
+          trigger: "axis",
+          axisPointer: {
+            type: 'shadow'
+          }
         },
         title: {
           text: ""
@@ -249,7 +261,11 @@ export default {
             }
           }
         ],
-        series: this.series
+        series: this.series,
+        legend: {
+          top: 10,
+          data: [{name: this.avgTitle},{name: "得分"}]
+        }
       });
     }
   },

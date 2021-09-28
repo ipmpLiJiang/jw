@@ -147,6 +147,21 @@
             :selectedOptions="tempbranchcode"
           ></BranchList>
         </el-form-item>
+        <el-form-item label="岗位类型">
+          <el-select
+            v-model="form.postType"
+            clearable
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in postType"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="党内身份">
           <el-select
             v-model="form.dbbk"
@@ -264,6 +279,20 @@ export default {
         {
           value: "5",
           label: "高中"
+        }
+      ],
+      postType: [
+        {
+          value: "1",
+          label: "科主任"
+        },
+        {
+          value: "2",
+          label: "护士长"
+        },
+        {
+          value: "3",
+          label: "行政"
         }
       ],
       form: {},

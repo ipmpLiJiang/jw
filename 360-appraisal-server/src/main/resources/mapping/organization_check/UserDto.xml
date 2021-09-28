@@ -28,8 +28,43 @@
     </resultMap>
     <!--("100","200","300","50")-->
     <select id="selectUserDtoLike" resultMap="BaseResultMap">
-        select u.UserCode,u.UserName,u.MoneyCard,u.ARatio,u.BRatio,u.CRatio,u.DRatio,u.ERatio,u.FRatio,
-        u.ARatio2,u.BRatio2,u.CRatio2,u.DRatio2,u.ERatio2,u.FRatio2,
+        select u.UserCode,u.UserName,u.MoneyCard,
+        <if test='userDto.dbtype!=null and userDto.dbtype=="1"'>
+            u.ARatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="2"'>
+            u.ARatio2 ARatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="1"'>
+            u.BRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="2"'>
+            u.BRatio2 BRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="1"'>
+            u.CRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="2"'>
+            u.CRatio2 CRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="1"'>
+            u.DRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="2"'>
+            u.DRatio2 DRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="1"'>
+            u.ERatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="2"'>
+            u.ERatio2 ERatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="1"'>
+            u.FRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="2"'>
+            u.FRatio2 FRatio,
+        </if>
         m.SerialNo,m.Year,m.Month,m.State,m.SavePath,m.FileName,m.Title,m.Content,m.ScoreStatus,
         s.StationName,s.StationCode,d.DepartmentCode,d.DepartmentName,
         r.RoleCode,r.RoleName
@@ -40,7 +75,7 @@
             </if>
 
             <if test='userDto.dbtype!=null and userDto.dbtype!="2"'>
-                and u.dbbk in('1','2','3')  and m.dbtype =#{userDto.dbtype}
+                and u.dbbk in('3','4')  and m.dbtype =#{userDto.dbtype}
             </if>
             <if test='userDto.dbtype!=null and userDto.dbtype!="1"'>
                 and m.dbtype =#{userDto.dbtype}
@@ -89,8 +124,43 @@
     </select>
 
     <select id="selectUserDtoByUserCode" resultMap="BaseResultMap">
-        select u.UserCode,u.UserName,u.MoneyCard,u.ARatio,u.BRatio,u.CRatio,u.DRatio,u.ERatio,u.FRatio,
-        u.ARatio2,u.BRatio2,u.CRatio2,u.DRatio2,u.ERatio2,u.FRatio2,
+        select u.UserCode,u.UserName,u.MoneyCard,
+        <if test='userDto.dbtype!=null and userDto.dbtype=="1"'>
+            u.ARatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="2"'>
+            u.ARatio2 ARatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="1"'>
+            u.BRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="2"'>
+            u.BRatio2 BRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="1"'>
+            u.CRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="2"'>
+            u.CRatio2 CRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="1"'>
+            u.DRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="2"'>
+            u.DRatio2 DRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="1"'>
+            u.ERatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="2"'>
+            u.ERatio2 ERatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="1"'>
+            u.FRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="2"'>
+            u.FRatio2 FRatio,
+        </if>
         m.SerialNo,m.Year,m.Month,m.State,m.SavePath,m.FileName,m.Title,m.Content,m.ScoreStatus,
         s.StationName,s.StationCode,d.DepartmentCode,d.DepartmentName,
         r.RoleCode,r.RoleName
@@ -162,8 +232,43 @@
         and u.Flag="0"
     </select>
     <select id="selectOneUserDto" resultType="com.welb.organization_check.dto.UserDto">
-        select u.UserCode,u.UserName,u.MoneyCard,u.ARatio,u.BRatio,u.CRatio,u.DRatio,u.ERatio,u.FRatio,
-        u.ARatio2,u.BRatio2,u.CRatio2,u.DRatio2,u.ERatio2,u.FRatio2,
+        select u.UserCode,u.UserName,u.MoneyCard,
+        <if test='dbtype!=null and dbtype=="1"'>
+            u.ARatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="2"'>
+            u.ARatio2 ARatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="1"'>
+            u.BRatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="2"'>
+            u.BRatio2 BRatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="1"'>
+            u.CRatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="2"'>
+            u.CRatio2 CRatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="1"'>
+            u.DRatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="2"'>
+            u.DRatio2 DRatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="1"'>
+            u.ERatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="2"'>
+            u.ERatio2 ERatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="1"'>
+            u.FRatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="2"'>
+            u.FRatio2 FRatio,
+        </if>
         m.SerialNo,m.Year,m.Month,m.State,m.SavePath,m.FileName,m.Title,m.Content,m.ScoreStatus,
         s.StationName,s.StationCode,d.DepartmentCode,d.DepartmentName,
         r.RoleCode,r.RoleName
@@ -171,7 +276,7 @@
         <where>
 
             <if test='dbtype!=null and dbtype!=""'>
-                and u.dbbk in('1','2','3')
+                and u.dbbk in('3','4')
             </if>
             <if test="year!=null and year!=''">
                 and m.Year=#{year}
@@ -203,7 +308,7 @@
         from user u ,monthsummary m,station s,department d,role r,user_role ur
         <where>
             <if test='userDto.dbtype!=null and userDto.dbtype!=""'>
-                and u.dbbk in('1','2','3')
+                and u.dbbk in('3','4')
             </if>
             <if test="username!=null and username!=''">
                 and u.UserName like concat('%',#{username},'%')
@@ -234,8 +339,43 @@
     </select>
     <select id="selectUserByMonthSummaryList" resultMap="BaseResultMap">
         SELECT
-            m.SerialNo,u.UserCode,u.UserName,u.MoneyCard,u.ARatio,u.BRatio,u.CRatio,u.DRatio,u.ERatio,u.FRatio,
-            u.ARatio2,u.BRatio2,u.CRatio2,u.DRatio2,u.ERatio2,u.FRatio2,
+            m.SerialNo,u.UserCode,u.UserName,u.MoneyCard,
+        <if test='userDto.dbtype!=null and userDto.dbtype=="1"'>
+            u.ARatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="2"'>
+            u.ARatio2 ARatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="1"'>
+            u.BRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="2"'>
+            u.BRatio2 BRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="1"'>
+            u.CRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="2"'>
+            u.CRatio2 CRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="1"'>
+            u.DRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="2"'>
+            u.DRatio2 DRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="1"'>
+            u.ERatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="2"'>
+            u.ERatio2 ERatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="1"'>
+            u.FRatio,
+        </if>
+        <if test='userDto.dbtype!=null and userDto.dbtype=="2"'>
+            u.FRatio2 FRatio,
+        </if>
             m.Year,m.Month,m.State,u.StationCode,u.FullStationCode,u.Flag,m.EmployeeCode,m.Pubdate,
             m.SavePath,m.FileName,m.IsSend,u.RoleType,m.Title,m.Content,m.ScoreStatus,r.RoleCode,
             r.RoleName,m.dbtype,u.dbbk

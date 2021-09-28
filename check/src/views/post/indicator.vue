@@ -48,6 +48,14 @@
         <el-table-column
           prop="stationname"
           label="所属岗位"
+          v-if="dbtype=='1'?false:true"
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          prop="dbbkName"
+          label="党内身份"
+          v-if="dbtype=='2'?false:true"
           show-overflow-tooltip
         >
         </el-table-column>
@@ -55,7 +63,7 @@
           prop="dutyname"
           label="指标名称"
           show-overflow-tooltip
-          width="600"
+          width="500"
         >
           <template slot-scope="scope">
             <span v-html="scope.row.dutyname"></span>
@@ -174,6 +182,7 @@ export default {
         pageSize: 10
       },
       total: 0,
+      dbtype: this.$store.state.user.user.dbtype,
       dialogVisible: false,
       fullstationcode: [""],
       tableLoading: true
@@ -217,7 +226,7 @@ export default {
         params.stationcode = "";
       }
       params.dutyname = this.search.dutyName;
-      params.dbtype = this.$store.state.user.user.dbtype
+      params.dbtype = this.dbtype
       new Promise((response, reject) => {
         getList(qs.stringify(params))
           .then(response => {

@@ -140,7 +140,7 @@
             <span slot="title">评估报告</span>
           </el-menu-item>
         </router-link>
-        <router-link to="/home/historyGrade">
+        <router-link v-if="role == '100' || role == '50' || role=='200' " to="/home/historyGrade">
           <el-menu-item index="/home/historyGrade">历史评分管理</el-menu-item>
         </router-link>
       </el-submenu>

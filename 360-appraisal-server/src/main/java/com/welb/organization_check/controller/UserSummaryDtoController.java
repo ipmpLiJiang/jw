@@ -365,13 +365,14 @@ public class UserSummaryDtoController {
             List<ScoreFlow> flow = flowService.selectByScoreFlow(mesrialno, scorringcode, dbtype);
             if (flow.size() > 0) {
                 Double sumScore = flow.stream().mapToDouble(ScoreFlow:: getScore).sum();
-                dto.setStatus(sumScore.toString());
+//                dto.setStatus(sumScore.toString());
+                dto.setStatus(sumScore > 0 ? "1": "2");
 //                for (ScoreFlow flow1 : flow) {
 //                    String totalscore = String.valueOf(flow1.getScore());
 //                    dto.setStatus(totalscore);
 //                }
             } else {
-                dto.setStatus("评分");
+                dto.setStatus("0");
             }
         }
     }

@@ -19,7 +19,8 @@ public class UserSummaryDto {
         states.put("", "--");
         states.put("0", "未提交");
         states.put("1", "已提交");
-        states.put("5", "待提交");
+//        states.put("5", "待提交");
+        states.put("5", "自评中");
         states.put("6", "评分中");
         states.put("7", "评分完成");
 
@@ -343,6 +344,16 @@ public class UserSummaryDto {
 
     public void setIsedit(String isedit) {
         this.isedit = isedit;
+    }
+
+    private String postType;
+
+    public String getPostType() {
+        return postType;
+    }
+
+    public void setPostType(String postType) {
+        this.postType = postType == null ? null : postType.trim();
     }
 
 }

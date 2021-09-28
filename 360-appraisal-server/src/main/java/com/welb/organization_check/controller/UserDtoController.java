@@ -262,8 +262,8 @@ public class UserDtoController {
         List<UserDto> bdfrUserDboList = new ArrayList<>();
         //筛选出被打分人
         if (dbtype.equals("1")) {
-            bdfrUserDboList = userDtoList.stream().filter(s -> s.getDbbk() != null && (s.getDbbk().equals("1") ||
-                    s.getDbbk().equals("2") || s.getDbbk().equals("3"))).collect(Collectors.toList());
+            bdfrUserDboList = userDtoList.stream().filter(s -> s.getDbbk() != null && (
+                    s.getDbbk().equals("3") || s.getDbbk().equals("4"))).collect(Collectors.toList());
         } else {
             bdfrUserDboList = userDtoList.stream().filter(s -> s.getRolecode().equals("300")).collect(Collectors.toList());
         }
@@ -536,14 +536,10 @@ public class UserDtoController {
 
         Double sumScore = 0.0;
         Double ratio = 0.0;
-        boolean isQueryDuty = false;
         boolean isDutySm = false;
         for (UserDto dto : bdfrUserDboList) {
             if(dbtype.equals("1")) {
-                if (!isQueryDuty) {
-                    queryDutyList = dutyList;
-                    isQueryDuty = true;
-                }
+                queryDutyList = dutyList.stream().filter(s -> s.getDbbk().equals(dto.getDbbk())).collect(Collectors.toList());
             } else {
                 queryDutyList = dutyList.stream().filter(s -> s.getStationcode().equals(dto.getStationcode())).collect(Collectors.toList());
             }
@@ -885,10 +881,16 @@ public class UserDtoController {
     @RequestMapping(value = "/updateFinishGradeAll", produces = "application/json;charset=utf-8")
     public Object updateFinishGradeAll(String dbtype) {
         ModelMap map = new ModelMap();
-        int count = summaryService.updateFinishGradeAll(dbtype);
-        if (count > 0) {
-            map.put("msg", "全部修改季结评分完成成功");
-            map.put("code", 0);
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
+        if(setTime!=null) {
+            int count = summaryService.updateFinishGradeAll(setTime.getYear(), setTime.getMonth(), dbtype);
+            if (count > 0) {
+                map.put("msg", "全部修改季结评分完成成功");
+                map.put("code", 0);
+            } else {
+                map.put("msg", "全部修改季结评分完成失败");
+                map.put("code", 1);
+            }
         } else {
             map.put("msg", "全部修改季结评分完成失败");
             map.put("code", 1);

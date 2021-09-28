@@ -3,7 +3,12 @@
     <el-row class="box-wrap">
       <h2 class="title">{{detailData.year}}年 第{{detailData.month}}季度 测评报告</h2>
       <el-col :span="16">
-        <h4>{{detailData.username}}<span>({{detailData.moneycard}})({{detailData.departmentname}}-{{detailData.stationname}})</span></h4>
+        <h4>{{detailData.username}}<span>&nbsp;&nbsp;&nbsp;
+          发薪号：{{detailData.moneycard}}&nbsp;&nbsp;&nbsp;
+          部门：{{detailData.departmentname}}&nbsp;&nbsp;&nbsp;
+          岗位：{{detailData.stationname}}</span>&nbsp;&nbsp;&nbsp;
+          <span v-show="postTypeName!=''?true:false">岗位类型：{{postTypeName}}</span>
+        </h4>
         <el-col :span="2">
           <h5>{{detailData.totalscore}}</h5>
           <p>总得分</p>
@@ -46,7 +51,7 @@
         </el-col>
         <el-col :span="3" v-show="dbtype=='1'?false:true">
           <h5>{{detailData.dfScore}}</h5>
-          <p>医德医风</p>
+          <p>党风廉政</p>
         </el-col>
         <el-col :span="3" v-show="dbtype=='2'?false:true">
           <h5>{{detailData.zfScore}}</h5>
@@ -54,7 +59,7 @@
         </el-col>
         <el-col :span="4">
           <h5>{{detailData.avgscore}}</h5>
-          <p>整体平均分</p>
+          <p>{{avgTitle}}</p>
         </el-col>
         <!-- <el-col :span="4">
           <h5 style="color:#409EFF;">{{detailData.plan}}%</h5>
@@ -65,7 +70,7 @@
     </el-row>
     <div class="box-data">
       <h4 class="bd-title">综合结果</h4>
-      <SomeoneChart :chartData="reportsData" :id="detailData.usercode" :year="$route.query.year" :month="$route.query.month" :dutyType="dutyType"></SomeoneChart>
+      <SomeoneChart :chartData="reportsData" :id="detailData.usercode" :year="$route.query.year" :month="$route.query.month" :dutyType="dutyType" :avgTitle="avgTitle"></SomeoneChart>
     </div>
   </div>
   <div class="none-data" v-else>该用户暂无评估报告！</div>
@@ -85,7 +90,9 @@ export default {
       dutyType: [],
       isData: 0,
       dbtype: this.$store.state.user.user.dbtype,
-      roleCode:this.$store.state.user.user.rolecode
+      roleCode:this.$store.state.user.user.rolecode,
+      avgTitle: '整体平均值',
+      postTypeName: ''
     };
   },
   mounted() {},
@@ -120,7 +127,7 @@ export default {
       if(data.dbtype == '1') {
         this.dutyType = ["政治建设", "思想建设", "组织建设", "党建创新","作风建设"]
       } else {
-        this.dutyType = ["基础评分", "关键评分", "重点评分", "目标评分"]
+        this.dutyType = ["基础评分", "关键评分", "重点评分", "目标评分","党风廉政"]
       }
       
       const loading = this.$loading({
@@ -134,6 +141,14 @@ export default {
           .then(response => {
             if (response.data.code == 0) {
               this.detailData = response.data.data.evaluationReport;
+              if (this.dbtype=='2'){
+                this.avgTitle = this.detailData.postType == '1' ? '科主任平均值' :
+                this.detailData.postType == '2' ? '护士长平均值' :
+                this.detailData.postType == '3' ? '行政平均值' : this.avgTitle;
+                this.postTypeName = this.detailData.postType == '1' ? '科主任' :
+                this.detailData.postType == '2' ? '护士长' :
+                this.detailData.postType == '3' ? '行政' : '';
+              }
               this.reportsData = response.data.data.reports;
             } else if (response.data.code == 2) {
               this.isData = 2;

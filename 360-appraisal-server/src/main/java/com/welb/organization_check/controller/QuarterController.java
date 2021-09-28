@@ -226,16 +226,44 @@ public class QuarterController {
     @RequestMapping(value = "/updateSummaryGradeStateAll", produces = "application/json;charset=utf-8")
     public Object updateSummaryGradeStateAll(String dbtype) {
         ModelMap map = new ModelMap();
-        int count = summaryService.updateStateAll(dbtype);
-        if (count > 0) {
-            map.put("msg", "全部季结评分修改成功");
-            map.put("code", 0);
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
+        if(setTime!=null) {
+            int count = summaryService.updateStateAll(setTime.getYear(),setTime.getMonth(),dbtype);
+            if (count > 0) {
+                map.put("msg", "全部季结评分修改成功");
+                map.put("code", 0);
+            } else {
+                map.put("msg", "全部季结评分修改失败");
+                map.put("code", 1);
+            }
         } else {
             map.put("msg", "全部季结评分修改失败");
             map.put("code", 1);
         }
         return map;
     }
+
+    @RequestMapping(value = "/updateSummaryGradeStateAllZp", produces = "application/json;charset=utf-8")
+    public Object updateSummaryGradeStateAllZp(String dbtype) {
+        ModelMap map = new ModelMap();
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
+        if(setTime!=null) {
+            int count = summaryService.updateStateZpAll(setTime.getYear(),setTime.getMonth(),dbtype);
+            if (count > 0) {
+                map.put("msg", "全部季结评分修改成功");
+                map.put("code", 0);
+            } else {
+                map.put("msg", "全部季结评分修改失败");
+                map.put("code", 1);
+            }
+        } else {
+            map.put("msg", "全部季结评分修改失败");
+            map.put("code", 1);
+        }
+        return map;
+    }
+
+
 
     /**
      * 将月节评分状态全部修改为月节评分

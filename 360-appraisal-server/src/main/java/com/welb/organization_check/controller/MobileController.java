@@ -767,13 +767,17 @@ public class MobileController {
             flow.setScoretype(score.getScoretype());
             User user = userService.findUserByUserCode(dto.getEmployeecode());
             if ("A".equals(flow.getScoretype())) {
-                flow.setRatio(user.getAratio());
+                flow.setRatio(dto.getDbtype().equals("1") ? user.getAratio():user.getAratio2());
             } else if ("B".equals(flow.getScoretype())) {
-                flow.setRatio(user.getBratio());
+                flow.setRatio(dto.getDbtype().equals("1") ? user.getBratio():user.getBratio2());
             } else if ("C".equals(flow.getScoretype())) {
-                flow.setRatio(user.getCratio());
+                flow.setRatio(dto.getDbtype().equals("1") ? user.getCratio():user.getCratio2());
             } else if ("D".equals(flow.getScoretype())) {
-                flow.setRatio(user.getDratio());
+                flow.setRatio(dto.getDbtype().equals("1") ? user.getDratio():user.getDratio2());
+            } else if ("E".equals(flow.getScoretype())) {
+                flow.setRatio(dto.getDbtype().equals("1") ? user.getEratio():user.getEratio2());
+            } else if ("F".equals(flow.getScoretype())) {
+                flow.setRatio(dto.getDbtype().equals("1") ? user.getFratio():user.getFratio2());
             }
             List<ScoreFlow> flow1 = flowService.selectByScoreFlow(dto.getSerialno(), scorringcode,dto.getDbtype());
             flow1 =flow1.stream().filter(p->p.getDbtype()!=null && p.getDbtype().equals(dto.getDbtype())).collect(Collectors.toList());

@@ -77,101 +77,116 @@
             <div class="title">政治建设(总分15)</div>
           </li>
           <li
-            v-for="(item,index) in dutyJichu"
-            :key="'a'+index"
+            v-for="(item,index) in dutyJichu" :key="'a'+index"
+            style="border-bottom:1px solid #409eff"
           >
-            <div
-              class="label"
-              v-html="item.dutyname"
-            ></div>
-            <el-row style="padding-top:10px;">
-              <el-col :span="2">
-                自评说明:
+            <el-row style="padding-bottom:5px;">
+              <el-col :span="19">
+                <span v-html="item.dutyname"></span>
               </el-col>
-                <el-col :span="18">
-              <el-input v-model="item.zpsm"></el-input>
-                </el-col>
-              </el-row>
+            </el-row>
+            <el-row class="zpsm">
+              <el-col :span="2">
+                <font style="color:red"> * </font>自评说明：
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+              </el-col>
+              <el-col :span="17">
+                <el-input v-show="detailData.isedit == 0?true:false" maxlength="80" type="textarea" v-model="item.zpsm"></el-input>
+                <div v-show="detailData.isedit == 1?true:false">{{item.zpsm}}</div>
+              </el-col>
+            </el-row>
           </li>
           <li class="li-title">
             <div class="title">思想建设(总分20)</div>
           </li>
           <li
-            v-for="(item,index) in dutyYiban"
-            :key="'b'+index"
+            v-for="(item,index) in dutyYiban" :key="'b'+index"
+            style="border-bottom:1px solid #409eff"
           >
-            <div
-              class="label"
-              v-html="item.dutyname"
-            ></div>
-            <el-row style="padding-top:10px;">
-              <el-col :span="2">
-                自评说明:
+            <el-row style="padding-bottom:5px;">
+              <el-col :span="19">
+                <span v-html="item.dutyname"></span>
               </el-col>
-                <el-col :span="18">
-              <el-input v-model="item.zpsm"></el-input>
-                </el-col>
-              </el-row>
+            </el-row>
+            <el-row class="zpsm">
+              <el-col :span="2">
+                <font style="color:red"> * </font>自评说明：
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+              </el-col>
+              <el-col :span="17">
+                <el-input v-show="detailData.isedit == 0?true:false" maxlength="80" type="textarea" v-model="item.zpsm"></el-input>
+                <div v-show="detailData.isedit == 1?true:false">{{item.zpsm}}</div>
+              </el-col>
+            </el-row>
           </li>
           <li class="li-title">
             <div class="title">组织建设(总分25)</div>
           </li>
           <li
-            v-for="(item,index) in dutyZhongdian"
-            :key="'c'+index"
+            v-for="(item,index) in dutyZhongdian" :key="'c'+index"
+            style="border-bottom:1px solid #409eff"
           >
-            <div
-              class="label"
-              v-html="item.dutyname"
-            ></div>
-            <el-row style="padding-top:10px;">
-              <el-col :span="2">
-                自评说明:
+            <el-row style="padding-bottom:5px;">
+              <el-col :span="19">
+                <span v-html="item.dutyname"></span>
               </el-col>
-                <el-col :span="18">
-              <el-input v-model="item.zpsm"></el-input>
-                </el-col>
-              </el-row>
+            </el-row>
+            <el-row class="zpsm">
+              <el-col :span="2">
+                <font style="color:red"> * </font>自评说明：
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+              </el-col>
+              <el-col :span="17">
+                <el-input v-show="detailData.isedit == 0?true:false" maxlength="80" type="textarea" v-model="item.zpsm"></el-input>
+                <div v-show="detailData.isedit == 1?true:false">{{item.zpsm}}</div>
+              </el-col>
+            </el-row>
           </li>
           <li class="li-title">
             <div class="title">党建创新(总分25)</div>
           </li>
           <li
-            v-for="(item,index) in dutyMubiao"
-            :key="'d'+index"
+            v-for="(item,index) in dutyMubiao" :key="'d'+index"
+            style="border-bottom:1px solid #409eff"
           >
-            <div
-              class="label"
-              v-html="item.dutyname"
-            ></div>
-            <el-row style="padding-top:10px;">
-              <el-col :span="2">
-                自评说明:
+            <el-row style="padding-bottom:5px;">
+              <el-col :span="19">
+                <span v-html="item.dutyname"></span>
               </el-col>
-                <el-col :span="18">
-              <el-input v-model="item.zpsm"></el-input>
-                </el-col>
-              </el-row>
+            </el-row>
+            <el-row class="zpsm">
+              <el-col :span="2">
+                <font style="color:red"> * </font>自评说明：
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+              </el-col>
+              <el-col :span="17">
+                <el-input v-show="detailData.isedit == 0?true:false" maxlength="80" type="textarea" v-model="item.zpsm"></el-input>
+                <div v-show="detailData.isedit == 1?true:false">{{item.zpsm}}</div>
+              </el-col>
+            </el-row>
           </li>
            <li class="li-title">
             <div class="title">作风建设(总分25)</div>
           </li>
            <li
-            v-for="(item,index) in dutyZuofeng"
-            :key="'e'+index"
+            v-for="(item,index) in dutyZuofeng" :key="'e'+index"
+            style="border-bottom:1px solid #409eff"
           >
-            <div
-              class="label"
-              v-html="item.dutyname"
-            ></div>
-            <el-row style="padding-top:10px;">
-              <el-col :span="2">
-                自评说明:
+            <el-row style="padding-bottom:5px;">
+              <el-col :span="19">
+                <span v-html="item.dutyname"></span>
               </el-col>
-                <el-col :span="18">
-              <el-input v-model="item.zpsm"></el-input>
-                </el-col>
-              </el-row>
+            </el-row>
+            <el-row class="zpsm">
+              <el-col :span="2">
+                <font style="color:red"> * </font>自评说明：
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+              </el-col>
+              <el-col :span="17">
+                <el-input v-show="detailData.isedit == 0?true:false" maxlength="80" type="textarea" v-model="item.zpsm"></el-input>
+                <div v-show="detailData.isedit == 1?true:false">{{item.zpsm}}</div>
+              </el-col>
+            </el-row>
           </li>
           <li
             class="w100 operation"
@@ -455,7 +470,7 @@ export default {
   }
   li {
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     padding: 0 20px;
     .label {
       font-weight: 500;
@@ -485,5 +500,9 @@ export default {
 }
 .form-menu {
   margin-bottom: 0px;
+}
+.zpsm {
+  padding-top:10px;
+  padding-bottom:15px;
 }
 </style>

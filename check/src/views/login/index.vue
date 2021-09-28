@@ -35,11 +35,6 @@
             type="primary"
             :loading="isLogin"
           >登录</el-button>
-          <el-button
-            @click="getBack"
-            type="primary"
-            class="mt10"
-          >找回密码</el-button>
         </el-col>
       </el-col>
     </el-row>

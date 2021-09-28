@@ -65,14 +65,18 @@
     </el-row>
     <el-row class="content">
       <el-col style="margin-bottom:20px;">
-        <el-button
+        <!-- <el-button
           type="primary"
           @click="updateGrade"
         >批量修改{{khtitle}}评分</el-button>
         <el-button
           type="primary"
           @click="gradeFinish"
-        >批量修改{{khtitle}}评分完成</el-button>
+        >批量修改{{khtitle}}评分完成</el-button> -->
+        <el-button
+          type="primary"
+          @click="updateAllZpStatus"
+        >全部{{khtitle}}自评</el-button>
         <el-button
           type="warning"
           @click="updateAllStatus"
@@ -99,7 +103,7 @@
             :http-request="uploadFile"
             :show-file-list="false"
             :auto-upload="true">
-            <el-button type="primary">德风上传</el-button>
+            <el-button type="primary">党风廉政上传</el-button>
           </el-upload>
       </el-col>
       <el-table
@@ -271,7 +275,7 @@ import {
   updateFinishGradeAll,
   upload
 } from "@/api/score/gradeTotal";
-import { updateSummaryGradeState, isAllFinish, openManualAssessment, updateSummaryGradeStateAll} from "@/api/score/quarter";
+import { updateSummaryGradeState, isAllFinish, openManualAssessment, updateSummaryGradeStateAll, updateSummaryGradeStateAllZp} from "@/api/score/quarter";
 import { updateStateBySerialNo } from "@/api/user/quarter";
 import { JiSuan } from "@/api/home/home";
 import AddQuarter from "../user/addQuarter";
@@ -290,10 +294,10 @@ export default {
         //   value: "1",
         //   label: "已提交"
         // },
-        // {
-        //   value: "5",
-        //   label: "月结待提交"
-        // },
+        {
+          value: "5",
+          label: "自评中"
+        },
         {
           value: "6",
           label: "评分中"
@@ -318,6 +322,10 @@ export default {
         }
       ],
       statusOptions: [
+        {
+          value: "5",
+          label: '季结自评'
+        },
         {
           value: "6",
           label: '季结评分'
@@ -604,6 +612,41 @@ export default {
                 dbtype: this.dbtype
             }
             updateSummaryGradeStateAll(qs.stringify(params))
+              .then(response => {
+                if (response.data.code == 0) {
+                  this.$message({
+                    message: response.data.msg,
+                    type: "success"
+                  });
+                  this.getList();
+                  // this.into();
+                } else {
+                  this.$message({
+                    message: response.data.msg,
+                    type: "error"
+                  });
+                }
+              })
+              .catch(error => {
+                reject(error);
+              });
+          });
+        })
+        .catch(() => {});
+    },
+     //全部月结自评
+    updateAllZpStatus() {
+      this.$confirm("此操作将所有人"+this.khtitle+"状态改成"+this.khtitle+"评分, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          new Promise((response, reject) => {
+            var params ={
+                dbtype: this.dbtype
+            }
+            updateSummaryGradeStateAllZp(qs.stringify(params))
               .then(response => {
                 if (response.data.code == 0) {
                   this.$message({

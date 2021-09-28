@@ -273,21 +273,19 @@ export default {
       }
       let data = {
         usercode: this.form.usercode};
-        if(this.dbtype == '1'){
-          data.aratio = this.form.aratio,
-          data.bratio = this.form.bratio,
-          data.cratio = this.form.cratio,
-          data.dratio = this.form.dratio,
-          data.eratio = this.form.eratio,
-          data.fratio = this.form.fratio
-        } else {
-          data.aratio2 = this.form.aratio2,
-          data.bratio2 = this.form.bratio2,
-          data.cratio2 = this.form.cratio2,
-          data.dratio2 = this.form.dratio2,
-          data.eratio2 = this.form.eratio2,
-          data.fratio2 = this.form.fratio2
-        }
+        data.aratio = this.form.aratio,
+        data.bratio = this.form.bratio,
+        data.cratio = this.form.cratio,
+        data.dratio = this.form.dratio,
+        data.eratio = this.form.eratio,
+        data.fratio = this.form.fratio
+        data.aratio2 = this.form.aratio2,
+        data.bratio2 = this.form.bratio2,
+        data.cratio2 = this.form.cratio2,
+        data.dratio2 = this.form.dratio2,
+        data.eratio2 = this.form.eratio2,
+        data.fratio2 = this.form.fratio2
+        
       
       new Promise((response, reject) => {
         updateWeight(qs.stringify(data))

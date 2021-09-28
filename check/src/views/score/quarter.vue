@@ -281,10 +281,10 @@ export default {
         //   value: "1",
         //   label: "已提交"
         // },
-        // {
-        //   value: "5",
-        //   label: "月结待提交"
-        // },
+        {
+          value: "5",
+          label: "自评中"
+        },
         {
           value: "6",
           label: "评分中"

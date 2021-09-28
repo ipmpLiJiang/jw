@@ -80,7 +80,7 @@
           prop="username"
           label="员工姓名"
         >
-        <template
+          <template
             slot-scope="scope"
             v-if="scope.row.username"
           >
@@ -184,7 +184,7 @@
         <el-table-column
           prop="dfScore"
           v-if="dbtype=='1'?false:true"
-          label="医德医风"
+          label="党风廉政"
         >
         </el-table-column>
         <el-table-column
@@ -194,7 +194,7 @@
         </el-table-column>
         <el-table-column
           prop="avgscore"
-          label="总体平均分"
+          label="平均分"
         >
         </el-table-column>
         <!-- <el-table-column

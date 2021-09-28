@@ -186,11 +186,11 @@ public class ScoreYdyfController {
                         message = "Exccel Shell为空.";
                     }
                 }
-                map.put("msg", message.equals("OK") ? "导入医德医风成功." : message);
+                map.put("msg", message.equals("OK") ? "导入党风廉政数据成功." : message);
                 map.put("code", message.equals("OK") ? 0 : 1);
             } catch (Exception e) {
                 log.error(LogUtil.getTrace(e));
-                map.put("msg", "导入医德医风失败");
+                map.put("msg", "导入党风廉政数据失败");
                 map.put("code", 1);
             }
         } else {

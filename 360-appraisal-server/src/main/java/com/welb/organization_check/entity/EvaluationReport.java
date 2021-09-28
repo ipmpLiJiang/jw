@@ -354,4 +354,14 @@ public class EvaluationReport {
     public void setBranchcode(String branchcode) {
         this.branchcode = branchcode == null ? null : branchcode.trim();
     }
+
+    private String postType;
+
+    public String getPostType() {
+        return postType;
+    }
+
+    public void setPostType(String postType) {
+        this.postType = postType == null ? null : postType.trim();
+    }
 }

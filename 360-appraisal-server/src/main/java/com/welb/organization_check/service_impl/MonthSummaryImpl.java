@@ -44,8 +44,12 @@ public class MonthSummaryImpl implements IMonthSummaryService {
     }
 
     @Override
-    public int updateStateAll(String dbtype) {
-        return monthSummaryMapper.updateStateAll(dbtype);
+    public int updateStateAll(String year,String month,String dbtype) {
+        return monthSummaryMapper.updateStateAll(year,month,dbtype);
+    }
+    @Override
+    public int updateStateZpAll(String year,String month,String dbtype){
+        return monthSummaryMapper.updateStateZpAll(year,month,dbtype);
     }
 
     @Override
@@ -54,8 +58,8 @@ public class MonthSummaryImpl implements IMonthSummaryService {
     }
 
     @Override
-    public int updateFinishGradeAll(String dbtype) {
-        return monthSummaryMapper.updateFinishGradeAll(dbtype);
+    public int updateFinishGradeAll(String year,String month,String dbtype) {
+        return monthSummaryMapper.updateFinishGradeAll(year,month,dbtype);
     }
 
     @Override

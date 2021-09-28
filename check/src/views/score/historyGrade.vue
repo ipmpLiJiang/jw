@@ -300,7 +300,7 @@
         >
         </el-table-column>
         <el-table-column
-          label="医德医风"
+          label="党风廉政"
           v-if="dbtype=='1'?false:true"
           prop="dfScore"
           show-overflow-tooltip
@@ -431,10 +431,10 @@ export default {
         //   value: "1",
         //   label: "已提交",
         // },
-        // {
-        //   value: "5",
-        //   label: "月结待提交",
-        // },
+        {
+          value: "5",
+          label: "自评中",
+        },
         {
           value: "6",
           label: "评分中"

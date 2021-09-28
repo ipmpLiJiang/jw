@@ -43,8 +43,9 @@ public interface IMonthSummaryService {
      * 季结状态全部修改为季节评分
      * @return
      */
-    int updateStateAll(String dbtype);
+    int updateStateAll(String year,String month,String dbtype);
 
+    int updateStateZpAll(String year,String month,String dbtype);
     /**
      * 批量修改状态为季节评分完成
      * @param serialno
@@ -56,7 +57,7 @@ public interface IMonthSummaryService {
      * 将状态全部修改为季节评分完成
      * @return
      */
-    int updateFinishGradeAll(String dbtype);
+    int updateFinishGradeAll(String year,String month,String dbtype);
 
     /**
      * 删除个人月度总结

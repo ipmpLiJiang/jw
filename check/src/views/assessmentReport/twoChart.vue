@@ -105,7 +105,7 @@
         </el-table-column>
         <el-table-column
           prop="avgscore"
-          label="总体平均分"
+          label="平均分"
         >
         </el-table-column>
       </el-table>

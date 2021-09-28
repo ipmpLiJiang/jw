@@ -306,7 +306,6 @@
             <if test='history.state=="0"'>
                 and (m.Title is null or m.Title='')
                 and (m.Content is null or m.Content='')
-
             </if>
             <if test="history.scorestatus!=null and history.scorestatus !=''">
                 and h.ScoreStatus=#{history.scorestatus}
@@ -332,7 +331,8 @@
             </foreach>
             </if>
             and h.Year=m.Year
-            and m.`Month`=h.`Month`
+            and m.Month=h.Month
+            AND h.dbtype = m.dbtype
         </where>
         order by h.Year+0 desc, h.Month+0 desc
     </select>
@@ -388,7 +388,8 @@
                 select ScorringCode from score where dbtype= #{dbtype,jdbcType=VARCHAR}
             )
             and h.Year=m.Year
-            and m.`Month`=h.`Month`
+            and m.Month=h.Month
+            AND h.dbtype = m.dbtype
         </where>
         order by h.Year+0 desc, h.Month+0 desc
     </select>
@@ -506,7 +507,8 @@
         </foreach>
         </if>
         and h.Year=m.Year
-        and m.`Month`=h.`Month`
+        and m.Month=h.Month
+        AND h.dbtype = m.dbtype
         order by h.Year+ 0 desc,h.Month+0 desc, h.ScoreStatus
     </select>
 
@@ -551,9 +553,9 @@
         <if test="dbtype != null and dbtype !='1'">
             and r.RoleCode in("100","150","200","300","50")
         </if>
-
         and h.Year=m.Year
-        and m.`Month`=h.`Month`
+        and m.Month=h.Month
+        AND h.dbtype = m.dbtype
         order by h.Year+ 0 desc,h.Month+0 desc, h.ScoreStatus
     </select>
     <select id="findUserScoreHistory" resultType="com.welb.organization_check.entity.ScoreHistory">
@@ -561,7 +563,7 @@
         h.Id, h.UserCode, h.Year, h.Month, h.ScoreStatus,
         h.AScore, h.BScore, h.CScore, h.DScore, h.TotalScore,
         h.SumZdScore, h.SumMbScore, h.AvgZdScore, h.AvgMbScore,
-        h.SumTotalScore, h.DfScore, u.dbtype, u.dbbk, h.SumZfScore, u.MoneyCard, u.BranchCode
+        h.SumTotalScore, h.DfScore, u.postType, u.dbtype, u.dbbk, h.SumZfScore, u.MoneyCard, u.BranchCode
     FROM
         scorehistory h,
         USER u,
@@ -580,14 +582,15 @@
         </if>
         AND h.YEAR = m.YEAR
         AND m.Month = h.Month
+        AND h.dbtype = m.dbtype
+        AND h.Year=#{year}
+        AND h.Month=#{month}
         <if test="dbtype != null and dbtype !=''">
             and  h.dbtype = #{dbtype,jdbcType=VARCHAR}
         </if>
         <if test="dbbk != null and dbbk !=''">
             and h.dbbk = #{dbbk,jdbcType=VARCHAR}
         </if>
-        AND h.Year=#{year}
-        AND h.Month=#{month}
 </select>
 
     <select id="selectHistoryByMonthSummaryList" resultType="com.welb.organization_check.entity.ScoreHistory">
@@ -599,10 +602,10 @@
         where
             m.Year = s.Year
             AND m.Month = s.Month
-            AND m.Year = #{year}
-            AND m.dbtype = #{dbtype}
+            AND m.dbtype = s.dbtype
             AND m.EmployeeCode = s.UserCode
+            AND m.Year = #{year}
             AND m.Month = #{month}
-            AND m.dbtype=#{dbtype}
+            AND m.dbtype = #{dbtype}
     </select>
 </mapper>

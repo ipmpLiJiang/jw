@@ -203,11 +203,11 @@
             <if test="stationcode!=null and stationcode!=''">
                 and duty.StationCode=#{stationcode}
             </if>
-            <if test='dbtype!=null and dbtype!=""'>
-                and duty.dbtype=#{dbtype}
-            </if>
             <if test="dutyname!=null and dutyname!=''">
                 and duty.DutyName like concat('%',#{dutyname},'%')
+            </if>
+            <if test='dbtype!=null and dbtype!=""'>
+                and duty.dbtype=#{dbtype}
             </if>
             and duty.StationCode=s.StationCode and s.DepartmentCode=d.DepartmentCode
         </where>
@@ -220,11 +220,14 @@
             <if test="stationcode!=null and stationcode!=''">
                 and duty.StationCode=#{stationcode}
             </if>
+            <if test="dutyname!=null and dutyname!=''">
+                and duty.DutyName like concat('%',#{dutyname},'%')
+            </if>
             <if test='dbtype!=null and dbtype!=""'>
                 and duty.dbtype=#{dbtype}
             </if>
-            <if test="dutyname!=null and dutyname!=''">
-                and duty.DutyName like concat('%',#{dutyname},'%')
+            <if test='dbbk!=null and dbbk!=""'>
+                and duty.dbbk=#{dbbk}
             </if>
         </where>
         order by duty.StationCode,duty.DutyType,duty.OrderId

@@ -329,7 +329,7 @@
     e.MinScore, e.ScoreDifference, e.TotalCompareLast, e.TotalCompareMark,
     e.Year, e.Month, e.MaxCompareLast, e.MaxCompareMark, e.MinCompareLast,
     e.MinCompareMark, e.Plan, e.SumMbAvgScore, e.MbScore, e.ZdScore,
-    e.DfScore, u.dbtype, u.dbbk, e.ZfScore, u.BranchCode
+    e.DfScore, u.postType ,u.dbtype, u.dbbk, e.ZfScore, u.BranchCode
     from evaluationreport e ,user u
     where e.Year=#{year}
     and e.Month=#{month}

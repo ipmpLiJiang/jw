@@ -13,7 +13,7 @@
           <el-col class="line">C类评分<span>{{item.cscore}}</span></el-col>
           <el-col class="line">D类评分<span>{{item.dscore}}</span></el-col> -->
           <el-col class="line">个人得分<span>{{item.score}}</span></el-col>
-          <el-col class="line">总体平均分<span>{{item.avgscore}}</span></el-col>
+          <el-col class="line">平均分<span>{{item.avgscore}}</span></el-col>
         </el-col>
       </el-col>
 

@@ -19,6 +19,7 @@
         <result column="DRatio" property="dratio" jdbcType="DOUBLE"/>
         <result column="ERatio" property="eratio" jdbcType="DOUBLE"/>
         <result column="FRatio" property="fratio" jdbcType="DOUBLE"/>
+        <result column="postType" property="postType" jdbcType="VARCHAR"/>
         <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
         <result column="BranchCode" property="branchCode" jdbcType="VARCHAR"/>
     </resultMap>
@@ -36,12 +37,43 @@
         dy.dutytype,
         sf.Ratio,
         sd.Score,
+        <if test='dbtype!=null and dbtype=="1"'>
         u.ARatio,
-        u.BRatio,
-        u.CRatio,
-        u.DRatio,
-        u.ERatio,
-        u.FRatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="2"'>
+            u.ARatio2 ARatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="1"'>
+            u.BRatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="2"'>
+            u.BRatio2 BRatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="1"'>
+            u.CRatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="2"'>
+            u.CRatio2 CRatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="1"'>
+            u.DRatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="2"'>
+            u.DRatio2 DRatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="1"'>
+            u.ERatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="2"'>
+            u.ERatio2 ERatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="1"'>
+            u.FRatio,
+        </if>
+        <if test='dbtype!=null and dbtype=="2"'>
+            u.FRatio2 FRatio,
+        </if>
+        u.postType,
         u.dbbk,
         u.BranchCode
         from
@@ -82,6 +114,7 @@
         u.DRatio,
         u.ERatio,
         u.FRatio,
+        u.postType,
         u.dbbk,
         u.BranchCode
         from

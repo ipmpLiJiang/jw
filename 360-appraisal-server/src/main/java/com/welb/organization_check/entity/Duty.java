@@ -5,12 +5,18 @@ import java.util.Map;
 
 public class Duty {
     public static Map<String, String> dutytypes = new LinkedHashMap<>();
+    public static Map<String, String> dbbks = new LinkedHashMap<>();
 
     static {
         dutytypes.put("0", "基础指标");
         dutytypes.put("1", "岗位职责");
         dutytypes.put("2", "重点任务");
         dutytypes.put("3", "目标任务");
+
+        dbbks.put("1","组织委员纪检委员");
+        dbbks.put("2","宣传委员青年委员");
+        dbbks.put("3","党支部书记");
+        dbbks.put("4","总党支部书记");
     }
 
     private String dutycode;
@@ -224,5 +230,26 @@ public class Duty {
 
     public void setZpsm(String zpsm) {
         this.zpsm = zpsm == null ? null : zpsm.trim();
+    }
+
+    public static Map<String, String> getDbbks() {
+        return dbbks;
+    }
+
+    public static void setDbbks(Map<String, String> dbbks) {
+        User.dbbks = dbbks;
+    }
+
+    private String dbbkName;
+
+    public String getDbbkName() {
+        if (dbbk!=null){
+            return dbbks.get(this.dbbk);
+        }
+        return dbbkName;
+    }
+
+    public void setDbbkName(String dbbkName) {
+        this.dbbkName = dbbkName;
     }
 }

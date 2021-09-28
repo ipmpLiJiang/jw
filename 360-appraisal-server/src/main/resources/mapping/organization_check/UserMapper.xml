@@ -35,6 +35,7 @@
         <result column="Flag" jdbcType="VARCHAR" property="flag"/>
         <result column="RoleCode" jdbcType="VARCHAR" property="rolecode"/>
         <result column="IsAgent" jdbcType="VARCHAR" property="isagent"/>
+        <result column="postType" jdbcType="VARCHAR" property="postType"/>
         <result column="dbtype" jdbcType="VARCHAR" property="dbtype"/>
         <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
         <association property="rolecode" javaType="com.welb.organization_check.entity.Role">
@@ -76,6 +77,7 @@
         <result column="RoleType" jdbcType="VARCHAR" property="roletype"/>
         <result column="Flag" jdbcType="VARCHAR" property="flag"/>
         <result column="IsAgent" jdbcType="VARCHAR" property="isagent"/>
+        <result column="postType" jdbcType="VARCHAR" property="postType"/>
         <result column="dbtype" jdbcType="VARCHAR" property="dbtype"/>
         <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
     </resultMap>
@@ -83,7 +85,7 @@
     UserCode, UserName, Password, UserState, Mobile, Operator, StationCode, PicturePath,
     Sex, Nation, Education, Email, Political, MoneyCard, BranchCode, ARatio, BRatio,
     CRatio, DRatio,ERatio, FRatio,ARatio2, BRatio2, CRatio2, DRatio2,ERatio2, FRatio2,
-    FullStationCode,FullBranchCode,Flag,RoleType,IsAgent,dbtype,dbbk
+    FullStationCode,FullBranchCode,Flag,RoleType,IsAgent,postType,dbtype,dbbk
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
@@ -224,6 +226,9 @@
             <if test="isagent != null">
                 IsAgent,
             </if>
+            <if test="postType != null">
+                postType,
+            </if>
             <if test="dbbk != null">
                 dbbk,
             </if>
@@ -324,6 +329,9 @@
             </if>
             <if test="isagent != null">
                 #{isagent,jdbcType=VARCHAR},
+            </if>
+            <if test="postType != null">
+                #{postType,jdbcType=VARCHAR},
             </if>
             <if test="dbbk != null">
                 #{dbbk,jdbcType=VARCHAR},
@@ -431,6 +439,9 @@
             <if test="isagent != null">
                 IsAgent,
             </if>
+            <if test="postType != null">
+                postType,
+            </if>
             <if test="dbbk != null">
                 dbbk,
             </if>
@@ -531,6 +542,9 @@
             </if>
             <if test="isagent != null">
                 #{isagent,jdbcType=VARCHAR},
+            </if>
+            <if test="postType != null">
+                #{postType,jdbcType=VARCHAR},
             </if>
             <if test="dbbk != null">
                 #{dbbk,jdbcType=VARCHAR},
@@ -636,6 +650,9 @@
             <if test="isagent != null">
                 IsAgent = #{isagent,jdbcType=VARCHAR},
             </if>
+            <if test="postType != null">
+                postType = #{postType,jdbcType=VARCHAR},
+            </if>
             <if test="dbbk != null">
                 dbbk = #{dbbk,jdbcType=VARCHAR},
             </if>
@@ -705,7 +722,7 @@
         select u.UserCode,u.UserName,u.StationCode,u.Mobile,u.Sex,u.Nation,u.UserState,
         u.Education,u.Email,u.Political,u.MoneyCard,u.BranchCode,u.FullStationCode, u.ARatio,
         u.BRatio,u.CRatio, u.DRatio,u.ERatio, u.FRatio,u.ARatio2, u.BRatio2,u.CRatio2,
-        u.DRatio2,u.ERatio2, u.FRatio2,u.FullBranchCode,u.dbtype,u.dbbk
+        u.DRatio2,u.ERatio2, u.FRatio2,u.FullBranchCode,u.postType,u.dbtype,u.dbbk
         from user u
         <where>
             <if test='user.dbtype!=null and user.dbtype!="" and user.dbtype=="1"'>
@@ -748,7 +765,7 @@
         select u.UserCode,u.UserName,u.StationCode,u.Mobile,u.Sex,u.Nation,u.UserState,
         u.Education,u.Email,u.Political,u.MoneyCard,u.BranchCode,u.FullStationCode, u.ARatio,
         u.BRatio,u.CRatio, u.DRatio,u.ERatio, u.FRatio,u.ARatio2, u.BRatio2,u.CRatio2, u.DRatio2,
-        u.ERatio2, u.FRatio2,u.FullBranchCode,u.dbtype,u.dbbk
+        u.ERatio2, u.FRatio2,u.FullBranchCode,u.postType,u.dbtype,u.dbbk
         from user u,role r,user_role ur
         where
         u.Flag ="0"
@@ -834,7 +851,7 @@
         </foreach>
        </if>
         <if test='dbtype!=null and dbtype !="2"'>
-            and u.dbbk in('1','2','3')
+            and u.dbbk in('3','4')
         </if>
        and u.Flag="0"
        and u.UserState="1"

@@ -210,13 +210,16 @@
     <update id="updateSubmitStateBySerialNo" parameterType="string">
     update  monthsummary set State="5" where SerialNo=#{serialno}
   </update>
+    <update id="updateStateZpAll" parameterType="string">
+    update  monthsummary set State="5" where Year = #{year} and Month = #{month} and dbtype=#{dbtype}
+  </update>
     <!--通过主键修改状态-->
     <update id="updateGradeStateBySerialNo" parameterType="string">
     update  monthsummary set State="6" where SerialNo=#{serialno}
   </update>
     <!--状态修改为全部季节评分-->
     <update id="updateStateAll" parameterType="string">
-    update  monthsummary set State="6" where dbtype=#{dbtype}
+    update  monthsummary set State="6" where Year = #{year} and Month = #{month} and dbtype=#{dbtype}
   </update>
     <!--批量修改状态为季节评分完成-->
     <update id="updateFinishGradeBySerialNo" parameterType="com.welb.organization_check.entity.MonthSummary">
@@ -224,7 +227,7 @@
     </update>
     <!--把状态全部修改为季节评分完成-->
     <update id="updateFinishGradeAll" parameterType="string">
-        update  monthsummary set State="7" where dbtype=#{dbtype}
+        update  monthsummary set State="7" where Year = #{year} and Month = #{month} and dbtype=#{dbtype}
     </update>
 
     <update id="updateStateBySerialNo" parameterType="com.welb.organization_check.entity.MonthSummary">

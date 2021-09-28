@@ -16,12 +16,27 @@
           ></el-input> -->
           <Ckeditor ref="ckditor" :type="1" :fatherContent="form.dutyname"></Ckeditor>
         </el-form-item>
-        <el-form-item label="所属岗位" v-if="$store.state.user.user.dbtype==2">
+        <el-form-item label="所属岗位" v-if="dbtype==2">
           <PostList
             ref="postList"
             @childSelectDepartment="getSelectStation"
             :selectedOptions="stationcode"
           ></PostList>
+        </el-form-item>
+        <el-form-item label="党内身份" v-if="dbtype==1">
+          <el-select
+            v-model="form.dbbk"
+            placeholder="请选择"
+            style="width:100%;"
+          >
+            <el-option
+              v-for="item in dbbk"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="排序">
           <el-input
@@ -141,6 +156,17 @@ export default {
     return {
       indicatorOptions: this.$store.state.user.user.dbtype==1 ?indicatorOptions_2 :indicatorOptions_1,
       form: {},
+      dbbk: [
+        {
+          value: "3",
+          label: "党支部书记"
+        },
+        {
+          value: "4",
+          label: "总党支部书记"
+        }
+      ],
+      dbtype: this.$store.state.user.user.dbtype,
       selfDialogVisible: this.dialogVisible
     };
   },
@@ -184,9 +210,13 @@ export default {
         return;
       }
       this.form.dutyname = this.$refs.ckditor.content;
-      this.form.dbtype = this.$store.state.user.user.dbtype
-      if (!this.form.stationcode && this.$store.state.user.user.dbtype==2) {
+      this.form.dbtype = this.dbtype
+      if (!this.form.stationcode && this.dbtype==2) {
         this.$message.warning("请选择岗位名称");
+        return;
+      }
+      if (!this.form.dbbk && this.dbtype==1) {
+        this.$message.warning("请选择党内身份");
         return;
       }
       if (!this.form.dutytype) {

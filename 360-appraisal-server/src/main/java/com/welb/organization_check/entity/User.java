@@ -152,6 +152,16 @@ public class User {
     //关联monthsummary表的员工编号
     private String employeecode;
 
+    private String postType;
+
+    public String getPostType() {
+        return postType;
+    }
+
+    public void setPostType(String postType) {
+        this.postType = postType == null ? null : postType.trim();
+    }
+
     private String dbtype;
 
     public String getDbtype() {

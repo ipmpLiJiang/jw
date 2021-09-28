@@ -249,4 +249,14 @@ public class UserScoreDto {
     public void setFscore(Double fscore) {
         this.fscore = fscore;
     }
+
+    private String postType;
+
+    public String getPostType() {
+        return postType;
+    }
+
+    public void setPostType(String postType) {
+        this.postType = postType == null ? null : postType.trim();
+    }
 }

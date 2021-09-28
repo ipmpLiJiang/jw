@@ -33,6 +33,13 @@ export function updateSummaryGradeStateAll(data) {
         data: data
     })
 }
+export function updateSummaryGradeStateAllZp(data) {
+    return fetch({
+        url: 'quarter/updateSummaryGradeStateAllZp',
+        method: 'post',
+        data: data
+    })
+}
 //是否确认开启新的月度考核接口
 export function isAllFinish(data) {
     return fetch({

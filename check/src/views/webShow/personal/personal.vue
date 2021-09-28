@@ -92,7 +92,7 @@
             >查看详情</el-button>
           </el-col>
           <el-col class="line">个人得分<span>{{item.score}}</span></el-col>
-          <el-col class="line">总体平均分<span>{{item.avgscore}}</span></el-col>
+          <el-col class="line">平均分<span>{{item.avgscore}}</span></el-col>
           <!-- <el-col class="line">A类评分人<span>{{item.ascore}}</span></el-col>
           <el-col class="line">B类评分人<span>{{item.bscore}}</span></el-col>
           <el-col class="line">C类评分人<span>{{item.cscore}}</span></el-col>
@@ -230,7 +230,7 @@ export default {
             data: [this.reportsData[0].score, this.reportsData[1].score]
           },
           {
-            name: "总体平均分",
+            name: "平均分",
             type: "bar",
             data: [this.reportsData[0].avgscore, this.reportsData[1].avgscore]
           }
@@ -263,7 +263,7 @@ export default {
             data: [this.reportsData[0].score, this.reportsData[1].score]
           },
           {
-            name: "总体平均分",
+            name: "平均分",
             type: "bar",
             data: [this.reportsData[0].avgscore, this.reportsData[1].avgscore]
           }

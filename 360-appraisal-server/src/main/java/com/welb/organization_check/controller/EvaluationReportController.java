@@ -212,6 +212,7 @@ public class EvaluationReportController {
                 map.put("code", 2);
             }
             this.getEvaluationReport0(newReprot);
+            newReprot.setPostType(report.getPostType());
             data.put("evaluationReport", newReprot);
             map.put("msg", "查询测评报告成功");
             map.put("data", data);
@@ -252,6 +253,7 @@ public class EvaluationReportController {
     private void getUserInfo(EvaluationReport report, User user) {
         report.setUsername(user.getUsername());
         report.setMoneycard(user.getMoneycard());
+        report.setPostType(user.getPostType());
 //        获取岗位和部门名称
         Station station = stationService.selectByStationCode(user.getStationcode());
         EvaluationReportController.getStationInfo(report, station, departmentService);

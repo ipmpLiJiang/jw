@@ -18,11 +18,13 @@ public interface MonthSummaryMapper {
 
     int updateGradeStateBySerialNo(String serialno);
 
-    int updateStateAll(String dbtype);
+    int updateStateZpAll(String year,String month,String dbtype);
+
+    int updateStateAll(String year,String month,String dbtype);
 
     int updateFinishGradeBySerialNo(String serialno);
 
-    int updateFinishGradeAll(String dbtype);
+    int updateFinishGradeAll(String year,String month,String dbtype);
 
     MonthSummary selectByPrimaryKey(String serialno);
 

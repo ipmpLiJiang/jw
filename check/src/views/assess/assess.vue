@@ -116,233 +116,225 @@
       </el-col>
       <el-col :span="24">
         <ul class="indicator">
-          <li
-            class="title"
-            v-if="historyTotal"
-          >总分：<span style="color:#f00;">{{historyTotal}}</span></li>
           <li class="li-title">
             <div class="title">基础指标(总分15)</div>
           </li>
           <li
-            v-for="(item,index) in dutyJichu"
-            :key="'a'+index"
+            v-for="(item,index) in dutyJichu" :key="'a'+index"
+            style="border-bottom:1px solid #409eff"
           >
-            <div
-              class="label"
-              v-html="item.dutyname"
-            ></div>
-            <el-row style="padding-top:5px;padding-bottom:10px;">
-              <el-col :span="2">
-                自评说明:
+            <el-row style="padding-bottom:5px;">
+              <el-col :span="19">
+                <span v-html="item.dutyname"></span>
               </el-col>
-                <el-col :span="15">
-              {{item.zpsm}}
-                </el-col>
-              </el-row>
+            </el-row>
+            <el-row style="padding-top:10px;padding-bottom:15px;">
+              <el-col :span="2">
+                自评说明：
+              </el-col>
+              <el-col :span="17">
+                {{item.zpsm}}
+              </el-col>
+            </el-row>
             <div class="value">
-              <el-radio-group v-model="item.score" style="display:list-item">
+              <el-radio-group v-model="item.score" @change="redioChange" :disabled="detailData.isedit == 1 ? true : false" style="display:list-item">
               <el-row type="flex" justify="space-around">
                 <el-col :span="5">
-<el-radio-button :label="item.ascore">优秀</el-radio-button>
+                  <el-radio :label="item.ascore" border>优秀</el-radio>
                 </el-col>
                 <el-col :span="5">
- <el-radio-button :label="item.bscore">良好</el-radio-button>
+                  <el-radio :label="item.bscore" border>良好</el-radio>
                 </el-col>
                 <el-col :span="5">
-<el-radio-button :label="item.cscore">一般</el-radio-button>
+                  <el-radio :label="item.cscore" border>一般</el-radio>
                 </el-col>
                 <el-col :span="5">
-<el-radio-button :label="item.dscore">较差</el-radio-button>
+                  <el-radio :label="item.dscore" border>较差</el-radio>
                 </el-col>
                 <el-col :span="4">
-                 <el-input-number
-                  placeholder="请输入分数"
-                  v-model="item.score"
-                  clearable
-                  class="core-input"
-                  :disabled="detailData.isedit == 1 ? true : false"
-                >
-                </el-input-number>
+                <span v-html="jieguo(item)"></span>
                 </el-col>
               </el-row>
               </el-radio-group>
             </div>
-              <el-row style="padding-top:10px;" v-show="item.score == item.dscore?true:false">
+              <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
-                差评说明原因:
-              </el-col>
-                <el-col :span="15">
-              <el-input v-model="item.cpsm"></el-input>
+                  <font style="color:red"> * </font>差评原因：
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+                </el-col>
+                <el-col :span="17">
+                  <el-input v-show="detailData.isedit == 0 ? true :false" maxlength="80" type="textarea" v-model="item.cpsm"></el-input>
+                  <span v-show="detailData.isedit == 1 ? true :false">{{item.cpsm}}</span>
                 </el-col>
               </el-row>
+              <el-col class="cpsmKong" v-show="item.score == item.dscore?false:true">
+                &nbsp;
+              </el-col>
           </li>
           <li class="li-title">
             <div class="title">岗位职责(总分20)</div>
           </li>
           <li
-            v-for="(item,index) in dutyYiban"
-            :key="'b'+index"
+            v-for="(item,index) in dutyYiban" :key="'b'+index"
+            style="border-bottom:1px solid #409eff"
           >
-            <div
-              class="label"
-              v-html="item.dutyname"
-            ></div>
-            <el-row style="padding-top:5px;padding-bottom:10px;">
-              <el-col :span="2">
-                自评说明:
+            <el-row style="padding-bottom:5px;">
+              <el-col :span="19">
+                <span v-html="item.dutyname"></span>
               </el-col>
-                <el-col :span="15">
-              {{item.zpsm}}
-                </el-col>
-              </el-row>
+            </el-row>
+            <el-row style="padding-top:10px;padding-bottom:15px;">
+              <el-col :span="2">
+                自评说明：
+              </el-col>
+              <el-col :span="17">
+                {{item.zpsm}}
+              </el-col>
+            </el-row>
             <div class="value">
-              <el-radio-group v-model="item.score" style="display:list-item">
+              <el-radio-group v-model="item.score" @change="redioChange" :disabled="detailData.isedit == 1 ? true : false" style="display:list-item">
               <el-row type="flex" justify="space-around">
                 <el-col :span="5">
-<el-radio-button :label="item.ascore">优秀</el-radio-button>
+                  <el-radio :label="item.ascore" border>优秀</el-radio>
                 </el-col>
                 <el-col :span="5">
- <el-radio-button :label="item.bscore">良好</el-radio-button>
+                  <el-radio :label="item.bscore" border>良好</el-radio>
                 </el-col>
                 <el-col :span="5">
-<el-radio-button :label="item.cscore">一般</el-radio-button>
+                  <el-radio :label="item.cscore" border>一般</el-radio>
                 </el-col>
                 <el-col :span="5">
-<el-radio-button :label="item.dscore">较差</el-radio-button>
+                  <el-radio :label="item.dscore" border>较差</el-radio>
                 </el-col>
                 <el-col :span="4">
-                 <el-input-number
-                  placeholder="请输入分数"
-                  v-model="item.score"
-                  clearable
-                  class="core-input"
-                  :disabled="detailData.isedit == 1 ? true : false"
-                >
-                </el-input-number>
+                <span v-html="jieguo(item)"></span>
                 </el-col>
               </el-row>
               </el-radio-group>
             </div>
-              <el-row style="padding-top:10px;" v-show="item.score == item.dscore?true:false">
+              <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
-                差评说明原因:
-              </el-col>
-                <el-col :span="15">
-              <el-input v-model="item.cpsm"></el-input>
+                  <font style="color:red"> * </font>差评原因：
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+                </el-col>
+                <el-col :span="17">
+                  <el-input v-show="detailData.isedit == 0 ? true :false" maxlength="80" type="textarea" v-model="item.cpsm"></el-input>
+                  <span v-show="detailData.isedit == 1 ? true :false">{{item.cpsm}}</span>
                 </el-col>
               </el-row>
+              <el-col class="cpsmKong" v-show="item.score == item.dscore?false:true">
+                &nbsp;
+              </el-col>
           </li>
           <li class="li-title">
             <div class="title">重点任务(总分25)</div>
           </li>
           <li
-            v-for="(item,index) in dutyZhongdian"
-            :key="'c'+index"
+            v-for="(item,index) in dutyZhongdian" :key="'c'+index"
+            style="border-bottom:1px solid #409eff"
           >
-            <div
-              class="label"
-              v-html="item.dutyname"
-            ></div>
-            <el-row style="padding-top:5px;padding-bottom:10px;">
-              <el-col :span="2">
-                自评说明:
+            <el-row style="padding-bottom:5px;">
+              <el-col :span="19">
+                <span v-html="item.dutyname"></span>
               </el-col>
-                <el-col :span="15">
-              {{item.zpsm}}
-                </el-col>
-              </el-row>
+            </el-row>
+            <el-row style="padding-top:10px;padding-bottom:15px;">
+              <el-col :span="2">
+                自评说明：
+              </el-col>
+              <el-col :span="17">
+                {{item.zpsm}}
+              </el-col>
+            </el-row>
             <div class="value">
-              <el-radio-group v-model="item.score" style="display:list-item">
+              <el-radio-group v-model="item.score" @change="redioChange" :disabled="detailData.isedit == 1 ? true : false" style="display:list-item">
               <el-row type="flex" justify="space-around">
                 <el-col :span="5">
-<el-radio-button :label="item.ascore">优秀</el-radio-button>
+                  <el-radio :label="item.ascore" border>优秀</el-radio>
                 </el-col>
                 <el-col :span="5">
- <el-radio-button :label="item.bscore">良好</el-radio-button>
+                  <el-radio :label="item.bscore" border>良好</el-radio>
                 </el-col>
                 <el-col :span="5">
-<el-radio-button :label="item.cscore">一般</el-radio-button>
+                  <el-radio :label="item.cscore" border>一般</el-radio>
                 </el-col>
                 <el-col :span="5">
-<el-radio-button :label="item.dscore">较差</el-radio-button>
+                  <el-radio :label="item.dscore" border>较差</el-radio>
                 </el-col>
                 <el-col :span="4">
-                 <el-input-number
-                  placeholder="请输入分数"
-                  v-model="item.score"
-                  clearable
-                  class="core-input"
-                  :disabled="detailData.isedit == 1 ? true : false"
-                >
-                </el-input-number>
+                <span v-html="jieguo(item)"></span>
                 </el-col>
               </el-row>
               </el-radio-group>
             </div>
-              <el-row style="padding-top:10px;" v-show="item.score == item.dscore?true:false">
+              <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
-                差评说明原因:
-              </el-col>
-                <el-col :span="15">
-              <el-input v-model="item.cpsm"></el-input>
+                  <font style="color:red"> * </font>差评原因：
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+                </el-col>
+                <el-col :span="17">
+                  <el-input v-show="detailData.isedit == 0 ? true :false" maxlength="80" type="textarea" v-model="item.cpsm"></el-input>
+                  <span v-show="detailData.isedit == 1 ? true :false">{{item.cpsm}}</span>
                 </el-col>
               </el-row>
+              <el-col class="cpsmKong" v-show="item.score == item.dscore?false:true">
+                &nbsp;
+              </el-col>
           </li>
           <li class="li-title">
             <div class="title">目标任务(总分25)</div>
           </li>
           <li
-            v-for="(item,index) in dutyMubiao"
-            :key="'d'+index"
+            v-for="(item,index) in dutyMubiao" :key="'d'+index"
+            style="border-bottom:1px solid #409eff"
           >
-            <div
-              class="label"
-              v-html="item.dutyname"
-            ></div>
-            <el-row style="padding-top:5px;padding-bottom:10px;">
-              <el-col :span="2">
-                自评说明:
+            <el-row style="padding-bottom:5px;">
+              <el-col :span="19">
+                <span v-html="item.dutyname"></span>
               </el-col>
-                <el-col :span="15">
-              {{item.zpsm}}
-                </el-col>
-              </el-row>
+            </el-row>
+            <el-row style="padding-top:10px;padding-bottom:15px;">
+              <el-col :span="2">
+                自评说明：
+              </el-col>
+              <el-col :span="17">
+                {{item.zpsm}}
+              </el-col>
+            </el-row>
             <div class="value">
-              <el-radio-group v-model="item.score" style="display:list-item">
+              <el-radio-group v-model="item.score" @change="redioChange" :disabled="detailData.isedit == 1 ? true : false" style="display:list-item">
               <el-row type="flex" justify="space-around">
                 <el-col :span="5">
-<el-radio-button :label="item.ascore">优秀</el-radio-button>
+                  <el-radio :label="item.ascore" border>优秀</el-radio>
                 </el-col>
                 <el-col :span="5">
- <el-radio-button :label="item.bscore">良好</el-radio-button>
+                  <el-radio :label="item.bscore" border>良好</el-radio>
                 </el-col>
                 <el-col :span="5">
-<el-radio-button :label="item.cscore">一般</el-radio-button>
+                  <el-radio :label="item.cscore" border>一般</el-radio>
                 </el-col>
                 <el-col :span="5">
-<el-radio-button :label="item.dscore">较差</el-radio-button>
+                  <el-radio :label="item.dscore" border>较差</el-radio>
                 </el-col>
                 <el-col :span="4">
-                 <el-input-number
-                  placeholder="请输入分数"
-                  v-model="item.score"
-                  clearable
-                  class="core-input"
-                  :disabled="detailData.isedit == 1 ? true : false"
-                >
-                </el-input-number>
+                <span v-html="jieguo(item)"></span>
                 </el-col>
               </el-row>
               </el-radio-group>
             </div>
-              <el-row style="padding-top:10px;" v-show="item.score == item.dscore?true:false">
+              <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
-                差评说明原因:
-              </el-col>
-                <el-col :span="15">
-              <el-input v-model="item.cpsm"></el-input>
+                  <font style="color:red"> * </font>差评原因：
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+                </el-col>
+                <el-col :span="17">
+                  <el-input v-show="detailData.isedit == 0 ? true :false" maxlength="80" type="textarea" v-model="item.cpsm"></el-input>
+                  <span v-show="detailData.isedit == 1 ? true :false">{{item.cpsm}}</span>
                 </el-col>
               </el-row>
+              <el-col class="cpsmKong" v-show="item.score == item.dscore?false:true">
+                &nbsp;
+              </el-col>
           </li>
           <li
             class="w100 operation"
@@ -357,17 +349,10 @@
             <div v-else>
               <el-button
                 type="primary"
-                @click="compute"
-              >计算总分</el-button>
-              <el-button
-                type="primary"
                 @click="submitAssess"
                 :loading="submitLoading"
               >提交</el-button>
-              <el-button
-                type="text"
-                v-show="scoreShow"
-              >总分为：{{totalScore}}分</el-button>
+              <font style="color:red">&nbsp;&nbsp;&nbsp;{{laberror}}</font>
             </div>
           </li>
         </ul>
@@ -492,6 +477,7 @@ export default {
       dutyYiban: [],
       dutyZhongdian: [],
       dutyMubiao: [],
+      laberror: '',
       search: {
         year: "",
         month: ""
@@ -506,6 +492,24 @@ export default {
     this.getDetail();
   },
   methods: {
+    jieguo (item) {
+      let v = '';
+      let color = '';
+      if (item.score == item.ascore) {
+        v = '优秀'
+        color = '#FFFF00'
+      } else if (item.score == item.bscore) {
+        v = '良好'
+        color = '#1AFD9C'
+      } else if (item.score == item.cscore) {
+        v = '一般'
+        color = '#00FFFF'
+      } else if (item.score == item.dscore) {
+        v = '较差'
+        color = '#FF9797'
+      }
+      return '<div style="width: 80px;height: 40px;background:'+color+';border-radius: 3px;font-size:14px;display: flex;align-items: center;justify-content: center;"><b>' + v + '</b></div>';
+    },
     getDetail() {
       let data = {
         employeecode: this.$route.query.userCode,
@@ -795,6 +799,9 @@ export default {
           });
       });
     },
+    redioChange () {
+      this.laberror = ''
+    },
     //提交考核
     submitAssess() {
       if (this.compute()) {
@@ -810,18 +817,43 @@ export default {
         data.dutyYiban = [];
         data.dutyZhongdian = [];
         data.dutyMubiao = [];
+        this.laberror = ''
         this.dutyJichu.forEach(row => {
           data.dutyJiChu.push({ topicId: row.dutycode, score: row.score, scoretype: row.scoretype, cpsm: row.score != row.dscore?'':row.cpsm, zpsm: row.zpsm });
+          if (row.score == row.dscore && (row.cpsm == null || row.cpsm == '' || row.cpsm == undefined)) {
+            this.laberror = '基础指标，差评原因 不能为空.'
+          }
         });
-        this.dutyYiban.forEach(row => {
-          data.dutyYiban.push({ topicId: row.dutycode, score: row.score, scoretype: row.scoretype, cpsm: row.score != row.dscore?'':row.cpsm, zpsm: row.zpsm });
-        });
-        this.dutyZhongdian.forEach(row => {
-          data.dutyZhongdian.push({ topicId: row.dutycode, score: row.score, scoretype: row.scoretype, cpsm: row.score != row.dscore?'':row.cpsm, zpsm: row.zpsm });
-        });
-        this.dutyMubiao.forEach(row => {
-          data.dutyMubiao.push({ topicId: row.dutycode, score: row.score, scoretype: row.scoretype, cpsm: row.score != row.dscore?'':row.cpsm, zpsm: row.zpsm });
-        });
+        if(this.laberror == ''){
+          this.dutyYiban.forEach(row => {
+            data.dutyYiban.push({ topicId: row.dutycode, score: row.score, scoretype: row.scoretype, cpsm: row.score != row.dscore?'':row.cpsm, zpsm: row.zpsm });
+            if (row.score == row.dscore && (row.cpsm == null || row.cpsm == '' || row.cpsm == undefined)) {
+              this.laberror = '岗位职责，差评原因 不能为空.'
+            }
+          });
+        }
+        if(this.laberror == ''){
+          this.dutyZhongdian.forEach(row => {
+            data.dutyZhongdian.push({ topicId: row.dutycode, score: row.score, scoretype: row.scoretype, cpsm: row.score != row.dscore?'':row.cpsm, zpsm: row.zpsm });
+            if (row.score == row.dscore && (row.cpsm == null || row.cpsm == '' || row.cpsm == undefined)) {
+              this.laberror = '重点任务，差评原因 不能为空.'
+            }
+          });
+        }
+        if(this.laberror == ''){
+          this.dutyMubiao.forEach(row => {
+            data.dutyMubiao.push({ topicId: row.dutycode, score: row.score, scoretype: row.scoretype, cpsm: row.score != row.dscore?'':row.cpsm, zpsm: row.zpsm });
+            if (row.score == row.dscore && (row.cpsm == null || row.cpsm == '' || row.cpsm == undefined)) {
+              this.laberror = '目标任务，差评原因 不能为空.'
+            }
+          });
+        }
+        if (this.laberror != ''){
+          this.$message.warning(this.laberror);
+          this.tableLoading = false;
+          this.submitLoading = false;
+          return
+        }
         data.dutyJiChu = JSON.stringify(data.dutyJiChu);
         data.dutyYiban = JSON.stringify(data.dutyYiban);
         data.dutyZhongdian = JSON.stringify(data.dutyZhongdian);
@@ -854,45 +886,6 @@ export default {
               reject(error);
             });
         });
-        // let data = {
-        //   scorringcode: 380065,
-        //   total: 80,
-        //   dutyJiChu:'[{ topicId: "2653", score: "4" },{ topicId: "2812", score: "4" },{ topicId: "2962", score: "4" },{ topicId: "3115", score: "4" }, { topicId: "3265", score: "4" }]',
-        //   dutyYiban:'[{ topicId: "3995", score: "12" },{ topicId: "3996", score: "12" },{ topicId: "3997", score: "12" },{ topicId: "3998", score: "12" },{ topicId: "3999", score: "12" }]'
-        // };
-        // let a = "2019-3-0040484,2019-3-0040430,2019-3-0022013,2019-3-0130116,2019-3-0010717,2019-3-0010776,2019-3-0010935,2019-3-0041439,2019-3-0011443,2019-3-0040495,2019-3-0041428,2019-3-0041455,2019-3-0130168,2019-3-0041427,2019-3-0011136,2019-3-0050890,2019-3-0050905,2019-3-0040471,2019-3-0040363,2019-3-0031477,2019-3-0050602,2019-3-0050987,2019-3-0041423,2019-3-0041372,2019-3-0041348,2019-3-0031336,2019-3-0020722,2019-3-0040347,2019-3-0022115,2019-3-0030393,2019-3-0130155,2019-3-0320006,2019-3-0040311,2019-3-0040338,2019-3-0040370,2019-3-0040371,2019-3-0054087,2019-3-0370006,2019-3-0041328,2019-3-0050908,2019-3-0041398,2019-3-0050643,2019-3-0041295,2019-3-0041299,2019-3-0041413,2019-3-0051378,2019-3-0054307,2019-3-0054313,2019-3-0031276,2019-3-0040416,2019-3-370067,2019-3-0040498,2019-3-370066,2019-3-0020777,2019-3-0330011,2019-3-0330021,2019-3-0030105,2019-3-0020826,2019-3-0041385,2019-3-0022085,2019-3-0020873,2019-3-0020783,2019-3-0020821,2019-3-0020876,2019-3-0022366,2019-3-0011061,2019-3-0020836,2019-3-0011543,2019-3-0010779,2019-3-0020814,2019-3-0022199,2019-3-0022365,2019-3-0022405,2019-3-0380063,2019-3-0022556,2019-3-0030415,2019-3-0041344,2019-3-0040322,2019-3-0030364,2019-3-0031273,2019-3-0030427,2019-3-0030454,2019-3-0031359,2019-3-0041320,2019-3-0031272,2019-3-0040488,2019-3-0020774,2019-3-0020835,2019-3-0020931,2019-3-0020962,2019-3-0022023,2019-3-0022174,2019-3-0022353,2019-3-0022554,2019-3-0022587,2019-3-0031345,2019-3-0031341,2019-3-0030297,2019-3-0031285,2019-3-0031286,2019-3-0031287,2019-3-0031291,2019-3-0031313,2019-3-0031319,2019-3-0031330,2019-3-0031340,2019-3-0031392,2019-3-0031448";
-        // let b = "0040484,0040430,0022013,0130116,0010717,0010776,0010935,0041439,0011443,0040495,0041428,0041455,0130168,0041427,0011136,0050890,0050905,0040471,0040363,0031477,0050602,0050987,0041423,0041372,0041348,0031336,0020722,0040347,0022115,0030393,0130155,0320006,0040311,0040338,0040370,0040371,0054087,0370006,0041328,0050908,0041398,0050643,0041295,0041299,0041413,0051378,0054307,0054313,0031276,0040416,370067,0040498,370066,0020777,0330011,0330021,0030105,0020826,0041385,0022085,0020873,0020783,0020821,0020876,0022366,0011061,0020836,0011543,0010779,0020814,0022199,0022365,0022405,0380063,0022556,0030415,0041344,0040322,0030364,0031273,0030427,0030454,0031359,0041320,0031272,0040488,0020774,0020835,0020931,0020962,0022023,0022174,0022353,0022554,0022587,0031345,0031341,0030297,0031285,0031286,0031287,0031291,0031313,0031319,0031330,0031340,0031392,0031448";
-        // let aArr = a.split(",");
-        // let bArr = b.split(",");
-        // for (let i = 0; i < 108; i++) {
-        //   data.serialno = aArr[i];
-        //   data.employeecode = bArr[i];
-        //   new Promise((response, reject) => {
-        //     scoring(qs.stringify(data))
-        //       .then(response => {
-        //         if (response.data.code == 0) {
-        //           this.$message({
-        //             message: response.data.msg,
-        //             type: "success"
-        //           });
-        //           this.$router.push({
-        //             path: "/home",
-        //             query: {}
-        //           });
-        //         } else {
-        //           this.$message({
-        //             message: response.data.msg,
-        //             type: "error"
-        //           });
-        //         }
-        //         this.tableLoading = false;
-        //         this.submitLoading = false;
-        //       })
-        //       .catch(error => {
-        //         reject(error);
-        //       });
-        //   });
-        // }
       }
     },
     //预览
@@ -951,7 +944,7 @@ export default {
   }
   li {
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     padding: 0 20px;
     .label {
       font-weight: 500;
@@ -982,4 +975,12 @@ export default {
 .form-menu {
   margin-bottom: 0px;
 }
+.cpsm {
+    padding-top:15px;
+    padding-bottom:15px;
+  }
+.cpsmKong {
+    padding-top:1px;
+    padding-bottom:1px;
+  }
 </style>
