@@ -58,7 +58,7 @@ public class StationController {
                 map.put("msg", "查询岗位成功 ");
                 map.put("code", 0);
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("msg", "查询岗位失败 ");
                 map.put("code", 1);
             }

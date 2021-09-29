@@ -230,7 +230,7 @@ public class EvaluationDepartmentServiceImpl implements EvaluationDepartmentServ
                 PersonnelUser hUser = personneService.selectByUserId(String.valueOf(directorUserId));
                 User newUser = new User();
                 newUser.setUsername(hUser.getUsername());
-                newUser.setPassword(MD5.md5(INITIAL_PASSWORD));//初始密码是whuh123456
+                newUser.setPassword(MD5.md5(INITIAL_PASSWORD));//初始密码是jw123456
                 newUser.setUserstate("1");
                 newUser.setSex(hUser.getSex());
                 newUser.setMoneycard(hUser.getId().toString());

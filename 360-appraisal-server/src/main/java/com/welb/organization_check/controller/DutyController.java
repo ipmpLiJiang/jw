@@ -58,7 +58,7 @@ public class DutyController {
                 map.put("data", duties);
                 map.put("code", 0);
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("msg", "查询指标失败");
                 map.put("code", 1);
             }

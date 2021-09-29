@@ -47,7 +47,7 @@ public class HrpUserController {
             }
 
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "查询失败");
             map.put("code", 1);
         }

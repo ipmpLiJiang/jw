@@ -57,7 +57,7 @@ public class DepartmentController {
                 map.put("data", departments);
                 map.put("code", 0);
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("msg", "查询部门失败");
                 map.put("code", 1);
             }

@@ -134,7 +134,7 @@ public class QuarterController {
             map.put("code", 0);
 
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "查询季度总结失败");
             map.put("code", 1);
         }
@@ -314,7 +314,7 @@ public class QuarterController {
             map.put("data", summary);
             map.put("code", 0);
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "查看季结内容失败");
             map.put("code", 1);
         }

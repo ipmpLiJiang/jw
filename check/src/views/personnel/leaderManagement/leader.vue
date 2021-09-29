@@ -293,7 +293,7 @@ export default {
     },
     //重置密码
     reset(val) {
-      this.$confirm("此操作将该人员密码重置为whuh123456, 是否继续?", "提示", {
+      this.$confirm("此操作将该人员密码重置为jw123456, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"

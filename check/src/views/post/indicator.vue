@@ -8,13 +8,31 @@
           show-overflow-tooltip="true"
         >
           <el-col :span="5">
-            <el-form-item label="所在岗位">
+            <el-form-item label="所在岗位" v-if="dbtype==2">
               <PostList
                 @childSelectDepartment="getSelectStation"
                 :selectedOptions="fullstationcode"
               ></PostList>
             </el-form-item>
           </el-col>
+          <el-col :span="5" v-if="dbtype==1">
+            <el-form-item label="党内身份">
+            <el-select
+              v-model="search.dbbk"
+              placeholder="请选择"
+              clearable
+              style="width:100%;"
+            >
+              <el-option
+                v-for="item in dbbk"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
           <el-col :span="5">
             <el-form-item label="指标名称">
               <el-input
@@ -63,7 +81,7 @@
           prop="dutyname"
           label="指标名称"
           show-overflow-tooltip
-          width="500"
+          width="450"
         >
           <template slot-scope="scope">
             <span v-html="scope.row.dutyname"></span>
@@ -174,8 +192,19 @@ export default {
       stationcode: [""],
       search: {
         dutyName: "",
+        dbbk: "",
         stationcode: [""]
       },
+      dbbk: [
+        {
+          value: "3",
+          label: "党支部书记"
+        },
+        {
+          value: "4",
+          label: "总党支部书记"
+        }
+      ],
       tableData: [],
       page: {
         pageNum: 1,
@@ -224,6 +253,9 @@ export default {
         params.stationcode = this.search.stationcode[0];
       } else {
         params.stationcode = "";
+      }
+      if (this.search.dbbk != '') {
+        params.dbbk = this.search.dbbk
       }
       params.dutyname = this.search.dutyName;
       params.dbtype = this.dbtype

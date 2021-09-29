@@ -69,7 +69,7 @@ public class ScoreYdyfController {
                 map.put("data", ydyfs);
                 map.put("code", 0);
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("msg", "查询指标失败");
                 map.put("code", 1);
             }
@@ -189,7 +189,7 @@ public class ScoreYdyfController {
                 map.put("msg", message.equals("OK") ? "导入党风廉政数据成功." : message);
                 map.put("code", message.equals("OK") ? 0 : 1);
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("msg", "导入党风廉政数据失败");
                 map.put("code", 1);
             }

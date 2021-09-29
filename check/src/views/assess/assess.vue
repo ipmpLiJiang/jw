@@ -497,13 +497,13 @@ export default {
       let color = '';
       if (item.score == item.ascore) {
         v = '优秀'
-        color = '#FFFF00'
+        color = '#FFFF99'
       } else if (item.score == item.bscore) {
         v = '良好'
-        color = '#1AFD9C'
+        color = '#99FF99'
       } else if (item.score == item.cscore) {
         v = '一般'
-        color = '#00FFFF'
+        color = '#99FFFF'
       } else if (item.score == item.dscore) {
         v = '较差'
         color = '#FF9797'

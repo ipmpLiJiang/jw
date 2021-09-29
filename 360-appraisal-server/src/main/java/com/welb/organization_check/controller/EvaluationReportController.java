@@ -98,7 +98,7 @@ public class EvaluationReportController {
                     map.put("code", 1);
                 }
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("msg", "查询测评报告失败");
                 map.put("code", 1);
             }
@@ -553,7 +553,7 @@ public class EvaluationReportController {
 //                }
 
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("msg", "查询失败");
                 map.put("code", 1);
             }
@@ -737,7 +737,7 @@ public class EvaluationReportController {
                 }
             }
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
         }
     }
 

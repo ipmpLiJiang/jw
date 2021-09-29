@@ -58,7 +58,7 @@ public class FileUploadController {
             map.put("code", 0);
 
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "文件上传失败");
             map.put("code", 1);
         }
@@ -102,7 +102,7 @@ public class FileUploadController {
                     map.put("msg", "下载成功");
                     map.put("code", "0");
                 } catch (Exception e) {
-                    log.error(LogUtil.getTrace(e));
+                    log.error(e.getMessage() , e);
                     map.put("msg", "下载失败");
                     map.put("code", "1");
                 } finally {
@@ -179,7 +179,7 @@ public class FileUploadController {
                 map.put("code", 1);
             }
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "图片上传失败");
             map.put("code", 1);
         }
@@ -203,7 +203,7 @@ public class FileUploadController {
             map.put("msg", "删除成功");
             map.put("code", 0);
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "删除失败");
             map.put("code", 1);
             map.put("error", e.getMessage());

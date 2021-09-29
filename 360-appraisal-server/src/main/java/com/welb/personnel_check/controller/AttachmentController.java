@@ -98,7 +98,7 @@ public class AttachmentController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "上传失败");
             map.put("code", 1);
         }
@@ -262,7 +262,7 @@ public class AttachmentController {
                 }
             }
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("error", e.getMessage());
             map.put("msg", "操作失败");
             map.put("code", 1);

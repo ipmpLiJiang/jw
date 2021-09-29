@@ -54,7 +54,7 @@ public class DeptAndStationAndUserTrees {
             map.put("data", departments1);
             map.put("code", 0);
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "级联查询用户失败");
             map.put("code", 1);
         }

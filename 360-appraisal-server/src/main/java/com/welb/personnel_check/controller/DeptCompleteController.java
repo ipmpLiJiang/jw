@@ -199,7 +199,7 @@ public class DeptCompleteController {
             map.put("msg", "查询成功");
             map.put("code", 0);
         }catch (Exception e){
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("error",e.getMessage());
             map.put("msg", "查询失败");
             map.put("code", 1);

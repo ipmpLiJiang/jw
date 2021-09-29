@@ -107,7 +107,7 @@ public class ScheduledTask {
                 manualGetStatus(year, quarter, i, sysTime);
 
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
         }
     }
 //    此处不清楚做什么
@@ -503,7 +503,7 @@ public class ScheduledTask {
                 }
             }
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
         }
     }
     //    此处不清楚做什么

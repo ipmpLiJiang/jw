@@ -128,7 +128,7 @@ public class MobileController {
 
                 }
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("msg", "查询个人考核详情失败");
                 map.put("code", 1);
             }
@@ -626,7 +626,7 @@ public class MobileController {
                     map.put("data", resultDetails);
                     map.put("code", 0);
                 } catch (Exception e) {
-                    log.error(LogUtil.getTrace(e));
+                    log.error(e.getMessage() , e);
                     map.put("msg", "查询失败");
                     map.put("code", 1);
                 }
@@ -807,7 +807,7 @@ public class MobileController {
             map.put("code", 0);
 
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "操作失败");
             map.put("code", 1);
         }

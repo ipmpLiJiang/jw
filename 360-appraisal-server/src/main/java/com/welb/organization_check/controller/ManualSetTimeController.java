@@ -115,7 +115,7 @@ public class ManualSetTimeController {
             map.put("msg", "手动考核开启成功，请重新登陆系统进行操作");
             map.put("code", 0);
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("error", e.getMessage());
             map.put("msg", "操作失败");
             map.put("code", 1);
@@ -150,7 +150,7 @@ public class ManualSetTimeController {
             map.put("msg", "操作成功");
             map.put("code", 0);
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("error", e.getMessage());
             map.put("msg", "操作失败");
             map.put("code", 1);
@@ -174,7 +174,7 @@ public class ManualSetTimeController {
             map.put("msg", "自动考核开启成功，请重新登陆系统进行操作");
             map.put("code", 0);
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("error", e.getMessage());
             map.put("msg", "操作失败");
             map.put("code", 1);

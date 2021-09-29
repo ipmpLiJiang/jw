@@ -80,7 +80,7 @@ public class PersonnelUserController {
                 map.put("code", 0);
 
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("msg", "查询失败");
                 map.put("code", 1);
             }
@@ -131,7 +131,7 @@ public class PersonnelUserController {
             }
 
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "导入失败,请核对上传分模板是否正确");
             map.put("code", 1);
         }
@@ -186,7 +186,7 @@ public class PersonnelUserController {
             }
 
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "导入失败,请核对上传分模板是否正确");
             map.put("code", 1);
         }
@@ -260,7 +260,7 @@ public class PersonnelUserController {
             map.put("msg", "下载成功");
             map.put("code", 0);
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "下载失败");
             map.put("code", 1);
         }
@@ -596,7 +596,7 @@ public class PersonnelUserController {
                 map.put("code", 0);
             }
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("error", e.getMessage());
             map.put("msg", "查询失败");
             map.put("code", 1);

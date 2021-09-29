@@ -68,7 +68,7 @@ public class UserServiceImpl implements IUserService {
             String usercode = String.valueOf(num);
             user.setUsercode(usercode);
         }
-        //新添加的数据是初始密码为whuh123456
+        //新添加的数据是初始密码为jw123456
         user.setPassword(INITIAL_PASSWORD);
         //对密码进行加密
         String password = MD5.md5(user.getPassword());

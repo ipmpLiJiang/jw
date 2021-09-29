@@ -158,7 +158,7 @@ public class MonthSummaryController {
             map.put("msg", "查询个人季结总结成功 ");
             map.put("code", 0);
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "查询个人季结总结失败 ");
             map.put("code", 1);
         }
@@ -340,7 +340,7 @@ public class MonthSummaryController {
             map.put("msg", "获取内容成功");
             map.put("code", 0);
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "获取内容失败");
             map.put("code", 1);
         }

@@ -90,7 +90,7 @@ public class ScoreController {
                 getList(map, scores);
                 map.put("code", 0);
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("msg", "查询失败");
                 map.put("code", 1);
             }
@@ -155,7 +155,7 @@ public class ScoreController {
                 scores = scores.stream().filter(p -> p.getDbtype() != null && p.getDbtype().equals(dbtype)).collect(Collectors.toList());
                 getList(map, scores);
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("msg", "查询失败");
                 map.put("code", 1);
             }
@@ -441,7 +441,7 @@ public class ScoreController {
             }
 
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
         }
         return map;
     }
@@ -534,7 +534,7 @@ public class ScoreController {
             }
 
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
         }
         return map;
     }
@@ -672,7 +672,7 @@ public class ScoreController {
             map.put("msg", "批量删除成功");
             map.put("code", 0);
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "批量删除失败");
             map.put("code", 1);
         }
@@ -700,7 +700,7 @@ public class ScoreController {
             map.put("msg", "批量删除成功");
             map.put("code", 0);
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "批量删除失败");
             map.put("code", 1);
         }
@@ -737,7 +737,7 @@ public class ScoreController {
             map.put("msg", "批量删除成功");
             map.put("code", 0);
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "批量删除失败");
             map.put("code", 1);
         }
@@ -807,7 +807,7 @@ public class ScoreController {
                 updateSuccess(map, count, "修改数据成功", "修改数据失败");
             }
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "修改失败,被评分人不能有两个或两个以上相同的评分人,请检查并删除其中一个或多个 相同的评分人");
             map.put("code", 1);
         }

@@ -64,7 +64,7 @@ public class PermissionController extends BaseController {
                 map.put("code", 0);
             }
         } catch (Exception e){
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "异常");
             map.put("code", 4);
         }

@@ -123,7 +123,7 @@ public class HomePageController {
 
                     }
                 } catch (Exception e) {
-                    log.error(LogUtil.getTrace(e));
+                    log.error(e.getMessage() , e);
                     map.put("msg", "查询个人考核详情失败");
                     map.put("code", 1);
                 }
@@ -177,7 +177,7 @@ public class HomePageController {
 
                     }
                 } catch (Exception e) {
-                    log.error(LogUtil.getTrace(e));
+                    log.error(e.getMessage() , e);
                     map.put("msg", "查询个人考核详情失败");
                     map.put("code", 1);
                 }
@@ -712,7 +712,7 @@ public class HomePageController {
             map.put("code", 0);
 
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "操作失败");
             map.put("error", e.getMessage());
             map.put("eor", e.getStackTrace());
@@ -800,7 +800,7 @@ public class HomePageController {
             map.put("code", 0);
 
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "操作失败");
             map.put("error", e.getMessage());
             map.put("eor", e.getStackTrace());
@@ -860,7 +860,7 @@ public class HomePageController {
                 map.put("code", 1);
             }
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "操作失败");
             map.put("error", e.getMessage());
             map.put("eor", e.getStackTrace());
@@ -1509,7 +1509,7 @@ public class HomePageController {
                 map.put("msg", msg.equals("OK") ? "计算完成." : msg);
                 map.put("code", msg.equals("OK") ? 0 : 1);
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("msg", "查询个人考核详情失败");
                 map.put("code", 1);
             }
@@ -1983,7 +1983,7 @@ public class HomePageController {
                 map.put("msg", msg.equals("OK") ? "计算完成." : msg);
                 map.put("code", msg.equals("OK") ? 0 : 1);
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("msg", "查询个人考核详情失败");
                 map.put("code", 1);
             }
@@ -2219,7 +2219,7 @@ public class HomePageController {
                 map.put("msg", msg.equals("OK") ? "计算完成." : msg);
                 map.put("code", msg.equals("OK") ? 0 : 1);
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("msg", "查询个人考核详情失败");
                 map.put("code", 1);
             }

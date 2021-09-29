@@ -73,12 +73,12 @@ public class PersonnelAuthorizationController {
                     if (user == null) {
                         newUser.setMoneycard(authorization.getAgent());
                         newUser.setUsername(authorization.getAgentusername());
-                        newUser.setPassword(MD5.md5(INITIAL_PASSWORD));//初始密码是whuh123456
+                        newUser.setPassword(MD5.md5(INITIAL_PASSWORD));//初始密码是jw123456
                         newUser.setRoletype("1");//角色类型属于人事部
                         newUser.setFlag("0");
                         newUser.setUserstate("1");
                         userService.insertSelective(newUser);
-                        map.put("msg", "操作成功，初始密码为whuh123456");
+                        map.put("msg", "操作成功，初始密码为jw123456");
                     }else {
                         map.put("msg", "操作成功");
                     }
@@ -203,7 +203,7 @@ public class PersonnelAuthorizationController {
             User newUser = addUser(authorization);
             key.setUsercode(newUser.getUsercode());
             key.setRolecode("500");
-            map.put("msg", "操作成功，初始密码为whuh123456");
+            map.put("msg", "操作成功，初始密码为jw123456");
         } else {
             map.put("msg", "操作成功");
             key.setUsercode(user.getUsercode());
@@ -219,7 +219,7 @@ public class PersonnelAuthorizationController {
         User newUser = new User();
         newUser.setMoneycard(authorization.getAgent());
         newUser.setUsername(authorization.getAgentusername());
-        newUser.setPassword(MD5.md5(INITIAL_PASSWORD));//初始密码是whuh123456
+        newUser.setPassword(MD5.md5(INITIAL_PASSWORD));//初始密码是jw123456
         newUser.setRoletype("1");//角色类型属于人事部
         newUser.setFlag("0");
         newUser.setUserstate("1");

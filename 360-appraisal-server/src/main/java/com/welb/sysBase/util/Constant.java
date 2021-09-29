@@ -8,7 +8,7 @@ public class Constant {
     public static final String DON = "、";
     public static final int NUMBER_ZERO = 0;
     public static final String STRING_ZERO = "0";
-    public static final String INITIAL_PASSWORD = "whuh123456";
+    public static final String INITIAL_PASSWORD = "jw123456";
 
     /**
      * 数据删除状态

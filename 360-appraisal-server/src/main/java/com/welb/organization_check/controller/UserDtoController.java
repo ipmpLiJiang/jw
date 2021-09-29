@@ -103,7 +103,7 @@ public class UserDtoController {
                 map.put("code", 0);
 
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("error", e.getMessage());
                 map.put("msg", "查询历史评分失败");
                 map.put("code", 1);
@@ -144,9 +144,8 @@ public class UserDtoController {
 
                 //手动考核-查看所有月节总结
                 manualSelectUserDtoLikeByUserAndState(dto, map, dbtype, pageNum, pageSize);
-
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("msg", "查询评分汇总列表失败");
                 map.put("code", 1);
             }
@@ -942,7 +941,7 @@ public class UserDtoController {
             String fileName = new String("评分汇总文档.xls".getBytes("UTF-8"), "iso-8859-1");    //生成word文件的文件名
             excelUtil.exportExcel(title, rowsName, dataList, fileName, response);
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
         }
     }
 
@@ -987,7 +986,7 @@ public class UserDtoController {
             String fileName = new String("评分汇总文档.xls".getBytes("UTF-8"), "iso-8859-1");    //生成word文件的文件名
             excelUtil.exportExcel(title, rowsName, dataList, fileName, response);
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
         }
     }
 
@@ -1172,7 +1171,7 @@ public class UserDtoController {
             getGradeState(userDtos);
 
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
         }
 
     }
@@ -1236,7 +1235,7 @@ public class UserDtoController {
                 map.put("code", 0);
 
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("error", e.getMessage());
                 map.put("msg", "查询失败");
                 map.put("code", 1);
@@ -1391,7 +1390,7 @@ public class UserDtoController {
                 map.put("code", 0);
 
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("error", e.getMessage());
                 map.put("msg", "查询历史评分失败");
                 map.put("code", 1);
@@ -1487,7 +1486,7 @@ public class UserDtoController {
                 map.put("code", 0);
 
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("error", e.getMessage());
                 map.put("msg", "查询失败");
                 map.put("code", 1);
@@ -1771,7 +1770,7 @@ public class UserDtoController {
             workbook.write(os);
             downFile(os, response, year + "-" + month + "未评分与未完成人员表.xlsx");
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
 //            map.put("msg", "一键导出失败");
 //            map.put("error", e.getMessage());
 //            map.put("eor", e.getStackTrace());

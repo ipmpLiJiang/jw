@@ -105,7 +105,7 @@ public class RaterController {
                         userRoleService.insertSelective(userRoleKey);
                         int count = raterService.insertSelective(rater);
                         if (count > 0) {
-                            map.put("msg", "添加成功,初始密码是whuh123456");
+                            map.put("msg", "添加成功,初始密码是jw123456");
                             map.put("code", 0);
                         } else {
                             map.put("msg", "添加失败");
@@ -143,7 +143,7 @@ public class RaterController {
         User newUser = new User();
         newUser.setMoneycard(rater.getScorringcode());
         newUser.setUsername(rater.getScorringname());
-        newUser.setPassword(MD5.md5(INITIAL_PASSWORD));//初始密码是whuh123456
+        newUser.setPassword(MD5.md5(INITIAL_PASSWORD));//初始密码是jw123456
         newUser.setMobile(rater.getLeaderphone());
         newUser.setRoletype("1");//角色类型属于人事部
         newUser.setFlag("0");

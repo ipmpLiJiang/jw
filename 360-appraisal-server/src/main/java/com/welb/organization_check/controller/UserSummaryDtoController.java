@@ -144,7 +144,7 @@ public class UserSummaryDtoController {
             map.put("data", summarys);
             map.put("code", 0);
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "查询待评分列表数据失败");
             map.put("code", 1);
         }
@@ -225,7 +225,7 @@ public class UserSummaryDtoController {
                     map.put("data", dtos);
                     map.put("code", 0);
                 } catch (Exception e) {
-                    log.error(LogUtil.getTrace(e));
+                    log.error(e.getMessage() , e);
                     map.put("msg", "查询待评分列表数据失败");
                     map.put("code", 1);
                 }
@@ -266,7 +266,7 @@ public class UserSummaryDtoController {
                     map.put("data", dtos);
                     map.put("code", 0);
                 } catch (Exception e) {
-                    log.error(LogUtil.getTrace(e));
+                    log.error(e.getMessage() , e);
                     map.put("msg", "查询待评分列表数据失败");
                     map.put("code", 1);
                 }
@@ -331,7 +331,7 @@ public class UserSummaryDtoController {
             map.put("data", dtos);
             map.put("code", 0);
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "查询待评分列表数据失败");
             map.put("code", 1);
         }

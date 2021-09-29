@@ -399,7 +399,7 @@ public class SendMessageController {
             map.put("content", content);
             map.put("size", mobileList);
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("error", e.getMessage());
             map.put("msg", " 发送失败");
             map.put("code", 1);
@@ -486,7 +486,7 @@ public class SendMessageController {
                 map.put("code", 1);
             }
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("error", LogUtil.getTrace(e));
             map.put("msg", " 发送失败");
             map.put("code", 1);

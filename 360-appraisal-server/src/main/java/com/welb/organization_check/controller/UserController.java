@@ -157,7 +157,7 @@ public class UserController extends BaseController {
                 map.put("data", users);
                 map.put("code", 0);
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("msg", "查询用户失败");
                 map.put("code", 1);
             }
@@ -187,7 +187,7 @@ public class UserController extends BaseController {
                 map.put("data", users);
                 map.put("code", 0);
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("msg", "查询用户失败");
                 map.put("code", 1);
             }
@@ -275,7 +275,7 @@ public class UserController extends BaseController {
                         null);
                 map.put("code", 0);
             } catch (Exception e) {
-                log.error(LogUtil.getTrace(e));
+                log.error(e.getMessage() , e);
                 map.put("msg", "导出失败");
                 map.put("code", 1);
             }
@@ -448,12 +448,12 @@ public class UserController extends BaseController {
                 if (count > 0) {
                     //添加用户的同时  季节总结管理也添加了一条数据  ，状态默认未提交
                     addUser(user, rolecode, state);
-                    map.put("msg", "添加用户成功,初始密码为whuh123456");
+                    map.put("msg", "添加用户成功,初始密码为jw123456");
                     map.put("code", 0);
                 }
             }
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "添加用户失败");
             map.put("code", 1);
         }
@@ -627,7 +627,7 @@ public class UserController extends BaseController {
                 }
             }
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "修改用户失败");
             map.put("code", 1);
         }
@@ -724,7 +724,7 @@ public class UserController extends BaseController {
             map.put("code", 0);
 
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "刪除用户失败");
             map.put("code", 1);
         }
@@ -799,7 +799,7 @@ public class UserController extends BaseController {
         user.setPassword(MD5.md5(password));
         int count = userService.updateByPrimaryKeySelective(user);
         if (count > 0) {
-            map.put("msg", "密码重置成功,重置的密码是 whuh123456");
+            map.put("msg", "密码重置成功,重置的密码是 jw123456");
             map.put("code", 0);
         } else {
             map.put("msg", "密码重置失败");
@@ -837,7 +837,7 @@ public class UserController extends BaseController {
                 map.put("code", 0);
             }
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "查询用户失败");
             map.put("code", 1);
         }
@@ -871,7 +871,7 @@ public class UserController extends BaseController {
                 }
             }
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("error", LogUtil.getTrace(e));
             map.put("msg", "修改失败");
             map.put("code", 1);

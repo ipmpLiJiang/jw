@@ -48,7 +48,7 @@ public class RoleController {
             map.put("data", roles);
             map.put("code", 0);
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
+            log.error(e.getMessage() , e);
             map.put("msg", "查询角色失败");
             map.put("code", 1);
         }
