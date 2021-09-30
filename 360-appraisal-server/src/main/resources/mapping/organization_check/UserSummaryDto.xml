@@ -75,11 +75,14 @@
             and u.UserCode =m.EmployeeCode
             and m.EmployeeCode=s.ScorredCode
             and s.ScorringCode=#{scorringcode}
+            AND u.UserCode in (
+            select ScorredCode from score where dbtype=#{dbtype} union
+            select ScorringCode from score where dbtype=#{dbtype}
+            )
             and m.dbtype = s.dbtype
             and m.State ="6"
             and u.RoleType="0"
             and u.Flag="0"
-
             and u.UserState="1"
         </where>
 
@@ -108,6 +111,10 @@
             and m.dbtype = s.dbtype
             and s.ScorringCode=#{scorringcode}
             and m.dbtype = #{dbtype}
+            AND u.UserCode in (
+            select ScorredCode from score where dbtype=#{dbtype} union
+            select ScorringCode from score where dbtype=#{dbtype}
+            )
             and m.State ="6"
             and u.RoleType="0"
             and u.Flag="0"

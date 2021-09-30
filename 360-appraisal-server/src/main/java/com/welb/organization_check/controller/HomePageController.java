@@ -379,6 +379,7 @@ public class HomePageController {
 
                 Duty du = new Duty();
                 du.setDbtype(dto.getDbtype());
+                du.setStationcode(dto.getStationcode());
                 List<Duty> dutyList = dutyService.selectDutyAll(du);
 
                 List<Duty> dutyJichu = dutyList.stream().filter(p -> p.getDutytype().equals("0")).collect(Collectors.toList());
@@ -419,7 +420,8 @@ public class HomePageController {
             data.put("total", "");
 
             Duty du = new Duty();
-            du.setDbtype("1");
+            du.setDbtype(dto.getDbtype());
+            du.setStationcode(dto.getStationcode());
             List<Duty> dutyList = dutyService.selectDutyAll(du);
 
             List<Duty> dutyJichu = dutyList.stream().filter(p -> p.getDutytype().equals("0")).collect(Collectors.toList());
@@ -517,7 +519,8 @@ public class HomePageController {
         } else {
             data.put("total", "");
             Duty du = new Duty();
-            du.setDbtype("1");
+            du.setDbtype(dto.getDbtype());
+            du.setDbbk(dto.getDbbk());
             List<Duty> dutyList = dutyService.selectDutyAll(du);
 
             List<Duty> dutyJichu = dutyList.stream().filter(p -> p.getDutytype().equals("4")).collect(Collectors.toList());

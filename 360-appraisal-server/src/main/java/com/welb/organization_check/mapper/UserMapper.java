@@ -30,6 +30,8 @@ public interface UserMapper {
 
     List<User>selectUserAll(@Param("user") User user,@Param("roleList") List<String> roleList);
 
+    List<User> selectUserScoreAll(@Param("user") User user,@Param("roleList") List<String> roleList);
+
     List<User>selectUserByStationCode(String stationcode);
 
     List<User>selectUserByDepartmentCode(String departmentcode);

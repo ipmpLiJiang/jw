@@ -761,6 +761,55 @@
         </where>
         order by u.UserCode+0
     </select>
+
+    <select id="selectUserScoreAll" resultMap="BaseResultMap">
+        select u.UserCode,u.UserName,u.StationCode,u.Mobile,u.Sex,u.Nation,u.UserState,
+        u.Education,u.Email,u.Political,u.MoneyCard,u.BranchCode,u.FullStationCode, u.ARatio,
+        u.BRatio,u.CRatio, u.DRatio,u.ERatio, u.FRatio,u.ARatio2, u.BRatio2,u.CRatio2,
+        u.DRatio2,u.ERatio2, u.FRatio2,u.FullBranchCode,u.postType,u.dbtype,u.dbbk
+        from user u
+        <where>
+            <if test='user.dbtype!=null and user.dbtype!="" and user.dbtype=="1"'>
+                and u.dbbk!='' and u.dbbk is not null
+            </if>
+            <if test="user.username!=null and user.username!=''">
+                and u.UserName like concat('%',#{user.username},'%')
+            </if>
+            <if test="user.stationcode!=null and user.stationcode!=''">
+                and u.StationCode=#{user.stationcode}
+            </if>
+            <if test="user.usercode!=null and user.usercode!=''">
+                and u.UserCode=#{user.usercode}
+            </if>
+            <if test="user.userstate!=null and user.userstate!=''">
+                and u.UserState=#{user.userstate}
+            </if>
+            <if test="user.roletype!=null and user.roletype!=''">
+                and u.RoleType=#{user.roletype}
+            </if>
+            and u.Flag ="0"
+            and u.RoleType="0"
+            and u.UserState="1"
+            AND u.UserCode in (
+            select ur.UserCode from user_role ur,role r where r.RoleCode = ur.RoleCode
+            <if test="user.rolecode!=null and user.rolecode!=''">
+                and r.RoleCode=#{user.rolecode}
+            </if>
+            <if test='user.dbtype!=null and user.dbtype!="" and user.dbtype!="1"'>
+                and r.RoleCode in
+                <foreach item="item" index="index" collection="roleList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            )
+            AND u.UserCode in (
+            select ScorredCode from score where dbtype=#{user.dbtype} union
+            select ScorringCode from score where dbtype=#{user.dbtype}
+            )
+        </where>
+        order by u.UserCode+0
+    </select>
+
     <select id="selectUserPfr" resultMap="BaseResultMap">
         select u.UserCode,u.UserName,u.StationCode,u.Mobile,u.Sex,u.Nation,u.UserState,
         u.Education,u.Email,u.Political,u.MoneyCard,u.BranchCode,u.FullStationCode, u.ARatio,
@@ -853,6 +902,10 @@
         <if test='dbtype!=null and dbtype !="2"'>
             and u.dbbk in('3','4')
         </if>
+        AND u.UserCode in (
+        select ScorredCode from score where dbtype=#{dbtype} union
+        select ScorringCode from score where dbtype=#{dbtype}
+        )
        and u.Flag="0"
        and u.UserState="1"
        and u.RoleType="0"

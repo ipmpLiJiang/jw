@@ -158,6 +158,7 @@ export default {
     },
     //查询是否有消息提醒
     isNotice() {
+      /*
       let rolecode = this.$store.state.user.user.rolecode;
       let data = {
         rolecode: rolecode,
@@ -198,6 +199,7 @@ export default {
             reject(error);
           });
       });
+      */
     },
   },
 };

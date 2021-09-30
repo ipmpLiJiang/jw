@@ -30,6 +30,8 @@ public interface IUserService {
      */
     List<User> selectUserAll(User user,List<String> roleList);
 
+    List<User> selectUserScoreAll(User user,List<String> roleList);
+
     /**
      * 通过usercode删除用户信息
      * @param usercode

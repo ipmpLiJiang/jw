@@ -46,6 +46,11 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public List<User> selectUserScoreAll(User user,List<String> roleList){
+        return userMapper.selectUserScoreAll(user,roleList);
+    }
+
+    @Override
     public List<User> findDutyScorringUserList(String scorredCode,String dutycode,String scoretype,String dbtype){
         return this.userMapper.findDutyScorringUserList(scorredCode,dutycode,scoretype,dbtype);
     }

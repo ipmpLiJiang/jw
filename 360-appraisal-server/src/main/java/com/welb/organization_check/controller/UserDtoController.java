@@ -180,7 +180,7 @@ public class UserDtoController {
                     roleList.add("50");
                     User user = new User();
                     user.setDbtype(dbtype);
-                    users = userService.selectUserAll(user, roleList);
+                    users = userService.selectUserScoreAll(user, roleList);
                 }
                 for (User u : scorringUserList) {
                     count = users.stream().filter(s -> s.getUsercode().equals(u.getUsercode())).count();

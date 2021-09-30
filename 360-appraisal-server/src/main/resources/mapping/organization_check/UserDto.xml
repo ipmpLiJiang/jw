@@ -386,6 +386,10 @@
             AND m.MONTH =#{userDto.month}
             AND m.dbtype =#{userDto.dbtype}
             -- 	AND m.State IN ( "6", "7" )
+            AND u.UserCode in (
+                select ScorredCode from score where dbtype=#{userDto.dbtype} union
+                select ScorringCode from score where dbtype=#{userDto.dbtype}
+            )
             AND u.UserCode = m.EmployeeCode
             and u.UserCode=ur.UserCode
             and r.RoleCode=ur.RoleCode
