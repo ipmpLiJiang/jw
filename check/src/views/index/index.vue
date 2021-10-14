@@ -10,7 +10,7 @@
             class="top-btn more"
             @click="choiceSystem(1)"
           >
-            <i class="icon iconfont icon-keyan"></i>党部考核
+            <i class="icon iconfont icon-keyan"></i>党支部考核
           </div>
         </el-col> 
         <el-col class="card">
@@ -133,7 +133,7 @@ export default {
         this.data.data.rolename = this.roleList[0]["rolename"];
         }
       //}
-      // 党部考核 还是普通考核
+      // 党支部考核 还是普通考核
       this.data.data.dbtype = type
       this.$message({
         message: this.data.msg,

@@ -13,10 +13,11 @@
         <result column="Ratio" property="ratio" jdbcType="DOUBLE"/>
         <result column="dbtype" property="dbtype" jdbcType="VARCHAR"/>
         <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
+        <result column="ScoreState" property="scoreState" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
     SerialNo, MSerialNo, ScoredCode, ScorringCode, ScoreDate, ScoreType, State, Score,
-    Ratio,dbtype,dbbk
+    Ratio,dbtype,dbbk,ScoreState
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
@@ -31,10 +32,11 @@
     <insert id="insert" parameterType="com.welb.organization_check.entity.ScoreFlow">
     insert into scoreflow (SerialNo, MSerialNo, ScoredCode,
       ScorringCode, ScoreDate, ScoreType,
-      State, Score, Ratio ,dbtype,dbbk)
+      State, Score, Ratio ,dbtype,dbbk,ScoreState)
     values (#{serialno,jdbcType=VARCHAR}, #{mserialno,jdbcType=VARCHAR}, #{scoredcode,jdbcType=VARCHAR},
       #{scorringcode,jdbcType=VARCHAR}, #{scoredate,jdbcType=DATE}, #{scoretype,jdbcType=VARCHAR},
-      #{state,jdbcType=INTEGER}, #{score,jdbcType=DOUBLE}, #{ratio,jdbcType=DOUBLE}, #{dbtype,jdbcType=VARCHAR},#{dbbk,jdbcType=VARCHAR})
+      #{state,jdbcType=INTEGER}, #{score,jdbcType=DOUBLE}, #{ratio,jdbcType=DOUBLE}, #{dbtype,jdbcType=VARCHAR},
+      #{dbbk,jdbcType=VARCHAR},#{scoreState,jdbcType=VARCHAR})
   </insert>
     <insert id="insertSelective" parameterType="com.welb.organization_check.entity.ScoreFlow">
         insert into scoreflow
@@ -72,7 +74,9 @@
             <if test="dbbk != null">
                 dbbk,
             </if>
-
+            <if test="scoreState != null">
+                ScoreState,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="serialno != null">
@@ -108,6 +112,10 @@
             <if test="dbbk != null">
                 #{dbbk,jdbcType=VARCHAR},
             </if>
+            <if test="scoreState != null">
+                #{scoreState,jdbcType=VARCHAR},
+            </if>
+
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.ScoreFlow">
@@ -143,6 +151,9 @@
             <if test="dbbk != null">
                 dbbk = #{dbbk,jdbcType=VARCHAR},
             </if>
+            <if test="scoreState != null">
+                ScoreState = #{scoreState,jdbcType=VARCHAR},
+            </if>
         </set>
         where SerialNo = #{serialno,jdbcType=VARCHAR}
     </update>
@@ -157,7 +168,8 @@
       Score = #{score,jdbcType=DOUBLE},
       Ratio = #{ratio,jdbcType=DOUBLE},
       dbtype = #{dbtype,jdbcType=VARCHAR},
-      dbbk = #{dbbk,jdbcType=VARCHAR}
+      dbbk = #{dbbk,jdbcType=VARCHAR},
+      ScoreState = #{scoreState,jdbcType=VARCHAR},
     where SerialNo = #{serialno,jdbcType=VARCHAR}
   </update>
     <!--通过评分人编号和季节编号查找当前上一月度的总分-->
@@ -316,6 +328,9 @@
                     <if test="flow.ratio != null">
                         Ratio = #{flow.ratio,jdbcType=DOUBLE},
                     </if>
+                    <if test="flow.scoreState != null">
+                        ScoreState = #{flow.scoreState,jdbcType=VARCHAR},
+                    </if>
                 </trim>
             </set>
             where SerialNo = #{flow.serialno,jdbcType=VARCHAR}
@@ -324,7 +339,7 @@
 
     <insert id="batchInsert">
         insert into scoreflow (SerialNo,MSerialNo, ScoredCode, ScorringCode, ScoreDate, ScoreType, State, Score,
-        Ratio,dbtype) values
+        Ratio,dbtype,ScoreState) values
         <foreach collection="list" item="flow" separator=",">
             (#{flow.serialno,jdbcType=VARCHAR},
             #{flow.mserialno,jdbcType=VARCHAR},
@@ -335,7 +350,8 @@
             #{flow.state,jdbcType=INTEGER},
             #{flow.score,jdbcType=DOUBLE},
             #{flow.ratio,jdbcType=DOUBLE},
-            #{flow.dbtype,jdbcType=VARCHAR})
+            #{flow.dbtype,jdbcType=VARCHAR},
+            #{flow.scoreState,jdbcType=VARCHAR})
         </foreach>
     </insert>
 

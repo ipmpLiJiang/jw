@@ -20,9 +20,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="发薪号">
+            <el-form-item label="账号">
               <el-input
-                placeholder="请选择发薪号"
+                placeholder="请选择账号"
                 v-model="search.userId"
                 clearable
                 @keyup.enter.native="getList"
@@ -103,7 +103,7 @@
         </el-table-column>
         <el-table-column
           prop="userId"
-          label="发薪号"
+          label="账号"
           show-overflow-tooltip
           align="center"
         >

@@ -16,7 +16,7 @@ public class Duty {
         dbbks.put("1","组织委员纪检委员");
         dbbks.put("2","宣传委员青年委员");
         dbbks.put("3","党支部书记");
-        dbbks.put("4","总党支部书记");
+        dbbks.put("4","党总支书记");
     }
 
     private String dutycode;
@@ -55,14 +55,14 @@ public class Duty {
 
     private String dbtype;
 
-    private Double defScore;
+    private String defScore;
 
-    public Double getDefScore() {
+    public String getDefScore() {
         return defScore;
     }
 
-    public void setDefScore(Double defScore) {
-        this.defScore = defScore;
+    public void setDefScore(String defScore) {
+        this.defScore = defScore == null ? "0" : defScore.trim();
     }
 
     public String getDbtype() {

@@ -4,7 +4,7 @@
       <h2 class="title">{{detailData.year}}年 第{{detailData.month}}季度 测评报告</h2>
       <el-col :span="16">
         <h4>{{detailData.username}}<span>&nbsp;&nbsp;&nbsp;
-          发薪号：{{detailData.moneycard}}&nbsp;&nbsp;&nbsp;
+          账号：{{detailData.moneycard}}&nbsp;&nbsp;&nbsp;
           部门：{{detailData.departmentname}}&nbsp;&nbsp;&nbsp;
           岗位：{{detailData.stationname}}</span>&nbsp;&nbsp;&nbsp;
           <span v-show="postTypeName!=''?true:false">岗位类型：{{postTypeName}}</span>
@@ -67,6 +67,13 @@
         </el-col> -->
       </el-col>
 
+    </el-row>
+    <el-row class="box-wrap">
+      <el-col>
+        <b>总得分：{{detailData.totalscore}} 分，{{postTypeName}}整体平均分差距0%，较个人上一季度0%差距。</b>
+        <br><br>
+        <b>另附：总得分和单项得分的柱状图（实际得分和平均分）</b>
+      </el-col>
     </el-row>
     <div class="box-data">
       <h4 class="bd-title">综合结果</h4>

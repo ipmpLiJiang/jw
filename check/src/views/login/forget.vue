@@ -16,11 +16,11 @@
           class="left"
         >
           <el-input
-            placeholder="请输入发薪号"
+            placeholder="请输入账号"
             v-model="moneycard"
             clearable
           >
-            <template slot="prepend">发薪号</template>
+            <template slot="prepend">账号</template>
           </el-input>
         </el-col>
         <el-col
@@ -158,10 +158,10 @@ export default {
     };
   },
   methods: {
-    //查询是否有发薪号
+    //查询是否有账号
     nextStep() {
       if (!this.moneycard) {
-        this.$message.warning("请先输入发薪号");
+        this.$message.warning("请先输入账号");
         return;
       }
       let data = {

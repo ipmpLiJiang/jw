@@ -13,5 +13,5 @@ import java.util.List;
  */
 public interface IDutyDtoService {
 
-    List<DutyDto> selectDutyDto(String station, String scorredcode, String stationcode, String username,String dbtype);
+    List<DutyDto> selectDutyDto(String station, String scorredcode, String stationcode, String username,String scoreType,String dbtype);
 }

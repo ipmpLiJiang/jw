@@ -356,4 +356,24 @@ public class UserSummaryDto {
         this.postType = postType == null ? null : postType.trim();
     }
 
+    private String scoreState;
+
+    public String getScoreState() {
+        return scoreState;
+    }
+
+    public void setScoreState(String scoreState) {
+        this.scoreState = scoreState == null ? "1" : scoreState.trim();
+    }
+
+    private String scoretype;
+
+    public String getScoretype() {
+        return scoretype;
+    }
+
+    public void setScoretype(String scoretype) {
+        this.scoretype = scoretype == null ? null : scoretype.trim();
+    }
+
 }

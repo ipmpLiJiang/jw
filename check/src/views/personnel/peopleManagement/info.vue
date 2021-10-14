@@ -72,7 +72,7 @@
         </el-table-column>
         <el-table-column
           prop="moneycard"
-          label="发薪号"
+          label="账号"
           show-overflow-tooltip
         >
         </el-table-column>
@@ -130,7 +130,7 @@
         </el-form-item>
 
         <el-form-item
-          label="发薪号"
+          label="账号"
           :label-width="formLabelWidth"
         >
           <el-input
@@ -425,7 +425,7 @@ export default {
         return;
       }
       if (!data.moneycard) {
-        this.$message.warning("请填写发薪号");
+        this.$message.warning("请填写账号");
         return;
       }
       if (!data.departmentname) {

@@ -74,7 +74,7 @@
       <el-col :span="24">
         <ul class="indicator">
           <li class="li-title">
-            <div class="title">政治建设(总分15)</div>
+            <div class="title">政治建设</div>
           </li>
           <li
             v-for="(item,index) in dutyJichu" :key="'a'+index"
@@ -88,7 +88,7 @@
             <el-row class="zpsm">
               <el-col :span="2">
                 <font style="color:red"> * </font>自评说明：
-                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限80字)</font>
               </el-col>
               <el-col :span="17">
                 <el-input v-show="detailData.isedit == 0?true:false" maxlength="80" type="textarea" v-model="item.zpsm"></el-input>
@@ -97,7 +97,7 @@
             </el-row>
           </li>
           <li class="li-title">
-            <div class="title">思想建设(总分20)</div>
+            <div class="title">思想建设</div>
           </li>
           <li
             v-for="(item,index) in dutyYiban" :key="'b'+index"
@@ -111,7 +111,7 @@
             <el-row class="zpsm">
               <el-col :span="2">
                 <font style="color:red"> * </font>自评说明：
-                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限80字)</font>
               </el-col>
               <el-col :span="17">
                 <el-input v-show="detailData.isedit == 0?true:false" maxlength="80" type="textarea" v-model="item.zpsm"></el-input>
@@ -120,7 +120,7 @@
             </el-row>
           </li>
           <li class="li-title">
-            <div class="title">组织建设(总分25)</div>
+            <div class="title">组织建设</div>
           </li>
           <li
             v-for="(item,index) in dutyZhongdian" :key="'c'+index"
@@ -134,7 +134,7 @@
             <el-row class="zpsm">
               <el-col :span="2">
                 <font style="color:red"> * </font>自评说明：
-                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限80字)</font>
               </el-col>
               <el-col :span="17">
                 <el-input v-show="detailData.isedit == 0?true:false" maxlength="80" type="textarea" v-model="item.zpsm"></el-input>
@@ -143,7 +143,7 @@
             </el-row>
           </li>
           <li class="li-title">
-            <div class="title">党建创新(总分25)</div>
+            <div class="title">党建创新</div>
           </li>
           <li
             v-for="(item,index) in dutyMubiao" :key="'d'+index"
@@ -157,7 +157,7 @@
             <el-row class="zpsm">
               <el-col :span="2">
                 <font style="color:red"> * </font>自评说明：
-                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限80字)</font>
               </el-col>
               <el-col :span="17">
                 <el-input v-show="detailData.isedit == 0?true:false" maxlength="80" type="textarea" v-model="item.zpsm"></el-input>
@@ -166,7 +166,7 @@
             </el-row>
           </li>
            <li class="li-title">
-            <div class="title">作风建设(总分25)</div>
+            <div class="title">作风建设</div>
           </li>
            <li
             v-for="(item,index) in dutyZuofeng" :key="'e'+index"
@@ -180,7 +180,7 @@
             <el-row class="zpsm">
               <el-col :span="2">
                 <font style="color:red"> * </font>自评说明：
-                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限80字)</font>
               </el-col>
               <el-col :span="17">
                 <el-input v-show="detailData.isedit == 0?true:false" maxlength="80" type="textarea" v-model="item.zpsm"></el-input>
@@ -192,7 +192,7 @@
             class="w100 operation"
             v-if="detailData.isedit == 1 ? false : true"
           >
-            <div v-if="dutyJichu.length == 0 && dutyJichu.length == 0 && dutyZhongdian.length == 0 && dutyMubiao.length == 0 && dutyZuofeng.length == 0">
+            <div v-if="dutyJichu.length == 0 && dutyYiban.length == 0 && dutyZhongdian.length == 0 && dutyMubiao.length == 0 && dutyZuofeng.length == 0">
               <el-button
                 type="default"
                 disabled="disabled"
@@ -295,7 +295,7 @@
   </div>
 </template>
 <script>
-import { getDetail2, scoring2 } from "@/api/home/home";
+import { getDetail2, scoring3 } from "@/api/home/home";
 import { download } from "@/api/common/common";
 import qs from "qs";
 export default {
@@ -389,7 +389,7 @@ export default {
       data.year =this.detailData.year;
       data.dbtype =this.$store.state.user.user.dbtype;
       new Promise((response, reject) => {
-        scoring2(qs.stringify(data))
+        scoring3(qs.stringify(data))
           .then(response => {
             if (response.data.code == 0) {
               this.$message({

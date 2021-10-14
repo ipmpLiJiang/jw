@@ -47,7 +47,7 @@
                 width="100">
         </el-table-column>
         <el-table-column
-                label="发薪号"
+                label="账号"
                 prop="name"
                 width="100">
         </el-table-column>
@@ -76,7 +76,7 @@
               <el-form-item label="员工姓名">
                 <el-input v-model="props.row.id" placeholder="请输入姓名"></el-input>
               </el-form-item>
-              <el-form-item label="发薪号">
+              <el-form-item label="账号">
                 <el-input v-model="props.row.name" placeholder="请输入姓名"></el-input>
               </el-form-item>
               <el-form-item label="性别">

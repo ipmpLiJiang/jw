@@ -85,12 +85,12 @@ public class ScoreController {
                     scores = scoreService.selectScoresByScorredCode(scorredcode, scoretype, dbtype);
                     //  getList(map, scores);
                 }
-                //做数据的筛选  是否党部数据 是否普通员工数据
+                //做数据的筛选  是否党支部数据 是否普通员工数据
                 scores = scores.stream().filter(p -> p.getDbtype() != null && p.getDbtype().equals(dbtype)).collect(Collectors.toList());
                 getList(map, scores);
                 map.put("code", 0);
             } catch (Exception e) {
-                log.error(e.getMessage() , e);
+                log.error(e.getMessage(), e);
                 map.put("msg", "查询失败");
                 map.put("code", 1);
             }
@@ -155,7 +155,7 @@ public class ScoreController {
                 scores = scores.stream().filter(p -> p.getDbtype() != null && p.getDbtype().equals(dbtype)).collect(Collectors.toList());
                 getList(map, scores);
             } catch (Exception e) {
-                log.error(e.getMessage() , e);
+                log.error(e.getMessage(), e);
                 map.put("msg", "查询失败");
                 map.put("code", 1);
             }
@@ -335,9 +335,10 @@ public class ScoreController {
         ModelMap map = new ModelMap();
         try {
             List<Role> roles = roleService.selectRoleListByUserCode(score.getScorredcode());
-            //普通用户 党部用户 不限制
-            if (dbtype.equals("1") || !roles.get(0).getRolecode().equals("150")) {
-                int flag = 1;
+            long ncount = roles.stream().filter(s -> s.getRolecode().equals("300")).count();
+            //党支部考核 不限制、干部考核 限制普通员工 才能考核
+            if (dbtype.equals("1") || (dbtype.equals("2") && ncount > 0)) {
+                int flag = 0;
                 boolean temp = false;
                 boolean temp1 = false;
                 StringBuilder sb = new StringBuilder();
@@ -345,103 +346,107 @@ public class ScoreController {
                 String[] scorringcodes = fullscorringcode.split(",");
                 List<String> scorringcode = new ArrayList<>();
                 Score score1 = new Score();
-                int counts = 0;
+                ncount = 0;
                 for (int i = 0; i < scorringcodes.length; i++) {
+                    // 打分人
                     User user = userService.findUserRoleByUserCode(scorringcodes[i]);
                     String moneycard = user.getMoneycard();
                     String username = user.getUsername();
-                    //4 总党支部书记
-                    if (dbtype.equals("1") && user.getDbbk().equals("4")) {
-                        temp1 = true;
-                        sb1.append(username + "(" + moneycard + "-" + scoretype + ")").append(";");
-                    } else {
-                        //干部考核 判断 打分人不能是 普通用户 需求更改 temp1 只能等于 false 下面代码不删除
-//                        if (dbtype.equals("2") && !user.getRolecode().equals("150")) {
-//                            temp1 = true;
-//                            sb1.append(username + "(" + moneycard + "-" + scoretype + ")").append(";");
-//                        } else {
-                            score1.setScorredcode(score.getScorredcode());
-                            score1.setScoretype(scoretype);
-                            score1.setDbtype(dbtype);
-                            score1.setScorringcode(scorringcodes[i]);
-                            Score selectScoreByCode = scoreService.selectTypeByCode(score1.getScorredcode(), score1.getScorringcode(), dbtype);
-                            if (score1.getScorringcode().equals(score1.getScorredcode())) {
-                                flag = 1;
-                                break;
-                            }
-                            if (selectScoreByCode != null) {
-                                temp = true;
-                                sb.append(username + "(" + moneycard + "-" + scoretype + ")").append(";");
-                            } else {
-                                flag = 3;
-                                scorringcode.add(score1.getScorringcode());
-                            }
+
+                    if (dbtype.equals("1")) {
+                        if (!user.getPolitical().equals("0")) {
+                            temp1 = true;
+                            sb1.append(username + "(" + moneycard + "-" + scoretype + ")").append(";");
+                            continue;
                         }
-//                    }
+                    } else {
+                        if (!user.getRolecode().equals("300") && !user.getRolecode().equals("150")) {
+                            temp1 = true;
+                            sb1.append(username + "(" + moneycard + "-" + scoretype + ")").append(";");
+                            continue;
+                        }
+                    }
+
+                    score1.setScorredcode(score.getScorredcode());
+                    score1.setScoretype(scoretype);
+                    score1.setDbtype(dbtype);
+                    score1.setScorringcode(scorringcodes[i]);
+                    List<Score> selectScoreByCode = scoreService.selectTypeByCodeList(score1.getScorredcode(), score1.getScorringcode(), dbtype);
+                    if (score1.getScorringcode().equals(score1.getScorredcode())) {
+                        flag = 1;
+                        break;
+                    }
+                    if (selectScoreByCode.size() > 0) {
+                        temp = true;
+                        sb.append(username + "(" + moneycard + "-" + scoretype + ")").append(";");
+                    } else {
+                        flag = 3;
+                        scorringcode.add(score1.getScorringcode());
+                    }
                 }
                 if (flag == 1) {
-                    map.put("msg", "不能添加自己作为评分人。");
+                    map.put("msg", "不能添加被评分人作为评分人。");
                     map.put("code", 1);
-                }
-                if (temp || temp1) {
-                    if (temp && !temp1) {
-                        sb.append("以上员工已被选择为其他类评分人，请重新选择。");
-                        map.put("msg", sb);
-                        map.put("code", 1);
-                    } else if (!temp && temp1) {
-                        if (dbtype.equals("1")) {
-                            sb1.append("以上员工为总党支部书记，请重新选择。");
-                        } else {
-                            sb1.append("以上员工非打分用户，请重新选择。");
-                        }
-                        map.put("msg", sb1);
-                        map.put("code", 1);
-                    } else {
-                        sb.append("以上员工已被选择为其他类评分人。");
-                        if (dbtype.equals("1")) {
-                            sb1.append("以上员工为总党支部书记，请重新选择。");
-                        } else {
-                            sb1.append("以上员工非打分用户，请重新选择。");
-                        }
-                        map.put("msg", sb.toString() + "  " + sb1.toString());
-                        map.put("code", 1);
-                    }
                 } else {
-                    if (scorringcode.size() == scorringcodes.length) {
-                        Score newScore = new Score();
-                        for (int i = 0; i < scorringcode.size(); i++) {
-                            newScore.setScorredcode(score.getScorredcode());
-                            newScore.setScoretype(score.getScoretype());
-                            newScore.setDbtype(dbtype);
-                            newScore.setScorringcode(scorringcode.get(i));
-                            int count = scoreService.insertSelective(newScore);
-                            //修改评分状态
-                            ScoreHistory history = historyService.selectScoreHistoryByUserCode(newScore.getScorringcode(), dbtype);
-                            if (history != null) {
-                                if (history.getScorestatus().equals("3")) {
-                                    history.setScorestatus("2");
-                                    historyService.updateByPrimaryKeySelective(history);
-                                }
+                    if (temp || temp1) {
+                        if (temp && !temp1) {
+                            sb.append("以上员工已被选择为其他类评分人，请重新选择。");
+                            map.put("msg", sb);
+                            map.put("code", 1);
+                        } else if (!temp && temp1) {
+                            if (dbtype.equals("1")) {
+                                sb1.append("以上员工不是中共党员，请重新选择。");
+                            } else {
+                                sb1.append("以上员工角色权限非打分用户或普通用户，请重新选择。");
                             }
-                            counts += count;
-                        }
-                        if (counts > 0) {
-                            map.put("msg", "添加" + scoretype + "类评分人成功");
-                            map.put("code", 0);
+                            map.put("msg", sb1);
+                            map.put("code", 1);
                         } else {
-                            map.put("msg", "添加" + scoretype + "类评分人失败");
+                            sb.append("以上员工已被选择为其他类评分人。");
+                            if (dbtype.equals("1")) {
+                                sb1.append("以上员工不是中共党员，请重新选择。");
+                            } else {
+                                sb1.append("以上员工角色权限非打分用户或普通用户，请重新选择。");
+                            }
+                            map.put("msg", sb.toString() + "  " + sb1.toString());
                             map.put("code", 1);
                         }
+                    } else {
+                        if (scorringcode.size() == scorringcodes.length) {
+                            Score newScore = new Score();
+                            for (int i = 0; i < scorringcode.size(); i++) {
+                                newScore.setScorredcode(score.getScorredcode());
+                                newScore.setScoretype(score.getScoretype());
+                                newScore.setDbtype(dbtype);
+                                newScore.setScorringcode(scorringcode.get(i));
+                                int count = scoreService.insertSelective(newScore);
+                                //修改评分状态
+                                ScoreHistory history = historyService.selectScoreHistoryByUserCode(newScore.getScorringcode(), dbtype);
+                                if (history != null) {
+                                    if (history.getScorestatus().equals("3")) {
+                                        history.setScorestatus("2");
+                                        historyService.updateByPrimaryKeySelective(history);
+                                    }
+                                }
+                                ncount += count;
+                            }
+                            if (ncount > 0) {
+                                map.put("msg", "添加" + scoretype + "类评分人成功");
+                                map.put("code", 0);
+                            } else {
+                                map.put("msg", "添加" + scoretype + "类评分人失败");
+                                map.put("code", 1);
+                            }
+                        }
                     }
                 }
-
             } else {
-                map.put("msg", "该用户是打分人员,不能添加评分人员");
+                map.put("msg", "该用户角色权限不是普通用户，不能添加评分人员");
                 map.put("code", 1);
             }
 
         } catch (Exception e) {
-            log.error(e.getMessage() , e);
+            log.error(e.getMessage(), e);
         }
         return map;
     }
@@ -456,89 +461,150 @@ public class ScoreController {
         ModelMap map = new ModelMap();
         try {
             List<Role> roles = roleService.selectRoleListByUserCode(score.getScorredcode());
-            if (!roles.get(0).getRolecode().equals("150")) {
-                int flag = 0;
+            long ncount = roles.stream().filter(s -> s.getRolecode().equals("300")).count();
+            if (ncount > 0) {
                 StringBuilder sb = new StringBuilder();
+                StringBuilder sb1 = new StringBuilder();
                 String[] scorringcodes = fullscorringcode.split(",");
-                List<User> userList = userService.findUserByCodeList(scorringcodes);
-                List<User> userqueryList = userList.stream().filter(s -> s.getRolecode().equals("150")).collect(Collectors.toList());
-                if (userqueryList.size() > 0) {
-                    long count = 0;
-                    List<Duty> dutyList = dutyService.selectDutyByStationCode(stationcode, score.getDbtype());
-                    String[] dutycodes = fulldutycode.split(",");
-                    List<String> dutyCodeList = new ArrayList<>();
-                    for (String code : dutycodes) {
-                        count = dutyList.stream().filter(s -> s.getDutycode().equals(code)).count();
-                        if (count > 0) {
-                            dutyCodeList.add(code);
-                        }
+//                List<User> userList = userService.findUserByCodeList(scorringcodes);
+                List<User> userqueryList = userService.findUserByCodeList(scorringcodes);
+//                List<User> userqueryList = userList.stream().filter(s -> s.getRolecode().equals("150")).collect(Collectors.toList());
+//                if (userqueryList.size() > 0) {
+                long count = 0;
+                List<Duty> dutyList = dutyService.selectDutyByStationCode(stationcode, score.getDbtype());
+                String[] dutycodes = fulldutycode.split(",");
+                List<String> dutyCodeList = new ArrayList<>();
+                for (String code : dutycodes) {
+                    count = dutyList.stream().filter(s -> s.getDutycode().equals(code)).count();
+                    if (count > 0) {
+                        dutyCodeList.add(code);
                     }
-                    if (dutyCodeList.size() > 0) {
-                        scorringcodes = new String[userqueryList.size()];
-                        for (int i = 0; i < userqueryList.size(); i++) {
-                            scorringcodes[i] = userqueryList.get(i).getUsercode();
-                        }
-                        List<Score> dutyScoreList = scoreService.findScoreScorringInList(score, scorringcodes);
-                        List<Score> createList = new ArrayList<>();
-                        for (User u : userqueryList) {
-                            for (String code : dutyCodeList) {
-                                count = dutyScoreList.stream().filter(
-                                        s -> s.getScorringcode().equals(u.getUsercode())
-                                                && s.getScorredcode().equals(score.getScorredcode())
-                                                && s.getDutycode().equals(code)
-                                ).count();
-                                if (count == 0) {
-                                    Score insert = new Score();
-                                    insert.setScoretype(score.getScoretype());
-                                    insert.setScorredcode(score.getScorredcode());
-                                    insert.setScorringcode(u.getUsercode());
-                                    insert.setDutycode(code);
-                                    insert.setDbtype(score.getDbtype());
-                                    createList.add(insert);
-                                } else {
-                                    if (flag == 0)
-                                        flag = 1;
-                                }
+                }
+                boolean temp = false;
+                boolean temp1 = false;
+                int flag = 0;
+                String userMsg = "";
+                if (dutyCodeList.size() > 0) {
+                    scorringcodes = new String[userqueryList.size()];
+                    for (int i = 0; i < userqueryList.size(); i++) {
+                        scorringcodes[i] = userqueryList.get(i).getUsercode();
+                    }
+                    String scoreType = score.getScoretype();
+                    // 查询去掉 scoreType
+                    score.setScoretype(null);
+                    List<Score> dutyScoreList = scoreService.findScoreScorringInList(score, scorringcodes);
+                    List<Score> createList = new ArrayList<>();
+                    for (User u : userqueryList) {
+                        if (!u.getRolecode().equals("300") && !u.getRolecode().equals("150")) {
+                            temp = true;
+                            userMsg = u.getUsername() + "(" + u.getMoneycard() + "-" + scoreType + ")";
+                            if (sb.indexOf(userMsg) == -1) {
+                                sb.append(userMsg).append(";");
+                                continue;
                             }
                         }
+                        count = dutyScoreList.stream().filter(
+                                s -> s.getScorringcode().equals(u.getUsercode())
+                                        && s.getScorredcode().equals(score.getScorredcode())
+                                        && (s.getDutycode() == null || s.getDutycode().equals(""))
+                        ).count();
+                        if (count == 0) {
+                            if (flag == 0) {
+                                if (score.getScorredcode().equals(u.getUsercode())) {
+                                    flag = 1;
+                                } else {
+                                    for (String code : dutyCodeList) {
+                                        count = dutyScoreList.stream().filter(
+                                                s -> s.getScorringcode().equals(u.getUsercode())
+                                                        && s.getScorredcode().equals(score.getScorredcode())
+                                                        && s.getScoretype().equals(scoreType)
+                                                        && s.getDutycode().equals(code)
+                                        ).count();
+
+//                                        if (count == 0) {
+//                                            count = dutyScoreList.stream().filter(
+//                                                    s -> s.getScorringcode().equals(u.getUsercode())
+//                                                            && s.getScorredcode().equals(score.getScorredcode())
+//                                                            && !s.getScoretype().equals(scoreType)
+//                                                            && !s.getDutycode().equals("")
+//                                            ).count();
+//                                        }
+
+                                        if (count == 0) {
+                                            Score insert = new Score();
+                                            insert.setScoretype(scoreType);
+                                            insert.setScorredcode(score.getScorredcode());
+                                            insert.setScorringcode(u.getUsercode());
+                                            insert.setDutycode(code);
+                                            insert.setDbtype(score.getDbtype());
+                                            createList.add(insert);
+                                        } else {
+                                            temp1 = true;
+                                            userMsg = u.getUsername() + "(" + u.getMoneycard() + "-" + scoreType + ")";
+                                            if (sb1.indexOf(userMsg) == -1) {
+                                                sb1.append(userMsg).append(";");
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            temp1 = true;
+                            userMsg = u.getUsername() + "(" + u.getMoneycard() + "-" + scoreType + ")";
+                            if (sb1.indexOf(userMsg) == -1) {
+                                sb1.append(userMsg).append(";");
+                            }
+                        }
+                    }
+
+                    if (flag == 1) {
+                        map.put("msg", "不能添加被评分人作为评分人。");
+                        map.put("code", 1);
+                    } else {
+                        boolean isAdd = false;
                         if (createList.size() > 0) {
                             for (Score insert : createList) {
                                 scoreService.insertSelective(insert);
                             }
-
-                            map.put("msg", "添加" + score.getScoretype() + "类评分人成功.");
-                            map.put("code", 0);
-                        } else {
-                            if (flag == 1) {
-                                map.put("msg", "添加" + score.getScoretype() + "类评分人失败, 当前选择的人员已添加.");
-                            } else {
-                                map.put("msg", "添加" + score.getScoretype() + "类评分人失败.");
-                            }
-                            map.put("code", 1);
+                            isAdd = true;
                         }
-                    } else {
-                        map.put("msg", "选择的指标无效，请重新选择");
-                        map.put("code", 1);
+
+                        if (temp || temp1) {
+                            if (!temp && temp1) {
+                                sb1.append("以上员工已被选择为其他类评分人，请重新选择。");
+                                map.put("msg", (isAdd ? "部分评分人添加成功。" : "") + sb1);
+                                map.put("code", isAdd ? 0 : 1);
+                            } else if (temp && !temp1) {
+                                sb.append("以上员工角色权限非打分用户或普通用户，请重新选择。");
+                                map.put("msg", (isAdd ? "部分评分人添加成功。" : "") + sb);
+                                map.put("code", isAdd ? 0 : 1);
+                            } else {
+                                sb.append("以上员工已被选择为其他类评分人。");
+                                sb1.append("以上员工角色权限非打分用户或普通用户，请重新选择。");
+                                map.put("msg", (isAdd ? "部分评分人添加成功。" : "") + sb.toString() + "。" + sb1.toString());
+                                map.put("code", isAdd ? 0 : 1);
+                            }
+                        } else {
+                            if (isAdd) {
+                                map.put("msg", "添加" + scoreType + "类评分人成功.");
+                                map.put("code", 0);
+                            }
+                        }
                     }
                 } else {
-                    for (User u : userList) {
-                        sb.append(u.getUsername() + "(" + u.getMoneycard() + ")").append(";");
-                    }
-                    sb.append("以上人员不是评分人，请重新选择");
-                    map.put("msg", sb);
+                    map.put("msg", "选择的指标无效，请重新选择");
                     map.put("code", 1);
                 }
             } else {
-                map.put("msg", "该用户是打分人员,不能添加评分人员");
+                map.put("msg", "该用户角色权限不是普通用户，不能添加评分人员");
                 map.put("code", 1);
             }
 
         } catch (Exception e) {
-            log.error(e.getMessage() , e);
+            log.error(e.getMessage(), e);
         }
         return map;
     }
-
 
     /**
      * 添加被评分人数据
@@ -560,18 +626,19 @@ public class ScoreController {
             score1.setScoretype(scoretype);
             score1.setDbtype(dbtype);
             score1.setScorringcode(score.getScorringcode());
-            Score selectScoreByCode = scoreService.selectTypeByCode(score1.getScorredcode(), score1.getScorringcode(), dbtype);
+            List<Score> selectScoreByCode = scoreService.selectTypeByCodeList(score1.getScorredcode(), score1.getScorringcode(), dbtype);
 
             if (score1.getScorringcode().equals(score1.getScorredcode())) {
                 flag = 1;
                 break;
             }
-            if (selectScoreByCode != null) {
+//            if (selectScoreByCode != null) {
+            if (selectScoreByCode.size() > 0) {
                 temp = true;
                 User user = userService.findUserByUserCode(score1.getScorredcode());
                 String moneycard = user.getMoneycard();
                 String username = user.getUsername();
-                String type = selectScoreByCode.getScoretype();
+                String type = selectScoreByCode.get(0).getScoretype();
                 sb.append(username + "(" + moneycard + "-" + type + ")").append(";");
             } else {
                 scorredcode.add(score1.getScorredcode());
@@ -672,7 +739,7 @@ public class ScoreController {
             map.put("msg", "批量删除成功");
             map.put("code", 0);
         } catch (Exception e) {
-            log.error(e.getMessage() , e);
+            log.error(e.getMessage(), e);
             map.put("msg", "批量删除失败");
             map.put("code", 1);
         }
@@ -700,7 +767,7 @@ public class ScoreController {
             map.put("msg", "批量删除成功");
             map.put("code", 0);
         } catch (Exception e) {
-            log.error(e.getMessage() , e);
+            log.error(e.getMessage(), e);
             map.put("msg", "批量删除失败");
             map.put("code", 1);
         }
@@ -714,7 +781,7 @@ public class ScoreController {
      * @return
      */
     @RequestMapping("/batchDelete")
-    public Object batchDelete(String ids,String dbtype) {
+    public Object batchDelete(String ids, String dbtype) {
         ModelMap map = new ModelMap();
         try {
             String[] split = ids.split(",");
@@ -737,7 +804,7 @@ public class ScoreController {
             map.put("msg", "批量删除成功");
             map.put("code", 0);
         } catch (Exception e) {
-            log.error(e.getMessage() , e);
+            log.error(e.getMessage(), e);
             map.put("msg", "批量删除失败");
             map.put("code", 1);
         }
@@ -807,7 +874,7 @@ public class ScoreController {
                 updateSuccess(map, count, "修改数据成功", "修改数据失败");
             }
         } catch (Exception e) {
-            log.error(e.getMessage() , e);
+            log.error(e.getMessage(), e);
             map.put("msg", "修改失败,被评分人不能有两个或两个以上相同的评分人,请检查并删除其中一个或多个 相同的评分人");
             map.put("code", 1);
         }

@@ -163,4 +163,15 @@ public class ScoreFlow {
     public void setDeparmentname(String deparmentname) {
         this.deparmentname = deparmentname;
     }
+
+    private String scoreState;
+
+    public String getScoreState() {
+        return scoreState;
+    }
+
+    public void setScoreState(String scoreState) {
+        this.scoreState = scoreState == null ? "1" : scoreState.trim();
+    }
+
 }

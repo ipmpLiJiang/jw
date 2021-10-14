@@ -3,7 +3,7 @@
     <el-table
       :data="tableData"
       border
-      style="width: 100%;margin-bottom:20px;"
+      style="width: 80%;margin-bottom:20px;"
       size="small"
     >
       <el-table-column
@@ -12,7 +12,7 @@
         width="180"
       >
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         prop="ascore"
         label="A类评分人"
         width="180"
@@ -42,13 +42,13 @@
         prop="fscore"
         label="F类评分人"
       >
-      </el-table-column>
-      <el-table-column
+      </el-table-column> -->
+      <!-- <el-table-column
         prop="sumMbAvgScore"
         v-if="dbtype=='1'?false:true"
         label="目标平均"
       >
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         prop="avgscore"
         :label="avgTitle"

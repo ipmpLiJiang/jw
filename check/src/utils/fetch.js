@@ -14,8 +14,8 @@ axios.defaults.withCredentials = true;
 // 创建axios实例
 const service = axios.create({
     // baseURL: process.env.VUE_APP_URL, // api的base_url
-    // baseURL: process.env.VUE_APP_ITEM_NAME, // api的base_url
-    baseURL: 'http://localhost:8080/',
+    baseURL: process.env.VUE_APP_ITEM_NAME, // api的base_url
+    // baseURL: 'http://localhost:8080/',
     timeout: 600000, // 请求超时时间
 })
 

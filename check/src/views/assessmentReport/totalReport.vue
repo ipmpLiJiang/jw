@@ -175,12 +175,12 @@
             >{{ scope.row.fscore }}</el-button>
           </template>
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           prop="sumMbAvgScore"
           v-if="dbtype=='1'?false:true"
           label="目标平均"
         >
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           prop="dfScore"
           v-if="dbtype=='1'?false:true"

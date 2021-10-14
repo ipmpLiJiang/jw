@@ -217,7 +217,7 @@ export default {
         },
         {
           value: "4",
-          label: "总党支部书记"
+          label: "党总支书记"
         }
       ],
       sex: [
@@ -384,7 +384,7 @@ export default {
         return;
       }
       if (!this.form.moneycard) {
-        this.$message.warning("请填写发薪号");
+        this.$message.warning("请填写账号");
         return;
       }
       if (!this.form.userstate) {

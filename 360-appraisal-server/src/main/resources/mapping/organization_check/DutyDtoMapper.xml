@@ -20,7 +20,7 @@
             duty d
             left join score s on
                 d.DutyCode = s.DutyCode
-                and s.ScoreType = 'D'
+                and s.ScoreType = #{scoreType}
                 and s.ScorredCode = #{scorredcode}
             left join user u on
                 u.UserCode = s.ScorringCode

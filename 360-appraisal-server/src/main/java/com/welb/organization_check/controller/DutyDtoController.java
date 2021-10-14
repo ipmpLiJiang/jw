@@ -31,7 +31,7 @@ public class DutyDtoController {
     @Resource
     IDutyDtoService dutyDtoService;
     @RequestMapping(value = "/dutylist", produces = "application/json;charset=utf-8")
-    public Object selectDutyDtoBy(HttpServletRequest req, String station,String scorredcode, String stationcode,String dbtype,String username,int pageNum, int pageSize) {
+    public Object selectDutyDtoBy(HttpServletRequest req, String station,String scorredcode, String stationcode,String scoretype,String dbtype,String username,int pageNum, int pageSize) {
         ModelMap map = new ModelMap();
         String usercode = (String) req.getSession().getAttribute("usercode");
         //pageNum:当前页  pageSize:每页总数
@@ -39,7 +39,7 @@ public class DutyDtoController {
             PageHelper.startPage(pageNum, pageSize);
             List<DutyDto> dutys;
             try {
-                dutys = dutyDtoService.selectDutyDto(station,scorredcode, stationcode,username,dbtype);
+                dutys = dutyDtoService.selectDutyDto(station,scorredcode, stationcode,username,scoretype,dbtype);
                 PageInfo<DutyDto> pageInfo = new PageInfo<>(dutys);
                 dutys = pageInfo.getList();
                 //获取总数据量

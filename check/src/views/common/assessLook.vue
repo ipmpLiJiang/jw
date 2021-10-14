@@ -93,7 +93,7 @@
             class="title"
             v-if="historyTotal"
           >总分：<span style="color:#f00;">{{historyTotal}}</span></li>
-          <li class="li-title">
+          <li class="li-title" v-if="dutyJichu.length == 0?false:true">
             <div class="title">基础指标(总分15)</div>
           </li>
           <li
@@ -128,7 +128,7 @@
               &nbsp;
             </el-col>
           </li>
-          <li class="li-title">
+          <li class="li-title" v-if="dutyYiban.length == 0?false:true">
             <div class="title">岗位职责(总分20)</div>
           </li>
           <li
@@ -163,7 +163,7 @@
               &nbsp;
             </el-col>
           </li>
-          <li class="li-title">
+          <li class="li-title" v-if="dutyZhongdian.length == 0?false:true">
             <div class="title">重点任务(总分25)</div>
           </li>
           <li
@@ -198,7 +198,7 @@
               &nbsp;
             </el-col>
           </li>
-          <li class="li-title">
+          <li class="li-title" v-if="dutyMubiao.length == 0?false:true">
             <div class="title">目标任务(总分25)</div>
           </li>
           <li
@@ -237,7 +237,7 @@
             class="w100 operation"
             v-if="detailData.isedit == 1 ? false : true"
           >
-            <div v-if="dutyJichu.length == 0 && dutyJichu.length == 0 && dutyZhongdian.length == 0 && dutyMubiao.length == 0">
+            <div v-if="dutyJichu.length == 0 && dutyYiban.length == 0 && dutyZhongdian.length == 0 && dutyMubiao.length == 0">
               <el-button
                 type="default"
                 disabled="disabled"
@@ -257,7 +257,7 @@
 
 </template>
 <script>
-import { getDetail } from "@/api/home/home";
+import { getDutyDetail } from "@/api/home/home";
 import { getUserByScoreFlow } from "@/api/people/people";
 import qs from "qs";
 export default {
@@ -341,7 +341,7 @@ export default {
         dbtype: this.$store.state.user.user.dbtype
       };
       new Promise((response, reject) => {
-        getDetail(qs.stringify(data))
+        getDutyDetail(qs.stringify(data))
           .then(response => {
             if (response.data.code == 0) {
               this.detailData = response.data.data.detail;

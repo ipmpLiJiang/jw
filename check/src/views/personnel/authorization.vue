@@ -30,9 +30,9 @@
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="发薪号">
+                <el-form-item label="账号">
                   <el-input
-                    placeholder="请输入发薪号"
+                    placeholder="请输入账号"
                     v-model="search.moneycard"
                     clearable
                     @keyup.enter.native="getList"

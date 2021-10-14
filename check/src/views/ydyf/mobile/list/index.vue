@@ -3,7 +3,7 @@
     <van-search
       v-model="searchKey"
       @search="onSearch"
-      placeholder="请输入发薪号或姓名搜索"
+      placeholder="请输入账号或姓名搜索"
     />
     <van-tabs
       v-model="active"

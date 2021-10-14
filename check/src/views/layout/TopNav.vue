@@ -17,7 +17,7 @@
       <el-col
         :span="3"
         style="line-height: 60px;font-size: 18px;"
-      ><router-link style="color: #409EFF;" to="/index">{{this.$store.state.user.user.dbtype==''?'&nbsp;':this.$store.state.user.user.dbtype=='1'?'党部考核':'干部考核'}}
+      ><router-link style="color: #409EFF;" to="/index">{{this.$store.state.user.user.dbtype==''?'&nbsp;':this.$store.state.user.user.dbtype=='1'?'党支部考核':'干部考核'}}
       </router-link>
       </el-col>
       <el-col :span="6">

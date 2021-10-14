@@ -9,7 +9,7 @@ export function updateUserPassword(data) {
         data: data
     })
 }
-//通过发薪号检索用户接口
+//通过账号检索用户接口
 export function getUserByMoneyCard(data) {
     return fetch({
         url: 'user/getUserByMoneyCard',

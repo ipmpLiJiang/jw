@@ -210,7 +210,7 @@
           ></el-input>
         </el-form-item>
 
-        <el-form-item label="书记发薪号" :label-width="formLabelWidth">
+        <el-form-item label="书记账号" :label-width="formLabelWidth">
           <el-input
             v-model="modificationForm.leaderUserId"
             autocomplete="off"
@@ -223,7 +223,7 @@
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="打分书记发薪号" :label-width="formLabelWidth">
+        <el-form-item label="打分书记账号" :label-width="formLabelWidth">
           <el-input
             v-model="modificationForm.directorUserId"
             autocomplete="off"
@@ -286,7 +286,7 @@
         <el-form-item label="党委书记名" :label-width="formLabelWidth">
           <el-input v-model="addparty.leaderName" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="党委书记发薪号" :label-width="formLabelWidth">
+        <el-form-item label="党委书记账号" :label-width="formLabelWidth">
           <el-input
             v-model="addparty.leaderUserId"
             autocomplete="off"
@@ -310,13 +310,13 @@
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="党总支部书记名" :label-width="formLabelWidth">
+        <el-form-item label="党总支书记名" :label-width="formLabelWidth">
           <el-input
             v-model="headquartersForm.leaderName"
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="党总支部书记发薪号" :label-width="formLabelWidth">
+        <el-form-item label="党总支书记账号" :label-width="formLabelWidth">
           <el-input
             v-model="headquartersForm.leaderUserId"
             autocomplete="off"
@@ -365,7 +365,7 @@
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="党支部书记发薪号" :label-width="formLabelWidth">
+        <el-form-item label="党支部书记账号" :label-width="formLabelWidth">
           <el-input
             v-model="branchForm.leaderUserId"
             autocomplete="off"
@@ -378,7 +378,7 @@
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="打分书记发薪号" :label-width="formLabelWidth">
+        <el-form-item label="打分书记账号" :label-width="formLabelWidth">
           <el-input
             v-model="branchForm.directorUserId"
             autocomplete="off"

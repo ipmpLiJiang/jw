@@ -169,7 +169,7 @@
           ></el-input>
         </p>
         <p>
-          <span>书记发薪号</span>
+          <span>书记账号</span>
           <el-input
             class="party-input"
             v-model="detailData.leaderUserId"
@@ -185,7 +185,7 @@
           ></el-input>
         </p>
         <p>
-          <span>打分书记发薪号</span>
+          <span>打分书记账号</span>
           <el-input
             class="party-input"
             v-model="detailData.directorUserId"

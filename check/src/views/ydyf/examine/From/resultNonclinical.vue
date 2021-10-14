@@ -23,7 +23,7 @@
               </div>
               <div class="name-role">
                 <span class="registe-info">
-                  发薪号：
+                  账号：
 
                   {{ form.userId }}
                 </span>

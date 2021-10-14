@@ -7,8 +7,8 @@
       <el-col>
         <el-form label-width="140px" show-overflow-tooltip="true">
           <el-col :span="7">
-          <el-form-item label="姓名/工号/发薪号">
-            <el-input placeholder="请输入姓名/工号/发薪号" size="small" clearable v-model="search.f_condition"></el-input>
+          <el-form-item label="姓名/工号/账号">
+            <el-input placeholder="请输入姓名/工号/账号" size="small" clearable v-model="search.f_condition"></el-input>
           </el-form-item>
           </el-col>
           <el-col :span="5" class="list">
@@ -41,7 +41,7 @@
         >
           <el-table-column prop="u_name" label="姓名" align="center" width="200px"></el-table-column>
           <el-table-column prop="u_job_number" label="工号" align="center" width="120px"></el-table-column>
-          <el-table-column prop="u_id" label="发薪号" align="center" width="120px"></el-table-column>
+          <el-table-column prop="u_id" label="账号" align="center" width="120px"></el-table-column>
           <el-table-column
             prop="u_technical_position1"
             label="职务"

@@ -16,9 +16,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="发薪号">
+            <el-form-item label="账号">
               <el-input
-                placeholder="请填写发薪号"
+                placeholder="请填写账号"
                 v-model="search.userId"
                 clearable
               >
@@ -109,7 +109,7 @@
         </el-table-column>
         <el-table-column
           prop="userId"
-          label="发薪号"
+          label="账号"
           show-overflow-tooltip
           align="center"
         >
@@ -192,7 +192,7 @@
           ></el-input>
         </el-form-item>
 
-        <el-form-item label="发薪号" :label-width="formLabelWidth">
+        <el-form-item label="账号" :label-width="formLabelWidth">
           <el-input
             v-model="modificationForm.moneycard"
             autocomplete="off"
@@ -224,7 +224,7 @@
           ></el-input>
         </el-form-item>
 
-        <el-form-item label="发薪号" :label-width="formLabelWidth">
+        <el-form-item label="账号" :label-width="formLabelWidth">
           <el-input
             v-model="modificationForm.userId"
             autocomplete="off"
@@ -505,7 +505,7 @@ export default {
         return;
       }
       if (!data.userId) {
-        this.$message.warning("请填写发薪号");
+        this.$message.warning("请填写账号");
         return;
       }
 

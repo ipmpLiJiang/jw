@@ -56,7 +56,7 @@ public class ScoreHistory {
         dbbks.put("1","组织委员纪检委员");
         dbbks.put("2","宣传委员青年委员");
         dbbks.put("3","党支部书记");
-        dbbks.put("4","总党支部书记");
+        dbbks.put("4","党总支书记");
 
     }
 

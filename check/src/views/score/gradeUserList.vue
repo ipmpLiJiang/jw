@@ -231,7 +231,7 @@ export default {
       if (!data.scoretype || !data.scorredcode) {
         return;
       }
-      // 新增dbtype 是否党部考核
+      // 新增dbtype 是否党支部考核
       data.dbtype = this.$store.state.user.user.dbtype
       this.tableLoading = true;
       new Promise((response, reject) => {

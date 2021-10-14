@@ -272,7 +272,7 @@
             class="w100 operation"
             v-if="detailData.isedit == 1 ? false : true"
           >
-            <div v-if="dutyJichu.length == 0 && dutyJichu.length == 0 && dutyZhongdian.length == 0 && dutyMubiao.length == 0 && dutyZuofeng.length == 0 && dutyZuofeng.length == 0">
+            <div v-if="dutyJichu.length == 0 && dutyYiban.length == 0 && dutyZhongdian.length == 0 && dutyMubiao.length == 0 && dutyZuofeng.length == 0 && dutyZuofeng.length == 0">
               <el-button
                 type="default"
                 disabled="disabled"

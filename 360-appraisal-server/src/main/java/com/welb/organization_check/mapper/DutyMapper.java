@@ -2,6 +2,7 @@ package com.welb.organization_check.mapper;
 
 import com.welb.organization_check.entity.Duty;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 @Mapper
@@ -34,5 +35,8 @@ public interface DutyMapper {
 
     List<Duty> queryDutyByStationCode(String stationcode,String dbtype);
 
-    List<Duty> queryDutyByScorringCode(String scorringCode,String scorredCode,String scoreType,String dbtype);
+    List<Duty> queryDutyByScorringCode(@Param("scorringCode") String scorringCode,
+                                       @Param("scorredCode") String scorredCode,
+                                       @Param("scoreTypeList") List<String> scoreTypeList,
+                                       @Param("dbtype") String dbtype);
 }

@@ -18,7 +18,7 @@
             <span v-else style="color:#ccc;">暂无数据</span>
           </p>
           <p>
-            <i>发薪号</i>
+            <i>账号</i>
             <span v-if="u_id ">{{u_id}}</span>
             <span v-else style="color:#ccc;">暂无数据</span>
           </p>
@@ -206,7 +206,7 @@ export default {
     //保存修改
     save() {
       let data = {
-        uId: this.u_id, //发薪号
+        uId: this.u_id, //账号
         person_permission: this.peopleMenu, //科室代码
         organization_permission: this.projectMenu, //角色代码 逗号拼接
         questionnaire_permission: this.achievementMenu,

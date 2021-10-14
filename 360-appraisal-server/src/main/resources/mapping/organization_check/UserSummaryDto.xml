@@ -18,6 +18,7 @@
         <result column="FullStationCode" jdbcType="VARCHAR" property="fullstationcode"/>
         <result column="ScorredCode" property="scorredcode" jdbcType="VARCHAR"/>
         <result column="ScorringCode" property="scorringcode" jdbcType="VARCHAR"/>
+        <result column="ScoreType" property="scoretype" jdbcType="VARCHAR"/>
         <result column="postType" jdbcType="VARCHAR" property="postType"/>
         <result column="dbtype" jdbcType="VARCHAR" property="dbtype"/>
         <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
@@ -66,11 +67,11 @@
             <if test="year!=null and year!=''">
                 and m.Year=#{year}
             </if>
-            <if test='dbtype!=null and dbtype!=""'>
-                and m.dbtype=#{dbtype}
-            </if>
             <if test="month!=null and month !=''">
                 and m.Month=#{month}
+            </if>
+            <if test='dbtype!=null and dbtype!=""'>
+                and m.dbtype=#{dbtype}
             </if>
             and u.UserCode =m.EmployeeCode
             and m.EmployeeCode=s.ScorredCode
@@ -125,7 +126,9 @@
 
     <!--查询所有评分汇总数据/待评分列表数据-->
     <select id="selectUserSummary" resultMap="BaseResultMap">
-        select u.*,m.*,s.* from user u ,monthsummary m,score s
+        select distinct u.MoneyCard,u.UserCode,u.UserName, u.StationCode,
+        m.SerialNo,m.Year,m.Month,m.Title,m.State,UUID() Id,
+        m.EmployeeCode,s.ScorringCode,s.ScorredCode, null ScoreType from user u ,monthsummary m,score s
         <where>
             <if test="year!=null and year!=''">
                 and m.Year=#{year}

@@ -73,7 +73,7 @@
         </el-table-column>
         <el-table-column
           prop="moneycard"
-          label="发薪号"
+          label="账号"
           show-overflow-tooltip
         >
         </el-table-column>
@@ -382,7 +382,11 @@ export default {
       });
     },
     gradeUser (row, type) {
-      this.setGradeUser(row, type);
+      if(this.dbtype == '2' && (type == 'E' || type == 'F')){
+        this.setDutyGradeUser(row, type);
+      } else {
+        this.setGradeUser(row, type);
+      }
     },
     //设置被评分人
     setByGradeUser(row) {

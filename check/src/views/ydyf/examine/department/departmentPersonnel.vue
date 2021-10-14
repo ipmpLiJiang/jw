@@ -16,9 +16,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="发薪号">
+            <el-form-item label="账号">
               <el-input
-                placeholder="请选择发薪号"
+                placeholder="请选择账号"
                 v-model="search.userId"
                 clearable
                 @keyup.enter.native="getList"
@@ -152,7 +152,7 @@
         </el-table-column>
         <el-table-column
           prop="userId"
-          label="发薪号"
+          label="账号"
           show-overflow-tooltip
           align="center"
           width="100"
@@ -287,7 +287,7 @@
     >
       <div>
         <p>
-          <span>用户发薪号:</span>
+          <span>用户账号:</span>
           <el-input
             class="party-input"
             v-model="detailData.userId"
@@ -622,7 +622,7 @@ export default {
         return;
       }
       if (!data.userId) {
-        this.$message.warning("请填写发薪号");
+        this.$message.warning("请填写账号");
         return;
       }
 

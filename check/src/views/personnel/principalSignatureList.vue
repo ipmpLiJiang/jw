@@ -97,7 +97,7 @@
         </el-table-column>
         <el-table-column
           prop="moneycard"
-          label="上传人发薪号"
+          label="上传人账号"
           show-overflow-tooltip
         >
         </el-table-column>

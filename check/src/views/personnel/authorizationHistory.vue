@@ -22,7 +22,7 @@
           <el-col :span="8">
             <el-form-item label="被授权人姓名">
               <el-input
-                placeholder="请输入发薪号"
+                placeholder="请输入账号"
                 v-model="search.agentusername"
                 clearable
                 @keyup.enter.native="getList"
@@ -133,7 +133,7 @@
         </el-table-column>
         <el-table-column
           prop="deptuser"
-          label="授权人发薪号"
+          label="授权人账号"
           show-overflow-tooltip
         >
         </el-table-column>
@@ -145,7 +145,7 @@
         </el-table-column>
         <el-table-column
           prop="agent"
-          label="被授权人发薪号"
+          label="被授权人账号"
           show-overflow-tooltip
         >
         </el-table-column>

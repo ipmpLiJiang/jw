@@ -511,7 +511,7 @@ public class UserController extends BaseController {
     private void addMonthSummary(MonthSummary summary, String usercode, String year, String month) {
         summary.setYear(year);
         summary.setMonth(month);
-        summary.setDbtype(summary.getDbtype()); //  党部考核的数据不另加 只增加普通考核的
+        summary.setDbtype(summary.getDbtype()); //  党支部考核的数据不另加 只增加普通考核的
         //拼接个人季节唯一标识
         String serialno = summary.getYear() + "-" + summary.getMonth() + "-" + summary.getDbtype() + "-" + usercode;
         summary.setSerialno(serialno);

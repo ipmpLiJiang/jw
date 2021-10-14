@@ -49,7 +49,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="发薪号码" prop="date">
+          <el-form-item label="账号码" prop="date">
             <el-input
               v-model="form.userId"
               style="width: 350px"

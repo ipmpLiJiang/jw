@@ -5,7 +5,7 @@
       :model="form"
       label-width="100px"
     >
-      <el-form-item label="发薪号">
+      <el-form-item label="账号">
         <el-input
           v-model="form.scorringcode"
           @input="selectUser"

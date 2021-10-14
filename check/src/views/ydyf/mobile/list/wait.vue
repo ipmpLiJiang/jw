@@ -19,7 +19,7 @@
           <div class="line-bottom">
             <div class="left">
               <h3><span class="list-title">姓名：</span><span>{{item.userName}}</span></h3>
-              <h4><span class="list-title">发薪号：</span><span>{{item.userId}}</span></h4>
+              <h4><span class="list-title">账号：</span><span>{{item.userId}}</span></h4>
               <h4><span class="list-title">人员类型：</span><span>{{item.personType == 0 ? '临床人员' : "非临床人员"}}</span></h4>
               <h4><span class="list-title">支部：</span><span>{{item.branchName}}</span></h4>
             </div>

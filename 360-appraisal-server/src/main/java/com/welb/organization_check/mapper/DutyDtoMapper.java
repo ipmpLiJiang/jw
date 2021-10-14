@@ -17,6 +17,9 @@ import java.util.List;
 public interface DutyDtoMapper {
 
 
-    List<DutyDto> selectDutyDto(@Param("station") String station, @Param("scorredcode") String scorredcode, @Param("stationcode") String stationcode, @Param("username") String username,@Param("dbtype") String dbtype);
+    List<DutyDto> selectDutyDto(@Param("station") String station, @Param("scorredcode") String scorredcode,
+                                @Param("stationcode") String stationcode, @Param("username") String username,
+                                @Param("scoreType") String scoreType,@Param("dbtype") String dbtype);
+
 
 }

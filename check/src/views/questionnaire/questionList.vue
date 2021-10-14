@@ -164,7 +164,7 @@
             v-model="uid"
             clearable
           >
-            <template slot="prepend">发薪号</template>
+            <template slot="prepend">账号</template>
           </el-input>
         </el-col>
       </div>
@@ -432,15 +432,15 @@ export default {
           });
       });
     },
-    //发薪号输入
+    //账号输入
     open() {
       this.dialogFormVisible = true;
     },
-    //发薪号核验
+    //账号核验
     uidVerify() {
       let data = {};
       if (!this.uid) {
-        this.$message.warning("请先填写发薪号");
+        this.$message.warning("请先填写账号");
         return;
       }
       data.uId = this.uid;

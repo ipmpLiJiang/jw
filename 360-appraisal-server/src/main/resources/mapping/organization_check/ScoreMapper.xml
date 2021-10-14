@@ -409,7 +409,9 @@
         score
         where
         ScorredCode = #{score.scorredcode}
-        and ScoreType = #{score.scoretype}
+        <if test="score.scoretype != null">
+            and ScoreType = #{score.scoretype}
+        </if>
         and dbtype = #{score.dbtype}
         and ScorringCode in
         <foreach item="item" index="index" collection="scorringList" open="(" separator="," close=")">

@@ -63,24 +63,28 @@
           <el-input-number
             v-model="form.ascore"
             style="width: 50%;"
+            :step="0.5"
           ></el-input-number>
         </el-form-item>
         <el-form-item label="良好分值">
           <el-input-number
             v-model="form.bscore"
             style="width: 50%;"
+            :step="0.5"
           ></el-input-number>
         </el-form-item>
         <el-form-item label="一般分值">
           <el-input-number
             v-model="form.cscore"
             style="width: 50%;"
+            :step="0.5"
           ></el-input-number>
         </el-form-item>
         <el-form-item label="较差分值">
           <el-input-number
             v-model="form.dscore"
             style="width: 50%;"
+            :step="0.5"
           ></el-input-number>
         </el-form-item>
         <el-form-item label="默认评分">
@@ -89,6 +93,7 @@
             v-model="form.defScore"
             clearable
             style="width: 50%;"
+            :step="0.5"
           >
           </el-input-number>
         </el-form-item>
@@ -163,7 +168,7 @@ export default {
         },
         {
           value: "4",
-          label: "总党支部书记"
+          label: "党总支书记"
         }
       ],
       dbtype: this.$store.state.user.user.dbtype,

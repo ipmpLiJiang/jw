@@ -1,7 +1,8 @@
 <template>
   <!-- 入口容器-->
   <div id="app">
-    <div class="content"><router-view /></div>
+    <div class="content">
+    <router-view /></div>
      <BottomNavM></BottomNavM>
   </div>
 </template>
@@ -17,7 +18,6 @@ export default {
       BottomNavM
   },
   methods: {
-
   },
   mounted() {
   },
@@ -31,7 +31,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
-  .content{
-    margin-bottom: 60px;
-  }
+.content{
+  margin-bottom: 60px;
+}
 </style>

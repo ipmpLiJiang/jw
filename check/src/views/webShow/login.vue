@@ -1,14 +1,14 @@
 <template>
   <div class="login">
-    <el-row class="content">
+    <el-row class="content" >
       <el-col class="title">精神卫生中心360°考核系统</el-col>
       <el-col class="pwd">
         <el-input
-          placeholder="请输入发薪号"
+          placeholder="请输入账号"
           v-model="usercode"
           type="text"
         >
-          <template slot="prepend">发薪号</template>
+          <template slot="prepend">账&nbsp;&nbsp;&nbsp;号</template>
           <i
             slot="suffix"
             :class="eyes?'icon iconfont icon-open-eye':'icon iconfont icon-close-eye'"
@@ -35,6 +35,13 @@
 
         </el-input>
       </el-col>
+      <el-col
+        class="pwd"
+        style="margin-top:1rem;text-align:center"
+      >
+        <el-radio v-model="dbtype" label="1">党支部考核</el-radio>
+        <el-radio v-model="dbtype" label="2">干部考核</el-radio>
+      </el-col>
       <el-col class="edit-btn">
         <el-button
           type="primary"
@@ -55,6 +62,17 @@ export default {
       usercode: "",
       psd: "",
       eyes: "1",
+      dbtype: "1",
+      dbTypeOptions: [
+        {
+          value: "0",
+          label: "党支部考核"
+        },
+        {
+          value: "1",
+          label: "干部考核"
+        }
+      ]
     };
   },
   components: {},
@@ -77,11 +95,11 @@ export default {
   methods: {
     login() {
       if (!this.usercode) {
-        this.$toast("请填写发薪号");
+        this.$toast("请填写账号");
         return;
       }
       if (!this.psd) {
-        this.$toast("请填写发薪号");
+        this.$toast("请填写账号");
         return;
       }
       let data = {
@@ -92,16 +110,18 @@ export default {
         mobileLogin(qs.stringify(data))
           .then((response) => {
             if (response.data.code == 0) {
+              response.data.data.dbtype = this.dbtype
               this.$store.commit("$_setStorage", {
                 user: response.data.data,
               });
               this.$toast(response.data.msg);
               //多角色
-              if (response.data.data.roleList.length > 0) {
+              // if (response.data.data.roleList.length > 0) {
                 this.$router.push({
                   path: "/web?usercode=" + response.data.data.usercode,
                   query: {},
                 });
+              /*
               } else {
                 //医德医风用户
                 if (response.data.data.rolecode == "700") {
@@ -141,7 +161,7 @@ export default {
                     }
                   }
                 }
-              }
+              }*/
             } else {
               this.$toast(response.data.msg);
             }

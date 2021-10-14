@@ -83,6 +83,8 @@ public class MobileController {
     IUserDtoService userDtoService;
     @Autowired
     MedicalEthicsUserService medicalEthicsUserService;
+    @Autowired
+    IScoreDutySmService scoreDutySmService;
 
     /**
      * 移动端查询个人考核详情
@@ -90,11 +92,12 @@ public class MobileController {
      * @return
      */
     @RequestMapping(value = "/getDetail", produces = "application/json;charset=utf-8")
-    public Object getDetail(HttpServletRequest req, UserSummaryDto dto, String scorringcode, String isvalidation, String dbtype) {//isvalidation 0:需要验证  1:不需要验证
+    public Object getDetail(HttpServletRequest req, UserSummaryDto dto, String scorringcode, String isvalidation) {//isvalidation 0:需要验证  1:不需要验证
         ModelMap map = new ModelMap();
         Map<String, Object> data = new LinkedHashMap<>();
         if (isvalidation.equals("1")) {
             try {
+                boolean isDuty = dto.getDbtype().equals("1") ? false : true;
                 if (dto.getYear() != null && dto.getMonth() != null) {
                     dto = dtoService.selectUserSummaryByLike(dto);
                     if (dto != null) {
@@ -102,8 +105,19 @@ public class MobileController {
                         dto.setMonth(dto.getMonth());
                         Station station = stationService.selectByStationCode(dto.getStationcode());
                         //获取评分人给被评分人打分的情况
-                        List<ScoreFlow> flow = flowService.selectByScoreFlow(dto.getSerialno(), scorringcode,dbtype);
-                        getFlow(map, data, dto, station, flow);
+                        List<ScoreFlow> flow = flowService.selectByScoreFlow(dto.getSerialno(), scorringcode,dto.getDbtype());
+
+                        ScoreDutySm query = new ScoreDutySm();
+                        query.setYear(dto.getYear());
+                        query.setMonth(dto.getMonth());
+                        query.setScorredcode(dto.getUsercode());
+                        query.setDbtype(dto.getDbtype());
+                        List<ScoreDutySm> dutySmList = scoreDutySmService.selectScoreDutySmList(query);
+                        if (isDuty) {
+                            getFlow2(map, data, dto, station, flow, dutySmList, 1);
+                        } else {
+                            getFlow(map, data, dto, station, flow, dutySmList, 1);
+                        }
                     } else {
                         map.put("msg", "数据为空");
                         map.put("code", 0);
@@ -120,12 +134,8 @@ public class MobileController {
                     int count = Integer.parseInt(month.trim()) - 1;
                     //获取当前系统时间
                     String sysTime = DateUtil.getTime();
-
-                        //手动考核-查看所有季节总结
-                        manualGetDetail(dto, map, data, year, month, count, sysTime,  dbtype);
-
-
-
+                    //手动考核-查看所有季节总结
+                    manualGetDetail(dto, map, data, year, month, count, sysTime,scorringcode,dto.getDbtype(),isDuty,1);
                 }
             } catch (Exception e) {
                 log.error(e.getMessage() , e);
@@ -136,28 +146,34 @@ public class MobileController {
         return map;
     }
 
-    private void manualGetDetail(UserSummaryDto dto, ModelMap map, Map<String, Object> data, String year, String quarter, int count, String sysTime,String dbtype) throws ParseException {
+    private void manualGetDetail(UserSummaryDto dto, ModelMap map, Map<String, Object> data, String year, String quarter, int count, String sysTime,String scorringcode,String dbtype,boolean isDuty,int type) throws ParseException {
         String month;
         ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
         if (setTime != null) {
-
-                //开始新的月度考核
-
-                getDto(dto, map, data, setTime.getYear(), setTime.getMonth(),dbtype);
-
+            //开始新的月度考核
+            getDto(dto, map, data, setTime.getYear(), setTime.getMonth(),scorringcode,dbtype,isDuty,type);
         }
     }
 
-    private void getDto(UserSummaryDto dto, ModelMap map, Map<String, Object> data, String year, String month,String dbtype) {
+    private void getDto(UserSummaryDto dto, ModelMap map, Map<String, Object> data, String year, String month,String scorringcode,String dbtype,boolean isDuty,int type) {
         dto.setYear(year);
         dto.setMonth(month);
-
         dto = dtoService.selectUserSummaryByLike(dto);
         //查找岗位
         Station station = stationService.selectByStationCode(dto.getStationcode());
         //获取评分人给被评分人打分的情况
-        List<ScoreFlow> flow = flowService.selectByScoreFlow(dto.getSerialno(), dto.getScorringcode(),dbtype);
-        getFlow(map, data, dto, station, flow);
+        List<ScoreFlow> flow = flowService.selectByScoreFlow(dto.getSerialno(), scorringcode,dbtype);
+        ScoreDutySm query = new ScoreDutySm();
+        query.setYear(dto.getYear());
+        query.setMonth(dto.getMonth());
+        query.setScorredcode(dto.getUsercode());
+        query.setDbtype(dto.getDbtype());
+        List<ScoreDutySm> dutySmList = scoreDutySmService.selectScoreDutySmList(query);
+        if (isDuty) {
+            getFlow2(map, data, dto, station, flow, dutySmList, type);
+        } else {
+            getFlow(map, data, dto, station, flow, dutySmList, type);
+        }
     }
 
     private void automaticGetDetail(UserSummaryDto dto, ModelMap map, Map<String, Object> data, String year, int count) {
@@ -172,21 +188,34 @@ public class MobileController {
         }
         dto.setYear(year);
         dto.setMonth(month);
-        getDto(dto, map, data, year, month,null);
+        getDto(dto, map, data, year, month,null,null,true,0);
     }
 
 
-    private void getFlow(ModelMap map, Map<String, Object> data, UserSummaryDto dto, Station station, List<ScoreFlow> scoreFlow) {
+    private void getFlow(ModelMap map, Map<String, Object> data, UserSummaryDto dto, Station station, List<ScoreFlow> scoreFlow, List<ScoreDutySm> dutySmList, int type) {
         if (scoreFlow.size() > 0) {
             for (ScoreFlow flow : scoreFlow) {
+                data.put("total", type == 2 ? "0" : flow.getScore() + "分");
 
-                data.put("total", flow.getScore() + "分");
-                //获取基础量化指标相关信息
-                List<Duty> dutyJichu = dutyService.queryDutyByType("0",dto.getStationcode());
-                getDutyInfo(data, flow, dutyJichu);
-                //获取关键量化指标的相关信息
-                List<Duty> dutyYiban = dutyService.queryDutyByType("1",dto.getStationcode());
-                getDutyInfo(data, flow, dutyYiban);
+                Duty du = new Duty();
+                du.setDbtype(dto.getDbtype());
+                du.setDbbk(dto.getDbbk());
+                List<Duty> dutyList = dutyService.selectDutyAll(du);
+                //获取 政治建设
+                List<Duty> dutyJichu = dutyList.stream().filter(p -> p.getDutytype().equals("4")).collect(Collectors.toList());
+                getDutyInfo(flow, dutyJichu, dutySmList, type);
+                //获取 思想建设
+                List<Duty> dutyYiban = dutyList.stream().filter(p -> p.getDutytype().equals("5")).collect(Collectors.toList());
+                getDutyInfo(flow, dutyYiban, dutySmList, type);
+                //获取 组织建设
+                List<Duty> dutyZhongdian = dutyList.stream().filter(p -> p.getDutytype().equals("6")).collect(Collectors.toList());
+                getDutyInfo(flow, dutyZhongdian, dutySmList, type);
+                //获取 党建创新
+                List<Duty> dutyMubiao = dutyList.stream().filter(p -> p.getDutytype().equals("7")).collect(Collectors.toList());
+                getDutyInfo(flow, dutyMubiao, dutySmList, type);
+                //获取 作风建设
+                List<Duty> dutyZuofeng = dutyList.stream().filter(p -> p.getDutytype().equals("8")).collect(Collectors.toList());
+                getDutyInfo(flow, dutyZuofeng, dutySmList, type);
 
                 //判断是否可编辑
                 if (dto.getState().equals("7")) {
@@ -198,20 +227,129 @@ public class MobileController {
                 data.put("stations", station);
                 data.put("dutyJichu", dutyJichu);
                 data.put("dutyYiban", dutyYiban);
+                data.put("dutyZhongdian", dutyZhongdian);
+                data.put("dutyMubiao", dutyMubiao);
+                data.put("dutyZuofeng", dutyZuofeng);
                 map.put("msg", "查询个人考核详情成功");
                 map.put("data", data);
                 map.put("code", 0);
             }
         } else {
             data.put("total", "");
-            List<Duty> dutyJichu = dutyService.queryDutyByType("0",dto.getStationcode());
+            Duty du = new Duty();
+            du.setDbtype(dto.getDbtype());
+            du.setDbbk(dto.getDbbk());
+            List<Duty> dutyList = dutyService.selectDutyAll(du);
+
+            List<Duty> dutyJichu = dutyList.stream().filter(p -> p.getDutytype().equals("4")).collect(Collectors.toList());
             for (Duty duty : dutyJichu) {
-                duty.setScore("");
+                duty.setScore(duty.getDefScore() == null ? "" : duty.getDefScore().toString());
             }
             //获取关键量化指标的相关信息
-            List<Duty> dutyYiban = dutyService.queryDutyByType("1",dto.getStationcode());
+            List<Duty> dutyYiban = dutyList.stream().filter(p -> p.getDutytype().equals("5")).collect(Collectors.toList());
             for (Duty duty : dutyYiban) {
-                duty.setScore("");
+                duty.setScore(duty.getDefScore() == null ? "" : duty.getDefScore().toString());
+            }
+            //获取关键量化指标的相关信息
+            List<Duty> dutyZhongdian = dutyList.stream().filter(p -> p.getDutytype().equals("6")).collect(Collectors.toList());
+            for (Duty duty : dutyZhongdian) {
+                duty.setScore(duty.getDefScore() == null ? "" : duty.getDefScore().toString());
+            }
+
+            //获取关键量化指标的相关信息
+            List<Duty> dutyMubiao = dutyList.stream().filter(p -> p.getDutytype().equals("7")).collect(Collectors.toList());
+            for (Duty duty : dutyMubiao) {
+                duty.setScore(duty.getDefScore() == null ? "" : duty.getDefScore().toString());
+            }
+
+            List<Duty> dutyZuofeng = dutyList.stream().filter(p -> p.getDutytype().equals("8")).collect(Collectors.toList());
+            for (Duty duty : dutyZuofeng) {
+                duty.setScore(duty.getDefScore() == null ? "" : duty.getDefScore().toString());
+            }
+            if (dto.getState().equals("7")) {
+                dto.setIsedit("1");
+            } else {
+                dto.setIsedit("0");
+            }
+            //获取基础量化指标相关信息
+            data.put("detail", dto);
+            data.put("stations", station);
+            data.put("dutyJichu", dutyJichu);
+            data.put("dutyYiban", dutyYiban);
+            data.put("dutyZhongdian", dutyZhongdian);
+            data.put("dutyMubiao", dutyMubiao);
+            data.put("dutyZuofeng", dutyZuofeng);
+            map.put("msg", "查询个人考核详情成功");
+            map.put("data", data);
+            map.put("code", 0);
+        }
+    }
+
+    private void getFlow2(ModelMap map, Map<String, Object> data, UserSummaryDto dto, Station station, List<ScoreFlow> scoreFlow, List<ScoreDutySm> dutySmList, int type) {
+        if (scoreFlow.size() > 0) {
+            for (ScoreFlow flow : scoreFlow) {
+
+                data.put("total", type == 2 ? "0" : flow.getScore() + "分");
+
+                Duty du = new Duty();
+                du.setDbtype(dto.getDbtype());
+                du.setStationcode(dto.getStationcode());
+                List<Duty> dutyList = dutyService.selectDutyAll(du);
+
+                List<Duty> dutyJichu = dutyList.stream().filter(p -> p.getDutytype().equals("0")).collect(Collectors.toList());
+                getDutyInfo(flow, dutyJichu, dutySmList, type);
+
+                List<Duty> dutyYiban = dutyList.stream().filter(p -> p.getDutytype().equals("1")).collect(Collectors.toList());
+                getDutyInfo(flow, dutyYiban, dutySmList, type);
+
+                List<Duty> dutyZhongdian = dutyList.stream().filter(p -> p.getDutytype().equals("2")).collect(Collectors.toList());
+                getDutyInfo(flow, dutyZhongdian, dutySmList, type);
+
+                List<Duty> dutyMubiao = dutyList.stream().filter(p -> p.getDutytype().equals("3")).collect(Collectors.toList());
+                getDutyInfo(flow, dutyMubiao, dutySmList, type);
+
+                //判断是否可编辑
+                if (dto.getState().equals("7")) {
+                    dto.setIsedit("1");
+                } else {
+                    dto.setIsedit("0");
+                }
+                data.put("detail", dto);
+                data.put("stations", station);
+                data.put("dutyJichu", dutyJichu);
+                data.put("dutyYiban", dutyYiban);
+                data.put("dutyZhongdian", dutyZhongdian);
+                data.put("dutyMubiao", dutyMubiao);
+                map.put("msg", "查询个人考核详情成功");
+                map.put("data", data);
+                map.put("code", 0);
+            }
+        } else {
+            data.put("total", "");
+
+            Duty du = new Duty();
+            du.setDbtype(dto.getDbtype());
+            du.setStationcode(dto.getStationcode());
+            List<Duty> dutyList = dutyService.selectDutyAll(du);
+
+            List<Duty> dutyJichu = dutyList.stream().filter(p -> p.getDutytype().equals("0")).collect(Collectors.toList());
+            for (Duty duty : dutyJichu) {
+                duty.setScore(duty.getDefScore() == null ? "" : duty.getDefScore().toString());
+            }
+
+            List<Duty> dutyYiban = dutyList.stream().filter(p -> p.getDutytype().equals("1")).collect(Collectors.toList());
+            for (Duty duty : dutyYiban) {
+                duty.setScore(duty.getDefScore() == null ? "" : duty.getDefScore().toString());
+            }
+
+            List<Duty> dutyZhongdian = dutyList.stream().filter(p -> p.getDutytype().equals("2")).collect(Collectors.toList());
+            for (Duty duty : dutyZhongdian) {
+                duty.setScore(duty.getDefScore() == null ? "" : duty.getDefScore().toString());
+            }
+
+            List<Duty> dutyMubiao = dutyList.stream().filter(p -> p.getDutytype().equals("3")).collect(Collectors.toList());
+            for (Duty duty : dutyMubiao) {
+                duty.setScore(duty.getDefScore() == null ? "" : duty.getDefScore().toString());
             }
             if (dto.getState().equals("7")) {
                 dto.setIsedit("1");
@@ -229,18 +367,58 @@ public class MobileController {
         }
     }
 
-    private void getDutyInfo(Map<String, Object> data, ScoreFlow flow, List<Duty> dutyJichu) {
+    private void getDutyInfo(Map<String, Object> data, ScoreFlow flow, List<Duty> dutyJichu, List<ScoreDutySm> dutySmList, int type) {
+        List<ScoreDutySm> queryDutySmList = new ArrayList<>();
         for (Duty duty : dutyJichu) {
-            ScoreDetail detail = detailService.selectDetailBySerialNo(duty.getDutycode(), flow.getSerialno());
-            if (data != null) {
-                duty.setScore(detail.getScore());
-            } else {
-                duty.setScore("");
+            queryDutySmList = dutySmList.stream().filter(s -> s.getDutycode().equals(duty.getDutycode())).collect(Collectors.toList());
+            if (type == 1) {
+                ScoreDetail detail = detailService.selectDetailBySerialNo(duty.getDutycode(), flow.getSerialno());
+                if (detail != null) {
+                    duty.setScore(this.getDutyInfoScore(duty, detail));
+                    duty.setCpsm(detail.getCpsm());
+                } else {
+                    duty.setScore(duty.getDefScore() == null ? "" : duty.getDefScore().toString());
+                }
+            }
+            if (queryDutySmList.size() > 0) {
+                duty.setZpsm(queryDutySmList.get(0).getZpsm());
             }
 
         }
     }
 
+    private void getDutyInfo(ScoreFlow flow, List<Duty> dutyJichu, List<ScoreDutySm> dutySmList, int type) {
+        List<ScoreDutySm> queryDutySmList = new ArrayList<>();
+        for (Duty duty : dutyJichu) {
+            queryDutySmList = dutySmList.stream().filter(s -> s.getDutycode().equals(duty.getDutycode())).collect(Collectors.toList());
+            if (type == 1) {
+                ScoreDetail detail = detailService.selectDetailBySerialNo(duty.getDutycode(), flow.getSerialno());
+                if (detail != null) {
+                    duty.setScore(this.getDutyInfoScore(duty, detail));
+                    duty.setCpsm(detail.getCpsm());
+                } else {
+                    duty.setScore(duty.getDefScore() == null ? "" : duty.getDefScore().toString());
+                }
+            }
+            if (queryDutySmList.size() > 0) {
+                duty.setZpsm(queryDutySmList.get(0).getZpsm());
+            }
+        }
+    }
+
+    private String getDutyInfoScore(Duty duty, ScoreDetail detail) {
+        if (duty.getAscore() != null && detail.getScore() != null && Double.parseDouble(duty.getAscore()) == Double.parseDouble(detail.getScore())) {
+            return duty.getAscore();
+        } else if (duty.getBscore() != null && detail.getScore() != null && Double.parseDouble(duty.getBscore()) == Double.parseDouble(detail.getScore())) {
+            return duty.getBscore();
+        } else if (duty.getCscore() != null && detail.getScore() != null && Double.parseDouble(duty.getCscore()) == Double.parseDouble(detail.getScore())) {
+            return duty.getCscore();
+        } else if (duty.getDscore() != null && detail.getScore() != null && Double.parseDouble(duty.getDscore()) == Double.parseDouble(detail.getScore())) {
+            return duty.getDscore();
+        } else {
+            return detail.getScore();
+        }
+    }
 
     /**
      * 发送个人评估报告短信接口
@@ -765,6 +943,8 @@ public class MobileController {
             //通过评分人和被评分人code查找评分关系数据
             Score score = scoreService.selectTypeByCode(dto.getEmployeecode(), scorringcode,dto.getDbtype());
             flow.setScoretype(score.getScoretype());
+            //新字段 2 已打分
+            flow.setScoreState("2");
             User user = userService.findUserByUserCode(dto.getEmployeecode());
             if ("A".equals(flow.getScoretype())) {
                 flow.setRatio(dto.getDbtype().equals("1") ? user.getAratio():user.getAratio2());
@@ -785,6 +965,7 @@ public class MobileController {
                 List<ScoreFlow> list = new ArrayList<>();
                 for (ScoreFlow scoreFlow : flow1) {
                     scoreFlow.setScore(dto.getTotal());
+                    scoreFlow.setScoreState("2");
                     list.add(scoreFlow);
                 }
                 if (list.size() > 0) {
@@ -1102,14 +1283,24 @@ public class MobileController {
         dto.setMonth(month);
         dto.setYear(year);
         dto.setScorringcode(usercode);
-        summaryList = summaryDtoService.selectUserSummaryBySixState(dto);
+        dto.setDbtype(dbtype);
+        if (dto.getDbtype().equals("1")) {
+            summaryList = summaryDtoService.selectUserSummaryBySixState(dto);
+        } else {
+            summaryList = summaryDtoService.selectUserSummaryBySixStateNew(dto);
+        }
         for (UserSummaryDto dto1 : summaryList) {
             List<ScoreFlow> flow = flowService.selectByScoreFlow(dto1.getSerialno(), dto1.getScorringcode(),dbtype);
-            flow= flow.stream().filter(p->p.getDbtype().equals(dbtype)).collect(Collectors.toList());
             if (flow.size() == 0) {
+                dto1.setScoreState("1");
+                summarys.add(dto1);
+            }
+            if(flow.size() > 0){
+                dto1.setScoreState(flow.get(0).getScoreState());
                 summarys.add(dto1);
             }
         }
+        summarys = summarys.stream().sorted(Comparator.comparing(UserSummaryDto::getScoreState)).collect(Collectors.toList());
         map.put("totalPages", summarys.size());
         map.put("msg", "查询待评分列表数据成功");
         map.put("data", summarys);
@@ -1362,18 +1553,18 @@ public class MobileController {
         AssessmentState state = stateService.selectByPrimaryKey(1);
         req.getSession().setAttribute("state", state.getState());
         //查询医德医风的角色列表
-        String moneyCard = user.getMoneycard();
-        List<MedicalEthicsUser> usersList = medicalEthicsUserService.list(new HashMap<String, String>() {{
-            put("userId", moneyCard);
-        }});
+//        String moneyCard = user.getMoneycard();
+//        List<MedicalEthicsUser> usersList = medicalEthicsUserService.list(new HashMap<String, String>() {{
+//            put("userId", moneyCard);
+//        }});
         //此处报错没有 getRoleCode setMedicalEthicsRoleList
-        if (usersList != null && !usersList.isEmpty()) {
+//        if (usersList != null && !usersList.isEmpty()) {
 //            List<String> roleList= new ArrayList<>();
 //            usersList.forEach(u ->{
 //                roleList.add(u.getRoleCode());
 //            });
 //            user.setMedicalEthicsRoleList(roleList);
-        }
+//        }
         List<Role> roles = roleService.selectRoleListByUserCode(user.getUsercode());
         if (roles.size() == 1) {
             user.setRolecode(roles.get(0).getRolecode());

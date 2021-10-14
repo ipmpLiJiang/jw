@@ -1,5 +1,10 @@
 <template>
   <div class="tabOne">
+    <div class="dbtypeLayout">
+      <i class="el-icon-sort" @click="changeDbtype">
+      <b>{{this.$store.state.user.user.dbtype=='1'?'党支部考核':'干部考核'}}</b>
+      </i>
+    </div>
     <el-row
       v-if="data.length <= 0"
       class="no-data"
@@ -16,8 +21,8 @@
       >
         <div class="line-bottom">
           <div class="left">
-            <h3>{{item.title}}<span>去考核</span></h3>
-            <h4>被考核人<span>{{item.scorredname}}</span></h4>
+            <h3>{{item.statename}}<span>{{item.scoreState=='1'?'未评分':'已评分'}}</span></h3>
+            <h4>被考核人<span>{{item.username}}</span></h4>
             <h5><span>{{item.year}}</span><span>{{item.monthname}}</span></h5>
           </div>
           <div class="right">
@@ -35,7 +40,8 @@ import qs from "qs";
 export default {
   data() {
     return {
-      data: []
+      data: [],
+      dbtype: this.$store.state.user.user.dbtype
     };
   },
   created() {
@@ -43,20 +49,40 @@ export default {
   },
   components: {},
   methods: {
+    changeDbtype () {
+      if (this.$store.state.user.user.dbtype == '1') {
+        this.$store.state.user.user.dbtype ='2'
+      } else {
+        this.$store.state.user.user.dbtype ='1'
+      }
+      this.dbtype = this.$store.state.user.user.dbtype
+      this.getList()
+    },
     toAnswer(item) {
-      this.$router.push({
-        path: "/webShow",
-        query: {
-          serialNo: item.serialno,
-          userCode: item.scorredcode,
-          scorringCode: item.scorringcode
-        }
-      });
+      if(this.dbtype == '2'){
+        this.$router.push({
+          path: "/webShow",
+          query: {
+            serialNo: item.serialno,
+            userCode: item.scorredcode,
+            scorringCode: item.scorringcode
+          }
+        });
+      } else {
+        this.$router.push({
+          path: "/webShow2",
+          query: {
+            serialNo: item.serialno,
+            userCode: item.scorredcode,
+            scorringCode: item.scorringcode
+          }
+        });
+      }
     },
     getList() {
       let data = {
         usercode: this.$store.state.user.user.usercode,
-        dbtype: this.$store.state.user.user.dbtype
+        dbtype: this.dbtype
       };
       var toast = this.$toast.loading({
         mask: true,
@@ -80,6 +106,12 @@ export default {
             reject(error);
           });
       });
+    }
+  },
+  watch: {
+    dbtype(val, oldVal) {
+      console.log('val:' + val)
+      console.log('oldVal:' + oldVal)
     }
   }
 };
@@ -139,8 +171,7 @@ export default {
 .no-data{
     position: absolute;
     width: 100%;
-    height: 100%;
-    top: -50px;
+    height: 90%;
     left: 0px;
     background: #fff;
     display: flex;
@@ -157,4 +188,11 @@ export default {
       color: #b4b4b4;
     }
   }
+.dbtypeLayout {
+  text-align: center;
+  padding: 8px;
+  font-size: 0.8rem;
+  color: #fff;
+  background: #409EFF;
+}
 </style>

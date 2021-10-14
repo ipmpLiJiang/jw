@@ -9,15 +9,14 @@
         icon="home-o"
         replace
         to="/web"
-        v-if="flag == true"
       >我的考核</van-tabbar-item>
-      <van-tabbar-item
+      <!-- <van-tabbar-item
         icon="orders-o"
         replace
         to="/web/webShowPersonal"
         v-if="flag == true"
-      >个人报告</van-tabbar-item>
-      <template v-if="$store.state.user.user.medicalEthicsRoleList.indexOf('400')!= -1 || $store.state.user.user.medicalEthicsRoleList.indexOf('300')!= -1">
+      >个人报告</van-tabbar-item> -->
+      <!-- <template v-if="$store.state.user.user.medicalEthicsRoleList.indexOf('400')!= -1 || $store.state.user.user.medicalEthicsRoleList.indexOf('300')!= -1">
         <van-tabbar-item
           icon="notes-o"
           replace
@@ -30,8 +29,7 @@
           v-else
           @click="ydyfClick"
         >医德医风</van-tabbar-item>
-      </template>
-
+      </template> -->
       <van-tabbar-item
         icon="manager-o"
         replace
@@ -47,6 +45,7 @@ export default {
     return {
       active: 0,
       flag: false,
+      dbtype: this.$store.state.user.user.dbtype,
     };
   },
   created() {

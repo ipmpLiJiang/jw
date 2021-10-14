@@ -17,6 +17,16 @@ export function getDetail(data) {
         data: data
     })
 }
+
+//考核详情
+export function getDutyDetail(data) {
+    return fetch({
+        url: 'homepage/getDutyDetail',
+        method: 'post',
+        data: data
+    })
+}
+
 //考核详情
 export function getDetail2(data) {
     return fetch({
@@ -36,6 +46,15 @@ export function scoring(data) {
 
 //提交考核
 export function scoring2(data) {
+    return fetch({
+        url: 'homepage/getDutyTotalScore',
+        method: 'post',
+        data: data
+    })
+}
+
+//提交考核
+export function scoring3(data) {
     return fetch({
         url: 'homepage/saveDutySm',
         method: 'post',

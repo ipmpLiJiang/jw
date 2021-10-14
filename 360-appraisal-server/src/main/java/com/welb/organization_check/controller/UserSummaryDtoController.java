@@ -132,9 +132,10 @@ public class UserSummaryDtoController {
             }
             for (UserSummaryDto dto1 : summaryList) {
                 List<ScoreFlow> flow = flowService.selectByScoreFlow(dto1.getSerialno(), dto1.getScorringcode(), dto.getDbtype());
-                if (flow.size() == 0) {
+                if (flow.size() == 0 || (flow.size() > 0 && flow.get(0).getScoreState().equals("1"))) {
                     summarys.add(dto1);
                 }
+
             }
 
             //修改每一位用户的打分状态
@@ -144,7 +145,7 @@ public class UserSummaryDtoController {
             map.put("data", summarys);
             map.put("code", 0);
         } catch (Exception e) {
-            log.error(e.getMessage() , e);
+            log.error(e.getMessage(), e);
             map.put("msg", "查询待评分列表数据失败");
             map.put("code", 1);
         }
@@ -225,7 +226,7 @@ public class UserSummaryDtoController {
                     map.put("data", dtos);
                     map.put("code", 0);
                 } catch (Exception e) {
-                    log.error(e.getMessage() , e);
+                    log.error(e.getMessage(), e);
                     map.put("msg", "查询待评分列表数据失败");
                     map.put("code", 1);
                 }
@@ -247,13 +248,13 @@ public class UserSummaryDtoController {
             //如果年份和月度同时为空  默认查当前月度的个人评分
             if (summaryDto.getYear().equals("") && summaryDto.getMonth().equals("") ||
                     summaryDto.getYear() == null && summaryDto.getMonth() == null) {
-                setTime = setTimeService.selectManualByYearAndMonth("", "",summaryDto.getDbtype());
+                setTime = setTimeService.selectManualByYearAndMonth("", "", summaryDto.getDbtype());
                 if (setTime != null) {
                     summaryDto.setYear(setTime.getYear());
                     summaryDto.setMonth(setTime.getMonth());
                 }
             }
-            if(setTime != null) {
+            if (setTime != null) {
                 PageHelper.startPage(pageNum, pageSize);
                 try {//当年份或者月度不为空的时候   查询的是历史的个人评分数据
                     summaryDto.setScorredcode(usercode);
@@ -266,7 +267,7 @@ public class UserSummaryDtoController {
                     map.put("data", dtos);
                     map.put("code", 0);
                 } catch (Exception e) {
-                    log.error(e.getMessage() , e);
+                    log.error(e.getMessage(), e);
                     map.put("msg", "查询待评分列表数据失败");
                     map.put("code", 1);
                 }
@@ -284,7 +285,7 @@ public class UserSummaryDtoController {
 
     private void manualSelectUserSummaryLike(UserSummaryDto summaryDto, ModelMap map, String usercode, String year, String quarter, int count, String sysTime, int pageNum, int pageSize) {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "",summaryDto.getDbtype());
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", summaryDto.getDbtype());
         if (setTime != null) {
             //新一月度考核-手动设置的考核时间未超过系统自动考核时间
             try {
@@ -331,7 +332,7 @@ public class UserSummaryDtoController {
             map.put("data", dtos);
             map.put("code", 0);
         } catch (Exception e) {
-            log.error(e.getMessage() , e);
+            log.error(e.getMessage(), e);
             map.put("msg", "查询待评分列表数据失败");
             map.put("code", 1);
         }
@@ -364,9 +365,9 @@ public class UserSummaryDtoController {
             String scorringcode = dto.getScorringcode();
             List<ScoreFlow> flow = flowService.selectByScoreFlow(mesrialno, scorringcode, dbtype);
             if (flow.size() > 0) {
-                Double sumScore = flow.stream().mapToDouble(ScoreFlow:: getScore).sum();
+                Double sumScore = flow.stream().mapToDouble(ScoreFlow::getScore).sum();
 //                dto.setStatus(sumScore.toString());
-                dto.setStatus(sumScore > 0 ? "1": "2");
+                dto.setStatus(sumScore > 0 ? "1" : "2");
 //                for (ScoreFlow flow1 : flow) {
 //                    String totalscore = String.valueOf(flow1.getScore());
 //                    dto.setStatus(totalscore);

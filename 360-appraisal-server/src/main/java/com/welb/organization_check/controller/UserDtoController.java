@@ -145,7 +145,7 @@ public class UserDtoController {
                 //手动考核-查看所有月节总结
                 manualSelectUserDtoLikeByUserAndState(dto, map, dbtype, pageNum, pageSize);
             } catch (Exception e) {
-                log.error(e.getMessage() , e);
+                log.error(e.getMessage(), e);
                 map.put("msg", "查询评分汇总列表失败");
                 map.put("code", 1);
             }
@@ -165,13 +165,13 @@ public class UserDtoController {
             List<User> users = new ArrayList<>();
             long count = 0;
             List<User> scorringUserList = userService.selectUserPfr(dbtype);
-            if(scorringUserList.size()>0) {
+            if (scorringUserList.size() > 0) {
                 if (dbtype.equals("2")) {
                     List<String> roleList = new ArrayList<>();
                     roleList.add("300"); //普通用户
                     roleList.add("150"); //打分用户
                     users = userService.findUserByRoleCode(roleList, dbtype);
-                } else { //党部考核
+                } else { //党支部考核
                     List<String> roleList = new ArrayList<>();
                     roleList.add("100");
                     roleList.add("150");
@@ -198,7 +198,7 @@ public class UserDtoController {
                     getUserDtos(dto, map, setTime.getYear(), setTime.getMonth(), pageNum, pageSize, dbtype);
 
                 }
-            }else{
+            } else {
                 map.put("msg", "未创建评分人关系.");
                 map.put("code", 1);
             }
@@ -237,7 +237,7 @@ public class UserDtoController {
         if (dbtype.equals("2")) {
             roleList.add("300");
             userDtos = dtoService.selectUserDtoLike(dto, roleList);
-        } else { //党部考核
+        } else { //党支部考核
             dto.setDbtype(dbtype);
             userDtos = dtoService.selectUserDtoLike(dto, roleList);
         }
@@ -274,11 +274,11 @@ public class UserDtoController {
             dutyQuery.setDbtype(dbtype);
             List<Duty> dutyList = dutyService.selectDutyAll(dutyQuery);
             List<Score> scoreList = scoreService.findScoreAll(dbtype);
-            ScoreDutySm queryDutySm  = new ScoreDutySm();
+            ScoreDutySm queryDutySm = new ScoreDutySm();
             queryDutySm.setYear(year);
             queryDutySm.setMonth(month);
             queryDutySm.setDbtype(dbtype);
-            List<ScoreDutySm> dutySmList =  scoreDutySmService.selectScoreDutySmList(queryDutySm);
+            List<ScoreDutySm> dutySmList = scoreDutySmService.selectScoreDutySmList(queryDutySm);
 
             // History
             List<ScoreHistory> insertHistoryList = new ArrayList<>();
@@ -299,9 +299,13 @@ public class UserDtoController {
             scoreTypeList.add("E");
             scoreTypeList.add("F");
 
-            this.getShengChengResult(year, month, scoreTypeList, bdfrUserDboList, dutyList, scoreList, historyList,
-                    bdfrHistoryList, bdfrFlowList, bdfrDetailList, insertFlowList, updateFlowList, insertHistoryList, updateHistoryList, insertDetailList,dutySmList,insertDutySmList, dbtype);
-
+            if (dbtype.equals("1")) {
+                this.getShengChengResult(year, month, scoreTypeList, bdfrUserDboList, dutyList, scoreList, historyList,
+                        bdfrHistoryList, bdfrFlowList, bdfrDetailList, insertFlowList, updateFlowList, insertHistoryList, updateHistoryList, insertDetailList, dutySmList, insertDutySmList, dbtype);
+            } else {
+                this.getDutyShengChengResult(year, month, scoreTypeList, bdfrUserDboList, dutyList, scoreList, historyList,
+                        bdfrHistoryList, bdfrFlowList, bdfrDetailList, insertFlowList, updateFlowList, insertHistoryList, updateHistoryList, insertDetailList, dutySmList, insertDutySmList, dbtype);
+            }
             if (insertHistoryList.size() > 0) {
                 historyService.batchInsert(insertHistoryList);
             }
@@ -319,30 +323,39 @@ public class UserDtoController {
             if (insertDetailList.size() > 0) {
                 scoreDetailService.batchInset(insertDetailList);
             }
-            if(insertDutySmList.size() > 0) {
+            if (insertDutySmList.size() > 0) {
                 scoreDutySmService.batchInset(insertDutySmList);
             }
         }
     }
 
-    //需求更改此方面 不用
     private void getDutyShengChengResult(String year, String month, List<String> scoreTypeList, List<UserDto> bdfrUserDboList,
-                                         List<Duty> dutyList, List<Duty> queryDutyList,
-                                         List<Score> scoreList, List<Score> queryScoreList,
-                                         List<ScoreHistory> historyList, List<ScoreHistory> bdfrHistoryList, List<ScoreHistory> queryHistoryList,
-                                         List<ScoreFlow> bdfrFlowList, List<ScoreFlow> queryFlowList, List<ScoreFlow> queryHbFlowList,
-                                         List<ScoreDetail> bdfrDetailList, List<ScoreDetail> queryDetailList,
+                                         List<Duty> dutyList, List<Score> scoreList,
+                                         List<ScoreHistory> historyList, List<ScoreHistory> bdfrHistoryList,
+                                         List<ScoreFlow> bdfrFlowList, List<ScoreDetail> bdfrDetailList,
                                          List<ScoreFlow> insertFlowList, List<ScoreFlow> updateFlowList,
                                          List<ScoreHistory> insertHistoryList, List<ScoreHistory> updateHistoryList,
-                                         List<ScoreDetail> insertDetailList, String dbtype) {
-        List<Score> queryScoreListD = new ArrayList<>();
+                                         List<ScoreDetail> insertDetailList, List<ScoreDutySm> dutySmList, List<ScoreDutySm> insertDutySmList, String dbtype) {
+        List<Score> queryScoreListEF = new ArrayList<>();
+        // 查询
+        List<Duty> queryDutyList = new ArrayList<>();
+        List<Score> queryScoreList = new ArrayList<>();
+        List<ScoreHistory> queryHistoryList = new ArrayList<>();
+        List<ScoreFlow> queryFlowList = new ArrayList<>();
+        List<ScoreFlow> queryHbFlowList = new ArrayList<>();
+        List<ScoreDetail> queryDetailList = new ArrayList<>();
+        List<ScoreDutySm> queryDutySmList = new ArrayList<>();
 
         Double sumScore = 0.0;
         Double ratio = 0.0;
         long count = 0;
+        boolean isDutySm = false;
+        List<String> fSerialNoList = new ArrayList<>();
+        boolean isEFSerialNo = false;
         for (UserDto dto : bdfrUserDboList) {
             queryDutyList = dutyList.stream().filter(s -> s.getStationcode().equals(dto.getStationcode())).collect(Collectors.toList());
 
+            isDutySm = false;
             queryHistoryList = bdfrHistoryList.stream().filter(s -> s.getUsercode().equals(dto.getUsercode())).collect(Collectors.toList());
             if (queryHistoryList.size() == 0) {
                 ScoreHistory history = new ScoreHistory();
@@ -354,6 +367,8 @@ public class UserDtoController {
                 history.setBscore(0.0);
                 history.setCscore(0.0);
                 history.setDscore(0.0);
+                history.setEscore(0.0);
+                history.setFscore(0.0);
                 history.setTotalscore(0.0);
                 history.setDbtype(dbtype);
                 historyList.add(history);
@@ -361,6 +376,7 @@ public class UserDtoController {
                 historyList.add(queryHistoryList.get(0));
             }
             if (queryDutyList.size() > 0) {
+                queryDutySmList = dutySmList.stream().filter(s -> s.getScorredcode().equals(dto.getUsercode())).collect(Collectors.toList());
                 for (String scoreType : scoreTypeList) {
                     queryScoreList = scoreList.stream().filter(s -> s.getScoretype().equals(scoreType) &&
                             s.getScorredcode().equals(dto.getUsercode())).collect(Collectors.toList());
@@ -377,10 +393,14 @@ public class UserDtoController {
                                     s.getScorringcode().equals(score.getScorringcode()) &&
                                     s.getScoretype().equals(score.getScoretype())).count();
 
-                            queryScoreListD = scoreList.stream().filter(s -> s.getScorredcode().equals(score.getScorredcode()) &&
-                                    s.getScorringcode().equals(score.getScorringcode()) &&
-                                    s.getScoretype().equals("D") && s.getDutycode() != null).collect(Collectors.toList());
-
+                            if(scoreType.equals("E") || scoreType.equals("F")) {
+                                queryScoreListEF = scoreList.stream().filter(s -> s.getScorredcode().equals(score.getScorredcode()) &&
+                                        s.getScorringcode().equals(score.getScorringcode()) &&
+                                        s.getScoretype().equals(scoreType) &&
+                                        s.getDutycode() != null).collect(Collectors.toList());
+                            } else {
+                                queryScoreListEF = new ArrayList<>();
+                            }
                             if (queryFlowList.size() == 0 && count == 0) {
                                 ratio = 0.0;
                                 ScoreFlow scoreFlow = new ScoreFlow();
@@ -389,6 +409,8 @@ public class UserDtoController {
                                 scoreFlow.setScoredcode(score.getScorredcode());
                                 scoreFlow.setScorringcode(score.getScorringcode());
                                 scoreFlow.setScoretype(score.getScoretype());
+                                //新字段 1 未打分
+                                scoreFlow.setScoreState("1");
                                 if (scoreType.equals("A")) {
                                     ratio = dto.getAratio();
                                 }
@@ -401,15 +423,21 @@ public class UserDtoController {
                                 if (scoreType.equals("D")) {
                                     ratio = dto.getDratio();
                                 }
+                                if (scoreType.equals("E")) {
+                                    ratio = dto.getEratio();
+                                }
+                                if (scoreType.equals("F")) {
+                                    ratio = dto.getFratio();
+                                }
                                 scoreFlow.setRatio(ratio);
                                 scoreFlow.setDbtype(dbtype);
                                 sumScore = 0.0;
 
                                 for (Duty duty : queryDutyList) {
-                                    count = queryScoreListD.stream().filter(s -> s.getDutycode().equals(duty.getDutycode())).count();
+                                    count = queryScoreListEF.stream().filter(s -> s.getDutycode().equals(duty.getDutycode())).count();
 
-                                    if ((!score.getScoretype().equals("D") && count == 0) ||
-                                            (score.getScoretype().equals("D") && count > 0)) {
+                                    if ((!this.isEF(score.getScoretype()) && count == 0) ||
+                                            (this.isEF(score.getScoretype()) && count > 0)) {
                                         ScoreDetail detail = new ScoreDetail();
                                         detail.setSerialNo(StringUtil.generatorId());
                                         detail.setFSerialNo(scoreFlow.getSerialno());
@@ -419,40 +447,71 @@ public class UserDtoController {
                                         detail.setRatio(scoreFlow.getRatio());
                                         detail.setDbtype(dbtype);
                                         insertDetailList.add(detail);
-                                        sumScore += duty.getDefScore() == null ? 0 : duty.getDefScore();
+                                        sumScore += duty.getDefScore() == null ? 0 : Double.parseDouble(duty.getDefScore());
+
+                                        if (queryDutySmList.size() == 0 && !isDutySm) {
+                                            ScoreDutySm dutySm = new ScoreDutySm();
+                                            dutySm.setYear(year);
+                                            dutySm.setMonth(month);
+                                            dutySm.setDutycode(duty.getDutycode());
+                                            dutySm.setScorredcode(dto.getUsercode());
+                                            dutySm.setZpsm("无");
+                                            dutySm.setDbtype(dbtype);
+                                            insertDutySmList.add(dutySm);
+                                        }
                                     }
                                 }
                                 scoreFlow.setScore(sumScore);
                                 insertFlowList.add(scoreFlow);
 
                             } else {
+                                isEFSerialNo = false;
                                 if (count == 0) {
                                     ScoreFlow updateFlow = queryFlowList.get(0);
-                                    sumScore = 0.0;
-
-                                    for (Duty duty : queryDutyList) {
-                                        count = queryScoreListD.stream().filter(s -> s.getDutycode().equals(duty.getDutycode())).count();
-
-                                        if ((!score.getScoretype().equals("D") && count == 0) || (score.getScoretype().equals("D") && count > 0)) {
-                                            queryDetailList = bdfrDetailList.stream().filter(s -> s.getFSerialNo().equals(updateFlow.getSerialno()) &&
-                                                    s.getDSerialNo().equals(duty.getDutycode())).collect(Collectors.toList());
-                                            if (queryDetailList.size() == 0) {
-                                                ScoreDetail detail = new ScoreDetail();
-                                                detail.setSerialNo(StringUtil.generatorId());
-                                                detail.setFSerialNo(updateFlow.getSerialno());
-                                                detail.setDSerialNo(duty.getDutycode());
-                                                detail.setScore(duty.getDefScore() == null ? "0" : duty.getDefScore().toString());
-                                                detail.setScoretype(scoreType);
-                                                detail.setRatio(updateFlow.getRatio());
-                                                detail.setDbtype(dbtype);
-                                                insertDetailList.add(detail);
-                                                sumScore += duty.getDefScore() == null ? 0 : duty.getDefScore();
-                                            }
+                                    if (this.isEF(score.getScoretype())) {
+                                        if (fSerialNoList.stream().filter(s -> s.equals(updateFlow.getSerialno())).count() == 0) {
+                                            fSerialNoList.add(updateFlow.getSerialno());
+                                        } else {
+                                            isEFSerialNo = true;
                                         }
                                     }
-                                    if (sumScore != 0.0) {
-                                        updateFlow.setScore(updateFlow.getScore() + sumScore);
-                                        updateFlowList.add(updateFlow);
+                                    sumScore = 0.0;
+                                    if(!isEFSerialNo) {
+                                        for (Duty duty : queryDutyList) {
+                                            count = queryScoreListEF.stream().filter(s -> s.getDutycode().equals(duty.getDutycode())).count();
+
+                                            if ((!this.isEF(score.getScoretype()) && count == 0) || (this.isEF(score.getScoretype()) && count > 0)) {
+                                                queryDetailList = bdfrDetailList.stream().filter(s -> s.getFSerialNo().equals(updateFlow.getSerialno()) &&
+                                                        s.getDSerialNo().equals(duty.getDutycode())).collect(Collectors.toList());
+                                                if (queryDetailList.size() == 0) {
+                                                    ScoreDetail detail = new ScoreDetail();
+                                                    detail.setSerialNo(StringUtil.generatorId());
+                                                    detail.setFSerialNo(updateFlow.getSerialno());
+                                                    detail.setDSerialNo(duty.getDutycode());
+                                                    detail.setScore(duty.getDefScore() == null ? "0" : duty.getDefScore().toString());
+                                                    detail.setScoretype(scoreType);
+                                                    detail.setRatio(updateFlow.getRatio());
+                                                    detail.setDbtype(dbtype);
+                                                    insertDetailList.add(detail);
+                                                    sumScore += duty.getDefScore() == null ? 0 : Double.parseDouble(duty.getDefScore());
+
+                                                    if (queryDutySmList.size() == 0 && !isDutySm) {
+                                                        ScoreDutySm dutySm = new ScoreDutySm();
+                                                        dutySm.setYear(year);
+                                                        dutySm.setMonth(month);
+                                                        dutySm.setDutycode(duty.getDutycode());
+                                                        dutySm.setScorredcode(dto.getUsercode());
+                                                        dutySm.setZpsm("无");
+                                                        dutySm.setDbtype(dbtype);
+                                                        insertDutySmList.add(dutySm);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        if (sumScore != 0.0) {
+                                            updateFlow.setScore(updateFlow.getScore() + sumScore);
+                                            updateFlowList.add(updateFlow);
+                                        }
                                     }
                                 }
                             }
@@ -475,6 +534,8 @@ public class UserDtoController {
         Double bScore = 0.0;
         Double cScore = 0.0;
         Double dScore = 0.0;
+        Double eScore = 0.0;
+        Double fScore = 0.0;
         List<UserScoreDto> dutyAndRatioList = new ArrayList<>();
         for (ScoreHistory history : historyList) {
             dutyAndRatioList = new ArrayList<>();
@@ -496,12 +557,16 @@ public class UserDtoController {
             bScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getBscore).sum();
             cScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getCscore).sum();
             dScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getDscore).sum();
+            eScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getEscore).sum();
+            fScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getFscore).sum();
 
             history.setTotalscore(sumScore);
             history.setAscore(aScore);
             history.setBscore(bScore);
             history.setCscore(cScore);
             history.setDscore(dScore);
+            history.setEscore(eScore);
+            history.setFscore(fScore);
 
             if (history.getId() == null) {
                 insertHistoryList.add(history);
@@ -513,17 +578,25 @@ public class UserDtoController {
             bScore = 0.0;
             cScore = 0.0;
             dScore = 0.0;
+            eScore = 0.0;
+            fScore = 0.0;
         }
     }
 
+    private boolean isEF(String scoretype) {
+        if (scoretype.equals("E") || scoretype.equals("F")) {
+            return true;
+        }
+        return false;
+    }
 
     private void getShengChengResult(String year, String month, List<String> scoreTypeList, List<UserDto> bdfrUserDboList,
-                                     List<Duty> dutyList,  List<Score> scoreList,
+                                     List<Duty> dutyList, List<Score> scoreList,
                                      List<ScoreHistory> historyList, List<ScoreHistory> bdfrHistoryList,
                                      List<ScoreFlow> bdfrFlowList, List<ScoreDetail> bdfrDetailList,
                                      List<ScoreFlow> insertFlowList, List<ScoreFlow> updateFlowList,
                                      List<ScoreHistory> insertHistoryList, List<ScoreHistory> updateHistoryList,
-                                     List<ScoreDetail> insertDetailList,List<ScoreDutySm> dutySmList,List<ScoreDutySm> insertDutySmList, String dbtype) {
+                                     List<ScoreDetail> insertDetailList, List<ScoreDutySm> dutySmList, List<ScoreDutySm> insertDutySmList, String dbtype) {
         // 查询
         List<Duty> queryDutyList = new ArrayList<>();
         List<Score> queryScoreList = new ArrayList<>();
@@ -537,11 +610,7 @@ public class UserDtoController {
         Double ratio = 0.0;
         boolean isDutySm = false;
         for (UserDto dto : bdfrUserDboList) {
-            if(dbtype.equals("1")) {
-                queryDutyList = dutyList.stream().filter(s -> s.getDbbk().equals(dto.getDbbk())).collect(Collectors.toList());
-            } else {
-                queryDutyList = dutyList.stream().filter(s -> s.getStationcode().equals(dto.getStationcode())).collect(Collectors.toList());
-            }
+            queryDutyList = dutyList.stream().filter(s -> s.getDbbk().equals(dto.getDbbk())).collect(Collectors.toList());
             isDutySm = false;
             queryHistoryList = bdfrHistoryList.stream().filter(s -> s.getUsercode().equals(dto.getUsercode())).collect(Collectors.toList());
             if (queryHistoryList.size() == 0) {
@@ -564,7 +633,7 @@ public class UserDtoController {
             }
 
             if (queryDutyList.size() > 0) {
-                queryDutySmList = dutySmList.stream().filter(s->s.getScorredcode().equals(dto.getUsercode())).collect(Collectors.toList());
+                queryDutySmList = dutySmList.stream().filter(s -> s.getScorredcode().equals(dto.getUsercode())).collect(Collectors.toList());
                 for (String scoreType : scoreTypeList) {
                     queryScoreList = scoreList.stream().filter(s -> s.getScoretype().equals(scoreType) &&
                             s.getScorredcode().equals(dto.getUsercode())).collect(Collectors.toList());
@@ -582,6 +651,8 @@ public class UserDtoController {
                                 scoreFlow.setScoredcode(score.getScorredcode());
                                 scoreFlow.setScorringcode(score.getScorringcode());
                                 scoreFlow.setScoretype(score.getScoretype());
+                                //新字段 1 未打分
+                                scoreFlow.setScoreState("1");
                                 if (scoreType.equals("A")) {
                                     ratio = dto.getAratio();
                                 }
@@ -611,9 +682,9 @@ public class UserDtoController {
                                     detail.setScore(duty.getDefScore() == null ? "0" : duty.getDefScore().toString());
                                     detail.setDbtype(dbtype);
                                     insertDetailList.add(detail);
-                                    sumScore += duty.getDefScore() == null ? 0 : duty.getDefScore();
+                                    sumScore += duty.getDefScore() == null ? 0 : Double.parseDouble(duty.getDefScore());
 
-                                    if(queryDutySmList.size()==0 && !isDutySm) {
+                                    if (queryDutySmList.size() == 0 && !isDutySm) {
                                         ScoreDutySm dutySm = new ScoreDutySm();
                                         dutySm.setYear(year);
                                         dutySm.setMonth(month);
@@ -640,9 +711,9 @@ public class UserDtoController {
                                         detail.setScore(duty.getDefScore() == null ? "0" : duty.getDefScore().toString());
                                         detail.setDbtype(dbtype);
                                         insertDetailList.add(detail);
-                                        sumScore += duty.getDefScore() == null ? 0 : duty.getDefScore();
+                                        sumScore += duty.getDefScore() == null ? 0 : Double.parseDouble(duty.getDefScore());
 
-                                        if(queryDutySmList.size()==0 && !isDutySm) {
+                                        if (queryDutySmList.size() == 0 && !isDutySm) {
                                             ScoreDutySm dutySm = new ScoreDutySm();
                                             dutySm.setYear(year);
                                             dutySm.setMonth(month);
@@ -652,6 +723,7 @@ public class UserDtoController {
                                             dutySm.setDbtype(dbtype);
                                             insertDutySmList.add(dutySm);
                                         }
+
                                     }
                                 }
                                 if (sumScore != 0.0) {
@@ -881,7 +953,7 @@ public class UserDtoController {
     public Object updateFinishGradeAll(String dbtype) {
         ModelMap map = new ModelMap();
         ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
-        if(setTime!=null) {
+        if (setTime != null) {
             int count = summaryService.updateFinishGradeAll(setTime.getYear(), setTime.getMonth(), dbtype);
             if (count > 0) {
                 map.put("msg", "全部修改季结评分完成成功");
@@ -941,7 +1013,7 @@ public class UserDtoController {
             String fileName = new String("评分汇总文档.xls".getBytes("UTF-8"), "iso-8859-1");    //生成word文件的文件名
             excelUtil.exportExcel(title, rowsName, dataList, fileName, response);
         } catch (Exception e) {
-            log.error(e.getMessage() , e);
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -986,7 +1058,7 @@ public class UserDtoController {
             String fileName = new String("评分汇总文档.xls".getBytes("UTF-8"), "iso-8859-1");    //生成word文件的文件名
             excelUtil.exportExcel(title, rowsName, dataList, fileName, response);
         } catch (Exception e) {
-            log.error(e.getMessage() , e);
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -1356,14 +1428,14 @@ public class UserDtoController {
             try {
                 List<String> roleList = new ArrayList<>();
                 if (history.getDbtype().equals("2")) {
-                    if(history.getRolecode() == null || history.getRolecode().equals("")) {
+                    if (history.getRolecode() == null || history.getRolecode().equals("")) {
                         roleList.add("300"); //普通用户
                         roleList.add("150"); //打分用户
                     } else {
-                        if(history.getRolecode() != null && history.getRolecode().equals("150")) {
+                        if (history.getRolecode() != null && history.getRolecode().equals("150")) {
                             roleList.add("150"); //打分用户
                         }
-                        if(history.getRolecode() != null && history.getRolecode().equals("300")) {
+                        if (history.getRolecode() != null && history.getRolecode().equals("300")) {
                             roleList.add("300"); //普通用户
                         }
                     }
@@ -1390,7 +1462,7 @@ public class UserDtoController {
                 map.put("code", 0);
 
             } catch (Exception e) {
-                log.error(e.getMessage() , e);
+                log.error(e.getMessage(), e);
                 map.put("error", e.getMessage());
                 map.put("msg", "查询历史评分失败");
                 map.put("code", 1);
@@ -1486,7 +1558,7 @@ public class UserDtoController {
                 map.put("code", 0);
 
             } catch (Exception e) {
-                log.error(e.getMessage() , e);
+                log.error(e.getMessage(), e);
                 map.put("error", e.getMessage());
                 map.put("msg", "查询失败");
                 map.put("code", 1);
@@ -1770,7 +1842,7 @@ public class UserDtoController {
             workbook.write(os);
             downFile(os, response, year + "-" + month + "未评分与未完成人员表.xlsx");
         } catch (Exception e) {
-            log.error(e.getMessage() , e);
+            log.error(e.getMessage(), e);
 //            map.put("msg", "一键导出失败");
 //            map.put("error", e.getMessage());
 //            map.put("eor", e.getStackTrace());

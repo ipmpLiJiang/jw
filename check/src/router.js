@@ -30,6 +30,7 @@ import forgetPsd from '@/views/login/forget.vue'
 import tabOne from '@/views/webShow/tabOne.vue'
 import me from '@/views/webShow/me.vue'
 import webShow from '@/views/webShow/index.vue'
+import webShow2 from '@/views/webShow/index2.vue'
 import webShowSuccess from '@/views/webShow/success.vue'
 import webShowLogin from '@/views/webShow/login.vue'
 import webShowPersonal from '@/views/webShow/personal/personal.vue'
@@ -277,6 +278,11 @@ export default new Router({
         path: '/webShow',
         name: "医院考核问卷",
         component: webShow,
+    },
+    {
+        path: '/webShow2',
+        name: "医院考核问卷2",
+        component: webShow2,
     },
     {
         path: '/webShowSuccess',

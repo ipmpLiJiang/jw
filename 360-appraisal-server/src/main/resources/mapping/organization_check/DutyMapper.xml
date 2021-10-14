@@ -13,7 +13,7 @@
         <result column="CScore" property="cscore" jdbcType="VARCHAR"/>
         <result column="DScore" property="dscore" jdbcType="VARCHAR"/>
         <result column="FullStationCode" property="fullstationcode" jdbcType="VARCHAR"/>
-        <result column="defScore" property="defScore" jdbcType="DOUBLE"/>
+        <result column="defScore" property="defScore" jdbcType="VARCHAR"/>
         <result column="dbtype" property="dbtype" jdbcType="VARCHAR"/>
         <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
     </resultMap>
@@ -40,7 +40,7 @@
       #{dutytype,jdbcType=VARCHAR}, #{orderid,jdbcType=INTEGER},
       #{updutycode,jdbcType=VARCHAR}, #{bscore,jdbcType=VARCHAR}, #{ascore,jdbcType=VARCHAR},
       #{cscore,jdbcType=VARCHAR}, #{dscore,jdbcType=VARCHAR},#{fullstationcode,jdbcType=VARCHAR}
-      , #{defScore,jdbcType=DOUBLE},#{dbtype,jdbcType=VARCHAR},#{dbbk,jdbcType=VARCHAR})
+      , #{defScore,jdbcType=VARCHAR},#{dbtype,jdbcType=VARCHAR},#{dbbk,jdbcType=VARCHAR})
   </insert>
     <insert id="insertSelective" parameterType="com.welb.organization_check.entity.Duty">
         insert into duty
@@ -124,7 +124,7 @@
                 #{fullstationcode,jdbcType=VARCHAR},
             </if>
             <if test="defScore != null">
-                #{defScore,jdbcType=DOUBLE},
+                #{defScore,jdbcType=VARCHAR},
             </if>
             <if test="dbtype != null">
                 #{dbtype,jdbcType=VARCHAR},
@@ -168,7 +168,7 @@
                 FullStationCode = #{fullstationcode,jdbcType=VARCHAR},
             </if>
             <if test="defScore != null">
-                defScore = #{defScore,jdbcType=DOUBLE},
+                defScore = #{defScore,jdbcType=VARCHAR},
             </if>
             <if test="dbtype != null">
                 dbtype = #{dbtype,jdbcType=VARCHAR},
@@ -191,7 +191,7 @@
       CScore = #{cscore,jdbcType=VARCHAR},
       DScore = #{dscore,jdbcType=VARCHAR},
       FullStationCode=#{fullstationcode,jdbcType=VARCHAR},
-      defScore = #{defScore,jdbcType=DOUBLE},
+      defScore = #{defScore,jdbcType=VARCHAR},
       dbtype = #{dbtype,jdbcType=VARCHAR},
       dbbk = #{dbbk,jdbcType=VARCHAR}
     where DutyCode = #{dutycode,jdbcType=VARCHAR}
@@ -279,7 +279,10 @@
             d.DutyCode = s.DutyCode
             and s.ScorringCode = #{scorringCode}
             AND s.ScorredCode= #{scorredCode}
-	        AND s.ScoreType= #{scoreType}
+	        AND s.ScoreType in
+            <foreach item="item" index="index" collection="scoreTypeList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
             and d.dbtype=#{dbtype}
         ORDER BY
             d.OrderId

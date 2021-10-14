@@ -73,7 +73,7 @@ export function getPackList(data) {
         data: data
     })
 }
-//校验用户发薪号
+//校验用户账号
 export function verifyUser(data) {
     return fetch({
         // url: 'personnel/findUserByUId',

@@ -306,7 +306,7 @@ public class EvaluationReportController {
                 if(dbtype!=null&& dbtype.equals("2")) {
                     report1.setMonth("12");
                 }
-                else{// 党部是按季度考核
+                else{// 党支部是按季度考核
                     report1.setMonth("4");
                 }
                 EvaluationReport report2 = evaluationReportService.selectReportByUserCode(report1);

@@ -53,7 +53,7 @@
             </el-table-column>
             <el-table-column
               prop="userId"
-              label="发薪号"
+              label="账号"
               show-overflow-tooltip
               align="center"
               width="100"
@@ -320,7 +320,7 @@
             </el-table-column>
             <el-table-column
               prop="userId"
-              label="发薪号"
+              label="账号"
               show-overflow-tooltip
               align="center"
               width="100"

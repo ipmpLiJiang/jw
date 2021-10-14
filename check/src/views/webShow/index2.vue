@@ -45,10 +45,8 @@
             </el-collapse>
           </div>
         </el-col> -->
-        <el-col 
-          class="toptic-title" 
-          v-if="dutyJichu.length == 0?false:true">
-          基础指标
+        <el-col class="toptic-title">
+          政治建设
         </el-col>
         <el-col
           class="list"
@@ -64,7 +62,8 @@
             <el-col 
               :span="23"
               class="toptic">
-              自评：&nbsp;&nbsp;&nbsp;{{item.zpsm}}
+              自评：&nbsp;&nbsp;
+              {{item.zpsm}}
             </el-col>
           </el-col>
           <el-col class="answer on-line-top">
@@ -96,13 +95,62 @@
         <el-col
           class="toptic-title"
           style="margin-top:.5rem;"
-          v-if="dutyYiban.length == 0?false:true"
         >
-          岗位职责
+          思想建设
         </el-col>
         <el-col
           class="list"
           v-for="(item,index) in dutyYiban" :key="'b'+index"
+        >
+          <el-col class="question-title">
+            <el-col
+              :span="24"
+              class="toptic"
+            ><span v-html="item.dutyname"></span></el-col>
+          </el-col>
+          <el-col class="question-title">
+            <el-col 
+              :span="23"
+              class="toptic">
+              自评：&nbsp;&nbsp;
+              {{item.zpsm}}
+            </el-col>
+          </el-col>
+          <el-col class="answer on-line-top">
+            <el-col class="radio">
+              <el-radio-group
+                v-model="item.score"
+                size="small"
+                @change="redioChange"
+                :disabled="detailData.isedit == 1 ? true : false"
+              >
+                <el-radio-button :label="item.ascore">优秀</el-radio-button>
+                <el-radio-button :label="item.bscore">良好</el-radio-button>
+                <el-radio-button :label="item.cscore">一般</el-radio-button>
+                <el-radio-button :label="item.dscore">较差</el-radio-button>
+              </el-radio-group>
+            </el-col>
+          </el-col>
+          <el-col class="question-title" v-show="item.score == item.dscore?true:false">
+            <el-col 
+              :span="24"
+              class="toptic">
+              <font style="color:red"> * </font>差评：
+              <el-input v-show="detailData.isedit == 0 ? true :false" style="width:82%" 
+              maxlength="80" rows="3" show-word-limit type="textarea" v-model="item.cpsm"></el-input>
+              <span v-show="detailData.isedit == 1 ? true :false">{{item.cpsm}}</span>
+            </el-col>
+          </el-col>
+        </el-col>
+        <el-col
+          class="toptic-title"
+          style="margin-top:.5rem;"
+        >
+          组织建设
+        </el-col>
+        <el-col
+          class="list"
+          v-for="(item,index) in dutyZhongdian" :key="'c'+index"
         >
           <el-col class="question-title">
             <el-col
@@ -134,7 +182,7 @@
           </el-col>
           <el-col class="question-title" v-show="item.score == item.dscore?true:false">
             <el-col 
-              :span="24" 
+              :span="24"
               class="toptic">
               <font style="color:red"> * </font>差评：
               <el-input v-show="detailData.isedit == 0 ? true :false" style="width:82%" 
@@ -146,13 +194,12 @@
         <el-col
           class="toptic-title"
           style="margin-top:.5rem;"
-          v-if="dutyZhongdian.length == 0?false:true"
         >
-          重点任务
+          党建创新
         </el-col>
         <el-col
           class="list"
-          v-for="(item,index) in dutyZhongdian" :key="'c'+index"
+          v-for="(item,index) in dutyMubiao" :key="'d'+index"
         >
           <el-col class="question-title">
             <el-col
@@ -164,7 +211,7 @@
             <el-col 
               :span="23"
               class="toptic">
-              自评：&nbsp;&nbsp;&nbsp;{{item.zpsm}}
+              自评：&nbsp;&nbsp;{{item.zpsm}}
             </el-col>
           </el-col>
           <el-col class="answer on-line-top">
@@ -196,13 +243,12 @@
         <el-col
           class="toptic-title"
           style="margin-top:.5rem;"
-          v-if="dutyMubiao.length == 0?false:true"
         >
-          目标任务
+          作风建设
         </el-col>
         <el-col
           class="list"
-          v-for="(item,index) in dutyMubiao" :key="'d'+index"
+          v-for="(item,index) in dutyZuofeng" :key="'e'+index"
         >
           <el-col class="question-title">
             <el-col
@@ -214,7 +260,7 @@
             <el-col 
               :span="23"
               class="toptic">
-              自评：&nbsp;&nbsp;&nbsp;{{item.zpsm}}
+              自评：&nbsp;&nbsp;{{item.zpsm}}
             </el-col>
           </el-col>
           <el-col class="answer on-line-top">
@@ -261,7 +307,7 @@
 
 <script>
 // import { getTotalScore, mobilGetDetail } from "@/api/mobile/check";
-import { getDutyDetail,  scoring2 } from "@/api/home/home";
+import { getDetail, scoring } from "@/api/home/home";
 import qs from "qs";
 export default {
   data() {
@@ -274,6 +320,7 @@ export default {
       dutyYiban: [],
       dutyZhongdian: [],
       dutyMubiao: [],
+      dutyZuofeng: [],
       laberror: '',
       submitLoading: false,
       totalScore: 0,
@@ -311,7 +358,7 @@ export default {
         dbtype: this.$store.state.user.user.dbtype
       };
       new Promise((response, reject) => {
-        getDutyDetail(qs.stringify(data))
+        getDetail(qs.stringify(data))
           .then(response => {
             if (response.data.code == 0) {
               this.detailData = response.data.data.detail;
@@ -319,10 +366,12 @@ export default {
               this.dutyYiban = [];
               this.dutyZhongdian = [];
               this.dutyMubiao = [];
+              this.dutyZuofeng = [];
               this.dutyJichu = response.data.data.dutyJichu;
               this.dutyYiban = response.data.data.dutyYiban;
               this.dutyZhongdian = response.data.data.dutyZhongdian;
               this.dutyMubiao = response.data.data.dutyMubiao;
+              this.dutyZuofeng = response.data.data.dutyZuofeng;
               this.year = response.data.data.detail.year;
               this.month = response.data.data.detail.month;
             } else {
@@ -450,24 +499,25 @@ export default {
       let scoreArr = [];
       for (let i = 0; i < this.dutyJichu.length; i++) {
         let val = this.dutyJichu[i];
-        if (!isNaN(val.score)) {
-          let arScore = this.getMaxMin(val)
-          if (arScore.length == 2) {
-            let min = arScore[0];
-            let max = arScore[1];
-            if (val.score > max || val.score < min) {
-              this.$message.warning("基础指标请填写"+ min +"-"+max+"之间数字");
+          if (!isNaN(val.score)) {
+            let arScore = this.getMaxMin(val)
+            if (arScore.length == 2) {
+              let min = arScore[0];
+              let max = arScore[1];
+              if (val.score > max || val.score < min) {
+                this.$message.warning("政治建设请填写"+ min +"-"+max+"之间数字");
+                return false;
+              }
+              totalScore += parseFloat(val.score);
+              scoreArr.push(val.score);
+            } else {
+              this.$message.warning("政治建设在创建指标时,设置有误.");
               return false;
             }
-            totalScore += parseFloat(val.score);
-            scoreArr.push(val.score);
           } else {
-            this.$message.warning("基础指标在创建指标时,设置有误.");
-            return false;
+            this.$message.warning("政治建设请填写正确数字");
           }
-        } else {
-          this.$message.warning("基础指标请填写正确数字");
-        }
+        
       }
       for (let i = 0; i < this.dutyYiban.length; i++) {
         let val = this.dutyYiban[i];
@@ -477,19 +527,18 @@ export default {
               let min = arScore[0];
               let max = arScore[1];
               if (val.score > max || val.score < min) {
-                this.$message.warning("岗位职责请填写"+ min +"-"+max+"之间数字");
+                this.$message.warning("思想建设请填写"+ min +"-"+max+"之间数字");
                 return false;
               }
               totalScore += parseFloat(val.score);
               scoreArr.push(val.score);
             } else {
-              this.$message.warning("岗位职责在创建指标时,设置有误.");
+              this.$message.warning("思想建设在创建指标时,设置有误.");
               return false;
             }
           } else {
-            this.$message.warning("岗位职责请填写正确数字");
+            this.$message.warning("思想建设请填写正确数字");
           }
-        
       }
       for (let i = 0; i < this.dutyZhongdian.length; i++) {
         let val = this.dutyZhongdian[i];
@@ -499,19 +548,18 @@ export default {
               let min = arScore[0];
               let max = arScore[1];
               if (val.score > max || val.score < min) {
-                this.$message.warning("重点任务请填写"+ min +"-"+max+"之间数字");
+                this.$message.warning("组织建设请填写"+ min +"-"+max+"之间数字");
                 return false;
               }
               totalScore += parseFloat(val.score);
               scoreArr.push(val.score);
             } else {
-              this.$message.warning("重点任务在创建指标时,设置有误.");
+              this.$message.warning("组织建设在创建指标时,设置有误.");
               return false;
             }
           } else {
-            this.$message.warning("重点任务请填写正确数字");
+            this.$message.warning("组织建设请填写正确数字");
           }
-        
       }
       for (let i = 0; i < this.dutyMubiao.length; i++) {
         let val = this.dutyMubiao[i];
@@ -521,17 +569,39 @@ export default {
               let min = arScore[0];
               let max = arScore[1];
               if (val.score > max || val.score < min) {
-                this.$message.warning("目标任务请填写"+ min + "-" + max + "之间数字");
+                this.$message.warning("党建创新请填写"+ min +"-"+max+"之间数字");
                 return false;
               }
               totalScore += parseFloat(val.score);
               scoreArr.push(val.score);
             } else {
-              this.$message.warning("目标任务在创建指标时,设置有误.");
+              this.$message.warning("党建创新在创建指标时,设置有误.");
               return false;
             }
           } else {
-            this.$message.warning("目标任务请填写正确数字");
+            this.$message.warning("党建创新请填写正确数字");
+          }
+        
+      }
+       for (let i = 0; i < this.dutyZuofeng.length; i++) {
+        let val = this.dutyZuofeng[i];
+          if (!isNaN(val.score)) {
+            let arScore = this.getMaxMin(val)
+            if (arScore.length == 2) {
+              let min = arScore[0];
+              let max = arScore[1];
+              if (val.score > max || val.score < min) {
+                this.$message.warning("作风建设请填写"+ min +"-"+max+"之间数字");
+                return false;
+              }
+              totalScore += parseFloat(val.score);
+              scoreArr.push(val.score);
+            } else {
+              this.$message.warning("作风建设在创建指标时,设置有误.");
+              return false;
+            }
+          } else {
+            this.$message.warning("作风建设请填写正确数字");
           }
         
       }
@@ -555,34 +625,43 @@ export default {
         data.dutyYiban = [];
         data.dutyZhongdian = [];
         data.dutyMubiao = [];
+        data.dutyZuofeng = [];
         this.laberror = ''
         this.dutyJichu.forEach(row => {
-          data.dutyJiChu.push({ topicId: row.dutycode, score: row.score, scoretype: row.scoretype, cpsm: row.score != row.dscore?'':row.cpsm, zpsm: row.zpsm });
+          data.dutyJiChu.push({ topicId: row.dutycode, score: row.score, cpsm: row.score != row.dscore?'':row.cpsm, zpsm: row.zpsm });
           if (row.score == row.dscore && (row.cpsm == null || row.cpsm == '' || row.cpsm == undefined)) {
-            this.laberror = '基础指标，差评原因 不能为空.'
+            this.laberror = '政治建设，差评原因 不能为空.'
           }
         });
         if(this.laberror == ''){
           this.dutyYiban.forEach(row => {
-            data.dutyYiban.push({ topicId: row.dutycode, score: row.score, scoretype: row.scoretype, cpsm: row.score != row.dscore?'':row.cpsm, zpsm: row.zpsm });
+            data.dutyYiban.push({ topicId: row.dutycode, score: row.score, cpsm: row.score != row.dscore?'':row.cpsm, zpsm: row.zpsm });
             if (row.score == row.dscore && (row.cpsm == null || row.cpsm == '' || row.cpsm == undefined)) {
-              this.laberror = '岗位职责，差评原因 不能为空.'
+              this.laberror = '思想建设，差评原因 不能为空.'
             }
           });
         }
         if(this.laberror == ''){
           this.dutyZhongdian.forEach(row => {
-            data.dutyZhongdian.push({ topicId: row.dutycode, score: row.score, scoretype: row.scoretype, cpsm: row.score != row.dscore?'':row.cpsm, zpsm: row.zpsm });
+            data.dutyZhongdian.push({ topicId: row.dutycode, score: row.score, cpsm: row.score != row.dscore?'':row.cpsm, zpsm: row.zpsm });
             if (row.score == row.dscore && (row.cpsm == null || row.cpsm == '' || row.cpsm == undefined)) {
-              this.laberror = '重点任务，差评原因 不能为空.'
+              this.laberror = '组织建设，差评原因 不能为空.'
             }
           });
         }
         if(this.laberror == ''){
           this.dutyMubiao.forEach(row => {
-            data.dutyMubiao.push({ topicId: row.dutycode, score: row.score, scoretype: row.scoretype, cpsm: row.score != row.dscore?'':row.cpsm, zpsm: row.zpsm });
+            data.dutyMubiao.push({ topicId: row.dutycode, score: row.score, cpsm: row.score != row.dscore?'':row.cpsm, zpsm: row.zpsm });
             if (row.score == row.dscore && (row.cpsm == null || row.cpsm == '' || row.cpsm == undefined)) {
-              this.laberror = '目标任务，差评原因 不能为空.'
+              this.laberror = '党建创新，差评原因 不能为空.'
+            }
+          });
+        }
+        if(this.laberror == ''){
+          this.dutyZuofeng.forEach(row => {
+            data.dutyZuofeng.push({ topicId: row.dutycode, score: row.score, cpsm: row.score != row.dscore?'':row.cpsm, zpsm: row.zpsm });
+            if (row.score == row.dscore && (row.cpsm == null || row.cpsm == '' || row.cpsm == undefined)) {
+              this.laberror = '作风建设，差评原因 不能为空.'
             }
           });
         }
@@ -596,10 +675,11 @@ export default {
         data.dutyYiban = JSON.stringify(data.dutyYiban);
         data.dutyZhongdian = JSON.stringify(data.dutyZhongdian);
         data.dutyMubiao = JSON.stringify(data.dutyMubiao);
+        data.dutyZuofeng = JSON.stringify(data.dutyZuofeng);
         data.dbtype= this.$store.state.user.user.dbtype;
         this.submitLoading = true;
         new Promise((response, reject) => {
-          scoring2(qs.stringify(data))
+          scoring(qs.stringify(data))
             .then(response => {
               if (response.data.code == 0) {
                 this.$message({

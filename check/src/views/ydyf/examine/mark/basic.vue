@@ -13,7 +13,7 @@
               <span>{{detailData.username}}</span>
             </div>
             <div class="form-msg">
-              <span>发薪号：</span>
+              <span>账号：</span>
               <span>{{detailData.userId}}</span>
             </div>
             <div class="form-msg">

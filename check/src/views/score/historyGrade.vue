@@ -155,12 +155,12 @@
           label="用户姓名"
           show-overflow-tooltip
         >
-        </el-table-column>
-        <el-table-column
-          prop="moneycard"
-          label="发薪号"
-          show-overflow-tooltip
-        >
+          <template
+            slot-scope="scope"
+            v-if="scope.row.username"
+          >
+            {{scope.row.username}}({{scope.row.moneycard}})
+          </template>
         </el-table-column>
         <el-table-column
           prop="departmentname"
@@ -174,25 +174,26 @@
           show-overflow-tooltip
         >
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           label="角色权限"
           prop="rolename"
           v-if="dbtype=='1'?false:true"
           show-overflow-tooltip
         >
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           prop="dbbkName"
           v-if="dbtype=='2'?false:true"
           label="党内身份"
         >
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           label="打分状态"
           prop="scorestatusname"
+          v-if="search.rolecode=='150'?true:false"
           show-overflow-tooltip
         >
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           label="季结状态"
           prop="statename"
@@ -292,13 +293,13 @@
           show-overflow-tooltip
         >
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           label="平均目标"
           v-if="dbtype=='1'?false:true"
           prop="avgMbScore"
           show-overflow-tooltip
         >
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           label="党风廉政"
           v-if="dbtype=='1'?false:true"

@@ -30,7 +30,7 @@
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <el-form-item label="发薪号码" prop="userId">
+        <el-form-item label="账号码" prop="userId">
           <el-input v-model="form.userId" style="width: 350px"  disabled></el-input>
         </el-form-item>
       </el-col>
@@ -176,8 +176,8 @@ export default {
         jobContent: [
           { required: true, message: "请选择从事工作", trigger: "blur" },
         ],
-        userId: [{ required: true, message: "请填写发薪号", trigger: "blur" }],
-        title: [{ required: true, message: "请填写发薪号", trigger: "blur" }],
+        userId: [{ required: true, message: "请填写账号", trigger: "blur" }],
+        title: [{ required: true, message: "请填写账号", trigger: "blur" }],
       },
       appellation: [
         {

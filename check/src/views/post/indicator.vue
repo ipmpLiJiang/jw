@@ -202,7 +202,7 @@ export default {
         },
         {
           value: "4",
-          label: "总党支部书记"
+          label: "党总支书记"
         }
       ],
       tableData: [],

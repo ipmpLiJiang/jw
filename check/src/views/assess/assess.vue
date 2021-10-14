@@ -93,7 +93,7 @@
               >点击查看</el-button>
             </div>
           </li>
-          <li v-if="detailData.filename">
+          <!-- <li v-if="detailData.filename">
             <div class="label">附件:</div>
             <div
               class="value"
@@ -107,7 +107,7 @@
               class="value"
               v-html="detailData.content"
             ></div>
-          </li>
+          </li> -->
           <!-- <li class="w100 operation">
             <el-button type="primary">历史绩效</el-button>
             <el-button type="primary">职责描述</el-button>
@@ -116,8 +116,8 @@
       </el-col>
       <el-col :span="24">
         <ul class="indicator">
-          <li class="li-title">
-            <div class="title">基础指标(总分15)</div>
+          <li class="li-title" v-if="dutyJichu.length == 0?false:true">
+            <div class="title">基础指标</div>
           </li>
           <li
             v-for="(item,index) in dutyJichu" :key="'a'+index"
@@ -160,7 +160,7 @@
               <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
                   <font style="color:red"> * </font>差评原因：
-                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限80字)</font>
                 </el-col>
                 <el-col :span="17">
                   <el-input v-show="detailData.isedit == 0 ? true :false" maxlength="80" type="textarea" v-model="item.cpsm"></el-input>
@@ -171,8 +171,8 @@
                 &nbsp;
               </el-col>
           </li>
-          <li class="li-title">
-            <div class="title">岗位职责(总分20)</div>
+          <li class="li-title" v-if="dutyYiban.length == 0?false:true">
+            <div class="title">岗位职责</div>
           </li>
           <li
             v-for="(item,index) in dutyYiban" :key="'b'+index"
@@ -215,7 +215,7 @@
               <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
                   <font style="color:red"> * </font>差评原因：
-                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限80字)</font>
                 </el-col>
                 <el-col :span="17">
                   <el-input v-show="detailData.isedit == 0 ? true :false" maxlength="80" type="textarea" v-model="item.cpsm"></el-input>
@@ -226,8 +226,8 @@
                 &nbsp;
               </el-col>
           </li>
-          <li class="li-title">
-            <div class="title">重点任务(总分25)</div>
+          <li class="li-title" v-if="dutyZhongdian.length == 0?false:true">
+            <div class="title">重点任务</div>
           </li>
           <li
             v-for="(item,index) in dutyZhongdian" :key="'c'+index"
@@ -270,7 +270,7 @@
               <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
                   <font style="color:red"> * </font>差评原因：
-                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限80字)</font>
                 </el-col>
                 <el-col :span="17">
                   <el-input v-show="detailData.isedit == 0 ? true :false" maxlength="80" type="textarea" v-model="item.cpsm"></el-input>
@@ -281,8 +281,8 @@
                 &nbsp;
               </el-col>
           </li>
-          <li class="li-title">
-            <div class="title">目标任务(总分25)</div>
+          <li class="li-title" v-if="dutyMubiao.length == 0?false:true">
+            <div class="title">目标任务</div>
           </li>
           <li
             v-for="(item,index) in dutyMubiao" :key="'d'+index"
@@ -325,7 +325,7 @@
               <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
                   <font style="color:red"> * </font>差评原因：
-                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限80字)</font>
                 </el-col>
                 <el-col :span="17">
                   <el-input v-show="detailData.isedit == 0 ? true :false" maxlength="80" type="textarea" v-model="item.cpsm"></el-input>
@@ -340,7 +340,7 @@
             class="w100 operation"
             v-if="detailData.isedit == 1 ? false : true"
           >
-            <div v-if="dutyJichu.length == 0 && dutyJichu.length == 0 && dutyZhongdian.length == 0 && dutyMubiao.length == 0">
+            <div v-if="dutyJichu.length == 0 && dutyYiban.length == 0 && dutyZhongdian.length == 0 && dutyMubiao.length == 0">
               <el-button
                 type="default"
                 disabled="disabled"
@@ -444,7 +444,7 @@
   </div>
 </template>
 <script>
-import { getDetail, queryByUser, scoring } from "@/api/home/home";
+import { getDutyDetail, queryByUser, scoring2 } from "@/api/home/home";
 import { download } from "@/api/common/common";
 import qs from "qs";
 export default {
@@ -513,14 +513,15 @@ export default {
     getDetail() {
       let data = {
         employeecode: this.$route.query.userCode,
-        dbtype: this.$store.state.user.user.dbtype
+        dbtype: this.$store.state.user.user.dbtype,
+        scoreType: this.$route.query.scoreType
       };
       if (this.$route.query.year && this.$route.query.month) {
         data.year = this.$route.query.year;
         data.month = this.$route.query.month;
       }
       new Promise((response, reject) => {
-        getDetail(qs.stringify(data))
+        getDutyDetail(qs.stringify(data))
           .then(response => {
             if (response.data.code == 0) {
               this.detailData = response.data.data.detail;
@@ -670,7 +671,7 @@ export default {
               this.$message.warning("基础指标请填写"+ min +"-"+max+"之间数字");
               return false;
             }
-            totalScore += parseInt(val.score);
+            totalScore += parseFloat(val.score);
             scoreArr.push(val.score);
           } else {
             this.$message.warning("基础指标在创建指标时,设置有误.");
@@ -691,7 +692,7 @@ export default {
                 this.$message.warning("岗位职责请填写"+ min +"-"+max+"之间数字");
                 return false;
               }
-              totalScore += parseInt(val.score);
+              totalScore += parseFloat(val.score);
               scoreArr.push(val.score);
             } else {
               this.$message.warning("岗位职责在创建指标时,设置有误.");
@@ -713,7 +714,7 @@ export default {
                 this.$message.warning("重点任务请填写"+ min +"-"+max+"之间数字");
                 return false;
               }
-              totalScore += parseInt(val.score);
+              totalScore += parseFloat(val.score);
               scoreArr.push(val.score);
             } else {
               this.$message.warning("重点任务在创建指标时,设置有误.");
@@ -732,10 +733,10 @@ export default {
               let min = arScore[0];
               let max = arScore[1];
               if (val.score > max || val.score < min) {
-                this.$message.warning("目标任务请填写"+ min +"-"+max+"之间数字");
+                this.$message.warning("目标任务请填写"+ min + "-" + max + "之间数字");
                 return false;
               }
-              totalScore += parseInt(val.score);
+              totalScore += parseFloat(val.score);
               scoreArr.push(val.score);
             } else {
               this.$message.warning("目标任务在创建指标时,设置有误.");
@@ -862,7 +863,7 @@ export default {
         data.year =this.detailData.year;
         data.dbtype =this.$store.state.user.user.dbtype;
         new Promise((response, reject) => {
-          scoring(qs.stringify(data))
+          scoring2(qs.stringify(data))
             .then(response => {
               if (response.data.code == 0) {
                 this.$message({

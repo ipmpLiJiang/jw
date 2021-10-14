@@ -75,7 +75,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="发薪号"
+          label="账号"
           prop="moneycard"
         >
         </el-table-column>

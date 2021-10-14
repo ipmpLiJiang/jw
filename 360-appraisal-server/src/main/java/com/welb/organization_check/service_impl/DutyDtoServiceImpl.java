@@ -23,7 +23,7 @@ public class DutyDtoServiceImpl implements IDutyDtoService {
     DutyDtoMapper dutyDtoMapper;
 
     @Override
-    public List<DutyDto> selectDutyDto(String station, String scorredcode, String stationcode, String username, String dbtype){
-        return dutyDtoMapper.selectDutyDto(station,scorredcode, stationcode, username,dbtype);
+    public List<DutyDto> selectDutyDto(String station, String scorredcode, String stationcode, String username,String scoreType, String dbtype){
+        return dutyDtoMapper.selectDutyDto(station,scorredcode, stationcode, username,scoreType,dbtype);
     }
 }

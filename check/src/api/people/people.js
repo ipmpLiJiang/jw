@@ -61,7 +61,7 @@ export function treelist() {
         method: 'post'
     })
 }
-//通过发薪号查找hrp用户数据接口
+//通过账号查找hrp用户数据接口
 export function findHrpUserById(data) {
     return fetch({
         url: 'hrpUser/findHrpUserById',

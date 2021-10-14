@@ -93,7 +93,7 @@
               >点击查看</el-button>
             </div>
           </li>
-          <li v-if="detailData.filename">
+          <!-- <li v-if="detailData.filename">
             <div class="label">附件:</div>
             <div
               class="value"
@@ -107,7 +107,7 @@
               class="value"
               v-html="detailData.content"
             ></div>
-          </li>
+          </li> -->
           <!-- <li class="w100 operation">
             <el-button type="primary">历史绩效</el-button>
             <el-button type="primary">职责描述</el-button>
@@ -117,7 +117,7 @@
       <el-col :span="24">
         <ul class="indicator">
           <li class="li-title">
-            <div class="title">政治建设(总分15)</div>
+            <div class="title">政治建设</div>
           </li>
           <li
             v-for="(item,index) in dutyJichu" :key="'a'+index"
@@ -160,7 +160,7 @@
               <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
                   <font style="color:red"> * </font>差评原因：
-                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限80字)</font>
                 </el-col>
                 <el-col :span="17">
                   <el-input v-show="detailData.isedit == 0 ? true :false" maxlength="80" type="textarea" v-model="item.cpsm"></el-input>
@@ -172,7 +172,7 @@
               </el-col>
           </li>
           <li class="li-title">
-            <div class="title">思想建设(总分20)</div>
+            <div class="title">思想建设</div>
           </li>
           <li
             v-for="(item,index) in dutyYiban" :key="'b'+index"
@@ -215,7 +215,7 @@
               <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
                   <font style="color:red"> * </font>差评原因：
-                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限80字)</font>
                 </el-col>
                 <el-col :span="17">
                   <el-input v-show="detailData.isedit == 0 ? true :false" maxlength="80" type="textarea" v-model="item.cpsm"></el-input>
@@ -227,7 +227,7 @@
               </el-col>
           </li>
           <li class="li-title">
-            <div class="title">组织建设(总分25)</div>
+            <div class="title">组织建设</div>
           </li>
           <li
             v-for="(item,index) in dutyZhongdian" :key="'c'+index"
@@ -270,7 +270,7 @@
               <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
                   <font style="color:red"> * </font>差评原因：
-                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限80字)</font>
                 </el-col>
                 <el-col :span="17">
                   <el-input v-show="detailData.isedit == 0 ? true :false" maxlength="80" type="textarea" v-model="item.cpsm"></el-input>
@@ -282,7 +282,7 @@
               </el-col>
           </li>
           <li class="li-title">
-            <div class="title">党建创新(总分25)</div>
+            <div class="title">党建创新</div>
           </li>
           <li
             v-for="(item,index) in dutyMubiao" :key="'d'+index"
@@ -325,7 +325,7 @@
               <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
                   <font style="color:red"> * </font>差评原因：
-                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限80字)</font>
                 </el-col>
                 <el-col :span="17">
                   <el-input v-show="detailData.isedit == 0 ? true :false" maxlength="80" type="textarea" v-model="item.cpsm"></el-input>
@@ -337,7 +337,7 @@
               </el-col>
           </li>
            <li class="li-title">
-            <div class="title">作风建设(总分25)</div>
+            <div class="title">作风建设</div>
           </li>
            <li
             v-for="(item,index) in dutyZuofeng" :key="'e'+index"
@@ -380,7 +380,7 @@
               <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
                 <el-col :span="2">
                   <font style="color:red"> * </font>差评原因：
-                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限制80字)</font>
+                  <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限80字)</font>
                 </el-col>
                 <el-col :span="17">
                   <el-input v-show="detailData.isedit == 0 ? true :false" maxlength="80" type="textarea" v-model="item.cpsm"></el-input>
@@ -395,7 +395,7 @@
             class="w100 operation"
             v-if="detailData.isedit == 1 ? false : true"
           >
-            <div v-if="dutyJichu.length == 0 && dutyJichu.length == 0 && dutyZhongdian.length == 0 && dutyMubiao.length == 0 && dutyZuofeng.length == 0">
+            <div v-if="dutyJichu.length == 0 && dutyYiban.length == 0 && dutyZhongdian.length == 0 && dutyMubiao.length == 0 && dutyZuofeng.length == 0">
               <el-button
                 type="default"
                 disabled="disabled"
@@ -729,7 +729,7 @@ export default {
                 this.$message.warning("政治建设请填写"+ min +"-"+max+"之间数字");
                 return false;
               }
-              totalScore += parseInt(val.score);
+              totalScore += parseFloat(val.score);
               scoreArr.push(val.score);
             } else {
               this.$message.warning("政治建设在创建指标时,设置有误.");
@@ -751,7 +751,7 @@ export default {
                 this.$message.warning("思想建设请填写"+ min +"-"+max+"之间数字");
                 return false;
               }
-              totalScore += parseInt(val.score);
+              totalScore += parseFloat(val.score);
               scoreArr.push(val.score);
             } else {
               this.$message.warning("思想建设在创建指标时,设置有误.");
@@ -772,7 +772,7 @@ export default {
                 this.$message.warning("组织建设请填写"+ min +"-"+max+"之间数字");
                 return false;
               }
-              totalScore += parseInt(val.score);
+              totalScore += parseFloat(val.score);
               scoreArr.push(val.score);
             } else {
               this.$message.warning("组织建设在创建指标时,设置有误.");
@@ -793,7 +793,7 @@ export default {
                 this.$message.warning("党建创新请填写"+ min +"-"+max+"之间数字");
                 return false;
               }
-              totalScore += parseInt(val.score);
+              totalScore += parseFloat(val.score);
               scoreArr.push(val.score);
             } else {
               this.$message.warning("党建创新在创建指标时,设置有误.");
@@ -815,7 +815,7 @@ export default {
                 this.$message.warning("作风建设请填写"+ min +"-"+max+"之间数字");
                 return false;
               }
-              totalScore += parseInt(val.score);
+              totalScore += parseFloat(val.score);
               scoreArr.push(val.score);
             } else {
               this.$message.warning("作风建设在创建指标时,设置有误.");
