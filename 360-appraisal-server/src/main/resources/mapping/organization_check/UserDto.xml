@@ -73,13 +73,6 @@
             <if test="userDto.username!=null and userDto.username!=''">
                 and u.UserName like concat('%',#{userDto.username},'%')
             </if>
-
-            <if test='userDto.dbtype!=null and userDto.dbtype!="2"'>
-                and u.dbbk in('3','4')  and m.dbtype =#{userDto.dbtype}
-            </if>
-            <if test='userDto.dbtype!=null and userDto.dbtype!="1"'>
-                and m.dbtype =#{userDto.dbtype}
-            </if>
             <if test="userDto.stationcode!=null and userDto.stationcode!=''">
                 and u.StationCode=#{userDto.stationcode}
             </if>
@@ -92,16 +85,20 @@
             <if test="userDto.month!=null and userDto.month !=''">
                 and m.Month=#{userDto.month}
             </if>
+            <if test="userDto.dbtype!=null">
+                and m.dbtype =#{userDto.dbtype}
+            </if>
+            <if test='userDto.dbtype!=null and userDto.dbtype!="2"'>
+                and u.dbbk in('3','4')
+            </if>
             <if test="userDto.state!=null and userDto.state !='' and userDto.state!='0'.toString()">
                 and m.State=#{userDto.state}
                 and r.RoleCode !="150" and r.RoleCode !="600" and r.RoleCode !="700"
-
             </if>
             <if test='userDto.state=="0"'>
                 and (m.Title is null or m.Title='')
                 and (m.Content is null or m.Content='')
                 and r.RoleCode !="150" and r.RoleCode !="600" and r.RoleCode !="700"
-
             </if>
             <if test="userDto.scorestatus!=null and userDto.scorestatus !=''">
                 and m.ScoreStatus=#{userDto.scorestatus}
@@ -113,11 +110,21 @@
             and s.DepartmentCode=d.DepartmentCode
             and u.UserCode=ur.UserCode
             and r.RoleCode=ur.RoleCode
-            <if test="roleList.size()>0">
-            and r.RoleCode in
-            <foreach item="item" index="index" collection="roleList" open="(" separator="," close=")">
-                #{item}
-            </foreach>
+            <if test="qrcode==null">
+                AND u.UserCode in (
+                select ScorredCode from score where dbtype=#{userDto.dbtype} union
+                select ScorringCode from score where dbtype=#{userDto.dbtype}
+                )
+            </if>
+            <if test='qrcode!=null and qrcode=="pfr"'>
+                AND u.UserCode in (
+                select ScorringCode from score where dbtype=#{userDto.dbtype}
+                )
+            </if>
+            <if test='qrcode!=null and qrcode=="bpfr"'>
+                AND u.UserCode in (
+                select ScorredCode from score where dbtype=#{userDto.dbtype}
+                )
             </if>
         </where>
         order by m.Year+0 desc, m.Month+0 desc,m.Pubdate desc
@@ -169,9 +176,6 @@
             <if test="userDto.usercode!=null and userDto.usercode!=''">
                 and u.UserCode = #{userDto.usercode}
             </if>
-            <if test='userDto.dbtype!=null and userDto.dbtype!=""'>
-                and m.dbtype =#{userDto.dbtype}
-            </if>
             <if test="userDto.stationcode!=null and userDto.stationcode!=''">
                 and u.StationCode=#{userDto.stationcode}
             </if>
@@ -184,16 +188,17 @@
             <if test="userDto.month!=null and userDto.month !=''">
                 and m.Month=#{userDto.month}
             </if>
+            <if test='userDto.dbtype!=null and userDto.dbtype!=""'>
+                and m.dbtype =#{userDto.dbtype}
+            </if>
             <if test="userDto.state!=null and userDto.state !='' and userDto.state!='0'.toString()">
                 and m.State=#{userDto.state}
                 and r.RoleCode !="150" and r.RoleCode !="600" and r.RoleCode !="700"
-
             </if>
             <if test='userDto.state=="0"'>
                 and (m.Title is null or m.Title='')
                 and (m.Content is null or m.Content='')
                 and r.RoleCode !="150" and r.RoleCode !="600" and r.RoleCode !="700"
-
             </if>
             <if test="userDto.scorestatus!=null and userDto.scorestatus !=''">
                 and m.ScoreStatus=#{userDto.scorestatus}
@@ -205,12 +210,6 @@
             and s.DepartmentCode=d.DepartmentCode
             and u.UserCode=ur.UserCode
             and r.RoleCode=ur.RoleCode
-            <if test="roleList.size()>0">
-                and r.RoleCode in
-                <foreach item="item" index="index" collection="roleList" open="(" separator="," close=")">
-                    #{item}
-                </foreach>
-            </if>
         </where>
         order by m.Year+0 desc, m.Month+0 desc,m.Pubdate desc
     </select>
@@ -274,15 +273,17 @@
         r.RoleCode,r.RoleName
         from user u ,monthsummary m,station s,department d,role r,user_role ur
         <where>
-
-            <if test='dbtype!=null and dbtype!=""'>
-                and u.dbbk in('3','4')
-            </if>
             <if test="year!=null and year!=''">
                 and m.Year=#{year}
             </if>
             <if test="month!=null and month !=''">
                 and m.Month=#{month}
+            </if>
+            <if test="dbtype!=null">
+                and m.dbtype = #{dbtype}
+            </if>
+            <if test='dbtype!=null and dbtype!="2"'>
+                and u.dbbk in('3','4')
             </if>
             <if test="moneycard!=null and moneycard!=''">
                 and u.MoneyCard =#{moneycard}
@@ -307,9 +308,6 @@
         r.RoleCode,r.RoleName
         from user u ,monthsummary m,station s,department d,role r,user_role ur
         <where>
-            <if test='userDto.dbtype!=null and userDto.dbtype!=""'>
-                and u.dbbk in('3','4')
-            </if>
             <if test="username!=null and username!=''">
                 and u.UserName like concat('%',#{username},'%')
             </if>
@@ -322,6 +320,12 @@
             </if>
             <if test="month!=null and month !=''">
                 and m.Month=#{month}
+            </if>
+            <if test="userDto.dbtype!=null">
+                and m.dbtype = #{dbtype}
+            </if>
+            <if test='userDto.dbtype!=null and userDto.dbtype!="2"'>
+                and u.dbbk in('3','4')
             </if>
             <if test="scorestatus!=null and scorestatus !=''">
                 and m.ScoreStatus=#{scorestatus}

@@ -23,8 +23,11 @@
         :span="19"
         class="name"
       >
-        <h3>{{data.username}}<span v-if="data.stationname">{{data.departmentname}}</span></h3>
-        <h4>{{data.stationname}}</h4>
+        <h3>{{$store.state.user.user.username}}</h3>
+        <h4>{{$store.state.user.user.politicalname}}</h4>
+        <h4>{{$store.state.user.user.branchname}}</h4>
+        <h4>{{$store.state.user.user.departmentname}}</h4>
+        <h4>{{$store.state.user.user.stationname}}</h4>
       </el-col>
     </el-row>
     <el-row>

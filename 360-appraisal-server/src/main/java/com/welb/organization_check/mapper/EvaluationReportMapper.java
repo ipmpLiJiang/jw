@@ -15,6 +15,8 @@ public interface EvaluationReportMapper {
 
     int updateByPrimaryKeySelective(EvaluationReport report);
 
+    int updateStateByDbtype(int state,String dbtype);
+
     EvaluationReport selectByPrimaryKey(Integer id);
 
     EvaluationReport selectReportByUserCode(EvaluationReport report);
@@ -27,7 +29,7 @@ public interface EvaluationReportMapper {
 
     List<EvaluationReport>selectAllEvaluationReport();
 
-    List<UserEvaluationDto>selectAllEvaluationReportLike(@Param("evaluationDto")UserEvaluationDto evaluationDto,@Param("roleList") List<String> roleList);
+    List<UserEvaluationDto>selectAllEvaluationReportLike(@Param("evaluationDto")UserEvaluationDto evaluationDto);
 
 
     int selectEvacationReportCount();

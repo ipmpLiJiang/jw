@@ -93,6 +93,14 @@ public class LoginController {
     }
 
     private void getLoginUserInfo(HttpServletRequest req, ModelMap map, User user) {
+        User query = new User();
+        query.setUsercode(user.getUsercode());
+        User gwBmUser = userService.selectUserBuGwByMoneyCard(query);
+        if(gwBmUser!=null){
+            user.setDepartmentname(gwBmUser.getDepartmentname());
+            user.setStationname(gwBmUser.getStationname());
+            user.setBranchname(gwBmUser.getBranchname());
+        }
         //将用户编号保存在session中
         req.getSession().setAttribute("usercode", user.getUsercode());
         //设置登录用户的过期时间

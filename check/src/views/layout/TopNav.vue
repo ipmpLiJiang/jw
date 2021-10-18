@@ -31,7 +31,64 @@
             @click="loginout"
           ><i class="icon iconfont icon-dingbudaohang-zhangh"></i>退出登录</el-menu-item>
           <!-- <el-menu-item index="3"><i class="icon iconfont icon-xiaoxi"></i>消息</el-menu-item> -->
-          <el-menu-item index="2"><i class="icon iconfont icon-yonghu"></i>{{$store.state.user.user.username}}</el-menu-item>
+          <el-menu-item index="2">
+          <el-popover
+            placement="left"
+            width="380"
+            trigger="hover">
+            <el-row class="userxxdiv">
+              <el-col :span="6">
+                姓　　名：
+              </el-col>
+              <el-col :span="15">
+                {{$store.state.user.user.username}}
+              </el-col>
+            </el-row>
+            <el-row class="userxxdiv">
+              <el-col :span="6">
+                群众关系：
+              </el-col>
+              <el-col :span="15">
+                {{$store.state.user.user.politicalname}}
+              </el-col>
+            </el-row>
+            <el-row class="userxxdiv">
+              <el-col :span="6">
+                所属支部：
+              </el-col>
+              <el-col :span="15">
+                {{$store.state.user.user.branchname=='' || $store.state.user.user.branchname==null?"无":$store.state.user.user.branchname}}
+              </el-col>
+            </el-row>
+            <el-row class="userxxdiv">
+              <el-col :span="6">
+                部　　门：
+              </el-col>
+              <el-col :span="15">
+                {{$store.state.user.user.departmentname}}
+              </el-col>
+            </el-row>
+            <el-row class="userxxdiv">
+              <el-col :span="6">
+                岗　　位：
+              </el-col>
+              <el-col :span="15">
+                {{$store.state.user.user.stationname}}
+              </el-col>
+            </el-row>
+            <!-- <el-row class="userxxdiv">
+              <el-col :span="6">
+                岗位类型：
+              </el-col>
+              <el-col :span="15">
+                {{$store.state.user.user.postTypeName=='' || $store.state.user.user.postTypeName==null?"无":$store.state.user.user.postTypeName}}
+              </el-col>
+            </el-row> -->
+            <i slot="reference" class="icon iconfont icon-yonghu">
+              {{$store.state.user.user.username}}
+            </i>
+          </el-popover>
+          </el-menu-item>
           <!-- <el-menu-item
             index="3"
             v-if="$store.state.user.user.roleList.length>1"
@@ -182,5 +239,8 @@ export default {
 i {
   font-size: 16px;
   margin-right: 5px;
+}
+.userxxdiv {
+  padding: 10px 5px 5px 40px;
 }
 </style>

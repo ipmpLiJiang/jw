@@ -19,6 +19,7 @@ public class User {
     public static Map<String, String> userstates = new LinkedHashMap<>();
     public static Map<String, String> dbbks = new LinkedHashMap<>();
     public static Map<String, String> roles = new LinkedHashMap<>();
+    public static Map<String, String> postTypes = new LinkedHashMap<>();
 
     static {
         //性别
@@ -52,6 +53,9 @@ public class User {
         dbbks.put("2","宣传委员青年委员");
         dbbks.put("3","党支部书记");
         dbbks.put("4","党总支书记");
+        postTypes.put("1","科主任");
+        postTypes.put("2","护士长");
+        postTypes.put("3","行政");
 
     }
 
@@ -160,6 +164,27 @@ public class User {
 
     public void setPostType(String postType) {
         this.postType = postType == null ? null : postType.trim();
+    }
+
+    private String postTypeName;
+
+    public String getPostTypeName() {
+        if (postType!=null){
+            return postTypes.get(this.postType);
+        }
+        return postTypeName;
+    }
+
+    public void setPostTypeName(String postTypeName) {
+        this.postTypeName = postTypeName;
+    }
+
+    public static Map<String, String> getPostTypes() {
+        return postTypes;
+    }
+
+    public static void setPostTypes(Map<String, String> postTypes) {
+        User.postTypes = postTypes;
     }
 
     private String dbtype;

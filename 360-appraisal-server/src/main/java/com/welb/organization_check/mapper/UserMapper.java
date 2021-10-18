@@ -38,7 +38,7 @@ public interface UserMapper {
 
     List<User>findUserAll();
 
-    List<User> findUserByRoleCode(@Param("roleList") List<String> roleList, @Param("dbtype") String dbtype);
+    List<User> findUserByRoleCode(@Param("qrcode") String qrcode, @Param("dbtype") String dbtype);
 
     List<User>findUserAllBySummary();
 
@@ -62,6 +62,8 @@ public interface UserMapper {
     User getUserByMoneyCard(String moneycard);
 
     User selectUserByMoneyCard(String moneycard);
+
+    User selectUserBuGwByMoneyCard(@Param("user") User user);
 
     User getUserByUserCode(String usercode);
 

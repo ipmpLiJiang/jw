@@ -81,7 +81,7 @@
             slot-scope="scope"
             v-if="scope.row.scorredname"
           >
-            {{scope.row.scorredname}}({{scope.row.moneycard}})
+            {{scope.row.scorredname}}
           </template>
         </el-table-column>
         <el-table-column
@@ -121,6 +121,15 @@
           <template slot-scope="scope">
             <span v-if="scope.row.state == 6">进行中</span>
             <span v-else-if="scope.row.state == 7">已完成</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          fixed="right"
+          label="提交状态"
+        >
+          <template slot-scope="scope">
+            <span style="background:#FF9797" v-if="scope.row.scoreState == '1'">未提交</span>
+            <span style="background:#99FF99" v-else-if="scope.row.scoreState =='2'">已提交</span>
           </template>
         </el-table-column>
         <el-table-column

@@ -112,9 +112,15 @@ public class UserServiceImpl implements IUserService {
         return userMapper.findUserAll();
     }
 
+    //查询当前评分关系人员数据
     @Override
-    public List<User> findUserByRoleCode(List<String> roleList,String dbtype) {
-        return userMapper.findUserByRoleCode(roleList, dbtype);
+    public List<User> findUserByRoleCode(String qrcode,String dbtype) {
+        return userMapper.findUserByRoleCode(qrcode, dbtype);
+    }
+
+    @Override
+    public User selectUserBuGwByMoneyCard(User user){
+        return userMapper.selectUserBuGwByMoneyCard(user);
     }
 
     @Override

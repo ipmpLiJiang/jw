@@ -131,6 +131,12 @@ public class UserSummaryDtoController {
                 summaryList = summaryDtoService.selectUserSummaryBySixStateNew(dto);
             }
             for (UserSummaryDto dto1 : summaryList) {
+                List<ScoreFlow> flowScorringScorredcode = flowService.selectByScorringScoredFlow(dto1.getSerialno(), dto1.getScorringcode(),dto1.getScorredcode(), dto.getDbtype());
+                if (flowScorringScorredcode.size() > 0) {
+                    dto1.setScoreState(flowScorringScorredcode.get(0).getScoreState());
+                } else {
+                    dto1.setScoreState("1");
+                }
                 List<ScoreFlow> flow = flowService.selectByScoreFlow(dto1.getSerialno(), dto1.getScorringcode(), dto.getDbtype());
                 if (flow.size() == 0 || (flow.size() > 0 && flow.get(0).getScoreState().equals("1"))) {
                     summarys.add(dto1);
@@ -374,6 +380,14 @@ public class UserSummaryDtoController {
 //                }
             } else {
                 dto.setStatus("0");
+            }
+            if(scorringcode!=null) {
+                List<ScoreFlow> flowScorringScorredcode = flowService.selectByScorringScoredFlow(mesrialno, scorringcode, user.getUsercode(), dbtype);
+                if (flowScorringScorredcode.size() > 0) {
+                    dto.setScoreState(flowScorringScorredcode.get(0).getScoreState());
+                } else {
+                    dto.setScoreState("1");
+                }
             }
         }
     }

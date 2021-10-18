@@ -75,6 +75,11 @@
         >批量修改{{khtitle}}评分完成</el-button> -->
         <el-button
           type="primary"
+          @click="scdata"
+          :loading="searchLoading"
+        >生成/更改数据</el-button>
+        <el-button
+          type="primary"
           @click="updateAllZpStatus"
         >全部{{khtitle}}自评</el-button>
         <el-button
@@ -273,7 +278,8 @@ import {
   getList,
   updateFinishGradeBySerialNo,
   updateFinishGradeAll,
-  upload
+  upload,
+  shengcheng
 } from "@/api/score/gradeTotal";
 import { updateSummaryGradeState, isAllFinish, openManualAssessment, updateSummaryGradeStateAll, updateSummaryGradeStateAllZp} from "@/api/score/quarter";
 import { updateStateBySerialNo } from "@/api/user/quarter";
@@ -388,6 +394,39 @@ export default {
     handleCurrentChange(val) {
       this.page.pageNum = val;
       this.getList();
+    },
+    scdata () {
+      this.$confirm(
+        "此操作将生成/更改数据, 是否继续?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      ).then(() => {
+        this.searchLoading = true;
+        this.tableLoading = true;
+        new Promise((response, reject) => {
+          shengcheng(qs.stringify({dbtype: this.dbtype}))
+            .then(response => {
+              if (response.data.code == 0) {
+                this.$message.success(response.data.msg);
+                this.getList();
+              } else {
+                this.$message({
+                  message: response.data.msg,
+                  type: "error"
+                });
+              }
+              this.searchLoading = false;
+              this.tableLoading = false;
+            })
+            .catch(error => {
+              reject(error);
+            });
+        });
+      }).catch(() => {});
     },
     //搜索
     searchList() {

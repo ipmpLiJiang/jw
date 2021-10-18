@@ -22,6 +22,11 @@ public interface IScoreFlowService {
 
     List<ScoreFlow> selectByScoredCodeFlow(String mserialno,String scoredcode,String dbtype);
 
+    List<ScoreFlow> selectByScorringScoredFlow(String mserialno,
+                                               String scorringcode,
+                                               String scoredcode,
+                                               String dbtype);
+
     /**
      * 获取各类型分数
      * @param mserialno

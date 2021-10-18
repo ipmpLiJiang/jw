@@ -181,6 +181,10 @@
     select * from scoreflow where MSerialNo=#{mserialno} and ScoredCode=#{scoredcode} and dbtype=#{dbtype}
   </select>
 
+    <select id="selectByScorringScoredFlow" resultMap="BaseResultMap">
+    select * from scoreflow where MSerialNo=#{mserialno} and ScorringCode=#{scorringcode}and ScoredCode=#{scoredcode} and dbtype=#{dbtype}
+  </select>
+
     <select id="getTotal" resultMap="BaseResultMap" parameterType="com.welb.organization_check.entity.ScoreFlow">
         select
         <include refid="Base_Column_List"/>

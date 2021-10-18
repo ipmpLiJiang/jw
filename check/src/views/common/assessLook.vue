@@ -118,7 +118,8 @@
               <el-col :span="5"> 良好({{item.bscore}}) </el-col>
               <el-col :span="5"> 一般({{item.cscore}}) </el-col>
               <el-col :span="5"> 较差({{item.dscore}}) </el-col>
-              <el-col :span="4"> {{item.score}} </el-col>
+              <el-col :span="2"> {{item.score}} </el-col>
+              <el-col :span="2"> {{item.scoretype}} </el-col>
             </el-row>
             <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
               <el-col :span="2"> 差评原因：</el-col>
@@ -153,7 +154,8 @@
               <el-col :span="5"> 良好({{item.bscore}}) </el-col>
               <el-col :span="5"> 一般({{item.cscore}}) </el-col>
               <el-col :span="5"> 较差({{item.dscore}}) </el-col>
-              <el-col :span="4"> {{item.score}} </el-col>
+              <el-col :span="2"> {{item.score}} </el-col>
+              <el-col :span="2"> {{item.scoretype}} </el-col>
             </el-row>
             <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
               <el-col :span="2"> 差评原因：</el-col>
@@ -188,7 +190,8 @@
               <el-col :span="5"> 良好({{item.bscore}}) </el-col>
               <el-col :span="5"> 一般({{item.cscore}}) </el-col>
               <el-col :span="5"> 较差({{item.dscore}}) </el-col>
-              <el-col :span="4"> {{item.score}} </el-col>
+              <el-col :span="2"> {{item.score}} </el-col>
+              <el-col :span="2"> {{item.scoretype}} </el-col>
             </el-row>
             <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
               <el-col :span="2"> 差评原因：</el-col>
@@ -223,7 +226,8 @@
               <el-col :span="5"> 良好({{item.bscore}}) </el-col>
               <el-col :span="5"> 一般({{item.cscore}}) </el-col>
               <el-col :span="5"> 较差({{item.dscore}}) </el-col>
-              <el-col :span="4"> {{item.score}} </el-col>
+              <el-col :span="2"> {{item.score}} </el-col>
+              <el-col :span="2"> {{item.scoretype}} </el-col>
             </el-row>
             <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
               <el-col :span="2"> 差评原因：</el-col>

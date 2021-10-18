@@ -21,7 +21,10 @@
       >
         <div class="line-bottom">
           <div class="left">
-            <h3>{{item.statename}}<span>{{item.scoreState=='1'?'未评分':'已评分'}}</span></h3>
+            <h3>{{item.statename}}
+            <span style="background:#FF9797" v-if="item.scoreState == '1'">未评分</span>
+            <span style="background:#99FF99" v-else-if="item.scoreState =='2'">已评分</span>
+            </h3>
             <h4>被考核人<span>{{item.username}}</span></h4>
             <h5><span>{{item.year}}</span><span>{{item.monthname}}</span></h5>
           </div>

@@ -18,13 +18,13 @@ public interface ScoreHistoryMapper {
 
     ScoreHistory selectOneByHistory(ScoreHistory history);
 
-    List<ScoreHistory>selectHistoryList(@Param("history") ScoreHistory history,@Param("roleList") List<String> roleList);
+    List<ScoreHistory>selectHistoryList(@Param("history") ScoreHistory history,@Param("qrcode") String qrcode);
 
     List<ScoreHistory>gradeList(ScoreHistory history);
 
     List<ScoreHistory>selectGradeHisotyList(ScoreHistory history);
 
-    List<ScoreHistory>selectUserHisotyList(@Param("history") ScoreHistory history,@Param("roleList") List<String> roleList);
+    List<ScoreHistory>selectUserHisotyList(@Param("history") ScoreHistory history,@Param("qrcode") String qrcode);
 
     int batchInsert(List<ScoreHistory>list);
 

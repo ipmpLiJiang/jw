@@ -166,12 +166,12 @@ public class ScheduledTask {
         UserDto dto = new UserDto();
         dto.setYear(year);
         dto.setMonth(month);
-        List<String> roleList = new ArrayList<>();
-        roleList.add("100");
-        roleList.add("200");
-        roleList.add("300");
-        roleList.add("50");
-        List<UserDto> userDtoList = dtoService.selectUserDtoLike(dto,roleList);
+//        List<String> roleList = new ArrayList<>();
+//        roleList.add("100");
+//        roleList.add("200");
+//        roleList.add("300");
+//        roleList.add("50");
+        List<UserDto> userDtoList = dtoService.selectUserDtoLike(dto,"bpfr");
         getStationName(userDtoList);
     }
 
@@ -321,12 +321,8 @@ public class ScheduledTask {
             month= setTime.getMonth();
 
             List<UserEvaluationDto> evaluationReports;
-            List<String> roleList = new ArrayList<>();
-            roleList.add("100");
-            roleList.add("200");
-            roleList.add("300");
-            roleList.add("50");
-            evaluationReports = evaluationReportService.selectAllEvaluationReportLike(evaluationDto,roleList);
+
+            evaluationReports = evaluationReportService.selectAllEvaluationReportLike(evaluationDto);
             if (evaluationReports.size() > 0) {
                 for (UserEvaluationDto evaluation : evaluationReports) {
                     if (evaluation.getMaxscore() == null && evaluation.getMinscore() == null) {
@@ -335,7 +331,7 @@ public class ScheduledTask {
                         dto.setUsername(evaluation.getUsername());
                         dto.setUsercode(evaluation.getUsercode());
 
-                        List<UserDto> userDtos = userDtoService.selectUserDtoLike(dto,roleList);
+                        List<UserDto> userDtos = userDtoService.selectUserDtoByUserCode(dto);
                         //获取岗位信息
                         getStationNameByEvaluate(userDtos, dto, evaluationDto);
                         //获取各类评分的分数
@@ -523,12 +519,12 @@ public class ScheduledTask {
 
                 //手动考核-查看所有季节总结
                 manualGetUserDto(dto, year, quarter, count, sysTime);
-            List<String> roleList = new ArrayList<>();
-            roleList.add("100");
-            roleList.add("200");
-            roleList.add("300");
-            roleList.add("50");
-            List<UserDto> userDtoList = dtoService.selectUserDtoLike(dto,roleList);
+//            List<String> roleList = new ArrayList<>();
+//            roleList.add("100");
+//            roleList.add("200");
+//            roleList.add("300");
+//            roleList.add("50");
+            List<UserDto> userDtoList = dtoService.selectUserDtoLike(dto,"bpfr");
             getMonthScoreStationName(userDtoList);
             List<HistoryScore> scores = historyScoreService.selectAll(dto.getYear(), dto.getMonth());
             addMonthScore(list, userDtoList, scores);

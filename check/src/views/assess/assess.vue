@@ -52,7 +52,7 @@
         <ul class="personal-information">
           <li>
             <div class="label">姓名:</div>
-            <div class="value">{{detailData.username}}({{detailData.moneycard}})</div>
+            <div class="value">{{detailData.username}}</div>
           </li>
           <li>
             <div class="label">标题:</div>

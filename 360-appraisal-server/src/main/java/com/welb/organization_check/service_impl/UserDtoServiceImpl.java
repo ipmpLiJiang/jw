@@ -21,13 +21,13 @@ public class UserDtoServiceImpl implements IUserDtoService {
     @Resource
     UserDtoMapper dtoMapper;
     @Override
-    public List<UserDto> selectUserDtoLike(UserDto userDto,List<String> roleList) {
-        return dtoMapper.selectUserDtoLike(userDto,roleList);
+    public List<UserDto> selectUserDtoLike(UserDto userDto,String qrcode) {
+        return dtoMapper.selectUserDtoLike(userDto,qrcode);
     }
 
     @Override
-    public List<UserDto>selectUserDtoByUserCode(UserDto userDto,List<String> roleList){
-        return dtoMapper.selectUserDtoByUserCode(userDto,roleList);
+    public List<UserDto>selectUserDtoByUserCode(UserDto userDto){
+        return dtoMapper.selectUserDtoByUserCode(userDto);
     }
 
     @Override
@@ -37,7 +37,8 @@ public class UserDtoServiceImpl implements IUserDtoService {
 
     @Override
     public List<UserDto> selectUserDtoLikeToQuarter(UserDto userDto) {
-        return dtoMapper.selectUserDtoLikeToQuarter(userDto);
+//        return dtoMapper.selectUserDtoLikeToQuarter(userDto);
+        return  null;
     }
 
     @Override

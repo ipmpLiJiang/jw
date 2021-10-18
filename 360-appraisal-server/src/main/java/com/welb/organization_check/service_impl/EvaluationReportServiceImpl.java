@@ -38,6 +38,11 @@ public class EvaluationReportServiceImpl implements IEvaluationReportService {
     }
 
     @Override
+    public int  updateStateByDbtype(int state,String dbtype) {
+        return evaluationReportMapper.updateStateByDbtype(state,dbtype);
+    }
+
+    @Override
     public EvaluationReport selectByPrimaryKey(Integer id) {
         return evaluationReportMapper.selectByPrimaryKey(id);
     }
@@ -68,8 +73,8 @@ public class EvaluationReportServiceImpl implements IEvaluationReportService {
     }
 
     @Override
-    public List<UserEvaluationDto> selectAllEvaluationReportLike(UserEvaluationDto evaluationDto,List<String> roleList) {
-        return evaluationReportMapper.selectAllEvaluationReportLike(evaluationDto,roleList);
+    public List<UserEvaluationDto> selectAllEvaluationReportLike(UserEvaluationDto evaluationDto) {
+        return evaluationReportMapper.selectAllEvaluationReportLike(evaluationDto);
     }
 
     @Override

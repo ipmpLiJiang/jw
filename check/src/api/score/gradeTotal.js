@@ -36,3 +36,11 @@ export function updateFinishGradeAll(data) {
         data: data
     })
 }
+//全部修改月节评分完成状态接口生成数据
+export function shengcheng(data) {
+    return fetch({
+        url: 'history/scoreShengCheng',
+        method: 'post',
+        data: data
+    })
+}

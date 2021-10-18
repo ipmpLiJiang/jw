@@ -35,7 +35,7 @@ public interface IScoreHistoryService {
      * @param history
      * @return
      */
-    List<ScoreHistory> selectHistoryList(ScoreHistory history,List<String> roleList);
+    List<ScoreHistory> selectHistoryList(ScoreHistory history,String qrcode);
 
     /**
      * 查询所有打分用户的历史数据
@@ -56,7 +56,7 @@ public interface IScoreHistoryService {
      * @param history
      * @return
      */
-    List<ScoreHistory>selectUserHisotyList(ScoreHistory history,List<String> roleList);
+    List<ScoreHistory>selectUserHisotyList(ScoreHistory history,String qrcode);
 
 
     /**

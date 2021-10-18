@@ -62,7 +62,7 @@
             slot-scope="scope"
             v-if="scope.row.scorredname"
           >
-            {{scope.row.scorredname}}({{scope.row.moneycard}})
+            {{scope.row.scorredname}}
           </template>
         </el-table-column>
         <el-table-column

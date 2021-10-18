@@ -74,38 +74,44 @@ public class UserDtoController {
     IUserScoreDtoService userScoreDtoService;
     @Autowired
     IScoreDutySmService scoreDutySmService;
-    /**
-     * 历史评分汇总查询列表 查询所有年份的所有年度
-     *
-     * @param dto
-     * @param pageNum
-     * @param pageSize
-     * @return
-     */
 
-  /*  @RequestMapping(value = "/list", produces = "application/json;charset=utf-8")
-    public Object selectUserDtoLike(HttpServletRequest req, UserDto dto, int pageNum, int pageSize) {
+    @RequestMapping(value = "/scoreShengCheng", produces = "application/json;charset=utf-8")
+    public Object scoreShengChengUser(HttpServletRequest req, String dbtype) {
         ModelMap map = new ModelMap();
         String usercode = (String) req.getSession().getAttribute("usercode");
         String state = (String) req.getSession().getAttribute("state");
         if (usercode != null) {
-            List<UserDto> userDtoList;
             try {
-                getCurrentgetGradeState(state);
-                PageHelper.startPage(pageNum, pageSize);
-                userDtoList = dtoService.selectUserDtoLike(dto);
-                getStationName(userDtoList);
-                PageInfo<UserDto> pageInfo = new PageInfo<>(userDtoList);
-                userDtoList = pageInfo.getList();
-                map.put("totalPages", pageInfo.getTotal());
-                map.put("msg", "查询历史评分成功");
-                map.put("data", userDtoList);
-                map.put("code", 0);
-
+                ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
+                if (setTime != null) {
+                    long count = 0;
+                    List<User> scorringUserList = userService.selectUserPfr(dbtype);
+                    if (scorringUserList.size() > 0) {
+                        List<User> users = userService.findUserByRoleCode(null, dbtype);
+                        for (User u : scorringUserList) {
+                            count = users.stream().filter(s -> s.getUsercode().equals(u.getUsercode())).count();
+                            if (count == 0) {
+                                users.add(u);
+                            }
+                        }
+                        if (users.size() > 0) {
+                            List<MonthSummary> summaryList = summaryService.selectSummaryListByYearAndMonth(setTime.getYear(), setTime.getMonth(), dbtype);
+                            // summaryList =summaryList.stream().filter(p->p.getDbtype()!=null && p.getDbtype().equals(dbtype)).collect(Collectors.toList());
+                            if (summaryList.size() != users.size()) {
+                                addMonthSummary(setTime.getYear(), setTime.getMonth(), users, dbtype);
+                            }
+                            this.getShengCheng(setTime.getYear(), setTime.getMonth(), dbtype);
+                            map.put("msg", "生成数据成功");
+                            map.put("code", 0);
+                        }
+                    } else {
+                        map.put("msg", "未创建评分人关系.");
+                        map.put("code", 1);
+                    }
+                }
             } catch (Exception e) {
-                log.error(e.getMessage() , e);
-                map.put("error", e.getMessage());
-                map.put("msg", "查询历史评分失败");
+                log.error(e.getMessage(), e);
+                map.put("msg", "生成数据失败");
                 map.put("code", 1);
             }
         } else {
@@ -113,9 +119,7 @@ public class UserDtoController {
             map.put("code", 810);
         }
         return map;
-
     }
-*/
 
     /**
      * 评分汇总查询列表数据  ；当前年份的上一月度
@@ -132,18 +136,10 @@ public class UserDtoController {
         String state = (String) req.getSession().getAttribute("state");
         if (usercode != null) {
             try {
-//                //当前年份
-//                String year = CalendarUtil.getYear();
-//                //当前月份
-//                String month = CalendarUtil.getMonth();
-//                //获取当前月度
-//                String quarter = month;// CalendarUtil.getQuarter(month);
-//                int counts = Integer.parseInt(quarter.trim()) - 1;
-//                //获取当前系统时间
-//                String sysTime = DateUtil.getTime();
-
-                //手动考核-查看所有月节总结
-                manualSelectUserDtoLikeByUserAndState(dto, map, dbtype, pageNum, pageSize);
+                ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
+                if (setTime != null) {
+                    getUserDtos(dto, map, setTime.getYear(), setTime.getMonth(), pageNum, pageSize, dbtype);
+                }
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
                 map.put("msg", "查询评分汇总列表失败");
@@ -155,13 +151,12 @@ public class UserDtoController {
         }
         return map;
     }
-
+    /*
     private void manualSelectUserDtoLikeByUserAndState(UserDto dto, ModelMap map, String dbtype, int pageNum, int pageSize) throws ParseException {
         String month;
         ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
         if (setTime != null) {
             //开始新的月度考核
-
             List<User> users = new ArrayList<>();
             long count = 0;
             List<User> scorringUserList = userService.selectUserPfr(dbtype);
@@ -204,7 +199,7 @@ public class UserDtoController {
             }
         }
     }
-
+    */
     private void addMonthSummary(String year, String month, List<User> users, String dbtype) {
         List<MonthSummary> list = new ArrayList<>();
         for (User user : users) {
@@ -228,21 +223,12 @@ public class UserDtoController {
     }
 
     private void getUserDtos(UserDto dto, ModelMap map, String year, String month, int pageNum, int pageSize, String dbtype) {
-        List<UserDto> userDtos;
         dto.setYear(year);
         dto.setMonth(month);
+        dto.setDbtype(dbtype);
         PageHelper.startPage(pageNum, pageSize);
-        List<String> roleList = new ArrayList<>();
+        List<UserDto> userDtos = dtoService.selectUserDtoLike(dto, "bpfr");
 
-        if (dbtype.equals("2")) {
-            roleList.add("300");
-            userDtos = dtoService.selectUserDtoLike(dto, roleList);
-        } else { //党支部考核
-            dto.setDbtype(dbtype);
-            userDtos = dtoService.selectUserDtoLike(dto, roleList);
-        }
-
-        this.getShengCheng(year, month, dbtype);
         //getStationName(userDtos);
         PageInfo<UserDto> pageInfo = new PageInfo<>(userDtos);
         userDtos = pageInfo.getList();
@@ -455,7 +441,7 @@ public class UserDtoController {
                                             dutySm.setMonth(month);
                                             dutySm.setDutycode(duty.getDutycode());
                                             dutySm.setScorredcode(dto.getUsercode());
-                                            dutySm.setZpsm("无");
+                                            dutySm.setZpsm("");
                                             dutySm.setDbtype(dbtype);
                                             insertDutySmList.add(dutySm);
                                         }
@@ -501,7 +487,7 @@ public class UserDtoController {
                                                         dutySm.setMonth(month);
                                                         dutySm.setDutycode(duty.getDutycode());
                                                         dutySm.setScorredcode(dto.getUsercode());
-                                                        dutySm.setZpsm("无");
+                                                        dutySm.setZpsm("");
                                                         dutySm.setDbtype(dbtype);
                                                         insertDutySmList.add(dutySm);
                                                     }
@@ -690,7 +676,7 @@ public class UserDtoController {
                                         dutySm.setMonth(month);
                                         dutySm.setDutycode(duty.getDutycode());
                                         dutySm.setScorredcode(dto.getUsercode());
-                                        dutySm.setZpsm("无");
+                                        dutySm.setZpsm("");
                                         dutySm.setDbtype(dbtype);
                                         insertDutySmList.add(dutySm);
                                     }
@@ -719,7 +705,7 @@ public class UserDtoController {
                                             dutySm.setMonth(month);
                                             dutySm.setDutycode(duty.getDutycode());
                                             dutySm.setScorredcode(dto.getUsercode());
-                                            dutySm.setZpsm("无");
+                                            dutySm.setZpsm("");
                                             dutySm.setDbtype(dbtype);
                                             insertDutySmList.add(dutySm);
                                         }
@@ -1078,12 +1064,12 @@ public class UserDtoController {
         List<UserDto> userDtos;
         dto.setYear(year);
         dto.setMonth(month);
-        List<String> roleList = new ArrayList<>();
-        roleList.add("100");
-        roleList.add("200");
-        roleList.add("300");
-        roleList.add("50");
-        userDtos = dtoService.selectUserDtoLike(dto, roleList);
+//        List<String> roleList = new ArrayList<>();
+//        roleList.add("100");
+//        roleList.add("200");
+//        roleList.add("300");
+//        roleList.add("50");
+        userDtos = dtoService.selectUserDtoLike(dto, "bpfr");
         // 获取人员相关信息 如岗位 部门 分数
         getStationName(userDtos, dto.getDbtype());
         //获取评分汇总数据
@@ -1426,19 +1412,12 @@ public class UserDtoController {
         if (usercode != null) {
             List<ScoreHistory> historieList;
             try {
-                List<String> roleList = new ArrayList<>();
-                if (history.getDbtype().equals("2")) {
-                    if (history.getRolecode() == null || history.getRolecode().equals("")) {
-                        roleList.add("300"); //普通用户
-                        roleList.add("150"); //打分用户
-                    } else {
-                        if (history.getRolecode() != null && history.getRolecode().equals("150")) {
-                            roleList.add("150"); //打分用户
-                        }
-                        if (history.getRolecode() != null && history.getRolecode().equals("300")) {
-                            roleList.add("300"); //普通用户
-                        }
-                    }
+                String qrcode = null;
+                if (history.getRolecode() != null && history.getRolecode().equals("150")) {
+                    qrcode = "pfr"; //评分人
+                }
+                if (history.getRolecode() != null && history.getRolecode().equals("300")) {
+                    qrcode = "bpfr"; //被评分人
                 }
                 ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth("", "", history.getDbtype());
                 if (history.getYear() != null && !history.getYear().equals("") && history.getMonth() != null && !history.getMonth().equals("")) {
@@ -1446,14 +1425,12 @@ public class UserDtoController {
                     manualSetTime.setMonth(history.getMonth());
                 }
                 //初始化列表
-                initUserList(map, state, roleList, manualSetTime);
+                initUserList(map, state, qrcode, manualSetTime);
                 PageHelper.startPage(pageNum, pageSize);
-                if (history.getDbtype().equals("1")) {
-                    roleList = new ArrayList<>();
-                }
+
                 history.setYear(manualSetTime.getYear());
                 history.setMonth(manualSetTime.getMonth());
-                historieList = historyService.selectHistoryList(history, roleList);
+                historieList = historyService.selectHistoryList(history,qrcode);
                 PageInfo<ScoreHistory> pageInfo = new PageInfo<>(historieList);
                 historieList = pageInfo.getList();
                 map.put("totalPages", pageInfo.getTotal());
@@ -1475,8 +1452,8 @@ public class UserDtoController {
 
     }
 
-    private void initUserList(ModelMap map, String state, List<String> roleList, ManualSetTime manualSetTime) throws ParseException {
-        List<User> users = userService.findUserByRoleCode(roleList, manualSetTime.getDbtype());
+    private void initUserList(ModelMap map, String state, String qrcode, ManualSetTime manualSetTime) throws ParseException {
+        List<User> users = userService.findUserByRoleCode(qrcode, manualSetTime.getDbtype());
 //        List<User> users = userService.findUserAllBySummary();
         //获取当前年份
         String year = CalendarUtil.getYear();
@@ -1494,7 +1471,7 @@ public class UserDtoController {
         scoreHistory.setYear(manualSetTime.getYear());
         scoreHistory.setMonth(manualSetTime.getMonth());
         scoreHistory.setDbtype(manualSetTime.getDbtype());
-        List<ScoreHistory> historyList = historyService.selectUserHisotyList(scoreHistory, roleList);
+        List<ScoreHistory> historyList = historyService.selectUserHisotyList(scoreHistory, qrcode);
         if (users.size() == 0) {
             map.put("msg", "数据为空");
             map.put("code", 0);
@@ -1573,7 +1550,7 @@ public class UserDtoController {
 
     private void initGradeList(ModelMap map, String state, ManualSetTime manualSetTime) throws ParseException {
         List<User> users = userService.selectUserPfr(manualSetTime.getDbtype());
-        //获取当前年份
+        //获取当前年份selectUserPfr
         String year = CalendarUtil.getYear();
         //获取当前月份
         String month = CalendarUtil.getMonth();
@@ -1589,6 +1566,7 @@ public class UserDtoController {
         scoreHistory.setYear(manualSetTime.getYear());
         scoreHistory.setMonth(manualSetTime.getMonth());
         scoreHistory.setDbtype(manualSetTime.getDbtype());
+        // 查询打分用户
         List<ScoreHistory> historyList = historyService.selectGradeHisotyList(scoreHistory);
         if (users.size() == 0) {
             map.put("msg", "故数据为空");
@@ -1723,12 +1701,7 @@ public class UserDtoController {
         dto.setState(info1.getState());
         dto.setScorestatus(info1.getScorestatus());
         dto.setDbtype(info1.getDbtype());
-        List<String> roleList = new ArrayList<>();
-        if (info1.getDbtype().equals("2")) {
-            roleList.add("300");//普通用戶
-            roleList.add("150");//打分用戶
-        }
-        userDtos = historyService.selectHistoryList(dto, roleList);
+        userDtos = historyService.selectHistoryList(dto, null);
         // 创建ExportExcel对象
         try {
             // 獲取工作表

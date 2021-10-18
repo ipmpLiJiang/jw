@@ -301,7 +301,6 @@
             </if>
             <if test="history.state!=null and history.state !='' and history.state!='0'.toString()">
                 and m.State=#{history.state}
-
             </if>
             <if test='history.state=="0"'>
                 and (m.Title is null or m.Title='')
@@ -324,11 +323,21 @@
             and s.DepartmentCode=d.DepartmentCode
             and u.UserCode=ur.UserCode
             and r.RoleCode=ur.RoleCode
-            <if test="roleList.size>0">
-            and r.RoleCode in
-            <foreach item="item" index="index" collection="roleList" open="(" separator="," close=")">
-                #{item}
-            </foreach>
+            <if test="qrcode==null">
+            AND u.UserCode in (
+                select ScorredCode from score where dbtype=#{history.dbtype,jdbcType=VARCHAR} union
+                select ScorringCode from score where dbtype=#{history.dbtype,jdbcType=VARCHAR}
+            )
+            </if>
+            <if test='qrcode!=null and qrcode=="pfr"'>
+                AND u.UserCode in (
+                select ScorringCode from score where dbtype=#{history.dbtype,jdbcType=VARCHAR}
+                )
+            </if>
+            <if test='qrcode!=null and qrcode=="bpfr"'>
+                AND u.UserCode in (
+                select ScorredCode from score where dbtype=#{history.dbtype,jdbcType=VARCHAR}
+                )
             </if>
             and h.Year=m.Year
             and m.Month=h.Month
@@ -360,12 +369,10 @@
             </if>
             <if test="state!=null and state !='' and state!='0'.toString()">
                 and m.State=#{state}
-
             </if>
             <if test='state=="0"'>
                 and (m.Title is null or m.Title='')
                 and (m.Content is null or m.Content='')
-
             </if>
             <if test="scorestatus!=null and scorestatus !=''">
                 and h.ScoreStatus=#{scorestatus}
@@ -400,13 +407,9 @@
     select h.* from  scorehistory h,user u,user_role ur
     where h.UserCode=u.UserCode
     and  u.UserCode=ur.UserCode
-        <if test='dbtype!=null and dbtype!="1"'>
-            and ur.RoleCode ='150'
-        </if>
-        <if test='dbtype!=null and dbtype!="2"'>
-            and u.dbbk!='' and u.dbbk is not null and u.dbbk not in('1','2','3')
-        </if>
-
+    and u.userCode in(
+        select ScorringCode from score where dbtype= #{dbtype}
+    )
     and  u.Flag="0"
     and  u.UserState="1"
     and  h.Year=#{year}
@@ -423,22 +426,32 @@
     select h.* from  scorehistory h,user u,user_role ur
     where h.UserCode=u.UserCode
     and  u.UserCode=ur.UserCode
-        <if test="roleList.size()>0">
-    and  ur.RoleCode in
-    <foreach item="item" index="index" collection="roleList" open="(" separator="," close=")">
-        #{item}
-    </foreach>
-        </if>
     and  u.Flag="0"
     and  u.UserState="1"
     and  h.Year=#{history.year}
     and  h.Month=#{history.month}
-        <if test="history.dbtype != null and history.dbtype !=''">
-            and h.dbtype = #{history.dbtype,jdbcType=VARCHAR}
-        </if>
-        <if test="history.dbbk != null and history.dbbk !=''">
-            and h.dbbk = #{history.dbbk,jdbcType=VARCHAR}
-        </if>
+    <if test="history.dbtype != null and history.dbtype !=''">
+        and h.dbtype = #{history.dbtype,jdbcType=VARCHAR}
+    </if>
+    <if test="history.dbbk != null and history.dbbk !=''">
+        and h.dbbk = #{history.dbbk,jdbcType=VARCHAR}
+    </if>
+    <if test="qrcode==null">
+        AND u.UserCode in (
+        select ScorredCode from score where dbtype=#{history.dbtype,jdbcType=VARCHAR} union
+        select ScorringCode from score where dbtype=#{history.dbtype,jdbcType=VARCHAR}
+        )
+    </if>
+    <if test='qrcode!=null and qrcode=="pfr"'>
+        AND u.UserCode in (
+        select ScorringCode from score where dbtype=#{history.dbtype,jdbcType=VARCHAR}
+        )
+    </if>
+    <if test='qrcode!=null and qrcode=="bpfr"'>
+        AND u.UserCode in (
+        select ScorredCode from score where dbtype=#{history.dbtype,jdbcType=VARCHAR}
+        )
+    </if>
   </select>
 
 

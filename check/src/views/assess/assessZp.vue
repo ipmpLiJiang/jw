@@ -9,7 +9,7 @@
         <ul class="personal-information">
           <li>
             <div class="label">姓名:</div>
-            <div class="value">{{detailData.username}}({{detailData.moneycard}})</div>
+            <div class="value">{{detailData.username}}</div>
           </li>
           <li>
             <div class="label">标题:</div>
@@ -58,13 +58,13 @@
               @click="preview(detailData.savepath)"
             ><a>{{detailData.filename}}</a></div>
           </li>
-          <li class="w100">
+          <!-- <li class="w100">
             <div class="label">季结内容:</div>
             <div
               class="value"
               v-html="detailData.content"
             ></div>
-          </li>
+          </li> -->
           <!-- <li class="w100 operation">
             <el-button type="primary">历史绩效</el-button>
             <el-button type="primary">职责描述</el-button>
@@ -91,7 +91,7 @@
                   <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限80字)</font>
               </el-col>
               <el-col :span="17">
-                <el-input v-show="detailData.isedit == 0?true:false" maxlength="80" type="textarea" v-model="item.zpsm"></el-input>
+                <el-input v-show="detailData.isedit == 0?true:false" @change="zpChange" maxlength="80" type="textarea" v-model="item.zpsm"></el-input>
                 <div v-show="detailData.isedit == 1?true:false">{{item.zpsm}}</div>
               </el-col>
             </el-row>
@@ -114,7 +114,7 @@
                   <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限80字)</font>
               </el-col>
               <el-col :span="17">
-                <el-input v-show="detailData.isedit == 0?true:false" maxlength="80" type="textarea" v-model="item.zpsm"></el-input>
+                <el-input v-show="detailData.isedit == 0?true:false" @change="zpChange" maxlength="80" type="textarea" v-model="item.zpsm"></el-input>
                 <div v-show="detailData.isedit == 1?true:false">{{item.zpsm}}</div>
               </el-col>
             </el-row>
@@ -137,7 +137,7 @@
                   <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限80字)</font>
               </el-col>
               <el-col :span="17">
-                <el-input v-show="detailData.isedit == 0?true:false" maxlength="80" type="textarea" v-model="item.zpsm"></el-input>
+                <el-input v-show="detailData.isedit == 0?true:false" @change="zpChange" maxlength="80" type="textarea" v-model="item.zpsm"></el-input>
                 <div v-show="detailData.isedit == 1?true:false">{{item.zpsm}}</div>
               </el-col>
             </el-row>
@@ -160,7 +160,7 @@
                   <br v-if="detailData.isedit == 0"><font v-if="detailData.isedit == 0">(限80字)</font>
               </el-col>
               <el-col :span="17">
-                <el-input v-show="detailData.isedit == 0?true:false" maxlength="80" type="textarea" v-model="item.zpsm"></el-input>
+                <el-input v-show="detailData.isedit == 0?true:false" @change="zpChange" maxlength="80" type="textarea" v-model="item.zpsm"></el-input>
                 <div v-show="detailData.isedit == 1?true:false">{{item.zpsm}}</div>
               </el-col>
             </el-row>
@@ -181,6 +181,7 @@
                 @click="submitAssess"
                 :loading="submitLoading"
               >提交</el-button>
+              <font style="color:red">&nbsp;&nbsp;&nbsp;{{laberror}}</font>
             </div>
           </li>
         </ul>
@@ -288,6 +289,7 @@ export default {
       dutyZhongdian: [],
       dutyMubiao: [],
       dutySm: [],
+      laberror: '',
       pageLoading: true,
       submitLoading: false,
       searchLoading: false
@@ -297,6 +299,9 @@ export default {
     this.getDetail();
   },
   methods: {
+    zpChange(){
+      this.laberror = ''
+    },
     getDetail() {
       let data = {
         employeecode: this.$route.query.userCode,
@@ -341,20 +346,46 @@ export default {
         serialno: this.detailData.serialno,
         employeecode: this.detailData.employeecode
       };
+      this.laberror = ''
       //遍历基础和关键打分数据
       data.dutySm = [];
       this.dutyJichu.forEach(row => {
         data.dutySm.push({ topicId: row.dutycode, zpsm: row.zpsm });
+        if (row.zpsm == null || row.zpsm == '' || row.zpsm == undefined) {
+          this.laberror = '基础指标，自评原因 不能为空.'
+        }
       });
-      this.dutyYiban.forEach(row => {
-        data.dutySm.push({ topicId: row.dutycode, zpsm: row.zpsm });
-      });
-      this.dutyZhongdian.forEach(row => {
-        data.dutySm.push({ topicId: row.dutycode, zpsm: row.zpsm });
-      });
-      this.dutyMubiao.forEach(row => {
-        data.dutySm.push({ topicId: row.dutycode, zpsm: row.zpsm });
-      });
+      if(this.laberror == ''){
+        this.dutyYiban.forEach(row => {
+          data.dutySm.push({ topicId: row.dutycode, zpsm: row.zpsm });
+          if (row.zpsm == null || row.zpsm == '' || row.zpsm == undefined) {
+            this.laberror = '岗位职责，自评原因 不能为空.'
+          }
+        });
+      }
+      if(this.laberror == ''){
+        this.dutyZhongdian.forEach(row => {
+          data.dutySm.push({ topicId: row.dutycode, zpsm: row.zpsm });
+          if (row.zpsm == null || row.zpsm == '' || row.zpsm == undefined) {
+            this.laberror = '重点任务，自评原因 不能为空.'
+          }
+        });
+      }
+      if(this.laberror == ''){
+        this.dutyMubiao.forEach(row => {
+          data.dutySm.push({ topicId: row.dutycode, zpsm: row.zpsm });
+          if (row.zpsm == null || row.zpsm == '' || row.zpsm == undefined) {
+            this.laberror = '目标任务，自评原因 不能为空.'
+          }
+        });
+      }
+
+      if (this.laberror != ''){
+          this.$message.warning(this.laberror);
+          this.tableLoading = false;
+          this.submitLoading = false;
+          return
+        }
       data.dutySm = JSON.stringify(data.dutySm);
       data.month = this.detailData.month;
       data.year =this.detailData.year;

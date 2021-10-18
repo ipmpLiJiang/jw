@@ -250,7 +250,6 @@
         from monthsummary  m,user_role ur,role r,user u
         where m.Year=#{year} and m.Month=#{month} and m.dbtype =#{dbtype}
          and ur.UserCode=m.EmployeeCode
-
         <if test="dbtype != null and dbtype !='' and dbtype!='1'">
             and r.RoleCode=ur.RoleCode
             and r.RoleCode in("100","150","200","300","50")

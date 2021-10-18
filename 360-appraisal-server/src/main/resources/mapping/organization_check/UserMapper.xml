@@ -893,19 +893,25 @@
        select u.UserCode,u.Mobile,u.UserName,r.RoleCode,ur.* from user u,role r,user_role ur
        where u.UserCode=ur.UserCode
        and r.RoleCode=ur.RoleCode
-       <if test="roleList!=null and roleList.size()>0">
-       and ur.RoleCode in
-        <foreach item="item" index="index" collection="roleList" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-       </if>
         <if test='dbtype!=null and dbtype !="2"'>
             and u.dbbk in('3','4')
         </if>
-        AND u.UserCode in (
-        select ScorredCode from score where dbtype=#{dbtype} union
-        select ScorringCode from score where dbtype=#{dbtype}
-        )
+        <if test="qrcode==null">
+            AND u.UserCode in (
+            select ScorredCode from score where dbtype=#{dbtype} union
+            select ScorringCode from score where dbtype=#{dbtype}
+            )
+        </if>
+        <if test='qrcode!=null and qrcode=="pfr"'>
+            AND u.UserCode in (
+            select ScorringCode from score where dbtype=#{dbtype}
+            )
+        </if>
+        <if test='qrcode!=null and qrcode=="bpfr"'>
+            AND u.UserCode in (
+            select ScorredCode from score where dbtype=#{dbtype}
+            )
+        </if>
        and u.Flag="0"
        and u.UserState="1"
        and u.RoleType="0"
@@ -1001,12 +1007,9 @@
     <select id="selectGradeUserList" parameterType="java.lang.String"  resultMap="BaseResultMap">
     select u.*  from user u,user_role ur
      where  u.UserCode=ur.UserCode
-     <if test='dbtype!=null and dbtype!="1"'>
-     and ur.RoleCode ='150'
-     </if>
-        <if test='dbtype!=null and dbtype!="2"'>
-            and u.dbbk!='' and u.dbbk is not null and u.dbbk not in('1','2','3')
-        </if>
+     and u.userCode in(
+        select ScorringCode from score where dbtype= #{dbtype}
+     )
      and u.Flag="0"
      and u.UserState="1"
     </select>
@@ -1022,6 +1025,30 @@
         from user
         where MoneyCard = #{moneycard,jdbcType=VARCHAR}
         and Flag="0"
+    </select>
+
+    <select id="selectUserBuGwByMoneyCard" resultType="com.welb.organization_check.entity.User">
+        SELECT
+            u.*,
+            s.stationName,
+            d.departmentName,
+            b.BranchName
+            FROM
+            USER u
+            left join station s on
+            u.StationCode = s.StationCode
+            left join department d on
+            s.DepartmentCode = d.DepartmentCode
+            left join branch b on
+            b.BranchCode = u.BranchCode
+        where
+            u.Flag="0"
+            <if test="user.UserCode != null">
+                AND u.UserCode = #{user.usercode}
+            </if>
+            <if test="user.MoneyCard != null">
+                AND u.UserCode = #{user.moneycard}
+            </if>
     </select>
     <!--查找用户，按UserCode查询-->
     <select id="findUserByCodeList" resultMap="BaseResultMap1">

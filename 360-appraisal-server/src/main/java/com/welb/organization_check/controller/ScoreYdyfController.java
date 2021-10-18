@@ -107,9 +107,6 @@ public class ScoreYdyfController {
                                 query.setYear(setTime.getYear());
                                 query.setMonth(setTime.getMonth());
                                 List<ScoreYdyf> list = ydyfService.findYdyfList(query);
-//                                List<String> roleList = new ArrayList<>();
-//                                roleList.add("300");
-//                                List<User> userList = userService.findUserByRoleCode(roleList);
                                 List<User> userList = userService.findUserAll();
                                 Double maxSoore = 15.0;
                                 boolean isUpdate = true;

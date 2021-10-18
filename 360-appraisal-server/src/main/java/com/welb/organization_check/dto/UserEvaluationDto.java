@@ -128,6 +128,16 @@ public class UserEvaluationDto {
         this.dbbkName = dbbkName;
     }
 
+    private Integer state;
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
     private String mserialno;
 
     public String getMserialno() {

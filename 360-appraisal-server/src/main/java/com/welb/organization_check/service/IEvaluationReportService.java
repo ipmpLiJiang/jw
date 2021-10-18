@@ -34,6 +34,8 @@ public interface IEvaluationReportService {
      */
     int updateByPrimaryKeySelective(EvaluationReport record);
 
+    int updateStateByDbtype(int state,String dbtype);
+
     /**
      * 查询个人测评报告
      * @param id
@@ -76,7 +78,7 @@ public interface IEvaluationReportService {
      * @param evaluationDto
      * @return
      */
-    List<UserEvaluationDto>selectAllEvaluationReportLike(UserEvaluationDto evaluationDto,List<String> roleList);
+    List<UserEvaluationDto>selectAllEvaluationReportLike(UserEvaluationDto evaluationDto);
     /**
      * 查找数据总量
      * @return

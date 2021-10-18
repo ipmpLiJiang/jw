@@ -18,9 +18,9 @@ public interface IUserDtoService {
      * @param userDto
      * @return
      */
-    List<UserDto> selectUserDtoLike(UserDto userDto,List<String> roleList);
+    List<UserDto> selectUserDtoLike(UserDto userDto,String qrcode);
 
-    List<UserDto>selectUserDtoByUserCode(UserDto userDto,List<String> roleList);
+    List<UserDto>selectUserDtoByUserCode(UserDto userDto);
 
     /**
      * 获取打分用户的打分状态历史数据

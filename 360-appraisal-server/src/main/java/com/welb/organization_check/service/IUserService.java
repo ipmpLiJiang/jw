@@ -88,7 +88,9 @@ public interface IUserService {
      */
     List<User>findUserAll();
 
-    List<User> findUserByRoleCode(List<String> roleList, String dbtype);
+    List<User> findUserByRoleCode(String qrcode, String dbtype);
+
+    User selectUserBuGwByMoneyCard(User user);
 
     /**
      * 查找已删除用户

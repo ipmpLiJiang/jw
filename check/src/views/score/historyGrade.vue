@@ -100,10 +100,9 @@
           </el-col>
           <el-col
             :span="6"
-            v-if="dbtype=='1'?false:true"
             style="margin-top:20px;"
           >
-            <el-form-item label="角色权限">
+            <el-form-item label="评分类型">
               <el-select
                 v-model="search.rolecode"
                 clearable
@@ -462,16 +461,16 @@ export default {
       title: "",
       roleOption: [{
           value: "150",
-          label: "打分用户"
+          label: "打分人"
         },
         {
           value: "300",
-          label: "普通用户"
+          label: "被打分人"
         }],
       search: {
         stationcode: "",
         username: "",
-        rolecode: this.$store.state.user.user.dbtype == '2'? '300':'',
+        rolecode: '300',
         month: "",
         year: "",
         state: "",

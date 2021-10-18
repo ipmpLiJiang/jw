@@ -17,13 +17,13 @@ import java.util.List;
 public interface UserDtoMapper {
 
 
-    List<UserDto>selectUserDtoLike(@Param("userDto")UserDto userDto,@Param("roleList")List<String> roleList);
+    List<UserDto>selectUserDtoLike(@Param("userDto")UserDto userDto,@Param("qrcode") String qrcode);
 
-    List<UserDto>selectUserDtoByUserCode(@Param("userDto")UserDto userDto,@Param("roleList")List<String> roleList);
+    List<UserDto>selectUserDtoByUserCode(@Param("userDto")UserDto userDto);
 
     List<UserDto>gradeList(UserDto userDto);
 
-    List<UserDto>selectUserDtoLikeToQuarter(UserDto userDto);
+//    List<UserDto>selectUserDtoLikeToQuarter(UserDto userDto);
 
     int getTotalCount(UserDto dto);
 

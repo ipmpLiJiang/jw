@@ -47,8 +47,8 @@ public class ScoreHistoryServiceImpl implements IScoreHistoryService {
     }
 
     @Override
-    public List<ScoreHistory> selectHistoryList(ScoreHistory history,List<String> roleList) {
-        return historyMapper.selectHistoryList(history,roleList);
+    public List<ScoreHistory> selectHistoryList(ScoreHistory history,String qrcode) {
+        return historyMapper.selectHistoryList(history,qrcode);
     }
 
     @Override
@@ -62,8 +62,8 @@ public class ScoreHistoryServiceImpl implements IScoreHistoryService {
     }
 
     @Override
-    public List<ScoreHistory> selectUserHisotyList(ScoreHistory history,List<String> roleList) {
-        return historyMapper.selectUserHisotyList(history,roleList);
+    public List<ScoreHistory> selectUserHisotyList(ScoreHistory history,String qrcode) {
+        return historyMapper.selectUserHisotyList(history,qrcode);
     }
 
     @Override

@@ -20,9 +20,19 @@ public interface ScoreFlowMapper {
 
     int updateByPrimaryKey(ScoreFlow record);
 
-    List<ScoreFlow> selectByScoreFlow(@Param("mserialno") String mserialno,@Param("scorringcode")String scorringcode,@Param("dbtype")String dbtype);
+    List<ScoreFlow> selectByScoreFlow(@Param("mserialno") String mserialno,
+                                      @Param("scorringcode") String scorringcode,
+                                      @Param("dbtype") String dbtype);
 
-    List<ScoreFlow> selectByScoredCodeFlow(@Param("mserialno") String mserialno,@Param("scoredcode")String scoredcode,@Param("dbtype")String dbtype);
+    List<ScoreFlow> selectByScoredCodeFlow(@Param("mserialno") String mserialno,
+                                           @Param("scoredcode") String scoredcode,
+                                           @Param("dbtype")String dbtype);
+
+    List<ScoreFlow> selectByScorringScoredFlow(@Param("mserialno") String mserialno,
+                                               @Param("scorringcode")String scorringcode,
+                                               @Param("scoredcode")String scoredcode,
+                                               @Param("dbtype")String dbtype);
+
 
     ScoreFlow getTotal(ScoreFlow scoreflow);
 

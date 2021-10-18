@@ -1,11 +1,15 @@
 package com.welb.organization_check.entity;
 
+import io.swagger.models.auth.In;
+
 public class EvaluationReport {
     private Integer id;
 
     private String usercode;
 
     private Double totalscore;
+
+    private Double lasttotalscore;
 
     private Double basicscore;
 
@@ -20,6 +24,8 @@ public class EvaluationReport {
     private Double zfScore;
 
     private Double avgscore;
+
+    private Double lastavgscore;
 
     private Double maxscore;
 
@@ -79,7 +85,6 @@ public class EvaluationReport {
         this.dbtype = dbtype == null ? null : dbtype.trim();
     }
 
-
     private String dbbk;
 
     public String getDbbk() {
@@ -88,6 +93,16 @@ public class EvaluationReport {
 
     public void setDbbk(String dbbk) {
         this.dbbk = dbbk == null ? null : dbbk.trim();
+    }
+
+    private Integer state;
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
     }
 
     public Integer getId() {
@@ -112,6 +127,14 @@ public class EvaluationReport {
 
     public void setTotalscore(Double totalscore) {
         this.totalscore = totalscore;
+    }
+
+    public Double getLastTotalscore() {
+        return lasttotalscore;
+    }
+
+    public void setLastTotalscore(Double lasttotalscore) {
+        this.lasttotalscore = lasttotalscore;
     }
 
     public Double getBasicscore() {
@@ -168,6 +191,14 @@ public class EvaluationReport {
 
     public void setAvgscore(Double avgscore) {
         this.avgscore = avgscore;
+    }
+
+    public Double getLastAvgscore() {
+        return lastavgscore;
+    }
+
+    public void setLastAvgscore(Double lastavgscore) {
+        this.lastavgscore = lastavgscore;
     }
 
     public Double getMaxscore() {
