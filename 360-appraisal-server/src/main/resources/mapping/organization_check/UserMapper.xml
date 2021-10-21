@@ -803,8 +803,8 @@
             </if>
             )
             AND u.UserCode in (
-            select ScorredCode from score where dbtype=#{user.dbtype} union
-            select ScorringCode from score where dbtype=#{user.dbtype}
+            select ScorredCode ucode from (SELECT DISTINCT ScorredCode FROM score WHERE dbtype =#{user.dbtype}) a union
+            select ScorringCode ucode from (SELECT DISTINCT ScorringCode FROM score WHERE dbtype =#{user.dbtype}) b
             )
         </where>
         order by u.UserCode+0
@@ -823,7 +823,7 @@
         and u.UserCode=ur.UserCode
         and r.RoleCode=ur.RoleCode
         and u.UserCode in (
-            select ScorringCode from score where dbtype= #{dbtype}
+            select ScorringCode from (select DISTINCT ScorringCode from score where dbtype= #{dbtype}) a
         )
         order by u.UserCode+0
     </select>
@@ -898,18 +898,18 @@
         </if>
         <if test="qrcode==null">
             AND u.UserCode in (
-            select ScorredCode from score where dbtype=#{dbtype} union
-            select ScorringCode from score where dbtype=#{dbtype}
+            select ScorredCode ucode from (SELECT DISTINCT ScorredCode FROM score WHERE dbtype =#{dbtype}) a union
+            select ScorringCode ucode from (SELECT DISTINCT ScorringCode FROM score WHERE dbtype =#{dbtype}) b
             )
         </if>
         <if test='qrcode!=null and qrcode=="pfr"'>
             AND u.UserCode in (
-            select ScorringCode from score where dbtype=#{dbtype}
+            select ScorringCode from (SELECT DISTINCT ScorringCode FROM score WHERE dbtype =#{dbtype}) a
             )
         </if>
         <if test='qrcode!=null and qrcode=="bpfr"'>
             AND u.UserCode in (
-            select ScorredCode from score where dbtype=#{dbtype}
+            select ScorredCode from (SELECT DISTINCT ScorredCode FROM score WHERE dbtype =#{dbtype}) a
             )
         </if>
        and u.Flag="0"

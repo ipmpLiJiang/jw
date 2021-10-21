@@ -325,18 +325,18 @@
             and r.RoleCode=ur.RoleCode
             <if test="qrcode==null">
             AND u.UserCode in (
-                select ScorredCode from score where dbtype=#{history.dbtype,jdbcType=VARCHAR} union
-                select ScorringCode from score where dbtype=#{history.dbtype,jdbcType=VARCHAR}
+                select ScorredCode ucode from (SELECT DISTINCT ScorredCode FROM score WHERE dbtype =#{history.dbtype}) a union
+                select ScorringCode ucode from (SELECT DISTINCT ScorringCode FROM score WHERE dbtype =#{history.dbtype}) b
             )
             </if>
             <if test='qrcode!=null and qrcode=="pfr"'>
                 AND u.UserCode in (
-                select ScorringCode from score where dbtype=#{history.dbtype,jdbcType=VARCHAR}
+                select ScorringCode from (SELECT DISTINCT ScorringCode FROM score WHERE dbtype =#{history.dbtype}) a
                 )
             </if>
             <if test='qrcode!=null and qrcode=="bpfr"'>
                 AND u.UserCode in (
-                select ScorredCode from score where dbtype=#{history.dbtype,jdbcType=VARCHAR}
+                select ScorredCode from (SELECT DISTINCT ScorredCode FROM score WHERE dbtype =#{history.dbtype}) a
                 )
             </if>
             and h.Year=m.Year
@@ -438,18 +438,18 @@
     </if>
     <if test="qrcode==null">
         AND u.UserCode in (
-        select ScorredCode from score where dbtype=#{history.dbtype,jdbcType=VARCHAR} union
-        select ScorringCode from score where dbtype=#{history.dbtype,jdbcType=VARCHAR}
+        select ScorredCode ucode from (SELECT DISTINCT ScorredCode FROM score WHERE dbtype =#{history.dbtype}) a union
+        select ScorringCode ucode from (SELECT DISTINCT ScorringCode FROM score WHERE dbtype =#{history.dbtype}) b
         )
     </if>
     <if test='qrcode!=null and qrcode=="pfr"'>
         AND u.UserCode in (
-        select ScorringCode from score where dbtype=#{history.dbtype,jdbcType=VARCHAR}
+        select ScorringCode from (SELECT DISTINCT ScorringCode FROM score WHERE dbtype =#{history.dbtype}) a
         )
     </if>
     <if test='qrcode!=null and qrcode=="bpfr"'>
         AND u.UserCode in (
-        select ScorredCode from score where dbtype=#{history.dbtype,jdbcType=VARCHAR}
+        select ScorredCode from (SELECT DISTINCT ScorredCode FROM score WHERE dbtype =#{history.dbtype}) a
         )
     </if>
   </select>
