@@ -12,6 +12,11 @@ public class Duty {
         dutytypes.put("1", "岗位职责");
         dutytypes.put("2", "重点任务");
         dutytypes.put("3", "目标任务");
+        dutytypes.put("4", "政治建设");
+        dutytypes.put("5", "思想建设");
+        dutytypes.put("6", "组织建设");
+        dutytypes.put("7", "党建创新");
+        dutytypes.put("8", "作风建设");
 
         dbbks.put("1","组织委员纪检委员");
         dbbks.put("2","宣传委员青年委员");

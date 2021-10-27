@@ -9,3 +9,11 @@ export function getDutyList(data) {
     })
 
 }
+export function getStationDutyList(data) {
+    return fetch({
+        url: 'dutyDto/dutyStationlist',
+        method: 'post',
+        data: data
+    })
+
+}

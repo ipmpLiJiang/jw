@@ -125,4 +125,6 @@ public interface IScoreDetailService {
 
     List<ScoreDetail> selectDetailByMonthSummaryList(String year,String month, String dbtype);
 
+    int deleteYM(String year,String month,String dbtype);
+
 }

@@ -2,6 +2,7 @@ package com.welb.organization_check.mapper;
 
 import com.welb.organization_check.entity.ScoreYdyf;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,5 +18,7 @@ public interface ScoreYdyfMapper {
     int updateByPrimaryKeySelective(ScoreYdyf ydyf);
 
     List<ScoreYdyf> selectYdyfList(ScoreYdyf Ydyf);
+
+    int deleteYM(@Param("year") String year, @Param("month") String month);
 
 }

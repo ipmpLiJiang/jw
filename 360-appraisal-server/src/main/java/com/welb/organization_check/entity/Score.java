@@ -11,6 +11,8 @@ public class Score {
         scoretypes.put("B", "B类评分");
         scoretypes.put("C", "C类评分");
         scoretypes.put("D", "D类评分");
+        scoretypes.put("E", "E类评分");
+        scoretypes.put("F", "F类评分");
     }
 
     private String id;

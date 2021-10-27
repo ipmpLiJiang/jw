@@ -58,4 +58,34 @@ public class DutyDtoController {
         }
         return map;
     }
+
+    @RequestMapping(value = "/dutyStationlist", produces = "application/json;charset=utf-8")
+    public Object selectStationDutyDtoBy(HttpServletRequest req, String scorredstationcode, String departmentcode,
+                                         String stationname,String scoretype,String dbtype,int pageNum, int pageSize) {
+        ModelMap map = new ModelMap();
+        String usercode = (String) req.getSession().getAttribute("usercode");
+        //pageNum:当前页  pageSize:每页总数
+        if (usercode != null) {
+            PageHelper.startPage(pageNum, pageSize);
+            List<DutyDto> dutys;
+            try {
+                dutys = dutyDtoService.selectStationDutyDto(scorredstationcode,departmentcode, stationname,scoretype,dbtype);
+                PageInfo<DutyDto> pageInfo = new PageInfo<>(dutys);
+                dutys = pageInfo.getList();
+                //获取总数据量
+                map.put("totalPages", pageInfo.getTotal());
+                map.put("msg", "查询成功");
+                map.put("data", dutys);
+                map.put("code", 0);
+            } catch (Exception e) {
+                log.error(e.getMessage() , e);
+                map.put("msg", "查询失败");
+                map.put("code", 1);
+            }
+        } else {
+            map.put("msg", "登录用户超时,请重新登录");
+            map.put("code", 810);
+        }
+        return map;
+    }
 }

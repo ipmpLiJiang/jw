@@ -44,6 +44,11 @@ public class MonthSummaryImpl implements IMonthSummaryService {
     }
 
     @Override
+    public int updateGradeStateBySerialNoZp(String serialno) {
+        return monthSummaryMapper.updateGradeStateBySerialNoZp(serialno);
+    }
+
+    @Override
     public int updateStateAll(String year,String month,String dbtype) {
         return monthSummaryMapper.updateStateAll(year,month,dbtype);
     }
@@ -130,5 +135,9 @@ public class MonthSummaryImpl implements IMonthSummaryService {
     @Override
     public List<MonthSummary>selectSummaryByInEmployeeCode(String year,String month, String dbtype,List<String> codeList){
         return monthSummaryMapper.selectSummaryByInEmployeeCode(year,month, dbtype,codeList);
+    }
+    @Override
+    public int deleteYM(String year,String month,String dbtype){
+        return monthSummaryMapper.deleteYM(year,month,dbtype);
     }
 }

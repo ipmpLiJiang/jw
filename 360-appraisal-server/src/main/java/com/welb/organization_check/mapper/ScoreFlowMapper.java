@@ -26,53 +26,55 @@ public interface ScoreFlowMapper {
 
     List<ScoreFlow> selectByScoredCodeFlow(@Param("mserialno") String mserialno,
                                            @Param("scoredcode") String scoredcode,
-                                           @Param("dbtype")String dbtype);
+                                           @Param("dbtype") String dbtype);
 
     List<ScoreFlow> selectByScorringScoredFlow(@Param("mserialno") String mserialno,
-                                               @Param("scorringcode")String scorringcode,
-                                               @Param("scoredcode")String scoredcode,
-                                               @Param("dbtype")String dbtype);
+                                               @Param("scorringcode") String scorringcode,
+                                               @Param("scoredcode") String scoredcode,
+                                               @Param("dbtype") String dbtype);
 
 
     ScoreFlow getTotal(ScoreFlow scoreflow);
 
-    Double getScoreByType(@Param("mserialno")String mserialno,@Param("scoretype")String scoretype,@Param("dbtype")String dbtype);
+    Double getScoreByType(@Param("mserialno") String mserialno, @Param("scoretype") String scoretype, @Param("dbtype") String dbtype);
 
-    int getScoreByTypeCount(@Param("mserialno")String mserialno,@Param("scoretype")String scoretype,@Param("dbtype")String dbtype);
+    int getScoreByTypeCount(@Param("mserialno") String mserialno, @Param("scoretype") String scoretype, @Param("dbtype") String dbtype);
 
     String selectMaxSerialNo();
 
-    List<ScoreFlow>selectScoreAllByScoredCode(@Param("scoredcode")String scoredcode,@Param("year")String year,@Param("month")String month,@Param("dbtype")String dbtype);
+    List<ScoreFlow> selectScoreAllByScoredCode(@Param("scoredcode") String scoredcode, @Param("year") String year, @Param("month") String month, @Param("dbtype") String dbtype);
 
-    Double selectMaxScoreByScoredCode(@Param("scoredcode")String scoredcode,@Param("year")String year,@Param("month")String month,@Param("dbtype")String dbtype);
+    Double selectMaxScoreByScoredCode(@Param("scoredcode") String scoredcode, @Param("year") String year, @Param("month") String month, @Param("dbtype") String dbtype);
 
-    Double selectMinScoreByScoredCode(@Param("scoredcode")String scoredcode,@Param("year")String year,@Param("month")String month,@Param("dbtype")String dbtype);
+    Double selectMinScoreByScoredCode(@Param("scoredcode") String scoredcode, @Param("year") String year, @Param("month") String month, @Param("dbtype") String dbtype);
 
-    List<ScoreFlow> selectFlowByScorredCode(String scorredcode,@Param("dbtype")String dbtype);
+    List<ScoreFlow> selectFlowByScorredCode(String scorredcode, @Param("dbtype") String dbtype);
 
-    List<ScoreFlow> selectFlowByScorringCode(String scorringcode,@Param("dbtype")String dbtype);
+    List<ScoreFlow> selectFlowByScorringCode(String scorringcode, @Param("dbtype") String dbtype);
 
     List<ScoreFlow> getSingleTotalScoreAll(@Param("mserialno") String mserialno, @Param("scoretype") String scoretype,
-                       @Param("dutytype") String dutytype,@Param("orderid")Integer orderid,@Param("dbtype")String dbtype);
+                                           @Param("dutytype") String dutytype, @Param("orderid") Integer orderid, @Param("dbtype") String dbtype);
 
     List<ScoreFlow> selectScoreByCodeAndType(ScoreFlow scoreFlow);
 
-    int batchDelete(List<String>scorringSerialnos);
+    int batchDelete(List<String> scorringSerialnos);
 
-    int batchUpdate(@Param("list") List<ScoreFlow>list);
+    int batchUpdate(@Param("list") List<ScoreFlow> list);
 
-    int batchInsert(@Param("list") List<ScoreFlow>list);
+    int batchInsert(@Param("list") List<ScoreFlow> list);
 
-    ScoreFlow selectFlowByMserialNoAndScorringCode(@Param("mserialno") String mserialno,@Param("scorringcode")String scorringcode,@Param("dbtype")String dbtype);
+    ScoreFlow selectFlowByMserialNoAndScorringCode(@Param("mserialno") String mserialno, @Param("scorringcode") String scorringcode, @Param("dbtype") String dbtype);
 
-    Double getTypeAvgScore(@Param("mserialno")String mserialno,@Param("scoretype")String scoretype,@Param("dbtype")String dbtype);
+    Double getTypeAvgScore(@Param("mserialno") String mserialno, @Param("scoretype") String scoretype, @Param("dbtype") String dbtype);
 
-    int getTotalCount(@Param("mserialno") String mserialno,@Param("scorringcode")String scorringcode,@Param("dbtype")String dbtype);
+    int getTotalCount(@Param("mserialno") String mserialno, @Param("scorringcode") String scorringcode, @Param("dbtype") String dbtype);
 
-    List<ScoreFlow>findFlowsByCode(String usercode,@Param("dbtype")String dbtype);
+    List<ScoreFlow> findFlowsByCode(String usercode, @Param("dbtype") String dbtype);
 
-    List<ScoreFlow> selectByScoreFlowType(@Param("mserialno") String mserialno,@Param("scoreType") String scoreType,@Param("dbtype")String dbtype);
+    List<ScoreFlow> selectByScoreFlowType(@Param("mserialno") String mserialno, @Param("scoreType") String scoreType, @Param("dbtype") String dbtype);
 
 
-    List<ScoreFlow> selectFlowByMonthSummaryList(@Param("year")String year,@Param("month")String month,@Param("dbtype")String dbtype);
-        }
+    List<ScoreFlow> selectFlowByMonthSummaryList(@Param("year") String year, @Param("month") String month, @Param("dbtype") String dbtype);
+
+    int deleteYM(@Param("year") String year, @Param("month") String month, @Param("dbtype") String dbtype);
+}

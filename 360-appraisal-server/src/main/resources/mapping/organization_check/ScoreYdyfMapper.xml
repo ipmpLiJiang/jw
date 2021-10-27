@@ -92,5 +92,7 @@
             and MoneyCard=#{moneyCard}
         </if>
   </select>
-
+    <delete id="deleteYM">
+        delete from scoreydyf where year=#{year} and Month=#{month}
+    </delete>
 </mapper>

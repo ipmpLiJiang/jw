@@ -218,6 +218,25 @@ public class QuarterController {
         return map;
     }
 
+    @RequestMapping(value = "/updateSummaryGradeStateZp", produces = "application/json;charset=utf-8")
+    public Object updateSummaryGradeStateZp(String serialnos) {
+        ModelMap map = new ModelMap();
+        String[] serialno = serialnos.split(",");
+        int counts = 0;
+        for (int i = 0; i < serialno.length; i++) {
+            int count = summaryService.updateGradeStateBySerialNoZp(serialno[i]);
+            counts += count;
+        }
+        if (counts > 0) {
+            map.put("msg", "批量季结评分状态修改成功");
+            map.put("code", 0);
+        } else {
+            map.put("msg", "批量季结评分状态修改失败");
+            map.put("code", 1);
+        }
+        return map;
+    }
+
     /**
      * 将月节评分状态全部修改为月节评分
      *

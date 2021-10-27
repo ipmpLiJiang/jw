@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.welb.organization_check.mapper.ScoreStationMapper">
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.entity.ScoreStation">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="ScorringStationCode" property="scorringstationcode" jdbcType="VARCHAR"/>
+        <result column="ScorredStationCode" property="scorredstationcode" jdbcType="VARCHAR"/>
+        <result column="ScoreType" property="scoretype" jdbcType="VARCHAR"/>
+        <result column="DutyCode" property="dutycode" jdbcType="VARCHAR"/>
+        <result column="dbtype" property="dbtype" jdbcType="VARCHAR"/>
+        <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, ScorringStationCode, ScorredStationCode, ScoreType,DutyCode ,dbtype,dbbk
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from ScoreStation
+        where Id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ScoreStation
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.welb.organization_check.entity.ScoreStation">
+    insert into ScoreStation (ScorringStationCode, ScorredStationCode, ScoreType,DutyCode,dbtype)
+    values (#{scorringstationcode,jdbcType=VARCHAR}, #{scorredstationcode,jdbcType=VARCHAR},
+      #{scoretype,jdbcType=VARCHAR},#{dutycode,jdbcType=VARCHAR},#{dbtype,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.welb.organization_check.entity.ScoreStation">
+        insert into ScoreStation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="scorringstationcode != null">
+                ScorringStationCode,
+            </if>
+            <if test="scorredstationcode != null">
+                ScorredStationCode,
+            </if>
+            <if test="scoretype != null">
+                ScoreType,
+            </if>
+            <if test="dutycode != null">
+                DutyCode,
+            </if>
+            <if test="dbtype != null">
+                dbtype,
+            </if>
+            <if test="dbbk != null">
+                dbbk,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="scorringstationcode != null">
+                #{scorringstationcode,jdbcType=VARCHAR},
+            </if>
+            <if test="scorredstationcode != null">
+                #{scorredstationcode,jdbcType=VARCHAR},
+            </if>
+            <if test="scoretype != null">
+                #{scoretype,jdbcType=VARCHAR},
+            </if>
+            <if test="dutycode != null">
+                #{dutycode,jdbcType=VARCHAR},
+            </if>
+            <if test="dbtype != null">
+                #{dbtype,jdbcType=VARCHAR},
+            </if>
+            <if test="dbbk != null">
+                #{dbbk,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.ScoreStation">
+        update score
+        <set>
+            <if test="scorringstationcode != null">
+                ScorringStationCode = #{scorringstationcode,jdbcType=VARCHAR},
+            </if>
+            <if test="scorredstationcode != null">
+                ScorredStationCode = #{scorredstationcode,jdbcType=VARCHAR},
+            </if>
+            <if test="scoretype != null">
+                ScoreType = #{scoretype,jdbcType=VARCHAR},
+            </if>
+            <if test="dutycode != null">
+                DutyCode = #{dutycode,jdbcType=VARCHAR},
+            </if>
+            <if test="dbtype != null">
+                dbtype = #{dbtype,jdbcType=VARCHAR},
+            </if>
+            <if test="dbbk != null">
+                dbbk = #{dbbk,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.welb.organization_check.entity.ScoreStation">
+    update ScoreStation
+    set ScorringStationCode = #{scorringstationcode,jdbcType=VARCHAR},
+      ScorredStationCode = #{scorredstationcode,jdbcType=VARCHAR},
+      ScoreType = #{scoretype,jdbcType=VARCHAR}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="selectScoreStationScorringLeft" resultMap="BaseResultMap">
+        select s.* from ScoreStation s left join station s1 on s1.StationCode=s.ScorringStationCode
+        <where>
+            <if test="scoreStation.scorredstationcode!=null">
+                and s.ScorredStationCode=#{scoreStation.scorredstationcode}
+            </if>
+            <if test="scoreStation.scoretype!=null">
+                and s.ScoreType=#{scoreStation.scoretype}
+            </if>
+            <if test="scoreStation.dbtype!=null">
+                and s.dbtype=#{scoreStation.dbtype}
+            </if>
+            <if test="scoreStation.scorringstationname!=null">
+                and s1.StationName like concat("%",#{scoreStation.scorringstationname},"%")
+            </if>
+            <if test='departmentcode!=null and departmentcode!=""'>
+                and s1.DepartmentCode = #{departmentcode}
+            </if>
+        </where>
+        order by Id+0
+    </select>
+    <select id="selectScoreStationByScorredTypeDuty" resultType="com.welb.organization_check.entity.ScoreStation">
+    SELECT
+        ss.*,
+        s.StationName scorringstationname,
+        d.DepartmentCode departmentcode1,
+        d.DepartmentName departmentname1
+    FROM
+        ScoreStation ss
+    inner join station s on
+        ss.ScorringStationCode = s.StationCode
+    inner join department d on
+        d.DepartmentCode=s.DepartmentCode
+    WHERE
+        ss.ScorredStationCode = #{scorredstationcode}
+        AND ss.ScoreType = #{scoretype}
+        AND ss.DutyCode = #{dutycode}
+        AND ss.dbtype = #{dbtype}
+</select>
+    <select id="findScoreStationAll" resultMap="BaseResultMap">
+        select * from scoreStation where dbtype = #{dbtype}
+    </select>
+
+    <delete id="batchDelete">
+        delete from ScoreStation where Id in
+        <foreach collection="list" item="scorredIds" separator="," open="(" close=")">
+            #{scorredIds}
+        </foreach>
+    </delete>
+
+    <!--通过被评分人code和评分人code查找评分数据-->
+    <select id="selectTypeByCodeDuty" resultType="com.welb.organization_check.entity.ScoreStation">
+    select * from ScoreStation where ScorredStationCode=#{scorredstationcode} and ScorringStationCode=#{scorringstationcode} and dbtype=#{dbtype} and DutyCode = #{dutycode}
+  </select>
+
+    <!--通过被评分人code和评分人code查找评分数据-->
+    <select id="selectTypeByCodeDutyIsNull" resultType="com.welb.organization_check.entity.ScoreStation">
+    select * from ScoreStation
+    where
+        ScorredStationCode=#{scorredstationcode} and
+        ScorringStationCode=#{scorringstationcode} and
+        dbtype=#{dbtype} and
+        DutyCode is null
+  </select>
+    <!--通过被评分人code和评分人code查找评分数据-->
+    <select id="selectTypeByCodeList" resultType="com.welb.organization_check.entity.ScoreStation">
+    select * from ScoreStation where ScorredStationCode=#{scorredstationcode} and ScorringStationCode=#{scorringstationcode} and dbtype=#{dbtype}
+  </select>
+
+    <select id="findScoreStationScorringInList" resultMap="BaseResultMap">
+        SELECT
+        *
+        FROM
+        ScoreStation
+        where
+        ScorredStationCode = #{scoreStation.scorredstationcode}
+        <if test="scoreStation.scoretype != null">
+            and ScoreType = #{scoreStation.scoretype}
+        </if>
+        and dbtype = #{scoreStation.dbtype}
+        and ScorringStationCode in
+        <foreach item="item" index="index" collection="scorringStationList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findScoreStationDutyInList" resultMap="BaseResultMap">
+        SELECT
+        *
+        FROM
+        ScoreStation
+        where
+        ScorredStationCode = #{scoreStation.scorredstationcode}
+        and ScoreType = #{scoreStation.scoretype}
+        and dbtype = #{scoreStation.dbtype}
+        and DutyCode in
+        <foreach item="item" index="index" collection="dutyCodeList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

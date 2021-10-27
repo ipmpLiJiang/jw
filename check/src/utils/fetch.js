@@ -24,7 +24,7 @@ service.interceptors.request.use(function (config) {
     if (localStorage.getItem('check')) {
         config.headers['u_id'] = JSON.parse(localStorage.getItem('check')).user.usercode;
         // config.headers['u_id'] = 10010698;
-    }
+    } 
     return config;
 }, function (error) {
     // 对请求错误做些什么

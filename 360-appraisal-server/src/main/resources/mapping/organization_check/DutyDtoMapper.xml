@@ -46,5 +46,40 @@
             d.DutyCode+0
     </select>
 
+    <select id="selectStationDutyDto" resultType="com.welb.organization_check.dto.DutyDto">
+        SELECT
+        d.DutyCode,
+        d.DutyName,
+        d.DutyType,
+        s.ScoreType,
+        GROUP_CONCAT(s1.StationName,'(',d1.DepartmentName,')') ScorringName
+        FROM
+        duty d
+        left join scoreStation s on
+        d.DutyCode = s.DutyCode
+        and s.ScoreType = #{scoreType}
+        and s.ScorredStationCode = #{scorredstationcode}
+        left join station s1 on
+        s.ScorringStationCode = s1.StationCode
+        left join department d1 on
+        d1.DepartmentCode = s1.DepartmentCode
+        where
+        d.dbtype = #{dbtype}
+        and d.StationCode = #{scorredstationcode}
+        <if test="departmentcode!=null and departmentcode!=''">
+            and s1.Departmentcode=#{departmentcode}
+        </if>
+        <if test="stationname!=null and stationname!=''">
+            and s1.stationname=#{stationname}
+        </if>
+        group by
+        d.DutyCode,
+        d.DutyName,
+        d.DutyType,
+        s.ScoreType
+        order by
+        d.DutyCode+0
+    </select>
+
 </mapper>
 

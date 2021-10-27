@@ -69,6 +69,36 @@ public class StationController {
         return map;
     }
 
+    @RequestMapping(value = "/listDuty", produces = "application/json;charset=utf-8")
+    public Object findStationDutyAll(HttpServletRequest req, int pageNum, int pageSize, Station station) {
+        ModelMap map = new ModelMap();
+        String usercode = (String) req.getSession().getAttribute("usercode");
+        if (usercode != null) {
+
+            //pageNum:当前所在的页面  pageSize:每页有多少条数据
+            PageHelper.startPage(pageNum, pageSize);
+            try {
+                List<Station> stations = stationService.selectStationByLike(station);
+                PageInfo<Station> pageInfo = new PageInfo<>(stations);
+                List<Station> stationList = pageInfo.getList();
+                //数据总量
+                map.put("totalPages", pageInfo.getTotal());
+                map.put("data", stationList);
+                map.put("msg", "查询岗位成功 ");
+                map.put("code", 0);
+            } catch (Exception e) {
+                log.error(e.getMessage() , e);
+                map.put("msg", "查询岗位失败 ");
+                map.put("code", 1);
+            }
+        } else {
+            map.put("msg", "登录用户超时,请重新登录");
+            map.put("code", 810);
+        }
+        return map;
+    }
+
+
     /**
      * 添加岗位
      *
@@ -88,6 +118,32 @@ public class StationController {
         }
         return map;
     }
+
+    @RequestMapping(value = "/getDutyScorringStationEF", produces = "application/json;charset=utf-8")
+    public Object getDutyScorringStation(HttpServletRequest req,String scorredStationCode, String dutycode,String scoretype,String dbtype) {
+        ModelMap map = new ModelMap();
+        String userCode = (String) req.getSession().getAttribute("usercode");
+        if (userCode != null) {
+            List<Station> stations;
+            try {
+                stations = stationService.selectStationScoreEF(scorredStationCode, dutycode, scoretype, dbtype);
+                map.put("totalPages", stations.size());
+                map.put("msg", "查询评分岗位成功");
+                map.put("data", stations);
+                map.put("code", 0);
+            } catch (Exception e) {
+                log.error(e.getMessage() , e);
+                map.put("msg", "查询评分岗位失败");
+                map.put("code", 1);
+            }
+        } else {
+            map.put("msg", "登录用户超时,请重新登录");
+            map.put("code", 810);
+        }
+        return map;
+
+    }
+
 
     /**
      * 修改岗位信息

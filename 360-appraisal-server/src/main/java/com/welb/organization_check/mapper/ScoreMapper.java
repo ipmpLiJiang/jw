@@ -87,6 +87,7 @@ public interface ScoreMapper {
     List<Score> selectDutyScoreList(@Param("score") Score score);
 
 
+    List<Score> findScoreDutyScorringUserList(@Param("scorredCode") String scorredCode,@Param("dutycode") String dutycode,@Param("scoretype") String scoretype,@Param("dbtype") String dbtype);
 
-
+    int deleteDbtype(String dbtype);
 }

@@ -50,4 +50,10 @@ public interface EvaluationReportMapper {
 
     List<EvaluationReport>selectEvaluationReportByInUserCode(@Param("year")String year,@Param("month")String month,@Param("dbtype")String dbtype,@Param("codeList")List<String> codeList);
 
+
+    int updateStateAll(@Param("state")Integer state,@Param("year")String year,@Param("month")String month,@Param("dbtype")String dbtype);
+
+    int updateStateById(@Param("state")Integer state,@Param("Id")Integer Id);
+
+    int deleteYM(@Param("year") String year,@Param("month") String month,@Param("dbtype") String dbtype);
 }

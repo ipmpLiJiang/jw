@@ -61,4 +61,14 @@ public class ResultReportServiceImpl implements IResultReportService {
     public int batchDelete(List<Integer> resultReportIds) {
         return reportMapper.batchDelete(resultReportIds);
     }
+
+    @Override
+    public List<ResultReport> selectResultReportByYearMonth(String year, String month,String dbtype){
+        return reportMapper.selectResultReportByYearMonth(year,month,dbtype);
+    }
+
+    @Override
+    public int deleteYM(String year,String month,String dbtype){
+        return reportMapper.deleteYM(year,month,dbtype);
+    }
 }

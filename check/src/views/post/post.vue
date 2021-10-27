@@ -269,6 +269,7 @@ export default {
     //编辑岗位
     editPost(row) {
       this.forms = row;
+      this.departmentcode = []
       this.departmentcode = row.fulldepartmentcode.split(",");
       this.dialogVisible = true;
     },
@@ -281,7 +282,6 @@ export default {
   }
 };
 </script>
-
 
 <style lang="scss" scoped>
 .title {

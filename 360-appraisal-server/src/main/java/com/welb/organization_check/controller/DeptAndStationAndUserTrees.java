@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author luoyaozu
@@ -42,7 +43,7 @@ public class DeptAndStationAndUserTrees {
         List<Department> departments;
         List<Department> departments1 = new ArrayList<>();
         try {
-            departments = getDeptAndStationAndUserTrees(department);
+            departments = getDeptAndStationAndUserTrees(department,false,true);
             for (Department department1 : departments) {
                 if (department1.getUpdepartmentcode().equals("0")) {
                     department1.setCommoncode(department1.getDepartmentcode());
@@ -61,7 +62,33 @@ public class DeptAndStationAndUserTrees {
         return map;
     }
 
-    private List<Department> getDeptAndStationAndUserTrees(Department department) {
+    @RequestMapping(value = "treeStationList", produces = "application/json;charset=utf-8")
+    public Object SelectStationAll(Department department,Integer isEd) {
+        ModelMap map = new ModelMap();
+        List<Department> departments;
+        List<Department> departments1 = new ArrayList<>();
+        try {
+            departments = getDeptAndStationAndUserTrees(department,isEd==0?false:true,false);
+            for (Department department1 : departments) {
+                if (department1.getUpdepartmentcode().equals("0")) {
+                    department1.setCommoncode(department1.getDepartmentcode());
+                    department1.setCommonname(department1.getDepartmentname());
+                    departments1.add(department1);
+                }
+            }
+            map.put("msg", "级联查询用户成功");
+            map.put("data", departments1);
+            map.put("code", 0);
+        } catch (Exception e) {
+            log.error(e.getMessage() , e);
+            map.put("msg", "级联查询用户失败");
+            map.put("code", 1);
+        }
+        return map;
+    }
+
+
+    private List<Department> getDeptAndStationAndUserTrees(Department department,boolean isEf,boolean isUser) {
         //查找所有部门
         List<Department> departments = departmentService.selectDepartmentTrees(department);
         //新建一个部门集合
@@ -73,7 +100,7 @@ public class DeptAndStationAndUserTrees {
             for (int i = 0; i < departments.size(); i++) {
                 //递归子部门
                 department1.setUpdepartmentcode(departments.get(i).getDepartmentcode());
-                List<Department> trees = getDeptAndStationAndUserTrees(department1);
+                List<Department> trees = getDeptAndStationAndUserTrees(department1,isEf,isUser);
                 List<Department> treeList = new ArrayList<>();
                 if (trees.size() > 0) {
                     for (Department dept : trees) {
@@ -92,21 +119,28 @@ public class DeptAndStationAndUserTrees {
                     departments.get(i).setChildDept(null);
                     List<Station> stationList = new ArrayList<>();
                     List<Station> stations = stationService.selectStationsByDeptCode(departments.get(i).getDepartmentcode());
+                    if(isEf){
+                        stations = stations.stream().filter(s-> s.getIsEF() !=null && s.getIsEF().equals(1)).collect(Collectors.toList());
+                    }
                     if (stations.size() > 0) {
                         //查找所有用户
                         for (int j = 0; j < stations.size(); j++) {
                             //满足前端的要求
                             stations.get(j).setCommoncode(stations.get(j).getStationcode());
                             stations.get(j).setCommonname(stations.get(j).getStationname());
-                            //查找所有用户
-                            List<User> users = userService.selectUserByStationCode(stations.get(j).getStationcode());
-                            if (users.size() > 0) {
-                                for (User user : users) {
-                                    //满足前端的需要
-                                    user.setCommoncode(user.getUsercode());
-                                    user.setCommonname(user.getUsername() + "  (" + user.getMoneycard()+")");
+                            if(isUser) {
+                                //查找所有用户
+                                List<User> users = userService.selectUserByStationCode(stations.get(j).getStationcode());
+                                if (users.size() > 0) {
+                                    for (User user : users) {
+                                        //满足前端的需要
+                                        user.setCommoncode(user.getUsercode());
+                                        user.setCommonname(user.getUsername() + "  (" + user.getMoneycard() + ")");
+                                    }
+                                    stations.get(j).setUserTree(users);
+                                    stationList.add(stations.get(j));
                                 }
-                                stations.get(j).setUserTree(users);
+                            }else{
                                 stationList.add(stations.get(j));
                             }
                             departments.get(i).setStations(stationList);

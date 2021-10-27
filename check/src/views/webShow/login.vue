@@ -39,8 +39,11 @@
         class="pwd"
         style="margin-top:1rem;text-align:center"
       >
-        <el-radio v-model="dbtype" label="1">党支部考核</el-radio>
-        <el-radio v-model="dbtype" label="2">干部考核</el-radio>
+      <el-radio-group v-model="dbtype" style="display:list-item">
+        <el-radio 
+          :label="item.value" 
+          :key="item.value" v-for="item in dbTypeOptions">{{item.label}}</el-radio>
+      </el-radio-group>
       </el-col>
       <el-col class="edit-btn">
         <el-button
@@ -62,14 +65,14 @@ export default {
       usercode: "",
       psd: "",
       eyes: "1",
-      dbtype: "1",
+      dbtype: "2",
       dbTypeOptions: [
         {
-          value: "0",
+          value: "1",
           label: "党支部考核"
         },
         {
-          value: "1",
+          value: "2",
           label: "干部考核"
         }
       ]

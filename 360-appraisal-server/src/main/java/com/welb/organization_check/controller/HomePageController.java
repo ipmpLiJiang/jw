@@ -1178,9 +1178,9 @@ public class HomePageController {
         report.setYear(year);
         report.setMonth(month);
         report.setDbtype(dbtype);
-        report.setState(0);
         evaluationReport = evaluationReportService.selectReportByUserCode(report);
         if (evaluationReport == null) {
+            report.setState(0);
             evaluationReportService.insertSelective(report);
         } else {
             report.setId(evaluationReport.getId());
@@ -1666,6 +1666,8 @@ public class HomePageController {
         }
         return map;
     }
+
+
 
     private void getZongScoreHistoryData(String year, String month, String dbtype, String zdzb, List<ScoreHistory> zongShList, List<ScoreHistory> shList) {
         List<User> userZdzbList = userService.findUserBranchByDbbk(zdzb);

@@ -110,7 +110,7 @@
                 自评说明：
               </el-col>
               <el-col :span="17">
-                {{item.zpsm=='' || item.zpsm==null?'无':item.zpsm}}
+                {{item.zpsm=='' || item.zpsm==null ? '未填':item.zpsm}}
               </el-col>
             </el-row>
             <el-row class="pingjia">
@@ -118,7 +118,7 @@
               <el-col :span="5"> 良好({{item.bscore}}) </el-col>
               <el-col :span="5"> 一般({{item.cscore}}) </el-col>
               <el-col :span="5"> 较差({{item.dscore}}) </el-col>
-              <el-col :span="4"> {{item.score}} </el-col>
+              <el-col :span="4"> <span v-html="jieguo(item)"></span> </el-col>
             </el-row>
             <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
               <el-col :span="2"> 差评原因：</el-col>
@@ -145,7 +145,7 @@
                 自评说明：
               </el-col>
               <el-col :span="17">
-                {{item.zpsm=='' || item.zpsm==null?'无':item.zpsm}}
+                {{item.zpsm=='' || item.zpsm==null ? '未填':item.zpsm}}
               </el-col>
             </el-row>
             <el-row class="pingjia">
@@ -153,7 +153,7 @@
               <el-col :span="5"> 良好({{item.bscore}}) </el-col>
               <el-col :span="5"> 一般({{item.cscore}}) </el-col>
               <el-col :span="5"> 较差({{item.dscore}}) </el-col>
-              <el-col :span="4"> {{item.score}} </el-col>
+              <el-col :span="4"> <span v-html="jieguo(item)"></span> </el-col>
             </el-row>
             <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
               <el-col :span="2"> 差评原因：</el-col>
@@ -180,7 +180,7 @@
                 自评说明：
               </el-col>
               <el-col :span="17">
-                {{item.zpsm=='' || item.zpsm==null?'无':item.zpsm}}
+                {{item.zpsm=='' || item.zpsm==null ? '未填':item.zpsm}}
               </el-col>
             </el-row>
             <el-row class="pingjia">
@@ -188,7 +188,7 @@
               <el-col :span="5"> 良好({{item.bscore}}) </el-col>
               <el-col :span="5"> 一般({{item.cscore}}) </el-col>
               <el-col :span="5"> 较差({{item.dscore}}) </el-col>
-              <el-col :span="4"> {{item.score}} </el-col>
+              <el-col :span="4"> <span v-html="jieguo(item)"></span> </el-col>
             </el-row>
             <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
               <el-col :span="2"> 差评原因：</el-col>
@@ -215,7 +215,7 @@
                 自评说明：
               </el-col>
               <el-col :span="17">
-                {{item.zpsm=='' || item.zpsm==null?'无':item.zpsm}}
+                {{item.zpsm=='' || item.zpsm==null ? '未填':item.zpsm}}
               </el-col>
             </el-row>
             <el-row class="pingjia">
@@ -223,7 +223,7 @@
               <el-col :span="5"> 良好({{item.bscore}}) </el-col>
               <el-col :span="5"> 一般({{item.cscore}}) </el-col>
               <el-col :span="5"> 较差({{item.dscore}}) </el-col>
-              <el-col :span="4"> {{item.score}} </el-col>
+              <el-col :span="4"> <span v-html="jieguo(item)"></span> </el-col>
             </el-row>
             <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
               <el-col :span="2"> 差评原因：</el-col>
@@ -250,7 +250,7 @@
                 自评说明：
               </el-col>
               <el-col :span="17">
-                {{item.zpsm=='' || item.zpsm==null?'无':item.zpsm}}
+                {{item.zpsm=='' || item.zpsm==null ? '未填':item.zpsm}}
               </el-col>
             </el-row>
             <el-row class="pingjia">
@@ -258,7 +258,7 @@
               <el-col :span="5"> 良好({{item.bscore}}) </el-col>
               <el-col :span="5"> 一般({{item.cscore}}) </el-col>
               <el-col :span="5"> 较差({{item.dscore}}) </el-col>
-              <el-col :span="4"> {{item.score}} </el-col>
+              <el-col :span="4"> <span v-html="jieguo(item)"></span> </el-col>
             </el-row>
             <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
               <el-col :span="2"> 差评原因：</el-col>
@@ -324,6 +324,25 @@ export default {
     // this.getDetail();
   },
   methods: {
+    jieguo (item) {
+      let v = '';
+      let color = '';
+      if (item.score == item.ascore) {
+        v = '优秀'
+        color = '#FFFF99'
+      } else if (item.score == item.bscore) {
+        v = '良好'
+        color = '#99FF99'
+      } else if (item.score == item.cscore) {
+        v = '一般'
+        color = '#99FFFF'
+      } else if (item.score == item.dscore) {
+        v = '较差'
+        color = '#FF9797'
+      }
+      v = v + '(' + item.score + ')'
+      return '<div style="width: 80px;height: 25px;background:'+color+';border-radius: 3px;font-size:14px;display: flex;align-items: center;justify-content: center;"><b>' + v + '</b></div>';
+    },
     getUserFlowType () {
       this.userList = [] 
       let data = {

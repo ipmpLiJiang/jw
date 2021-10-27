@@ -39,6 +39,8 @@ public interface IMonthSummaryService {
      * @return
      */
     int updateGradeStateBySerialNo(String serialno);
+
+    int updateGradeStateBySerialNoZp(String serialno);
     /**
      * 季结状态全部修改为季节评分
      * @return
@@ -155,4 +157,6 @@ public interface IMonthSummaryService {
     List<MonthSummary>selectListByYearAndMonth(String year,String month, String dbtype);
 
     List<MonthSummary>selectSummaryByInEmployeeCode(String year,String month, String dbtype,List<String> codeList);
+
+    int deleteYM(String year,String month,String dbtype);
 }

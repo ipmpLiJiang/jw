@@ -107,7 +107,6 @@ public class UserEvaluationDto {
         UserEvaluationDto.dbbks = dbbks;
     }
 
-
     public String getDbbk() {
         return dbbk;
     }
@@ -410,5 +409,14 @@ public class UserEvaluationDto {
 
     public void setSumMbAvgScore(Double sumMbAvgScore) {
         this.sumMbAvgScore = sumMbAvgScore;
+    }
+
+    String postType;
+    public String getPostType() {
+        return postType;
+    }
+
+    public void setPostType(String postType) {
+        this.postType = postType;
     }
 }

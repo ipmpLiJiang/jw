@@ -158,7 +158,6 @@ export default {
     },
     //查询是否有消息提醒
     isNotice() {
-      /*
       let rolecode = this.$store.state.user.user.rolecode;
       let data = {
         rolecode: rolecode,
@@ -174,20 +173,20 @@ export default {
                   title: "友情提示",
                   message: response.data.data.logininfo,
                   type: "warning",
-                  duration: 0,
+                  duration: 4000,
                 });
               }
               //判断人事部是否有评分导入提示信息
-              if (rolecode == 400 || rolecode == 500) {
-                if (response.data.data.inportlogin == 1) {
-                  this.$notify({
-                    title: "友情提示",
-                    message: response.data.data.inportinfo,
-                    type: "warning",
-                    duration: 0,
-                  });
-                }
-              }
+              // if (rolecode == 400 || rolecode == 500) {
+              //   if (response.data.data.inportlogin == 1) {
+              //     this.$notify({
+              //       title: "友情提示",
+              //       message: response.data.data.inportinfo,
+              //       type: "warning",
+              //       duration: 0,
+              //     });
+              //   }
+              // }
             } else {
               this.$message({
                 message: response.data.msg,
@@ -199,7 +198,6 @@ export default {
             reject(error);
           });
       });
-      */
     },
   },
 };

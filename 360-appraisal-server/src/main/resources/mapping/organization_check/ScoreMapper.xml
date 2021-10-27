@@ -441,4 +441,24 @@
             #{item}
         </foreach>
     </delete>
+
+    <select id="findScoreDutyScorringUserList" resultType="com.welb.organization_check.entity.Score">
+    SELECT
+        s1.*,u.UserName scorringname,s.StationName stationname1,d.DepartmentName departmentname1
+    FROM
+        score s1,station s ,department d ,user u,user_role ur
+    where
+        s1.ScorringCode = u.UserCode
+        and u.UserCode=ur.UserCode
+        and u.StationCode=s.StationCode
+        and s.DepartmentCode=d.DepartmentCode
+        and s1.ScorredCode = #{scorredCode}
+        and s1.DutyCode = #{dutycode}
+        and s1.ScoreType = #{scoretype}
+        and s1.dbtype = #{dbtype}
+  </select>
+
+    <delete id="deleteDbtype">
+        delete from score where dbtype = #{dbtype}
+    </delete>
 </mapper>

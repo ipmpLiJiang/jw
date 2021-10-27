@@ -325,8 +325,10 @@
             and r.RoleCode=ur.RoleCode
             <if test="qrcode==null">
             AND u.UserCode in (
-                select ScorredCode ucode from (SELECT DISTINCT ScorredCode FROM score WHERE dbtype =#{history.dbtype}) a union
-                select ScorringCode ucode from (SELECT DISTINCT ScorringCode FROM score WHERE dbtype =#{history.dbtype}) b
+                select code from (
+                    SELECT ScorredCode code FROM score WHERE dbtype =#{history.dbtype} union
+                    SELECT ScorringCode code FROM score WHERE dbtype =#{history.dbtype}
+                ) a
             )
             </if>
             <if test='qrcode!=null and qrcode=="pfr"'>
@@ -438,8 +440,10 @@
     </if>
     <if test="qrcode==null">
         AND u.UserCode in (
-        select ScorredCode ucode from (SELECT DISTINCT ScorredCode FROM score WHERE dbtype =#{history.dbtype}) a union
-        select ScorringCode ucode from (SELECT DISTINCT ScorringCode FROM score WHERE dbtype =#{history.dbtype}) b
+            select code from (
+                SELECT ScorredCode code FROM score WHERE dbtype =#{history.dbtype} union
+                SELECT ScorringCode code FROM score WHERE dbtype =#{history.dbtype}
+            ) a
         )
     </if>
     <if test='qrcode!=null and qrcode=="pfr"'>
@@ -621,4 +625,8 @@
             AND m.Month = #{month}
             AND m.dbtype = #{dbtype}
     </select>
+
+    <delete id="deleteYM">
+        delete from scorehistory where year=#{year} and Month=#{month} and dbtype=#{dbtype}
+    </delete>
 </mapper>

@@ -127,4 +127,11 @@ public interface IEvaluationReportService {
     List<EvaluationReport> selectEvaluationReportList(EvaluationReport report);
 
     List<EvaluationReport>selectEvaluationReportByInUserCode(String year,String month,String dbtype,List<String> codeList);
+
+
+    int updateStateAll(Integer state,String year,String month,String dbtype);
+
+    int updateStateById(Integer state,Integer Id);
+
+    int deleteYM(String year,String month,String dbtype);
 }

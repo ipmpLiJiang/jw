@@ -61,4 +61,9 @@ public class ScoreDutySmServiceImpl implements IScoreDutySmService {
     public List<ScoreDutySm> selectScoreDutySmList(ScoreDutySm record) {
         return scoreDutySmMapper.selectScoreDutySmList(record);
     }
+
+    @Override
+    public int deleteYM(String year,String month,String dbtype){
+        return scoreDutySmMapper.deleteYM(year,month,dbtype);
+    }
 }

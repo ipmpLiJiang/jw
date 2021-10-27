@@ -129,4 +129,8 @@ public interface  IScoreService {
     int deleteDutyScore(Score score,String[] dutyCodeList);
 
     int deleteScoreDutyScorringUser(Score score);
+
+    List<Score> findScoreDutyScorringUserList(String scorredCode,String dutycode,String scoretype,String dbtype);
+
+    int deleteDbtype(String dbtype);
 }

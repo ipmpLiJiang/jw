@@ -46,4 +46,10 @@ public class ScoreYdyfServiceImpl implements IScoreYdyfService {
     public List<ScoreYdyf> findYdyfList(ScoreYdyf ydyf) {
         return ydyfMapper.selectYdyfList(ydyf);
     }
+
+
+    @Override
+    public int deleteYM(String year,String month){
+        return ydyfMapper.deleteYM(year,month);
+    }
 }

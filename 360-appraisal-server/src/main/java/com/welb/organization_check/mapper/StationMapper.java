@@ -2,6 +2,7 @@ package com.welb.organization_check.mapper;
 
 import com.welb.organization_check.entity.Station;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -25,5 +26,7 @@ public interface StationMapper {
 
     List<Station>selectStationsByDeptCode(String departmentcode);
 
+    List<Station> selectStationScoreEF(String scorredStationCode,String scoreType,String dutyCode,String dbtype);
 
+    List<Station> findStationByInCodeList(@Param("codeList") List<String> codeList);
 }

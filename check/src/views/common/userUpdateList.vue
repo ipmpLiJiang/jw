@@ -32,7 +32,7 @@
               show-overflow-tooltip
             >
               <template slot-scope="scope">
-                {{scope.row.username}}({{scope.row.departmentname}}-{{scope.row.stationname}})
+                {{scope.row.scorringname}}({{scope.row.departmentname1}}-{{scope.row.stationname1}})
               </template>
             </el-table-column>
             <el-table-column
@@ -66,8 +66,8 @@
 </template>
 <script>
 
-import { getDutyScorringUserlist } from "@/api/people/people";
-import { deleteScoreDutyScorringUser } from "@/api/score/score";
+import { getScoreDutyScorringUserlist } from "@/api/score/score";
+import { deleteScore } from "@/api/score/score";
 import qs from "qs";
 export default {
   data() {
@@ -106,7 +106,7 @@ export default {
       data.dbtype = this.dbtype
       this.tableLoading = true;
       new Promise((response, reject) => {
-        getDutyScorringUserlist(qs.stringify(data))
+        getScoreDutyScorringUserlist(qs.stringify(data))
           .then(response => {
             if (response.data.code == 0) {
               this.tableData = response.data.data;
@@ -140,14 +140,10 @@ export default {
       })
         .then(() => {
           let data = {
-            dutycode: this.form.dutycode,
-            scoretype: this.form.scoretype,
-            scorringcode: row.usercode,
-            scorredcode: this.form.scorredcode,
-            dbtype: this.dbtype
+            id: row.id
           };
           new Promise((response, reject) => {
-            deleteScoreDutyScorringUser(qs.stringify(data))
+            deleteScore(qs.stringify(data))
               .then(response => {
                 if (response.data.code == 0) {
                   this.$message({

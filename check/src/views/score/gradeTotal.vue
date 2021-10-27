@@ -43,6 +43,23 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="6">
+            <el-form-item label="岗位类型">
+              <el-select
+                v-model="search.postType"
+                clearable
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in postTypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col
             :span="24"
             class="edit-btn"
@@ -65,14 +82,6 @@
     </el-row>
     <el-row class="content">
       <el-col style="margin-bottom:20px;">
-        <!-- <el-button
-          type="primary"
-          @click="updateGrade"
-        >批量修改{{khtitle}}评分</el-button>
-        <el-button
-          type="primary"
-          @click="gradeFinish"
-        >批量修改{{khtitle}}评分完成</el-button> -->
         <el-button
           type="primary"
           @click="scdata"
@@ -80,25 +89,38 @@
         >生成/更改数据</el-button>
         <el-button
           type="primary"
+          @click="updateGradeZp"
+        >批量自评</el-button>
+        <el-button
+          type="primary"
+          @click="updateGrade"
+        >批量评分</el-button>
+        <el-button
+          type="primary"
+          @click="gradeFinish"
+        >批量评分完成</el-button>
+        <el-button
+          type="warning"
           @click="updateAllZpStatus"
-        >全部{{khtitle}}自评</el-button>
+        >全部自评</el-button>
         <el-button
           type="warning"
           @click="updateAllStatus"
-        >全部{{khtitle}}评分</el-button>
+        >全部评分</el-button>
         <el-button
           type="warning"
           @click="gradeAllFinish"
-        >全部{{khtitle}}评分完成</el-button>
-           <el-button
-          type="primary"
-          @click="manual"
-          :loading="manualLoading"
-        >开启下一个{{khtitle}}考核</el-button>
+        >全部评分完成</el-button>
         <el-button
           type="warning"
           @click="jisuanChang"
+          :loading="searchLoading"
         >计算</el-button>
+        <el-button
+          type="primary"
+          @click="manual"
+          :loading="manualLoading"
+        >开启下一个考核</el-button>
         <!-- <el-button type="danger">汇总</el-button> -->
         <el-upload
             style="display:inline-block;margin-left: .50rem"
@@ -281,7 +303,14 @@ import {
   upload,
   shengcheng
 } from "@/api/score/gradeTotal";
-import { updateSummaryGradeState, isAllFinish, openManualAssessment, updateSummaryGradeStateAll, updateSummaryGradeStateAllZp} from "@/api/score/quarter";
+import { 
+  updateSummaryGradeState,
+  updateSummaryGradeStateZp, 
+  isAllFinish, 
+  openManualAssessment, 
+  updateSummaryGradeStateAll, 
+  updateSummaryGradeStateAllZp
+} from "@/api/score/quarter";
 import { updateStateBySerialNo } from "@/api/user/quarter";
 import { JiSuan } from "@/api/home/home";
 import AddQuarter from "../user/addQuarter";
@@ -313,20 +342,6 @@ export default {
           label: "评分完成"
         }
       ],
-      gradeStatus: [
-        {
-          value: "1",
-          label: "未评分"
-        },
-        {
-          value: "2",
-          label: "未完成"
-        },
-        {
-          value: "3",
-          label: "已完成"
-        }
-      ],
       statusOptions: [
         {
           value: "5",
@@ -345,8 +360,21 @@ export default {
       search: {
         stationcode: "",
         username: "",
-        state: ""
+        state: "",
+        postType: ""
       },
+      postTypeOptions: [{
+          value: "1",
+          label: "科主任"
+        },
+        {
+          value: "2",
+          label: "护士长"
+        },
+        {
+          value: "3",
+          label: "行政"
+        }],
       tableData: [],
       stationcode: [""],
       page: {
@@ -445,6 +473,11 @@ export default {
       params.state = this.search.state;
       params.scorestatus = this.search.scorestatus;
       params.dbtype = this.dbtype
+      if (this.search.postType !=null) {
+        params.postType = this.search.postType
+      } else {
+        params.postType = "";
+      }
       this.searchLoading = true;
       new Promise((response, reject) => {
         getList(qs.stringify(params))
@@ -494,6 +527,8 @@ export default {
       console.log("shangc")
     },
      jisuanChang() {
+       this.searchLoading = true
+       this.tableLoading = true
       //此操作将计算 重点、目标 指标的平均值, 是否继续?
       this.$confirm(
         "此操作将计算各项指标平均值, 是否继续?",
@@ -616,6 +651,49 @@ export default {
         .then(() => {
           new Promise((response, reject) => {
             updateSummaryGradeState(qs.stringify(data))
+              .then(response => {
+                if (response.data.code == 0) {
+                  this.$message({
+                    message: response.data.msg,
+                    type: "success"
+                  });
+                  this.getList();
+                  this.into();
+                } else {
+                  this.$message({
+                    message: response.data.msg,
+                    type: "error"
+                  });
+                }
+              })
+              .catch(error => {
+                reject(error);
+              });
+          });
+        })
+        .catch(() => {});
+    },
+    updateGradeZp() {
+      if (this.checkBoxData.length <= 0) {
+        this.$message.warning("请先勾选需要更改的数据");
+        return;
+      }
+      let tData = [];
+      this.checkBoxData.forEach(row => {
+        tData.push(row.serialno);
+      });
+      let data = {
+        serialnos: tData.join(","),
+        dbtype: this.dbtype
+      };
+      this.$confirm("此操作将"+this.khtitle+"状态改成"+this.khtitle+"评分, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          new Promise((response, reject) => {
+            updateSummaryGradeStateZp(qs.stringify(data))
               .then(response => {
                 if (response.data.code == 0) {
                   this.$message({

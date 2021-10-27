@@ -96,4 +96,6 @@ public interface IScoreHistoryService {
     List<ScoreHistory>selectHistoryByInUserCode(String year,String month, String dbtype,List<String> codeList);
 
     List<ScoreHistory> selectHistoryByMonthSummaryList(String year,String month, String dbtype);
+
+    int deleteYM(String year,String month,String dbtype);
 }

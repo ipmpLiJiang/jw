@@ -22,4 +22,6 @@ public interface IScoreYdyfService {
     int updateByPrimaryKeySelective(ScoreYdyf ydyf);
 
     List<ScoreYdyf> findYdyfList(ScoreYdyf ydyf);
+
+    int deleteYM(String year,String month);
 }

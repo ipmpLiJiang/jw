@@ -18,6 +18,8 @@ public interface MonthSummaryMapper {
 
     int updateGradeStateBySerialNo(String serialno);
 
+    int updateGradeStateBySerialNoZp(String serialno);
+
     int updateStateZpAll(String year,String month,String dbtype);
 
     int updateStateAll(String year,String month,String dbtype);
@@ -56,4 +58,5 @@ public interface MonthSummaryMapper {
 
     List<MonthSummary>selectSummaryByInEmployeeCode(@Param("year")String year,@Param("month")String month, @Param("dbtype")String dbtype,@Param("codeList") List<String> codeList);
 
+    int deleteYM(@Param("year") String year,@Param("month") String month,@Param("dbtype") String dbtype);
 }

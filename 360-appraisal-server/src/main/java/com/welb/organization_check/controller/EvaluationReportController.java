@@ -862,4 +862,56 @@ public class EvaluationReportController {
         }
     }
 
+    @RequestMapping(value = "/updateState", produces = "application/json;charset=utf-8")
+    public Object updateState(String ids,Integer state) {
+        ModelMap map = new ModelMap();
+        try {
+            String[] arrId = ids.split(",");
+            int counts = 0;
+            Integer id = 0;
+            for (int i = 0; i < arrId.length; i++) {
+                id = Integer.parseInt(arrId[i]);
+                int count = evaluationReportService.updateStateById(state, id);
+                counts += count;
+            }
+            if (counts > 0) {
+                map.put("msg", "批量推送状态修改成功");
+                map.put("code", 0);
+            } else {
+                map.put("msg", "批量推送状态修改失败");
+                map.put("code", 1);
+            }
+        } catch ( Exception e){
+            map.put("msg", "异常中,批量推送状态修改失败");
+            map.put("code", 1);
+            log.error(e.getMessage(), e);
+        }
+        return map;
+    }
+
+    @RequestMapping(value = "/updateStateAll", produces = "application/json;charset=utf-8")
+    public Object updateStateAll(String year,String month,String dbtype,int state) {
+        ModelMap map = new ModelMap();
+        try {
+            if (year == null || month == null || year.equals("") || month.equals("")) {
+                ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
+                year = setTime.getYear();
+                month = setTime.getMonth();
+            }
+            int count = evaluationReportService.updateStateAll(state, year, month, dbtype);
+            if (count > 0) {
+                map.put("msg", "全部推送状态修改成功");
+                map.put("code", 0);
+            } else {
+                map.put("msg", "全部推送状态修改失败");
+                map.put("code", 1);
+            }
+        } catch (Exception e) {
+            map.put("msg", "异常中,全部推送状态修改失败");
+            map.put("code", 1);
+            log.error(e.getMessage(), e);
+        }
+        return map;
+    }
+
 }

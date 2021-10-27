@@ -19,6 +19,7 @@
     <result column="Jibenjineng" jdbcType="VARCHAR" property="jibenjineng" />
     <result column="OrderId" jdbcType="INTEGER" property="orderid" />
     <result column="FullDepartmentCode" jdbcType="VARCHAR" property="fulldepartmentcode" />
+      <result column="isEF" jdbcType="INTEGER" property="isEF" />
   </resultMap>
   <insert id="insert" parameterType="com.welb.organization_check.entity.Station">
     insert into station (StationCode, StationName, DepartmentCode,
@@ -26,13 +27,13 @@
       Relation2, Station1, Station2,
       Xueli, Zhiyezige, Peixun,
       Gongzuojingyan, Gexingtezheng, Jibenjineng,
-      OrderId, FullDepartmentCode)
+      OrderId, FullDepartmentCode,isEF)
     values (#{stationcode,jdbcType=VARCHAR}, #{stationname,jdbcType=VARCHAR}, #{departmentcode,jdbcType=VARCHAR},
       #{stationdesc,jdbcType=VARCHAR}, #{dutydesc,jdbcType=VARCHAR}, #{relation1,jdbcType=VARCHAR},
       #{relation2,jdbcType=VARCHAR}, #{station1,jdbcType=VARCHAR}, #{station2,jdbcType=VARCHAR},
       #{xueli,jdbcType=VARCHAR}, #{zhiyezige,jdbcType=VARCHAR}, #{peixun,jdbcType=VARCHAR},
       #{gongzuojingyan,jdbcType=VARCHAR}, #{gexingtezheng,jdbcType=VARCHAR}, #{jibenjineng,jdbcType=VARCHAR},
-      #{orderid,jdbcType=INTEGER},  #{fulldepartmentcode,jdbcType=VARCHAR})
+      #{orderid,jdbcType=INTEGER},  #{fulldepartmentcode,jdbcType=VARCHAR},#{isEF,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.welb.organization_check.entity.Station">
     insert into station
@@ -88,6 +89,9 @@
       <if test="fulldepartmentcode != null">
         FullDepartmentCode,
       </if>
+        <if test="isEF != null">
+            isEF,
+        </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="stationcode != null">
@@ -141,6 +145,9 @@
       <if test="fulldepartmentcode != null">
         #{fulldepartmentcode,jdbcType=VARCHAR},
       </if>
+        <if test="isEF != null">
+            #{isEF,jdbcType=INTEGER},
+        </if>
     </trim>
   </insert>
     <!--删除岗位-->
@@ -153,7 +160,7 @@
       Relation2=#{relation2}, Station1=#{station1}, Station2=#{station2},
       Xueli=#{xueli}, Zhiyezige=#{zhiyezige}, Peixun=#{peixun},
       Gongzuojingyan=#{gongzuojingyan}, Gexingtezheng=#{ gexingtezheng}, Jibenjineng=#{jibenjineng},
-      OrderId=#{orderid} where StationCode=#{stationcode}
+      OrderId=#{orderid},isEF=#{isEF} where StationCode=#{stationcode}
   </update>
     <!--通过stationcode修改岗位信息-->
     <update id="updateByPrimaryKeySelective" parameterType="com.welb.organization_check.entity.Station">
@@ -205,8 +212,12 @@
                 OrderId = #{orderid},
             </if>
             <if test="fulldepartmentcode != null">
-                FullDepartmentCode = #{fulldepartmentcode}
+                FullDepartmentCode = #{fulldepartmentcode},
             </if>
+            <if test="isEF != null">
+                isEF = #{isEF},
+            </if>
+
         </set>
         where StationCode=#{stationcode}
     </update>
@@ -234,8 +245,42 @@
     </select>
     <!--通过部门code查找岗位-->
     <select id="selectStationsByDeptCode" resultMap="BaseResultMap">
-        select s.DepartmentCode,s.StationCode, s.StationName,d.DepartmentName from station s,department d where s.DepartmentCode=d.DepartmentCode
+        select s.DepartmentCode,s.StationCode, s.StationName,s.isEF,d.DepartmentName from station s,department d where s.DepartmentCode=d.DepartmentCode
         and d.DepartmentCode=#{departmentcode}
     </select>
 
+
+    <select id="selectStationScoreEF" resultType="com.welb.organization_check.entity.Station">
+        SELECT
+            s.*,
+            d.DepartmentName ,
+            ss.ScoreType,
+            ss.Id scoreId
+        FROM
+            station s
+            inner join department d on
+                d.DepartmentCode=s.DepartmentCode
+            left join scorestation ss on
+                ss.ScorringStationCode = s.StationCode
+                AND ss.ScorredStationCode = #{scorredStationCode}
+                AND ss.ScoreType = #{scoreType}
+                AND ss.DutyCode = #{dutyCode}
+                AND ss.dbtype = #{dbtype}
+        where
+            s.StationCode != #{scorredStationCode} AND
+            s.isEF = 1
+        ORDER BY
+            s.StationCode +0;
+    </select>
+    <select id="findStationByInCodeList" resultMap="BaseResultMap">
+    select s.*,d.DepartmentName
+    from station s
+        inner join department d on
+        d.DepartmentCode=s.DepartmentCode
+    where
+        s.StationCode in
+        <foreach item="item" index="index" collection="codeList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 </mapper>

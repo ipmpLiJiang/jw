@@ -217,6 +217,9 @@
     <update id="updateGradeStateBySerialNo" parameterType="string">
     update  monthsummary set State="6" where SerialNo=#{serialno}
   </update>
+    <update id="updateGradeStateBySerialNoZp" parameterType="string">
+    update  monthsummary set State="5" where SerialNo=#{serialno}
+  </update>
     <!--状态修改为全部季节评分-->
     <update id="updateStateAll" parameterType="string">
     update  monthsummary set State="6" where Year = #{year} and Month = #{month} and dbtype=#{dbtype}
@@ -366,4 +369,8 @@
             #{item}
         </foreach>
     </select>
+
+    <delete id="deleteYM">
+        delete from monthsummary where year=#{year} and Month=#{month} and dbtype = #{dbtype}
+  </delete>
 </mapper>

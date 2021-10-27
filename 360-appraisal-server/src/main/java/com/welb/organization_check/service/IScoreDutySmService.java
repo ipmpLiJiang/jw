@@ -22,4 +22,6 @@ public interface IScoreDutySmService {
     int batchUpdate(List<ScoreDutySm>list);
 
     List<ScoreDutySm> selectScoreDutySmList(ScoreDutySm record);
+
+    int deleteYM(String year,String month,String dbtype);
 }

@@ -178,4 +178,6 @@ public interface IScoreFlowService {
     List<ScoreFlow> selectByScoreFlowType(String mserialno,String scoreType,String dbtype);
 
     List<ScoreFlow> selectFlowByMonthSummaryList(String year,String month,String dbtype);
+
+    int deleteYM(String year,String month,String dbtype);
 }

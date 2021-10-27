@@ -96,4 +96,9 @@ public class ScoreDetailService implements IScoreDetailService {
     public List<ScoreDetail> selectDetailByMonthSummaryList(String year,String month, String dbtype){
         return scoreDetailMapper.selectDetailByMonthSummaryList(year,month, dbtype);
     }
+
+    @Override
+    public int deleteYM(String year,String month,String dbtype){
+        return scoreDetailMapper.deleteYM(year,month,dbtype);
+    }
 }

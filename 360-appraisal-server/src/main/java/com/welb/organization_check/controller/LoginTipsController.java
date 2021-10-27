@@ -37,7 +37,7 @@ public class LoginTipsController {
         ModelMap map = new ModelMap();
         String usercode = (String) req.getSession().getAttribute("usercode");
         if (usercode != null) {
-            LoginTips loginTips = loginTipsService.selectLoginTips(rolecode);
+            LoginTips loginTips = loginTipsService.selectLoginTips("50");
             if (loginTips != null) {
                 map.put("msg", "查询登录提示成功");
                 map.put("data", loginTips);
@@ -63,6 +63,7 @@ public class LoginTipsController {
     @RequestMapping(value = "/update", produces = "application/json;charset=utf-8")
     public Object updateLoginTips(LoginTips loginTips) {
         ModelMap map = new ModelMap();
+        loginTips.setRolecode("50");
         int count = loginTipsService.updateLoginTips(loginTips);
         LoginTips tips = new LoginTips();
         tips.setLogininfo(loginTips.getLogininfo());

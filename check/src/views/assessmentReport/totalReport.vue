@@ -55,6 +55,23 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="6">
+            <el-form-item label="岗位类型">
+              <el-select
+                v-model="search.postType"
+                clearable
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in postTypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-button
             type="primary"
             @click="searchList"
@@ -63,13 +80,31 @@
       </el-col>
     </el-row>
     <el-row class="content">
+      <el-col style="margin-bottom:20px;">
+          <el-button
+            class="czbutton"
+            type="primary"
+            @click="updateState(1)"
+          >批量推送</el-button>
+          <el-button
+            class="czbutton"
+            type="primary"
+            @click="updateStateAll(1)"
+          >全部推送</el-button>
+      </el-col>
       <el-table
         :data="tableData"
         border
         style="width: 100%"
         v-loading="tableLoading"
         element-loading-text="拼命加载中"
+        @selection-change="changeFun"
       >
+        <el-table-column
+          type="selection"
+          width="55"
+        >
+        </el-table-column>
         <el-table-column
           type="index"
           label="序号"
@@ -197,6 +232,16 @@
           label="平均分"
         >
         </el-table-column>
+        <el-table-column
+          prop="state"
+          label="是否推送"
+        >
+          <template
+            slot-scope="scope"
+          >
+            {{scope.row.state == 0 ? '否':'是'}}
+          </template>
+        </el-table-column>
         <!-- <el-table-column
           label="考核进度"
           style="color:#409EFF"
@@ -259,7 +304,7 @@
 
 <script>
 // import MessageCheck from "../common/messageCheck";
-import { selectAllReport } from "@/api/assessmentReport/index";
+import { selectAllReport,updateState,updateStateAll } from "@/api/assessmentReport/index";
 import { sendMessageUser } from "@/api/sms/sms";
 import AssessLook from "../common/assessLook";
 import AssessLook2 from "../common/assessLook2";
@@ -271,10 +316,24 @@ export default {
       search: {
         username: "",
         year: "",
-        month: ""
+        month: "",
+        postType: ""
       },
+      postTypeOptions: [{
+          value: "1",
+          label: "科主任"
+        },
+        {
+          value: "2",
+          label: "护士长"
+        },
+        {
+          value: "3",
+          label: "行政"
+      }],
       fromPath: '',
       tableData: [],
+      checkBoxData: [],
       page: {
         pageNum: 1,
         pageSize: 10
@@ -311,6 +370,90 @@ export default {
     into() {
       this.page.pageNum = 1;
       this.page.pageSize = 10;
+    },
+    //获取选中的值
+    changeFun(val) {
+      this.checkBoxData = val;
+    },
+    updateState(state) {
+      if (this.checkBoxData.length <= 0) {
+        this.$message.warning("请先勾选需要更改的数据");
+        return;
+      }
+      let tData = [];
+      this.checkBoxData.forEach(row => {
+        tData.push(row.id);
+      });
+      let data = {
+        ids: tData.join(","),
+        state: state
+      };
+      this.$confirm("此操作将状态改成可查看, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          new Promise((response, reject) => {
+            updateState(qs.stringify(data))
+              .then(response => {
+                if (response.data.code == 0) {
+                  this.$message({
+                    message: response.data.msg,
+                    type: "success"
+                  });
+                  this.getList();
+                  this.into();
+                } else {
+                  this.$message({
+                    message: response.data.msg,
+                    type: "error"
+                  });
+                }
+              })
+              .catch(error => {
+                reject(error);
+              });
+          });
+        })
+        .catch(() => {});
+    },
+    updateStateAll(state) {
+      this.$confirm("此操作将状态全部改成可查看, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let data = {
+            year: this.search.year,
+            month: this.search.month,
+            dbtype: this.dbtype,
+            state: state
+          };
+          new Promise((response, reject) => {
+            updateStateAll(qs.stringify(data))
+              .then(response => {
+                if (response.data.code == 0) {
+                  this.$message({
+                    message: response.data.msg,
+                    type: "success"
+                  });
+                  this.getList();
+                  this.into();
+                } else {
+                  this.$message({
+                    message: response.data.msg,
+                    type: "error"
+                  });
+                }
+              })
+              .catch(error => {
+                reject(error);
+              });
+          });
+        })
+        .catch(() => {});
     },
     lookCancel(val){
       this.setForm = {}
@@ -424,6 +567,11 @@ export default {
       params.year = this.search.year;
       params.month = this.search.month;
       params.dbtype = this.dbtype
+      if (this.search.postType !=null) {
+        params.postType = this.search.postType
+      } else {
+        params.postType = "";
+      }
       new Promise((response, reject) => {
         selectAllReport(qs.stringify(params))
           .then(response => {
@@ -535,6 +683,10 @@ export default {
 
 
 <style lang="scss" scoped>
+.czbutton {
+    margin-left: 10px;
+    padding: 6px 10px;
+  }
 .title {
   height: 50px;
   line-height: 50px;

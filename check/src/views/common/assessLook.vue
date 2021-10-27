@@ -69,7 +69,13 @@
                 placeholder="请选择评分人"
                 v-model="userValue"
                 @change="userChange"
+                filterable
+                remote
+                reserve-keyword
+                :remote-method="remoteMethod"
                 style="width:100%"
+                @visible-change="visibleChange"
+                :loading="selectLoading"
               >
                 <el-option
                   v-for="(item,index) in userList"
@@ -110,7 +116,7 @@
                 自评说明：
               </el-col>
               <el-col :span="17">
-                {{item.zpsm=='' || item.zpsm==null?'无':item.zpsm}}
+                {{item.zpsm=='' || item.zpsm==null ? '未填':item.zpsm}}
               </el-col>
             </el-row>
             <el-row class="pingjia">
@@ -118,7 +124,7 @@
               <el-col :span="5"> 良好({{item.bscore}}) </el-col>
               <el-col :span="5"> 一般({{item.cscore}}) </el-col>
               <el-col :span="5"> 较差({{item.dscore}}) </el-col>
-              <el-col :span="2"> {{item.score}} </el-col>
+              <el-col :span="2"> <span v-html="jieguo(item)"></span> </el-col>
               <el-col :span="2"> {{item.scoretype}} </el-col>
             </el-row>
             <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
@@ -146,7 +152,7 @@
                 自评说明：
               </el-col>
               <el-col :span="17">
-                {{item.zpsm=='' || item.zpsm==null?'无':item.zpsm}}
+                {{item.zpsm=='' || item.zpsm==null ? '未填':item.zpsm}}
               </el-col>
             </el-row>
             <el-row class="pingjia">
@@ -154,7 +160,7 @@
               <el-col :span="5"> 良好({{item.bscore}}) </el-col>
               <el-col :span="5"> 一般({{item.cscore}}) </el-col>
               <el-col :span="5"> 较差({{item.dscore}}) </el-col>
-              <el-col :span="2"> {{item.score}} </el-col>
+              <el-col :span="2"> <span v-html="jieguo(item)"></span> </el-col>
               <el-col :span="2"> {{item.scoretype}} </el-col>
             </el-row>
             <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
@@ -182,7 +188,7 @@
                 自评说明：
               </el-col>
               <el-col :span="17">
-                {{item.zpsm=='' || item.zpsm==null?'无':item.zpsm}}
+                {{item.zpsm=='' || item.zpsm==null ? '未填':item.zpsm}}
               </el-col>
             </el-row>
             <el-row class="pingjia">
@@ -190,7 +196,7 @@
               <el-col :span="5"> 良好({{item.bscore}}) </el-col>
               <el-col :span="5"> 一般({{item.cscore}}) </el-col>
               <el-col :span="5"> 较差({{item.dscore}}) </el-col>
-              <el-col :span="2"> {{item.score}} </el-col>
+              <el-col :span="2"> <span v-html="jieguo(item)"></span> </el-col>
               <el-col :span="2"> {{item.scoretype}} </el-col>
             </el-row>
             <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
@@ -218,7 +224,7 @@
                 自评说明：
               </el-col>
               <el-col :span="17">
-                {{item.zpsm=='' || item.zpsm==null?'无':item.zpsm}}
+                {{item.zpsm=='' || item.zpsm==null ? '未填':item.zpsm}}
               </el-col>
             </el-row>
             <el-row class="pingjia">
@@ -226,7 +232,7 @@
               <el-col :span="5"> 良好({{item.bscore}}) </el-col>
               <el-col :span="5"> 一般({{item.cscore}}) </el-col>
               <el-col :span="5"> 较差({{item.dscore}}) </el-col>
-              <el-col :span="2"> {{item.score}} </el-col>
+              <el-col :span="2"> <span v-html="jieguo(item)"></span> </el-col>
               <el-col :span="2"> {{item.scoretype}} </el-col>
             </el-row>
             <el-row class="cpsm" v-show="item.score == item.dscore?true:false">
@@ -274,8 +280,10 @@ export default {
       dutyZhongdian: [],
       dutyMubiao: [],
       userList: [],
+      userListQ: [],
       userValue: undefined,
       historyTotal: 0,
+      selectLoading: false,
       form: {}
     };
   },
@@ -292,8 +300,50 @@ export default {
     // this.getDetail();
   },
   methods: {
+    jieguo (item) {
+      let v = '';
+      let color = '';
+      if (item.score == item.ascore) {
+        v = '优秀'
+        color = '#FFFF99'
+      } else if (item.score == item.bscore) {
+        v = '良好'
+        color = '#99FF99'
+      } else if (item.score == item.cscore) {
+        v = '一般'
+        color = '#99FFFF'
+      } else if (item.score == item.dscore) {
+        v = '较差'
+        color = '#FF9797'
+      }
+      v = v + '(' + item.score + ')'
+      return '<div style="width: 80px;height: 25px;background:'+color+';border-radius: 3px;font-size:14px;display: flex;align-items: center;justify-content: center;"><b>' + v + '</b></div>';
+    },
+    visibleChange(b){
+      if(b==false){
+        this.userList = this.userListQ;
+      }
+    },
+    remoteMethod(query) {
+      if (query !== '') {
+        this.selectLoading = true;
+        setTimeout(() => {
+          this.selectLoading = false;
+          this.userList = this.userListQ.filter(item => {
+            return item.label.indexOf(query) > -1;
+          });
+        }, 200);
+      } else {
+        this.userList = this.userListQ;
+      }
+    },
+    userChange (val) {
+      this.userValue = val
+      this.getDetail()
+    },
     getUserFlowType () {
       this.userList = [] 
+      this.userListQ = [] 
       let data = {
         serialNo: this.form.serialno,
         scoreType: this.form.scoreType,
@@ -307,11 +357,13 @@ export default {
                   let userArr = response.data.data
                   userArr.forEach(item => {
                     this.userList.push({value: item.usercode, label: item.username})
+                    this.userListQ.push({value: item.usercode, label: item.username})
                   }); 
                   this.userValue = response.data.data[0].usercode
                   this.getDetail()
                 }else {
                   this.userList = []
+                  this.userListQ = [] 
                   this.userValue = ''
                   this.dutyJichu = [];
                   this.dutyYiban = [];
@@ -331,10 +383,6 @@ export default {
             reject(error);
           });
       });
-    },
-    userChange (val) {
-      this.userValue = val
-      this.getDetail()
     },
     getDetail() {
       let data = {

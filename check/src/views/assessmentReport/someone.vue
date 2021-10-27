@@ -80,12 +80,8 @@
             <p>组织建设</p>
           </el-col>
           <el-col :span="3" v-show="dbtype=='1'?false:true">
-            <h5>{{detailData.mbScore}}</h5>
+            <h5>{{detailData.mbScore + detailData.sumMbAvgScore}}</h5>
             <p>目标得分</p>
-          </el-col>
-          <el-col :span="3" v-show="dbtype=='1'?false:true">
-            <h5>{{detailData.sumMbAvgScore}}</h5>
-            <p>目标平均</p>
           </el-col>
           <el-col :span="3" v-show="dbtype=='2'?false:true">
             <h5>{{detailData.mbScore}}</h5>

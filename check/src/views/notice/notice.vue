@@ -75,7 +75,6 @@ export default {
   },
   methods: {
     getDetail() {
-      /*
       let data = {
         rolecode : this.$store.state.user.user.rolecode
       }
@@ -106,7 +105,6 @@ export default {
             reject(error);
           });
       });
-      */
     },
     submitForm() {
       let data = {

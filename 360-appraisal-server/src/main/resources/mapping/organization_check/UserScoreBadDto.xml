@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.welb.organization_check.mapper.UserScoreBadDtoMapper">
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.dto.UserScoreBadDto">
+        <result column="Year" property="year" jdbcType="VARCHAR"/>
+        <result column="Month" property="month" jdbcType="VARCHAR"/>
+        <result column="MSerialNo" property="mserialNo" jdbcType="VARCHAR"/>
+        <result column="FSerialNo" property="fserialNo" jdbcType="VARCHAR"/>
+        <result column="usercode" property="usercode" jdbcType="VARCHAR"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="ScoredCode" property="scoredCode" jdbcType="VARCHAR"/>
+        <result column="ScorringCode" property="scorringCode" jdbcType="VARCHAR"/>
+        <result column="stationcode" property="stationcode" jdbcType="VARCHAR"/>
+        <result column="moneycard" property="moneycard" jdbcType="VARCHAR"/>
+        <result column="departmentcode" property="departmentcode" jdbcType="VARCHAR"/>
+        <result column="State" property="state" jdbcType="VARCHAR"/>
+        <result column="dutyCode" property="dutyCode" jdbcType="VARCHAR"/>
+        <result column="dutyName" property="dutyName" jdbcType="VARCHAR"/>
+        <result column="DutyType" property="dutyType" jdbcType="VARCHAR"/>
+        <result column="ScoreType" property="scoreType" jdbcType="VARCHAR"/>
+        <result column="postType" property="postType" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectUserScoreBadDto" resultMap="BaseResultMap">
+    SELECT
+        m.SerialNo MSerialNo,
+        sf.SerialNo FSerialNo,
+        m.Year,
+        m.Month,
+        m.EmployeeCode,
+        m.State,
+        u.usercode,
+        u.username,
+        u.stationcode,
+        u.moneycard,
+        u.postType,
+        sf.ScoredCode,
+        sf.ScorringCode,
+        sf.ScoreType,
+        d.DutyCode,
+        d.DutyName,
+        d.DutyType,
+        sd.cpsm
+    FROM
+        scoreDetail sd
+        left join Duty d on
+            sd.DSerialNo = d.DutyCode
+        left join scoreflow sf on
+            sf.SerialNo = sd.FSerialNo
+        left join monthsummary m on
+            m.SerialNo = sf.MSerialNo
+            AND m.EmployeeCode = sf.ScoredCode
+            AND m.dbtype = sf.dbtype
+        left join User u on
+            m.EmployeeCode = u.UserCode
+    where
+        m.Year = #{year}
+        AND m.Month = #{month}
+        AND m.dbtype = #{dbtype}
+        <if test='username != null and username!=""'>
+        AND u.username = #{username}
+        </if>
+        <if test='stationcode != null and stationcode!=""'>
+        AND u.stationcode = #{stationcode}
+        </if>
+        <if test='postType != null and postType!=""'>
+        AND u.postType = #{postType}
+        </if>
+        AND !ISNULL(sd.cpsm) and LENGTH(sd.cpsm) > 0
+        order by u.usercode,sf.ScoreType
+    </select>
+
+</mapper>
+

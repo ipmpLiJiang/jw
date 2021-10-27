@@ -84,6 +84,7 @@ public class UserDtoController {
             try {
                 ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
                 if (setTime != null) {
+                    this.shengChengDelete(setTime.getYear(),setTime.getMonth(),dbtype);
                     long count = 0;
                     List<User> scorringUserList = userService.selectUserPfr(dbtype);
                     if (scorringUserList.size() > 0) {
@@ -120,6 +121,17 @@ public class UserDtoController {
         }
         return map;
     }
+    private void shengChengDelete(String year,String month,String dbtype){
+        List<MonthSummary> monthSummaryList =  summaryService.selectListByYearAndMonth(year,month,dbtype);
+        long count = monthSummaryList.stream().filter(s-> !s.getState().equals("0")).count();
+        if(count == 0) {
+            scoreDetailService.deleteYM(year, month, dbtype);
+            historyService.deleteYM(year, month, dbtype);
+            flowService.deleteYM(year, month, dbtype);
+            summaryService.deleteYM(year, month, dbtype);
+        }
+    }
+
 
     /**
      * 评分汇总查询列表数据  ；当前年份的上一月度
@@ -293,24 +305,36 @@ public class UserDtoController {
                         bdfrHistoryList, bdfrFlowList, bdfrDetailList, insertFlowList, updateFlowList, insertHistoryList, updateHistoryList, insertDetailList, dutySmList, insertDutySmList, dbtype);
             }
             if (insertHistoryList.size() > 0) {
-                historyService.batchInsert(insertHistoryList);
+                for(ScoreHistory item:insertHistoryList){
+                    historyService.insertSelective(item);
+                }
+//                historyService.batchInsert(insertHistoryList);
             }
             if (updateHistoryList.size() > 0) {
                 for (ScoreHistory history : updateHistoryList)
                     historyService.updateByPrimaryKeySelective(history);
             }
             if (insertFlowList.size() > 0) {
-                flowService.batchInsert(insertFlowList);
+                for(ScoreFlow item:insertFlowList){
+                    flowService.insertSelective(item);
+                }
+//                flowService.batchInsert(insertFlowList);
             }
             if (updateFlowList.size() > 0) {
                 for (ScoreFlow flow : updateFlowList)
                     flowService.updateByPrimaryKeySelective(flow);
             }
             if (insertDetailList.size() > 0) {
-                scoreDetailService.batchInset(insertDetailList);
+                for(ScoreDetail item:insertDetailList){
+                    scoreDetailService.insertSelective(item);
+                }
+//                scoreDetailService.batchInset(insertDetailList);
             }
             if (insertDutySmList.size() > 0) {
-                scoreDutySmService.batchInset(insertDutySmList);
+                for(ScoreDutySm item:insertDutySmList){
+                    scoreDutySmService.insertSelective(item);
+                }
+//                scoreDutySmService.batchInset(insertDutySmList);
             }
         }
     }

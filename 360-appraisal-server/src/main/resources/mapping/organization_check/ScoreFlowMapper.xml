@@ -393,4 +393,10 @@
         AND m.Month = #{month}
         AND m.dbtype=#{dbtype}
   </select>
+
+    <delete id="deleteYM">
+        delete from scoreflow where MSerialNo in (
+            select SerialNo from monthsummary where year=#{year} and Month=#{month} and dbtype=#{dbtype}
+        )
+    </delete>
 </mapper>

@@ -169,36 +169,6 @@ public class UserController extends BaseController {
 
     }
 
-    @RequestMapping(value = "/dutyScorringUserlist", produces = "application/json;charset=utf-8")
-    public Object dutyScorringUserlist(HttpServletRequest req,String scorredCode, String dutycode,String scoretype,String dbtype, int pageNum, int pageSize) {
-        ModelMap map = new ModelMap();
-        String userCode = (String) req.getSession().getAttribute("usercode");
-        if (userCode != null) {
-            //分页
-            PageHelper.startPage(pageNum, pageSize);
-            List<User> users;
-            try {
-                users = userService.findDutyScorringUserList(scorredCode,dutycode,scoretype,dbtype);
-                PageInfo<User> pageInfo = new PageInfo<>(users);
-                users = pageInfo.getList();
-                users = this.handleUsersMsg(users);
-                map.put("totalPages", pageInfo.getTotal());
-                map.put("msg", "查询用户成功");
-                map.put("data", users);
-                map.put("code", 0);
-            } catch (Exception e) {
-                log.error(e.getMessage() , e);
-                map.put("msg", "查询用户失败");
-                map.put("code", 1);
-            }
-        } else {
-            map.put("msg", "登录用户超时,请重新登录");
-            map.put("code", 810);
-        }
-        return map;
-
-    }
-
     private List<User> handleUsersMsg(List<User> users) {
         if (users.size() > 0) {
             for (int i = 0; i < users.size(); i++) {

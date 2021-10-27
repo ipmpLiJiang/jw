@@ -99,4 +99,9 @@ public class ScoreHistoryServiceImpl implements IScoreHistoryService {
     public List<ScoreHistory> selectHistoryByMonthSummaryList(String year,String month, String dbtype){
         return historyMapper.selectHistoryByMonthSummaryList(year,month,dbtype);
     }
+
+    @Override
+    public int deleteYM(String year,String month,String dbtype){
+        return historyMapper.deleteYM(year,month,dbtype);
+    }
 }

@@ -803,8 +803,10 @@
             </if>
             )
             AND u.UserCode in (
-            select ScorredCode ucode from (SELECT DISTINCT ScorredCode FROM score WHERE dbtype =#{user.dbtype}) a union
-            select ScorringCode ucode from (SELECT DISTINCT ScorringCode FROM score WHERE dbtype =#{user.dbtype}) b
+                select code from (
+                    SELECT ScorredCode code FROM score WHERE dbtype =#{user.dbtype} union
+                    SELECT ScorringCode code FROM score WHERE dbtype =#{user.dbtype}
+                ) a
             )
         </where>
         order by u.UserCode+0
@@ -898,8 +900,10 @@
         </if>
         <if test="qrcode==null">
             AND u.UserCode in (
-            select ScorredCode ucode from (SELECT DISTINCT ScorredCode FROM score WHERE dbtype =#{dbtype}) a union
-            select ScorringCode ucode from (SELECT DISTINCT ScorringCode FROM score WHERE dbtype =#{dbtype}) b
+                select code from (
+                    SELECT ScorredCode code FROM score WHERE dbtype =#{dbtype} union
+                    SELECT ScorringCode code FROM score WHERE dbtype =#{dbtype}
+                ) a
             )
         </if>
         <if test='qrcode!=null and qrcode=="pfr"'>
@@ -986,23 +990,6 @@
     and d.DepartmentCode = (select DepartmentCode from department where DepartmentName=#{departmentname})
   </select>
 
-    <select id="findDutyScorringUserList" resultMap="BaseResultMap">
-    SELECT
-        d.DepartmentName ,u.*,s.StationName
-    FROM
-        score s1,station s ,department d ,user u,user_role ur
-    where
-        s1.ScorringCode = u.UserCode
-        and u.UserCode=ur.UserCode
-        and u.StationCode=s.StationCode
-        and s.DepartmentCode=d.DepartmentCode
-        and s1.ScorredCode = #{scorredCode}
-        and s1.DutyCode = #{dutycode}
-        and s1.DutyCode = #{dutycode}
-        and s1.ScoreType = #{scoretype}
-        and s1.dbtype = #{dbtype}
-  </select>
-
     <!--查找打分用户-->
     <select id="selectGradeUserList" parameterType="java.lang.String"  resultMap="BaseResultMap">
     select u.*  from user u,user_role ur
@@ -1065,5 +1052,24 @@
         <foreach item="item" index="index" collection="codeList" open="(" separator="," close=")">
             #{item}
         </foreach>
+    </select>
+
+    <select id="selectUserScoreStationList" resultType="com.welb.organization_check.entity.User">
+        select
+            u.*,
+            r.RoleCode
+        from
+            user u
+            inner join (
+                select UserCode,RoleCode from user_role where RoleCode in ('150','300')
+            ) r on u.UserCode = r.UserCode
+         where
+            u.Flag = 0 and
+            u.StationCode in (
+                select code from (
+                    select ScorringStationCode code from scorestation union
+                    select ScorredStationCode code from scorestation
+                ) a
+            )
     </select>
 </mapper>

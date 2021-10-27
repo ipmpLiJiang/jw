@@ -43,3 +43,19 @@ export function getScorringAndScore(data) {
     })
 }
 
+export function updateState(data) {
+    return fetch({
+        url: 'evaluation/updateState',
+        method: 'post',
+        data: data
+    })
+}
+
+export function updateStateAll(data) {
+    return fetch({
+        url: 'evaluation/updateStateAll',
+        method: 'post',
+        data: data
+    })
+}
+

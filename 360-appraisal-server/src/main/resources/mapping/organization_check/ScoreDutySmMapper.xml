@@ -122,4 +122,8 @@
             </if>
              and dbtype = #{dbtype,jdbcType=VARCHAR}
     </select>
+
+    <delete id="deleteYM">
+        delete from scoreDutySm where year=#{year} and Month=#{month} and dbtype = #{dbtype}
+    </delete>
 </mapper>

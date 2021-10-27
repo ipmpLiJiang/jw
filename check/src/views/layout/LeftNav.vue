@@ -68,6 +68,9 @@
         <router-link to="/home/scorePeople">
           <el-menu-item index="/home/scorePeople">评分关系管理</el-menu-item>
         </router-link>
+        <router-link to="/home/scoreStationPeople">
+          <el-menu-item index="/home/scoreStationPeople">岗位关系管理</el-menu-item>
+        </router-link>
         <router-link to="/home/gradeTotal">
           <el-menu-item index="/home/gradeTotal">评分汇总管理</el-menu-item>
         </router-link>
@@ -81,7 +84,7 @@
           <el-menu-item index="/home/leaderUser">打分用户管理</el-menu-item>
         </router-link>
       </el-submenu>
-      <!-- <router-link
+      <router-link
         to="/home/notice"
         v-if="role == '100' || role == '50'"
       >
@@ -89,7 +92,7 @@
           <i class="iconfont icon-gonggao"></i>
           <span slot="title">登录提示</span>
         </el-menu-item>
-      </router-link> -->
+      </router-link>
       <router-link to="/home/updatePsd">
         <el-menu-item index="/home/updatePsd">
           <i class="iconfont icon-xiugaimima"></i>
@@ -142,6 +145,12 @@
         </router-link>
         <router-link v-if="role == '100' || role == '50' || role=='200' " to="/home/historyGrade">
           <el-menu-item index="/home/historyGrade">历史评分管理</el-menu-item>
+        </router-link>
+        <router-link v-if="role == '100' || role == '50' || role=='200' " to="/home/scoreBadGrade">
+          <el-menu-item index="/home/scoreBadGrade">差评评分汇总</el-menu-item>
+        </router-link>
+        <router-link v-if="role == '100' || role == '50' || role=='200' " to="/home/scoreSortGrade">
+          <el-menu-item index="/home/scoreSortGrade">评分排序汇总</el-menu-item>
         </router-link>
       </el-submenu>
      <!-- <template v-if="role == 300">

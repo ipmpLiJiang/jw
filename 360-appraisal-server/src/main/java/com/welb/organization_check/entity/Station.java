@@ -215,4 +215,34 @@ public class Station {
     public void setCommonname(String commonname) {
         this.commonname = commonname;
     }
+
+    public Integer getIsEF() {
+        return isEF;
+    }
+
+    public void setIsEF(Integer isEF) {
+        this.isEF = isEF;
+    }
+
+    private Integer isEF;
+
+    private  Integer scoreId;
+
+    public Integer getScoreId() {
+        return scoreId;
+    }
+
+    public void setScoreId(Integer scoreId) {
+        this.scoreId = scoreId;
+    }
+
+    public String getScoreType() {
+        return scoreType;
+    }
+
+    public void setScoreType(String scoreType) {
+        this.scoreType = scoreType;
+    }
+
+    private  String scoreType;
 }

@@ -77,8 +77,10 @@
             and m.EmployeeCode=s.ScorredCode
             and s.ScorringCode=#{scorringcode}
             AND u.UserCode in (
-            select ScorredCode ucode from (SELECT DISTINCT ScorredCode FROM score WHERE dbtype =#{dbtype}) a union
-            select ScorringCode ucode from (SELECT DISTINCT ScorringCode FROM score WHERE dbtype =#{dbtype}) b
+                select code from (
+                    SELECT ScorredCode code FROM score WHERE dbtype =#{dbtype} union
+                    SELECT ScorringCode code FROM score WHERE dbtype =#{dbtype}
+                ) a
             )
             and m.dbtype = s.dbtype
             and m.State ="6"
@@ -113,8 +115,10 @@
             and s.ScorringCode=#{scorringcode}
             and m.dbtype = #{dbtype}
             AND u.UserCode in (
-            select ScorredCode from (select DISTINCT ScorredCode from score where dbtype=#{dbtype}) a union
-            select ScorringCode from (select DISTINCT ScorringCode from score where dbtype=#{dbtype}) b
+                select code from (
+                    select ScorredCode code from score where dbtype=#{dbtype} union
+                    select ScorringCode code from score where dbtype=#{dbtype}
+                ) a
             )
             and m.State ="6"
             and u.RoleType="0"

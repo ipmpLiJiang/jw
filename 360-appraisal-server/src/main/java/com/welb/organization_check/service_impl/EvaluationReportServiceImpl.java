@@ -120,4 +120,19 @@ public class EvaluationReportServiceImpl implements IEvaluationReportService {
     public List<EvaluationReport>selectEvaluationReportByInUserCode(String year,String month, String dbtype,List<String> codeList){
         return evaluationReportMapper.selectEvaluationReportByInUserCode(year,month, dbtype,codeList);
     }
+
+    @Override
+    public int updateStateAll(Integer state,String year,String month,String dbtype){
+        return evaluationReportMapper.updateStateAll(state,year,month,dbtype);
+    }
+
+    @Override
+    public int updateStateById(Integer state,Integer Id){
+        return evaluationReportMapper.updateStateById(state,Id);
+    }
+
+    @Override
+    public int deleteYM(String year,String month,String dbtype){
+        return evaluationReportMapper.deleteYM(year,month,dbtype);
+    }
 }

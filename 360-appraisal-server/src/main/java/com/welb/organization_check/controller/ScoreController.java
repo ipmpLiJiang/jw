@@ -517,18 +517,8 @@ public class ScoreController {
                                         count = dutyScoreList.stream().filter(
                                                 s -> s.getScorringcode().equals(u.getUsercode())
                                                         && s.getScorredcode().equals(score.getScorredcode())
-                                                        && s.getScoretype().equals(scoreType)
                                                         && s.getDutycode().equals(code)
                                         ).count();
-
-//                                        if (count == 0) {
-//                                            count = dutyScoreList.stream().filter(
-//                                                    s -> s.getScorringcode().equals(u.getUsercode())
-//                                                            && s.getScorredcode().equals(score.getScorredcode())
-//                                                            && !s.getScoretype().equals(scoreType)
-//                                                            && !s.getDutycode().equals("")
-//                                            ).count();
-//                                        }
 
                                         if (count == 0) {
                                             Score insert = new Score();
@@ -571,7 +561,7 @@ public class ScoreController {
 
                         if (temp || temp1) {
                             if (!temp && temp1) {
-                                sb1.append("以上员工已被选择为其他类评分人，请重新选择。");
+                                sb1.append("以上员工已添加或已被其他选择为类评分人，请重新选择。");
                                 map.put("msg", (isAdd ? "部分评分人添加成功。" : "") + sb1);
                                 map.put("code", isAdd ? 0 : 1);
                             } else if (temp && !temp1) {
@@ -588,6 +578,9 @@ public class ScoreController {
                             if (isAdd) {
                                 map.put("msg", "添加" + scoreType + "类评分人成功.");
                                 map.put("code", 0);
+                            } else {
+                                map.put("msg", "添加" + scoreType + "类评分人失败.");
+                                map.put("code", 1);
                             }
                         }
                     }
@@ -915,5 +908,34 @@ public class ScoreController {
             map.put("msg", "失败");
         }
         return map;
+    }
+
+    @RequestMapping(value = "/dutyScoreScorringUserlist", produces = "application/json;charset=utf-8")
+    public Object dutyScoreScorringUserlist(HttpServletRequest req,String scorredCode, String dutycode,String scoretype,String dbtype, int pageNum, int pageSize) {
+        ModelMap map = new ModelMap();
+        String userCode = (String) req.getSession().getAttribute("usercode");
+        if (userCode != null) {
+            //分页
+            PageHelper.startPage(pageNum, pageSize);
+            List<Score> scores;
+            try {
+                scores = scoreService.findScoreDutyScorringUserList(scorredCode,dutycode,scoretype,dbtype);
+                PageInfo<Score> pageInfo = new PageInfo<>(scores);
+                scores = pageInfo.getList();
+                map.put("totalPages", pageInfo.getTotal());
+                map.put("msg", "查询评分用户成功");
+                map.put("data", scores);
+                map.put("code", 0);
+            } catch (Exception e) {
+                log.error(e.getMessage() , e);
+                map.put("msg", "查询评分用户失败");
+                map.put("code", 1);
+            }
+        } else {
+            map.put("msg", "登录用户超时,请重新登录");
+            map.put("code", 810);
+        }
+        return map;
+
     }
 }

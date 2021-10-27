@@ -86,8 +86,14 @@ import scorePeople from '@/views/score/scorePeople.vue'//评分关系管理
 import gradeUserList from '@/views/score/gradeUserList.vue'//设置各类评分人
 import gradeDutyUserList from '@/views/score/gradeDutyUserList.vue'//设置各类评分人
 import byGradeUserList from '@/views/score/byGradeUserList.vue' // 设置被评分人
+import scoreStationPeople from '@/views/score/scoreStationPeople.vue'//岗位关系管理
+import gradeStationList from '@/views/score/gradeStationList.vue'//设置各类评分岗位
+import gradeDutyStationList from '@/views/score/gradeDutyStationList.vue'//设置各类评分岗位
+import byGradeStationList from '@/views/score/byGradeStationList.vue' // 设置被评分岗位
 import gradeTotal from '@/views/score/gradeTotal.vue'//评分汇总管理
 import historyGrade from '@/views/score/historyGrade.vue'//历史评分汇总
+import scoreBadGrade from '@/views/score/scoreBadGrade.vue'//差评评分汇总
+import scoreSortGrade from '@/views/score/scoreSortGrade.vue'//评分排序汇总
 import quarter from '@/views/score/quarter.vue'//月度总结管理
 import leaderUser from '@/views/score/leader.vue'//打分用户管理
 
@@ -349,6 +355,23 @@ export default new Router({
                 component: gradeDutyUserList,
             }]
         }, {
+            path: 'scoreStationPeople',
+            name: "岗位关系管理",
+            component: routeReplaceSelf(scoreStationPeople),
+            children: [{
+                path: 'gradeStationList',
+                name: "岗位关系管理",
+                component: gradeStationList,
+            }, {
+                path: 'byGradeStationList',
+                name: "岗位关系管理",
+                component: byGradeStationList,
+            }, {
+                path: 'gradeDutyStationList',
+                name: "岗位关系管理",
+                component: gradeDutyStationList,
+            }]
+        }, {
             path: 'gradeTotal',
             name: "评分汇总管理",
             component: gradeTotal
@@ -356,6 +379,14 @@ export default new Router({
             path: 'historyGrade',
             name: "历史评分汇总",
             component: historyGrade
+        }, {
+            path: 'scoreBadGrade',
+            name: "差评评分汇总",
+            component: scoreBadGrade
+        }, {
+            path: 'scoreSortGrade',
+            name: "评分排序汇总",
+            component: scoreSortGrade
         }
         // , {
         //     path: 'quarter',

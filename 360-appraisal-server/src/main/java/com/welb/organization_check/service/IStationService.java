@@ -56,5 +56,9 @@ public interface IStationService {
      */
     List<Station>selectStationsByDeptCode(String departmentcode);
 
+    List<Station> selectStationScoreEF(String scorredStationCode,String scoreType,String dutyCode,String dbtype);
+
+    List<Station> findStationByInCodeList(List<String> codeList);
+
 
 }

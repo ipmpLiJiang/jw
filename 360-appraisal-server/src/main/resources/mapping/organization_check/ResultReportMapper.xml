@@ -179,4 +179,15 @@
       #{resultReportIds}
     </foreach>
   </delete>
+
+  <select id="selectResultReportByYearMonth" resultMap="BaseResultMap">
+    select * from resultreport where EvaluationReportCode in (
+          select id from evaluationreport where Year =#{year} and Month = #{month}  and dbtype =#{dbtype}
+      )
+  </select>
+  <delete id="deleteYM">
+    delete from resultreport where evaluationreportCode in(
+        select id from evaluationreport where year=#{year} and Month=#{month} and dbtype = #{dbtype}
+    )
+  </delete>
 </mapper>

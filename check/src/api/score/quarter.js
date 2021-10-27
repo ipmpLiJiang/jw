@@ -25,6 +25,13 @@ export function updateSummaryGradeState(data) {
         data: data
     })
 }
+export function updateSummaryGradeStateZp(data) {
+    return fetch({
+        url: 'quarter/updateSummaryGradeStateZp',
+        method: 'post',
+        data: data
+    })
+}
 //全部修改月节评分状态接口
 export function updateSummaryGradeStateAll(data) {
     return fetch({

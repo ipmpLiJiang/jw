@@ -11,7 +11,7 @@
           <div class="season-text">
             <div class="form-msg">
               <span>姓名：</span>
-              <span>{{detailData.username}}({{detailData.moneycard}})</span>
+              <span>{{detailData.username}}</span>
             </div>
             <div class="form-msg">
               <span>账号：</span>

@@ -389,6 +389,9 @@
             <if test="evaluationDto.dbbk != null and evaluationDto.dbbk!=''">
                 and e.dbbk=#{evaluationDto.dbbk,jdbcType=VARCHAR}
             </if>
+            <if test="evaluationDto.postType != null and evaluationDto.postType!=''">
+                and u.postType=#{evaluationDto.postType,jdbcType=VARCHAR}
+            </if>
             and u.UserCode=e.UserCode
             and e.UserCode=ur.UserCode
             and r.RoleCode=ur.RoleCode
@@ -437,4 +440,15 @@
     <update id="updateAvgScore" parameterType="com.welb.organization_check.entity.EvaluationReport">
         update evaluationreport set AvgScore = #{avgscore} where Year=#{year} and Month=#{month} and dbtype=#{dbtype}
     </update>
+
+    <update id="updateStateAll">
+    update  evaluationreport set State=#{state} where Year = #{year} and Month = #{month} and dbtype=#{dbtype}
+  </update>
+
+    <update id="updateStateById">
+    update  evaluationreport set State=#{state} where Id = #{Id}
+  </update>
+    <delete id="deleteYM">
+        delete from evaluationreport where year=#{year} and Month=#{month} and dbtype = #{dbtype}
+  </delete>
 </mapper>

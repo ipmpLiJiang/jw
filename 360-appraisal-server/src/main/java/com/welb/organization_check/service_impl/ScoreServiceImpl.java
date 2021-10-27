@@ -162,4 +162,14 @@ public class ScoreServiceImpl implements  IScoreService {
             return 0;
         }
     }
+
+    @Override
+    public List<Score> findScoreDutyScorringUserList(String scorredCode,String dutycode,String scoretype,String dbtype){
+        return this.scoreMapper.findScoreDutyScorringUserList(scorredCode,dutycode,scoretype,dbtype);
+    }
+
+    @Override
+    public int deleteDbtype(String dbtype){
+        return scoreMapper.deleteDbtype(dbtype);
+    }
 }

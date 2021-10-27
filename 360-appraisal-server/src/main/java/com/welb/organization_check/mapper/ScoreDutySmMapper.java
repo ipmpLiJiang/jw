@@ -2,6 +2,7 @@ package com.welb.organization_check.mapper;
 
 import com.welb.organization_check.entity.ScoreDutySm;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -23,4 +24,6 @@ public interface ScoreDutySmMapper {
     int updateByYmSc(ScoreDutySm record);
 
     List<ScoreDutySm> selectScoreDutySmList(ScoreDutySm record);
+
+    int deleteYM(@Param("year") String year, @Param("month") String month, @Param("dbtype") String dbtype);
 }

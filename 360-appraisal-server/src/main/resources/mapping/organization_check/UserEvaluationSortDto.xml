@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.welb.organization_check.mapper.UserEvaluationSortDtoMapper">
+    <resultMap id="BaseResultMap" type="com.welb.organization_check.dto.UserEvaluationSortDto">
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="MSerialNo" property="mserialNo" jdbcType="VARCHAR"/>
+        <result column="Year" property="year" jdbcType="VARCHAR"/>
+        <result column="Month" property="month" jdbcType="VARCHAR"/>
+        <result column="usercode" property="usercode" jdbcType="VARCHAR"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="stationcode" property="stationcode" jdbcType="VARCHAR"/>
+        <result column="moneycard" property="moneycard" jdbcType="VARCHAR"/>
+        <result column="departmentcode" property="departmentcode" jdbcType="VARCHAR"/>
+        <result column="postType" property="postType" jdbcType="VARCHAR"/>
+        <result column="TotalScore" property="totalscore" jdbcType="DOUBLE"/>
+        <result column="BasicScore" property="basicscore" jdbcType="DOUBLE"/>
+        <result column="KeyScore" property="keyscore" jdbcType="DOUBLE"/>
+        <result column="ZdScore" property="zdScore" jdbcType="DOUBLE"/>
+        <result column="SumMbAvgScore" property="sumMbAvgScore" jdbcType="DOUBLE"/>
+        <result column="DfScore" property="dfScore" jdbcType="DOUBLE"/>
+        <result column="MbScore" property="mbScore" jdbcType="DOUBLE"/>
+        <result column="ZfScore" property="zfScore" jdbcType="DOUBLE"/>
+        <result column="AvgScore" property="avgscore" jdbcType="DOUBLE"/>
+        <result column="State" property="state" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectUserEvaluationReportSortList" resultMap="BaseResultMap">
+        SELECT
+            er.id,
+            m.SerialNo MSerialNo,
+            m.State,
+            er.year,
+            er.month,
+            u.usercode,
+            u.username,
+            u.stationcode,
+            u.moneycard,
+            u.postType,
+            er.TotalScore,
+            er.BasicScore,
+            er.KeyScore,
+            er.ZdScore,
+            er.SumMbAvgScore,
+            er.DfScore,
+            er.MbScore,
+            er.ZfScore,
+            er.AvgScore
+        FROM
+            monthsummary m,
+            evaluationreport er,
+            User u
+        where
+            m.Year = er.Year
+            AND m.Month = er.Month
+            AND m.EmployeeCode = er.UserCode
+            AND m.EmployeeCode = u.UserCode
+            AND m.dbtype = er.dbtype
+            AND m.Year = #{year}
+            AND m.Month = #{month}
+            AND m.dbtype = #{dbtype}
+            <if test='username != null and username!=""'>
+                AND u.username = #{username}
+            </if>
+            <if test='stationcode != null and stationcode!=""'>
+                AND u.stationcode = #{stationcode}
+            </if>
+            <if test='postType != null and postType!=""'>
+            AND u.postType = #{postType}
+            </if>
+        order by er.TotalScore desc
+    </select>
+</mapper>
+

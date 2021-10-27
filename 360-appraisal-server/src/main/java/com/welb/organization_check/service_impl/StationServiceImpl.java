@@ -63,4 +63,14 @@ public class StationServiceImpl implements IStationService {
     public List<Station> selectStationsByDeptCode(String departmentcode) {
         return stationMapper.selectStationsByDeptCode(departmentcode);
     }
+
+    @Override
+    public List<Station> selectStationScoreEF(String scorredStationCode,String scoreType,String dutyCode,String dbtype){
+        return stationMapper.selectStationScoreEF(scorredStationCode,scoreType,dutyCode,dbtype);
+    }
+
+    @Override
+    public List<Station> findStationByInCodeList(List<String> codeList){
+        return stationMapper.findStationByInCodeList(codeList);
+    }
 }

@@ -50,10 +50,6 @@ public class UserServiceImpl implements IUserService {
         return userMapper.selectUserScoreAll(user,roleList);
     }
 
-    @Override
-    public List<User> findDutyScorringUserList(String scorredCode,String dutycode,String scoretype,String dbtype){
-        return this.userMapper.findDutyScorringUserList(scorredCode,dutycode,scoretype,dbtype);
-    }
 
     @Override
     public int deleteByPrimaryKey(String usercode) {
@@ -206,6 +202,11 @@ public class UserServiceImpl implements IUserService {
     @Override
     public List<User> findUserByCodeList(String[] codeList){
         return  userMapper.findUserByCodeList(codeList);
+    }
+
+    @Override
+    public List<User> selectUserScoreStationList(){
+        return  userMapper.selectUserScoreStationList();
     }
 
 }

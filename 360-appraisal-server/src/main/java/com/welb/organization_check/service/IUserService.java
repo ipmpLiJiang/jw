@@ -175,5 +175,6 @@ public interface IUserService {
 
     List<User> findUserByCodeList(String[] codeList);
 
-    List<User> findDutyScorringUserList(String scorredCode,String dutycode,String scoretype,String dbtype);
+    List<User> selectUserScoreStationList();
+
 }

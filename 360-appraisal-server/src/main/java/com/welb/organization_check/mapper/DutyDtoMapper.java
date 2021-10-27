@@ -21,5 +21,6 @@ public interface DutyDtoMapper {
                                 @Param("stationcode") String stationcode, @Param("username") String username,
                                 @Param("scoreType") String scoreType,@Param("dbtype") String dbtype);
 
-
+    List<DutyDto> selectStationDutyDto(@Param("scorredstationcode") String scorredstationcode, @Param("departmentcode") String departmentcode,
+                                       @Param("stationname") String stationname,@Param("scoreType") String scoreType,@Param("dbtype") String dbtype);
 }

@@ -146,4 +146,9 @@ public class ScoreFlowServiceImpl implements IScoreFlowService {
     public List<ScoreFlow> selectFlowByMonthSummaryList(String year,String month,String dbtype){
         return flowMapper.selectFlowByMonthSummaryList(year,month,dbtype);
     }
+
+    @Override
+    public int deleteYM(String year,String month,String dbtype){
+        return flowMapper.deleteYM(year,month,dbtype);
+    }
 }

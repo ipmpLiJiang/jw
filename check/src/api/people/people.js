@@ -10,10 +10,18 @@ export function getList(data) {
     })
 }
 
-//查询指标打分人员列表
-export function getDutyScorringUserlist(data) {
+
+export function getDutyScorringStationlist(data) {
     return fetch({
-        url: 'user/dutyScorringUserlist',
+        url: 'station/dutyScorringStationlist',
+        method: 'post',
+        data: data
+    })
+}
+
+export function getScorredTypeDutyList(data) {
+    return fetch({
+        url: 'scoreStation/selectScorredTypeDuty',
         method: 'post',
         data: data
     })
@@ -59,6 +67,14 @@ export function treelist() {
     return fetch({
         url: 'usertree/treelist',
         method: 'post'
+    })
+}
+//岗位列表级联查询
+export function treeStationList(data) {
+    return fetch({
+        url: 'usertree/treeStationList',
+        method: 'post',
+        data:data
     })
 }
 //通过账号查找hrp用户数据接口

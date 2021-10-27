@@ -68,6 +68,15 @@ export function updateWeight(data) {
     })
 }
 
+//查询指标打分人员列表
+export function getScoreDutyScorringUserlist(data) {
+    return fetch({
+        url: 'score/dutyScoreScorringUserlist',
+        method: 'post',
+        data: data
+    })
+}
+
 //删除评分人
 export function deleteScore(data) {
     return fetch({
@@ -95,6 +104,22 @@ export function batchDelete(data) {
 export function deleteDutyScore(data) {
     return fetch({
         url: 'score/deleteDutyScore',
+        method: 'post',
+        data: data
+    })
+}
+
+export function getBadList(data) {
+    return fetch({
+        url: 'scoreBad/list',
+        method: 'post',
+        data: data
+    })
+}
+
+export function getSortList(data) {
+    return fetch({
+        url: 'scoreSort/list',
         method: 'post',
         data: data
     })

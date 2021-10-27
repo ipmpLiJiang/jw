@@ -7,7 +7,7 @@
       :before-close="cancel"
       width="50%"
     >
-      <el-form label-width="80px">
+      <el-form label-width="90px">
         <el-form-item label="所属部门">
           <DepartmentList
             @childSelectDepartment="getSelectDepartment"
@@ -16,6 +16,9 @@
         </el-form-item>
         <el-form-item label="岗位名称">
           <el-input v-model="form.stationname"></el-input>
+        </el-form-item>
+        <el-form-item label="是否EF考核">
+          <el-checkbox v-model="isEFCk" @change="bkhChange"></el-checkbox>
         </el-form-item>
         <el-form-item label="直接上级">
           <el-input v-model="form.relation1"></el-input>
@@ -107,6 +110,7 @@ export default {
         }
       ],
       form:{},
+      isEFCk: false,
       selfDialogVisible: this.dialogVisible
     };
   },
@@ -128,12 +132,16 @@ export default {
   },
   created() {
     this.form = Object.assign({},this.parentForms);
+    this.isEFCk = this.form.isEF==0? false:true
   },
   methods: {
     //获取部门选择
     getSelectDepartment(data,row) {
       this.form.departmentcode = data;
       this.form.fulldepartmentcode = row.join(',');
+    },
+    bkhChange(){
+       this.form.isEF = this.isEFCk? 1:0;
     },
     //添加/修改岗位
     addSubmit() {
@@ -209,6 +217,8 @@ export default {
     },
     parentForms(val, oldVal){
       this.form = Object.assign({},val);
+      this.isEFCk = this.form.isEF==0? false:true
+      console.log(this.departmentcode)
     }
   }
 };

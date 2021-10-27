@@ -18,6 +18,11 @@ public class DutyDto {
         dutytypes.put("1", "岗位职责");
         dutytypes.put("2", "重点任务");
         dutytypes.put("3", "目标任务");
+        dutytypes.put("4", "政治建设");
+        dutytypes.put("5", "思想建设");
+        dutytypes.put("6", "组织建设");
+        dutytypes.put("7", "党建创新");
+        dutytypes.put("8", "作风建设");
     }
 
     private String dutycode;
