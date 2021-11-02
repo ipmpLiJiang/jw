@@ -88,6 +88,7 @@ public class ScheduledTask {
     private HUserService service;
 
     //    此处不清楚做什么
+
     /**
      * 动态获取打分状态
      */
@@ -103,16 +104,17 @@ public class ScheduledTask {
             //获取当前系统时间
             String sysTime = DateUtil.getTime();
 
-                //手动考核-查看所有季节总结
-                manualGetStatus(year, quarter, i, sysTime);
+            //手动考核-查看所有季节总结
+            manualGetStatus(year, quarter, i, sysTime);
 
         } catch (Exception e) {
-            log.error(e.getMessage() , e);
+            log.error(e.getMessage(), e);
         }
     }
-//    此处不清楚做什么
+
+    //    此处不清楚做什么
 //    @Scheduled(cron = "0 30 23 * * ?") //
-    public void autoSynHrpData(){
+    public void autoSynHrpData() {
         int upd = 0;
         int add = 0;
         int del = 0;
@@ -152,12 +154,12 @@ public class ScheduledTask {
 
     private void manualGetStatus(String year, String quarter, int i, String sysTime) throws ParseException {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "","2");
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", "2");
         if (setTime != null) {
 
-                //开始新的月度考核
-                month = quarter;
-                getUserDto(setTime.getYear(), setTime.getMonth());
+            //开始新的月度考核
+            month = quarter;
+            getUserDto(setTime.getYear(), setTime.getMonth());
 
         }
     }
@@ -171,7 +173,7 @@ public class ScheduledTask {
 //        roleList.add("200");
 //        roleList.add("300");
 //        roleList.add("50");
-        List<UserDto> userDtoList = dtoService.selectUserDtoLike(dto,"bpfr");
+        List<UserDto> userDtoList = dtoService.selectUserDtoLike(dto, "bpfr");
         getStationName(userDtoList);
     }
 
@@ -208,21 +210,19 @@ public class ScheduledTask {
 
                 }
             }
-            int dtoTotalCount = dtoService.getTotalCount(userDto);
-            String mserialno = userDto.getYear() + "-" + userDto.getMonth();
-            int flowTotalCount = flowService.getTotalCount(mserialno, userDto.getUsercode(),null);
-            if (flowTotalCount == 0) {
-                summary.setScorestatus("1");
-                list.add(summary);
-            } else if (flowTotalCount < dtoTotalCount) {
-                summary.setScorestatus("2");
-                list.add(summary);
-            } else {
-                summary.setScorestatus("3");
-                list.add(summary);
-            }
-
-
+//            int dtoTotalCount = dtoService.getTotalCount(userDto);
+//            String mserialno = userDto.getYear() + "-" + userDto.getMonth();
+//            int flowTotalCount = flowService.getTotalCount(mserialno, userDto.getUsercode(),null);
+//            if (flowTotalCount == 0) {
+//                summary.setScorestatus("1");
+//                list.add(summary);
+//            } else if (flowTotalCount < dtoTotalCount) {
+//                summary.setScorestatus("2");
+//                list.add(summary);
+//            } else {
+//                summary.setScorestatus("3");
+//                list.add(summary);
+//            }
         }
         if (list.size() > 0) {
             summaryService.batchUpdate(list);
@@ -309,16 +309,16 @@ public class ScheduledTask {
         UserEvaluationDto evaluationDto = new UserEvaluationDto();
         try {
             String year = "";
-            String month ="";
+            String month = "";
 
 
-                //手动考核-查看所有季节总结
-                ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "","");
+            //手动考核-查看所有季节总结
+            ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", "");
             evaluationDto.setYear(setTime.getYear());
             evaluationDto.setMonth(setTime.getMonth());
 
-            year= setTime.getYear();
-            month= setTime.getMonth();
+            year = setTime.getYear();
+            month = setTime.getMonth();
 
             List<UserEvaluationDto> evaluationReports;
 
@@ -351,8 +351,8 @@ public class ScheduledTask {
                         report.setAvgscore(evaluation.getAvgscore());
                         //            第三步  获取最高分和最低分
                         report.setUsercode(evaluation.getUsercode());
-                        Double maxScore = flowService.selectMaxScoreByScoredCode(report.getUsercode(), year, month,"");
-                        Double minScore = flowService.selectMinScoreByScoredCode(report.getUsercode(), year, month,"");
+                        Double maxScore = flowService.selectMaxScoreByScoredCode(report.getUsercode(), year, month, "");
+                        Double minScore = flowService.selectMinScoreByScoredCode(report.getUsercode(), year, month, "");
                         report.setMaxscore(maxScore);
                         report.setMinscore(minScore);
 //            第四步  计算分值差
@@ -361,10 +361,10 @@ public class ScheduledTask {
                         EvaluationReport report1 = new EvaluationReport();
                         report1.setUsercode(report.getUsercode());
 
-                            report1.setYear(year);
-                            report1.setMonth(month);
-                            EvaluationReport report2 = evaluationReportService.selectReportByUserCode(report1);
-                            getCompareLastInfo(report, maxScore, minScore, report2);
+                        report1.setYear(year);
+                        report1.setMonth(month);
+                        EvaluationReport report2 = evaluationReportService.selectReportByUserCode(report1);
+                        getCompareLastInfo(report, maxScore, minScore, report2);
 
                         evaluationReportService.updateByPrimaryKeySelective(report);
                     }
@@ -442,8 +442,8 @@ public class ScheduledTask {
             for (UserDto userDto : userDtoList) {
                 if (userDto.getUsercode().equals(dto.getUsercode())) {
                     //获取各类评分的总人数和分数
-                    Double Ascore = flowService.getScoreByType(userDto.getSerialno(), "A",null);
-                    int Acount = flowService.getScoreByTypeCount(userDto.getSerialno(), "A",null);
+                    Double Ascore = flowService.getScoreByType(userDto.getSerialno(), "A", null);
+                    int Acount = flowService.getScoreByTypeCount(userDto.getSerialno(), "A", null);
                     Double totalRatio = 0.0;
                     Double Ascore1;
                     if (Ascore == null) {
@@ -454,8 +454,8 @@ public class ScheduledTask {
                         userDto.setAScore(Double.parseDouble(df.format(Ascore1)));
                         totalRatio += userDto.getAratio();
                     }
-                    Double Bscore = flowService.getScoreByType(userDto.getSerialno(), "B",null);
-                    int Bcount = flowService.getScoreByTypeCount(userDto.getSerialno(), "B",null);
+                    Double Bscore = flowService.getScoreByType(userDto.getSerialno(), "B", null);
+                    int Bcount = flowService.getScoreByTypeCount(userDto.getSerialno(), "B", null);
                     Double Bscore1;
                     if (Bscore == null) {
                         Bscore1 = 0.0;
@@ -465,8 +465,8 @@ public class ScheduledTask {
                         userDto.setBScore(Double.parseDouble(df.format(Bscore1)));
                         totalRatio += userDto.getBratio();
                     }
-                    Double Cscore = flowService.getScoreByType(userDto.getSerialno(), "C",null);
-                    int Ccount = flowService.getScoreByTypeCount(userDto.getSerialno(), "C",null);
+                    Double Cscore = flowService.getScoreByType(userDto.getSerialno(), "C", null);
+                    int Ccount = flowService.getScoreByTypeCount(userDto.getSerialno(), "C", null);
                     Double Cscore1;
                     if (Cscore == null) {
                         Cscore1 = 0.0;
@@ -476,8 +476,8 @@ public class ScheduledTask {
                         userDto.setCScore(Double.parseDouble(df.format(Cscore1)));
                         totalRatio += userDto.getCratio();
                     }
-                    Double Dscore = flowService.getScoreByType(userDto.getSerialno(), "D",null);
-                    int Dcount = flowService.getScoreByTypeCount(userDto.getSerialno(), "D",null);
+                    Double Dscore = flowService.getScoreByType(userDto.getSerialno(), "D", null);
+                    int Dcount = flowService.getScoreByTypeCount(userDto.getSerialno(), "D", null);
                     Double Dscore1;
                     if (Dscore == null) {
                         Dscore1 = 0.0;
@@ -499,9 +499,10 @@ public class ScheduledTask {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage() , e);
+            log.error(e.getMessage(), e);
         }
     }
+
     //    此处不清楚做什么
 //    @Scheduled(cron = "0 45 17 ? * MON ")//每周一12点30分触发；
     public void monthScoreScheduled() {
@@ -517,14 +518,14 @@ public class ScheduledTask {
             //获取当前系统时间
             String sysTime = DateUtil.getTime();
 
-                //手动考核-查看所有季节总结
-                manualGetUserDto(dto, year, quarter, count, sysTime);
+            //手动考核-查看所有季节总结
+            manualGetUserDto(dto, year, quarter, count, sysTime);
 //            List<String> roleList = new ArrayList<>();
 //            roleList.add("100");
 //            roleList.add("200");
 //            roleList.add("300");
 //            roleList.add("50");
-            List<UserDto> userDtoList = dtoService.selectUserDtoLike(dto,"bpfr");
+            List<UserDto> userDtoList = dtoService.selectUserDtoLike(dto, "bpfr");
             getMonthScoreStationName(userDtoList);
             List<HistoryScore> scores = historyScoreService.selectAll(dto.getYear(), dto.getMonth());
             addMonthScore(list, userDtoList, scores);
@@ -538,13 +539,13 @@ public class ScheduledTask {
 
     private void manualGetUserDto(UserDto dto, String year, String quarter, int count, String sysTime) throws ParseException {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "","");
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", "");
         if (setTime != null) {
 
-                //开始新的月度考核
-                month = quarter;
-                dto.setYear(setTime.getYear());
-                dto.setMonth(setTime.getMonth());
+            //开始新的月度考核
+            month = quarter;
+            dto.setYear(setTime.getYear());
+            dto.setMonth(setTime.getMonth());
 
 
         }
@@ -601,7 +602,7 @@ public class ScheduledTask {
             for (UserDto userDto : userDtoList) {
                 if (!userDto.getRolecode().equals("150")) {
                     Double totalRatio = 0.0;
-                    Double AScore = flowService.getTypeAvgScore(userDto.getSerialno(), "A",null);
+                    Double AScore = flowService.getTypeAvgScore(userDto.getSerialno(), "A", null);
                     if (AScore == null) {
                         AScore = 0.0;
                         userDto.setAScore(AScore);
@@ -609,7 +610,7 @@ public class ScheduledTask {
                         userDto.setAScore(Double.parseDouble(df.format(AScore)));
                         totalRatio += userDto.getAratio();
                     }
-                    Double BScore = flowService.getTypeAvgScore(userDto.getSerialno(), "B",null);
+                    Double BScore = flowService.getTypeAvgScore(userDto.getSerialno(), "B", null);
                     if (BScore == null) {
                         BScore = 0.0;
                         userDto.setBScore(BScore);
@@ -617,7 +618,7 @@ public class ScheduledTask {
                         userDto.setBScore(Double.parseDouble(df.format(BScore)));
                         totalRatio += userDto.getBratio();
                     }
-                    Double CScore = flowService.getTypeAvgScore(userDto.getSerialno(), "C",null);
+                    Double CScore = flowService.getTypeAvgScore(userDto.getSerialno(), "C", null);
                     if (CScore == null) {
                         CScore = 0.0;
                         userDto.setCScore(CScore);
@@ -625,7 +626,7 @@ public class ScheduledTask {
                         userDto.setCScore(Double.parseDouble(df.format(CScore)));
                         totalRatio += userDto.getCratio();
                     }
-                    Double DScore = flowService.getTypeAvgScore(userDto.getSerialno(), "D",null);
+                    Double DScore = flowService.getTypeAvgScore(userDto.getSerialno(), "D", null);
                     if (DScore == null) {
                         DScore = 0.0;
                         userDto.setDScore(DScore);
@@ -658,6 +659,7 @@ public class ScheduledTask {
     }
 
     //    此处不清楚做什么
+
     /**
      * 人事部代理人开始考核
      */
@@ -697,6 +699,7 @@ public class ScheduledTask {
     }
 
     //    此处不清楚做什么
+
     /**
      * 人事部代理人结束考核
      */
@@ -722,7 +725,7 @@ public class ScheduledTask {
                 //删除人事部用户管理中的代理人
                 raterService.deleteRaterByScorringCode(authorization.getAgent());
                 //修改人事部授权表的状态
-                authorizationService.updateFlag("4",endtime,authorization.getAgent());
+                authorizationService.updateFlag("4", endtime, authorization.getAgent());
             }
         }
         String end = DateUtil.getTime();

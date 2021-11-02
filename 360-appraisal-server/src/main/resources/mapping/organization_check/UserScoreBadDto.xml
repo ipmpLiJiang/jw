@@ -66,6 +66,9 @@
         <if test='postType != null and postType!=""'>
         AND u.postType = #{postType}
         </if>
+        <if test='dbbk != null and dbbk!=""'>
+            AND u.dbbk = #{dbbk}
+        </if>
         AND !ISNULL(sd.cpsm) and LENGTH(sd.cpsm) > 0
         order by u.usercode,sf.ScoreType
     </select>

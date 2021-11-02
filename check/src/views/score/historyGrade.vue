@@ -9,7 +9,7 @@
           label-width="100px"
           show-overflow-tooltip="true"
         >
-          <el-col :span="6">
+          <el-col :span="6" v-if="dbtype==2">
             <el-form-item label="所属岗位">
               <PostList
                 @childSelectDepartment="getSelectStation"
@@ -17,7 +17,25 @@
               ></PostList>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="5" v-if="dbtype==1">
+            <el-form-item label="党内身份">
+            <el-select
+              v-model="search.dbbk"
+              placeholder="请选择"
+              clearable
+              style="width:100%;"
+            >
+              <el-option
+                v-for="item in dbbk"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          </el-col>
+          <el-col :span="5">
             <el-form-item label="员工姓名">
               <el-input
                 placeholder="请输入员工姓名"
@@ -28,7 +46,7 @@
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="5">
             <el-form-item label="年份">
               <el-date-picker
                 v-model="search.year"
@@ -39,7 +57,7 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="5">
             <el-form-item label="季度">
               <el-select
                 v-model="search.month"
@@ -56,8 +74,8 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col
-            :span="6"
+          <!-- <el-col
+            :span="5"
             style="margin-top:20px;"
           >
             <el-form-item label="季结状态">
@@ -78,7 +96,7 @@
             </el-form-item>
           </el-col>
           <el-col
-            :span="6"
+            :span="5"
             style="margin-top:20px;"
           >
             <el-form-item label="打分状态">
@@ -97,19 +115,20 @@
                 </el-option>
               </el-select>
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <el-col
             :span="6"
             style="margin-top:20px;"
+            v-if="dbtype=='1'?false:true"
           >
-            <el-form-item label="评分类型">
+            <el-form-item label="岗位类型">
               <el-select
-                v-model="search.rolecode"
+                v-model="search.postType"
                 clearable
                 placeholder="请选择"
               >
               <el-option
-                v-for="item in roleOption"
+                v-for="item in postTypeOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -427,10 +446,6 @@ export default {
           value: "0",
           label: "未提交",
         },
-        // {
-        //   value: "1",
-        //   label: "已提交",
-        // },
         {
           value: "5",
           label: "自评中",
@@ -458,23 +473,38 @@ export default {
           label: "已完成",
         },
       ],
-      title: "",
-      roleOption: [{
-          value: "150",
-          label: "打分人"
+      dbbk: [
+        {
+          value: "3",
+          label: "党支部书记"
         },
         {
-          value: "300",
-          label: "被打分人"
+          value: "4",
+          label: "党总支书记"
+        }
+      ],
+      title: "",
+      postTypeOptions: [{
+          value: "1",
+          label: "科主任"
+        },
+        {
+          value: "2",
+          label: "护士长"
+        },
+        {
+          value: "3",
+          label: "行政"
         }],
       search: {
         stationcode: "",
         username: "",
-        rolecode: '300',
+        postType: '',
         month: "",
         year: "",
         state: "",
         scorestatus: "",
+        dbbk: ""
       },
       tableData: [],
       stationcode: [""],
@@ -604,9 +634,11 @@ export default {
       params.month = this.search.month;
       params.year = this.search.year;
       params.state = this.search.state;
-      params.rolecode = this.search.rolecode;
+      params.postType = this.search.postType
+      // params.rolecode = this.search.rolecode;
       params.scorestatus = this.search.scorestatus;
       params.dbtype = this.dbtype;
+      params.dbbk = this.search.dbbk
       new Promise((response, reject) => {
         getList(qs.stringify(params))
           .then((response) => {

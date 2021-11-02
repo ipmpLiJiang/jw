@@ -45,16 +45,27 @@
             </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="5">
+            <el-form-item label="岗位类型">
+              <el-select
+                v-model="search.postType"
+                clearable
+                placeholder="请选择"
+              >
+              <el-option
+                v-for="item in postTypeOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+            </el-form-item>
+          </el-col>
           <el-button
             type="primary"
             @click="searchList"
           >搜索</el-button>
-
-          <el-button
-            type="warning"
-            @click="exportExcel"
-          ><i class="icon iconfont icon-daochu-tianchong"></i>导出excel</el-button>
-
         </el-form>
       </el-col>
     </el-row>
@@ -255,7 +266,20 @@ export default {
         stationcode: "",
         username: "",
         rolecode: "",
+        postType: ""
       },
+      postTypeOptions: [{
+          value: "1",
+          label: "科主任"
+        },
+        {
+          value: "2",
+          label: "护士长"
+        },
+        {
+          value: "3",
+          label: "行政"
+        }],
       tableData: [],
       stationcode: [""],
       page: {
@@ -333,6 +357,7 @@ export default {
       } else {
         params.rolecode = ""
       }
+      params.postType = this.search.postType
       params.dbtype = this.dbtype
       params.username = this.search.username;
       new Promise((response, reject) => {

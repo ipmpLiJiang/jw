@@ -120,7 +120,7 @@ public interface  IScoreService {
 
 
 
-    List<Score>findScoreAll(String dbtype);
+    List<Score>findScoreAll(String dbtype,String postType);
 
     List<Score> findScoreScorringInList(Score score,String[] scorringList);
 

@@ -384,4 +384,14 @@ public class UserEvaluationSortDto {
     private Double zfAvgScore;
 
     private Double dfAvgScore;
+
+    public String getDbbk() {
+        return dbbk;
+    }
+
+    public void setDbbk(String dbbk) {
+        this.dbbk = dbbk;
+    }
+
+    private  String dbbk;
 }

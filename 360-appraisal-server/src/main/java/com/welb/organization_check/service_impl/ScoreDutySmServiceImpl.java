@@ -58,12 +58,12 @@ public class ScoreDutySmServiceImpl implements IScoreDutySmService {
     }
 
     @Override
-    public List<ScoreDutySm> selectScoreDutySmList(ScoreDutySm record) {
-        return scoreDutySmMapper.selectScoreDutySmList(record);
+    public List<ScoreDutySm> selectScoreDutySmList(ScoreDutySm record,String postType) {
+        return scoreDutySmMapper.selectScoreDutySmList(record,postType);
     }
 
     @Override
-    public int deleteYM(String year,String month,String dbtype){
-        return scoreDutySmMapper.deleteYM(year,month,dbtype);
+    public int deleteYM(String year,String month,String dbtype,String postType){
+        return scoreDutySmMapper.deleteYM(year,month,dbtype,postType);
     }
 }

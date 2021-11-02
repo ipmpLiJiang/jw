@@ -392,11 +392,33 @@
         AND m.Year = #{year}
         AND m.Month = #{month}
         AND m.dbtype=#{dbtype}
+        <if test="postType != null and postType !=''">
+            AND m.EmployeeCode in (
+            select UserCode from user where Flag='0' and UserState='1' and RoleType='0' and postType = #{postType}
+            )
+        </if>
   </select>
-
+    <select id="selectScoreFlowScorringCode" resultMap="BaseResultMap">
+        SELECT
+            sf.*
+        FROM
+            monthsummary m,
+            scoreflow sf
+        WHERE
+            m.EmployeeCode = sf.ScorringCode
+            AND m.dbtype = sf.dbtype
+            AND m.Year= #{year}
+            AND m.Month = #{month}
+            AND m.dbtype = #{dbtype}
+            AND sf.ScorringCode = #{scorringcode}
+    </select>
     <delete id="deleteYM">
         delete from scoreflow where MSerialNo in (
-            select SerialNo from monthsummary where year=#{year} and Month=#{month} and dbtype=#{dbtype}
+            select m.SerialNo from monthsummary m,user u where m.EmployeeCode = u.UserCode and
+            m.year=#{year} and m.Month=#{month} and m.dbtype=#{dbtype}
+            <if test="postType != null and postType !=''">
+                and u.postType = #{postType}
+            </if>
         )
     </delete>
 </mapper>

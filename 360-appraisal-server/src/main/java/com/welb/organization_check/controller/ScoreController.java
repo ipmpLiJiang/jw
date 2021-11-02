@@ -893,7 +893,7 @@ public class ScoreController {
     public Object findAll(String dbtype) {
         ModelMap map = new ModelMap();
         try {
-            List<Score> scoreAll = scoreService.findScoreAll(dbtype);
+            List<Score> scoreAll = scoreService.findScoreAll(dbtype,null);
             if (scoreAll.size() > 0) {
                 for (Score score : scoreAll) {
                     User user1 = userService.findOne(score.getScorredcode());

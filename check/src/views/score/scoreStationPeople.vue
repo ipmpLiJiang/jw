@@ -32,12 +32,6 @@
             type="primary"
             @click="searchList"
           >搜索</el-button>
-
-          <el-button
-            type="warning"
-            @click="exportExcel"
-          ><i class="icon iconfont icon-daochu-tianchong"></i>导出excel</el-button>
-
           <el-button
             type="warning"
             @click="shengChengScore"

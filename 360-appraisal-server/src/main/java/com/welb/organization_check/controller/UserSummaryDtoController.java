@@ -131,7 +131,7 @@ public class UserSummaryDtoController {
                 summaryList = summaryDtoService.selectUserSummaryBySixStateNew(dto);
             }
             for (UserSummaryDto dto1 : summaryList) {
-                List<ScoreFlow> flowScorringScorredcode = flowService.selectByScorringScoredFlow(dto1.getSerialno(), dto1.getScorringcode(),dto1.getScorredcode(), dto.getDbtype());
+                List<ScoreFlow> flowScorringScorredcode = flowService.selectByScorringScoredFlow(dto1.getSerialno(), dto1.getScorringcode(), dto1.getScorredcode(), dto.getDbtype());
                 if (flowScorringScorredcode.size() > 0) {
                     dto1.setScoreState(flowScorringScorredcode.get(0).getScoreState());
                 } else {
@@ -164,19 +164,25 @@ public class UserSummaryDtoController {
             historyState.setYear(year);
             historyState.setMonth(month);
             historyState.setUsercode(list.getUsercode());
-            UserDto userDto = new UserDto();
-            userDto.setYear(year);
-            userDto.setMonth(month);
-            userDto.setEmployeecode(list.getUsercode());
-            int dtoTotalCount = userDtoService.getTotalCount(userDto);
-            String mserialno = year + "-" + month;
-            int flowTotalCount = flowService.getTotalCount(mserialno, list.getUsercode(), null);
+//            UserDto userDto = new UserDto();
+//            userDto.setYear(year);
+//            userDto.setMonth(month);
+//            userDto.setEmployeecode(list.getUsercode());
+            List<ScoreFlow> scorringList = flowService.selectScoreFlowScorringCode(year, month, list.getDbtype(), list.getUsercode());
+//            int dtoTotalCount = userDtoService.getTotalCount(userDto);
+//            String mserialno = year + "-" + month;
+//            int flowTotalCount = flowService.getTotalCount(mserialno, list.getUsercode(), null);
+            int dtoTotalCount = scorringList.size();
+            //ScoreState 1 未评分 2 已评分
+            int flowTotalCount = scorringList.stream().filter(s -> s.getScoreState().equals("2")).collect(Collectors.toList()).size();
             if (flowTotalCount == 0) {
                 historyState.setScorestatus("1");
             } else if (flowTotalCount < dtoTotalCount) {
                 historyState.setScorestatus("2");
             } else {
-                historyState.setScorestatus("3");
+                // 在计算中计算已完成
+//            historyState.setScorestatus("3");
+                historyState.setScorestatus("2");
             }
             ScoreHistory history = historyService.selectOneByHistory(historyState);
             if (history == null) {//新增操作
@@ -381,7 +387,7 @@ public class UserSummaryDtoController {
             } else {
                 dto.setStatus("0");
             }
-            if(scorringcode!=null) {
+            if (scorringcode != null) {
                 List<ScoreFlow> flowScorringScorredcode = flowService.selectByScorringScoredFlow(mesrialno, scorringcode, user.getUsercode(), dbtype);
                 if (flowScorringScorredcode.size() > 0) {
                     dto.setScoreState(flowScorringScorredcode.get(0).getScoreState());

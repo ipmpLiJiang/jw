@@ -400,6 +400,11 @@
 
     <select id="findScoreAll" resultMap="BaseResultMap">
         select * from score where dbtype = #{dbtype}
+        <if test="postType != null and postType !=''">
+            AND ScorredCode in (
+            select UserCode from user where Flag='0' and UserState='1' and RoleType='0' and postType = #{postType}
+            )
+        </if>
     </select>
 
     <select id="findScoreScorringInList" resultMap="BaseResultMap">

@@ -7,13 +7,31 @@
           label-width="100px"
           show-overflow-tooltip="true"
         >
-          <el-col :span="6">
+          <el-col :span="6" v-if="dbtype==2">
             <el-form-item label="所属岗位">
               <PostList
                 @childSelectDepartment="getSelectStation"
                 :selectedOptions="fullstationcode"
               ></PostList>
             </el-form-item>
+          </el-col>
+          <el-col :span="5" v-if="dbtype==1">
+            <el-form-item label="党内身份">
+            <el-select
+              v-model="search.dbbk"
+              placeholder="请选择"
+              clearable
+              style="width:100%;"
+            >
+              <el-option
+                v-for="item in dbbk"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="员工姓名">
@@ -43,7 +61,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="6" v-if="dbtype=='1'?false:true">
             <el-form-item label="岗位类型">
               <el-select
                 v-model="search.postType"
@@ -170,6 +188,13 @@
         >
         </el-table-column>
         <el-table-column
+          prop="postTypeName"
+          label="岗位类型"
+          v-if="dbtype==2"
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
           label="评分季度"
           show-overflow-tooltip
         >
@@ -182,6 +207,14 @@
           prop="statename"
           show-overflow-tooltip
         >
+        </el-table-column>
+        <el-table-column
+          label="是否生成"
+          show-overflow-tooltip
+        >
+          <template slot-scope="scope">
+            {{scope.row.isSc==1?'是':'否'}}
+          </template>
         </el-table-column>
         <el-table-column
           label="修改状态"
@@ -361,8 +394,19 @@ export default {
         stationcode: "",
         username: "",
         state: "",
-        postType: ""
+        postType: "",
+        dbbk: ""
       },
+      dbbk: [
+        {
+          value: "3",
+          label: "党支部书记"
+        },
+        {
+          value: "4",
+          label: "党总支书记"
+        }
+      ],
       postTypeOptions: [{
           value: "1",
           label: "科主任"
@@ -424,6 +468,13 @@ export default {
       this.getList();
     },
     scdata () {
+      if (this.dbtype=='2' && (this.search.postType == null || this.search.postType == "")) {
+        this.$message({
+            message: '干部考核，必须选择 岗位类型，才能 生成/更改数据.',
+            type: "error"
+          });
+          return;
+      }
       this.$confirm(
         "此操作将生成/更改数据, 是否继续?",
         "提示",
@@ -435,8 +486,14 @@ export default {
       ).then(() => {
         this.searchLoading = true;
         this.tableLoading = true;
+        let data = {dbtype: this.dbtype}
+        if (this.dbtype=='2' && this.search.postType !=null) {
+          data.postType = this.search.postType
+        } else {
+          data.postType = null
+        }
         new Promise((response, reject) => {
-          shengcheng(qs.stringify({dbtype: this.dbtype}))
+          shengcheng(qs.stringify(data))
             .then(response => {
               if (response.data.code == 0) {
                 this.$message.success(response.data.msg);
@@ -473,10 +530,13 @@ export default {
       params.state = this.search.state;
       params.scorestatus = this.search.scorestatus;
       params.dbtype = this.dbtype
-      if (this.search.postType !=null) {
+      if (this.dbtype=='2' && this.search.postType !=null) {
         params.postType = this.search.postType
       } else {
-        params.postType = "";
+        params.postType = null
+      }
+      if(this.dbtype=='1' && this.search.dbbk !=null){
+        params.dbbk = this.search.dbbk
       }
       this.searchLoading = true;
       new Promise((response, reject) => {
@@ -527,8 +587,6 @@ export default {
       console.log("shangc")
     },
      jisuanChang() {
-       this.searchLoading = true
-       this.tableLoading = true
       //此操作将计算 重点、目标 指标的平均值, 是否继续?
       this.$confirm(
         "此操作将计算各项指标平均值, 是否继续?",
@@ -540,6 +598,8 @@ export default {
         }
       )
         .then(() => {
+          this.searchLoading = true
+          this.tableLoading = true
           let params = {}
           params.dbtype = this.dbtype
           new Promise((response, reject) => {
@@ -728,6 +788,11 @@ export default {
             var params ={
                 dbtype: this.dbtype
             }
+            if (this.dbtype=='2' && this.search.postType !=null) {
+              params.postType = this.search.postType
+            } else {
+              params.postType = null
+            }
             updateSummaryGradeStateAll(qs.stringify(params))
               .then(response => {
                 if (response.data.code == 0) {
@@ -762,6 +827,11 @@ export default {
           new Promise((response, reject) => {
             var params ={
                 dbtype: this.dbtype
+            }
+            if (this.dbtype=='2' && this.search.postType !=null) {
+              params.postType = this.search.postType
+            } else {
+              params.postType = null
             }
             updateSummaryGradeStateAllZp(qs.stringify(params))
               .then(response => {
@@ -896,7 +966,6 @@ export default {
     },
     //全部修改月结评分完成
     gradeAllFinish() {
-      let params  = {dbtype: this.dbtype}
       this.$confirm(
         "此操作将所有人"+this.khtitle+"状态改成"+this.khtitle+"评分完成, 是否继续?",
         "提示",
@@ -907,6 +976,12 @@ export default {
         }
       )
         .then(() => {
+          let params  = {dbtype: this.dbtype}
+          if (this.dbtype=='2' && this.search.postType !=null) {
+            params.postType = this.search.postType
+          } else {
+            params.postType = null
+          }
           new Promise((response, reject) => {
             updateFinishGradeAll(qs.stringify(params))
               .then(response => {

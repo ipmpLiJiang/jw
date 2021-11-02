@@ -48,22 +48,20 @@ public class ManualSetTimeController {
         String year = manualSetTime.getYear();
         String month = manualSetTime.getMonth();
 
-        List<MonthSummary> list = monthSummaryService.selectListByYearAndMonth(year, month,dbtype);
-        list=list.stream().filter(p->p.getDbtype().equals(dbtype)).collect(Collectors.toList());
+        List<MonthSummary> list = monthSummaryService.selectSummaryListByYearAndMonth(year, month,dbtype,null);
         boolean isFinish = true;
         for (MonthSummary summary : list) {
             if (!summary.getState().equals("7")) {
                 isFinish = false;
                 break;
             }
-
         }
-        if (isFinish){
-            map.put("msg","是否确认开启新的考核");
-            map.put("code",0);
-        }else {
-            map.put("msg","当前考核还未全部完成,是否结束当前考核并开始新的考核。");
-            map.put("code",0);
+        if (isFinish) {
+            map.put("msg", "是否确认开启新的考核");
+            map.put("code", 0);
+        } else {
+            map.put("msg", "当前考核还未全部完成,是否结束当前考核并开始新的考核。");
+            map.put("code", 0);
         }
         return map;
     }

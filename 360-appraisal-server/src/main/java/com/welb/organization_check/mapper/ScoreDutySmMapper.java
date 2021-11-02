@@ -23,7 +23,7 @@ public interface ScoreDutySmMapper {
 
     int updateByYmSc(ScoreDutySm record);
 
-    List<ScoreDutySm> selectScoreDutySmList(ScoreDutySm record);
+    List<ScoreDutySm> selectScoreDutySmList(@Param("record") ScoreDutySm record,@Param("postType") String postType);
 
-    int deleteYM(@Param("year") String year, @Param("month") String month, @Param("dbtype") String dbtype);
+    int deleteYM(@Param("year") String year, @Param("month") String month, @Param("dbtype") String dbtype,@Param("postType") String postType);
 }

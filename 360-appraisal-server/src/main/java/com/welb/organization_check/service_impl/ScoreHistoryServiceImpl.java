@@ -47,8 +47,8 @@ public class ScoreHistoryServiceImpl implements IScoreHistoryService {
     }
 
     @Override
-    public List<ScoreHistory> selectHistoryList(ScoreHistory history,String qrcode) {
-        return historyMapper.selectHistoryList(history,qrcode);
+    public List<ScoreHistory> selectHistoryList(ScoreHistory history,String qrcode,String postType) {
+        return historyMapper.selectHistoryList(history,qrcode,postType);
     }
 
     @Override
@@ -62,8 +62,8 @@ public class ScoreHistoryServiceImpl implements IScoreHistoryService {
     }
 
     @Override
-    public List<ScoreHistory> selectUserHisotyList(ScoreHistory history,String qrcode) {
-        return historyMapper.selectUserHisotyList(history,qrcode);
+    public List<ScoreHistory> selectUserHisotyList(ScoreHistory history,String qrcode,String postType) {
+        return historyMapper.selectUserHisotyList(history,qrcode,postType);
     }
 
     @Override
@@ -96,12 +96,12 @@ public class ScoreHistoryServiceImpl implements IScoreHistoryService {
     }
 
     @Override
-    public List<ScoreHistory> selectHistoryByMonthSummaryList(String year,String month, String dbtype){
-        return historyMapper.selectHistoryByMonthSummaryList(year,month,dbtype);
+    public List<ScoreHistory> selectHistoryByMonthSummaryList(String year,String month, String dbtype,String postType){
+        return historyMapper.selectHistoryByMonthSummaryList(year,month,dbtype,postType);
     }
 
     @Override
-    public int deleteYM(String year,String month,String dbtype){
-        return historyMapper.deleteYM(year,month,dbtype);
+    public int deleteYM(String year,String month,String dbtype,String postType){
+        return historyMapper.deleteYM(year,month,dbtype,postType);
     }
 }

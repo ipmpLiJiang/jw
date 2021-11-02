@@ -1,5 +1,7 @@
 package com.welb.organization_check.dto;
 
+import com.welb.organization_check.entity.User;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -19,6 +21,7 @@ public class UserDto {
     public static HashMap<String, String> scorestatusList = new LinkedHashMap<>();
     public static Map<String, String> roles = new LinkedHashMap<>();
     public static Map<String, String> dbbks = new LinkedHashMap<>();
+    public static Map<String, String> postTypes = new LinkedHashMap<>();
 
     static {
         states.put("", "--");
@@ -63,6 +66,10 @@ public class UserDto {
         dbbks.put("2","宣传委员青年委员");
         dbbks.put("3","党支部书记");
         dbbks.put("4","党总支书记");
+
+        postTypes.put("1","科主任");
+        postTypes.put("2","护士长");
+        postTypes.put("3","行政");
 
     }
 
@@ -596,5 +603,36 @@ public class UserDto {
 
     public void setPostType(String postType) {
         this.postType = postType;
+    }
+
+    public Integer getIsSc() {
+        return isSc;
+    }
+
+    public void setIsSc(Integer isSc) {
+        this.isSc = isSc;
+    }
+
+    Integer isSc;
+
+    private String postTypeName;
+
+    public String getPostTypeName() {
+        if (postType!=null){
+            return postTypes.get(this.postType);
+        }
+        return postTypeName;
+    }
+
+    public void setPostTypeName(String postTypeName) {
+        this.postTypeName = postTypeName;
+    }
+
+    public static Map<String, String> getPostTypes() {
+        return postTypes;
+    }
+
+    public static void setPostTypes(Map<String, String> postTypes) {
+        UserDto.postTypes = postTypes;
     }
 }

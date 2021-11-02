@@ -88,7 +88,7 @@ public interface IUserService {
      */
     List<User>findUserAll();
 
-    List<User> findUserByRoleCode(String qrcode, String dbtype);
+    List<User> findUserByRoleCode(String qrcode, String dbtype,String postType,String dbbk);
 
     User selectUserBuGwByMoneyCard(User user);
 

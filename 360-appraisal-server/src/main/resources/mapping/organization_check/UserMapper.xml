@@ -743,6 +743,9 @@
             <if test="user.roletype!=null and user.roletype!=''">
                 and u.RoleType=#{user.roletype}
             </if>
+            <if test="user.postType!=null and user.postType!=''">
+                and u.postType=#{user.postType}
+            </if>
             and u.Flag ="0"
             and u.RoleType="0"
             and u.UserState="1"
@@ -895,8 +898,11 @@
        select u.UserCode,u.Mobile,u.UserName,r.RoleCode,ur.* from user u,role r,user_role ur
        where u.UserCode=ur.UserCode
        and r.RoleCode=ur.RoleCode
-        <if test='dbtype!=null and dbtype !="2"'>
+        <if test='dbtype!=null and dbtype !="2" and (dbbk==null or dbbk=="")'>
             and u.dbbk in('3','4')
+        </if>
+        <if test='dbtype!=null and dbtype !="2" and dbbk!=null and dbbk!=""'>
+            and u.dbbk = #{dbbk}
         </if>
         <if test="qrcode==null">
             AND u.UserCode in (
@@ -915,6 +921,9 @@
             AND u.UserCode in (
             select ScorredCode from (SELECT DISTINCT ScorredCode FROM score WHERE dbtype =#{dbtype}) a
             )
+        </if>
+        <if test="postType != null and postType !=''">
+            and u.postType = #{postType}
         </if>
        and u.Flag="0"
        and u.UserState="1"
@@ -995,7 +1004,7 @@
     select u.*  from user u,user_role ur
      where  u.UserCode=ur.UserCode
      and u.userCode in(
-        select ScorringCode from score where dbtype= #{dbtype}
+        select code from (select distinct ScorringCode code from score where dbtype= #{dbtype}) a
      )
      and u.Flag="0"
      and u.UserState="1"

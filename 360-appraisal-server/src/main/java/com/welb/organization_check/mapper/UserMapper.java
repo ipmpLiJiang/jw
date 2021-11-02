@@ -38,7 +38,10 @@ public interface UserMapper {
 
     List<User>findUserAll();
 
-    List<User> findUserByRoleCode(@Param("qrcode") String qrcode, @Param("dbtype") String dbtype);
+    List<User> findUserByRoleCode(@Param("qrcode") String qrcode,
+                                  @Param("dbtype") String dbtype,
+                                  @Param("postType") String postType,
+                                  @Param("dbbk") String dbbk);
 
     List<User>findUserAllBySummary();
 

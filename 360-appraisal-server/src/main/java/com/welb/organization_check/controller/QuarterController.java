@@ -84,7 +84,7 @@ public class QuarterController {
         try {
             //开始新的月度考核
             month = quarter;
-            List<MonthSummary> summaryList = summaryService.selectSummaryListByYearAndMonth(year, month, dbtype);
+            List<MonthSummary> summaryList = summaryService.selectSummaryListByYearAndMonth(year, month, dbtype,null);
             summaryList.stream().filter(p -> p.getDbtype().equals(dbtype)).collect(Collectors.toList());
             if (summaryList.size() != users.size()) {
                 addMonthSummary(year, month, users, dbtype);
@@ -99,7 +99,7 @@ public class QuarterController {
     }
 
     private void getSummaryList(int pageNum, int pageSize, UserDto dto, ModelMap map, List<User> users, String year, String month, String dbtype) {
-        List<MonthSummary> summaryList = summaryService.selectSummaryListByYearAndMonth(year, month, dbtype);
+        List<MonthSummary> summaryList = summaryService.selectSummaryListByYearAndMonth(year, month, dbtype,null);
         if (summaryList.size() != users.size()) {
             addMonthSummary(year, month, users, dbtype);
         }
@@ -144,7 +144,7 @@ public class QuarterController {
         List<MonthSummary> list = new ArrayList<>();
         for (User user : users) {
             String serialno = year + "-" + month + "-" + user.getUsercode();
-            MonthSummary monthSummary = summaryService.selectByPrimaryKey(serialno);
+            MonthSummary monthSummary = summaryService.selectByPrimaryKey(serialno,dbtype);
             if (monthSummary == null) {
                 MonthSummary summary = new MonthSummary();
                 summary.setSerialno(serialno);
@@ -169,14 +169,14 @@ public class QuarterController {
      * @return
      */
     @RequestMapping(value = "/updateSummarySubmitState", produces = "application/json;charset=utf-8")
-    public Object updateSummarySubmitState(HttpServletRequest req, String serialnos) {
+    public Object updateSummarySubmitState(HttpServletRequest req, String serialnos,String dbtype) {
         ModelMap map = new ModelMap();
         String usercode = (String) req.getSession().getAttribute("usercode");
         if (usercode != null) {
             String[] serialno = serialnos.split(",");
             int counts = 0;
             for (int i = 0; i < serialno.length; i++) {
-                int count = summaryService.updateSubmitStateBySerialNo(serialno[i]);
+                int count = summaryService.updateSubmitStateBySerialNo(serialno[i],dbtype);
                 counts += count;
             }
             if (counts > 0) {
@@ -200,12 +200,12 @@ public class QuarterController {
      * @return
      */
     @RequestMapping(value = "/updateSummaryGradeState", produces = "application/json;charset=utf-8")
-    public Object updateSummaryGradeState(String serialnos) {
+    public Object updateSummaryGradeState(String serialnos,String dbtype) {
         ModelMap map = new ModelMap();
         String[] serialno = serialnos.split(",");
         int counts = 0;
         for (int i = 0; i < serialno.length; i++) {
-            int count = summaryService.updateGradeStateBySerialNo(serialno[i]);
+            int count = summaryService.updateGradeStateBySerialNo(serialno[i],dbtype);
             counts += count;
         }
         if (counts > 0) {
@@ -219,12 +219,12 @@ public class QuarterController {
     }
 
     @RequestMapping(value = "/updateSummaryGradeStateZp", produces = "application/json;charset=utf-8")
-    public Object updateSummaryGradeStateZp(String serialnos) {
+    public Object updateSummaryGradeStateZp(String serialnos,String dbtype) {
         ModelMap map = new ModelMap();
         String[] serialno = serialnos.split(",");
         int counts = 0;
         for (int i = 0; i < serialno.length; i++) {
-            int count = summaryService.updateGradeStateBySerialNoZp(serialno[i]);
+            int count = summaryService.updateGradeStateBySerialNoZp(serialno[i],dbtype);
             counts += count;
         }
         if (counts > 0) {
@@ -243,11 +243,11 @@ public class QuarterController {
      * @return
      */
     @RequestMapping(value = "/updateSummaryGradeStateAll", produces = "application/json;charset=utf-8")
-    public Object updateSummaryGradeStateAll(String dbtype) {
+    public Object updateSummaryGradeStateAll(String dbtype,String postType) {
         ModelMap map = new ModelMap();
         ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
         if(setTime!=null) {
-            int count = summaryService.updateStateAll(setTime.getYear(),setTime.getMonth(),dbtype);
+            int count = summaryService.updateStateAll(setTime.getYear(),setTime.getMonth(),dbtype,postType);
             if (count > 0) {
                 map.put("msg", "全部季结评分修改成功");
                 map.put("code", 0);
@@ -263,11 +263,11 @@ public class QuarterController {
     }
 
     @RequestMapping(value = "/updateSummaryGradeStateAllZp", produces = "application/json;charset=utf-8")
-    public Object updateSummaryGradeStateAllZp(String dbtype) {
+    public Object updateSummaryGradeStateAllZp(String dbtype,String postType) {
         ModelMap map = new ModelMap();
         ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
         if(setTime!=null) {
-            int count = summaryService.updateStateZpAll(setTime.getYear(),setTime.getMonth(),dbtype);
+            int count = summaryService.updateStateZpAll(setTime.getYear(),setTime.getMonth(),dbtype,postType);
             if (count > 0) {
                 map.put("msg", "全部季结评分修改成功");
                 map.put("code", 0);
@@ -294,7 +294,7 @@ public class QuarterController {
         ModelMap map = new ModelMap();
         String state = summary.getState();
         String username = summary.getEmployeecode() + " : " + summary.getEmployeename();
-        summary = summaryService.selectByPrimaryKey(summary.getSerialno());
+        summary = summaryService.selectByPrimaryKey(summary.getSerialno(),summary.getDbtype());
         Score score = new Score();
         score.setDbtype(summary.getDbtype());
         score.setScorredcode(summary.getEmployeecode());
@@ -325,10 +325,10 @@ public class QuarterController {
      * @return
      */
     @RequestMapping(value = "/selectSummaryBySerialno", produces = "application/json;charset=utf-8")
-    public Object selectSummaryBySerialno(String serialno) {
+    public Object selectSummaryBySerialno(String serialno,String dbtype) {
         ModelMap map = new ModelMap();
         try {
-            MonthSummary summary = summaryService.selectByPrimaryKey(serialno);
+            MonthSummary summary = summaryService.selectByPrimaryKey(serialno,dbtype);
             map.put("msg", "查看季结内容成功");
             map.put("data", summary);
             map.put("code", 0);

@@ -105,14 +105,14 @@ public class MobileController {
                         dto.setMonth(dto.getMonth());
                         Station station = stationService.selectByStationCode(dto.getStationcode());
                         //获取评分人给被评分人打分的情况
-                        List<ScoreFlow> flow = flowService.selectByScoreFlow(dto.getSerialno(), scorringcode,dto.getDbtype());
+                        List<ScoreFlow> flow = flowService.selectByScoreFlow(dto.getSerialno(), scorringcode, dto.getDbtype());
 
                         ScoreDutySm query = new ScoreDutySm();
                         query.setYear(dto.getYear());
                         query.setMonth(dto.getMonth());
                         query.setScorredcode(dto.getUsercode());
                         query.setDbtype(dto.getDbtype());
-                        List<ScoreDutySm> dutySmList = scoreDutySmService.selectScoreDutySmList(query);
+                        List<ScoreDutySm> dutySmList = scoreDutySmService.selectScoreDutySmList(query, null);
                         if (isDuty) {
                             getFlow2(map, data, dto, station, flow, dutySmList, 1);
                         } else {
@@ -129,16 +129,16 @@ public class MobileController {
 //                    当前月份h
                     String month = CalendarUtil.getMonth();
 //                    当前月度
-                 //   String quarter = CalendarUtil.getQuarter(month);
+                    //   String quarter = CalendarUtil.getQuarter(month);
                     //当前上一月度
                     int count = Integer.parseInt(month.trim()) - 1;
                     //获取当前系统时间
                     String sysTime = DateUtil.getTime();
                     //手动考核-查看所有季节总结
-                    manualGetDetail(dto, map, data, year, month, count, sysTime,scorringcode,dto.getDbtype(),isDuty,1);
+                    manualGetDetail(dto, map, data, year, month, count, sysTime, scorringcode, dto.getDbtype(), isDuty, 1);
                 }
             } catch (Exception e) {
-                log.error(e.getMessage() , e);
+                log.error(e.getMessage(), e);
                 map.put("msg", "查询个人考核详情失败");
                 map.put("code", 1);
             }
@@ -146,29 +146,29 @@ public class MobileController {
         return map;
     }
 
-    private void manualGetDetail(UserSummaryDto dto, ModelMap map, Map<String, Object> data, String year, String quarter, int count, String sysTime,String scorringcode,String dbtype,boolean isDuty,int type) throws ParseException {
+    private void manualGetDetail(UserSummaryDto dto, ModelMap map, Map<String, Object> data, String year, String quarter, int count, String sysTime, String scorringcode, String dbtype, boolean isDuty, int type) throws ParseException {
         String month;
         ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
         if (setTime != null) {
             //开始新的月度考核
-            getDto(dto, map, data, setTime.getYear(), setTime.getMonth(),scorringcode,dbtype,isDuty,type);
+            getDto(dto, map, data, setTime.getYear(), setTime.getMonth(), scorringcode, dbtype, isDuty, type);
         }
     }
 
-    private void getDto(UserSummaryDto dto, ModelMap map, Map<String, Object> data, String year, String month,String scorringcode,String dbtype,boolean isDuty,int type) {
+    private void getDto(UserSummaryDto dto, ModelMap map, Map<String, Object> data, String year, String month, String scorringcode, String dbtype, boolean isDuty, int type) {
         dto.setYear(year);
         dto.setMonth(month);
         dto = dtoService.selectUserSummaryByLike(dto);
         //查找岗位
         Station station = stationService.selectByStationCode(dto.getStationcode());
         //获取评分人给被评分人打分的情况
-        List<ScoreFlow> flow = flowService.selectByScoreFlow(dto.getSerialno(), scorringcode,dbtype);
+        List<ScoreFlow> flow = flowService.selectByScoreFlow(dto.getSerialno(), scorringcode, dbtype);
         ScoreDutySm query = new ScoreDutySm();
         query.setYear(dto.getYear());
         query.setMonth(dto.getMonth());
         query.setScorredcode(dto.getUsercode());
         query.setDbtype(dto.getDbtype());
-        List<ScoreDutySm> dutySmList = scoreDutySmService.selectScoreDutySmList(query);
+        List<ScoreDutySm> dutySmList = scoreDutySmService.selectScoreDutySmList(query, null);
         if (isDuty) {
             getFlow2(map, data, dto, station, flow, dutySmList, type);
         } else {
@@ -188,7 +188,7 @@ public class MobileController {
         }
         dto.setYear(year);
         dto.setMonth(month);
-        getDto(dto, map, data, year, month,null,null,true,0);
+        getDto(dto, map, data, year, month, null, null, true, 0);
     }
 
 
@@ -533,15 +533,14 @@ public class MobileController {
 //        }
 //        return map;
 //    }
-
-    private void manualSendEvaluationReport(String usercode, EvaluationReport report, ResultReport r1, ResultReport r2, User user, DecimalFormat df, String year, String quarter, int count, String sysTime , String dbtype) throws ParseException {
+    private void manualSendEvaluationReport(String usercode, EvaluationReport report, ResultReport r1, ResultReport r2, User user, DecimalFormat df, String year, String quarter, int count, String sysTime, String dbtype) throws ParseException {
         String month;
         ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
         if (setTime != null) {
 
-                //开始新的月度考核
-                month = quarter;
-                getEvaluationReports(usercode, report, r1, r2, user, df, setTime.getYear(), setTime.getMonth(),dbtype);
+            //开始新的月度考核
+            month = quarter;
+            getEvaluationReports(usercode, report, r1, r2, user, df, setTime.getYear(), setTime.getMonth(), dbtype);
 
         }
     }
@@ -559,9 +558,9 @@ public class MobileController {
             report.setAvgscore(0.0);
             report.setTotalscore(0.0);
         }
-        List<ScoreFlow> scoreFlows = flowService.selectScoreAllByScoredCode(report.getUsercode(), year, month,dbtype);
-        scoreFlows =scoreFlows.stream().filter(p->p.getDbtype().equals(dbtype)).collect(Collectors.toList());
-        getScoreInfo(report, df, user, year, month, scoreFlows, r1, r2,dbtype);
+        List<ScoreFlow> scoreFlows = flowService.selectScoreAllByScoredCode(report.getUsercode(), year, month, dbtype);
+        scoreFlows = scoreFlows.stream().filter(p -> p.getDbtype().equals(dbtype)).collect(Collectors.toList());
+        getScoreInfo(report, df, user, year, month, scoreFlows, r1, r2, dbtype);
     }
 
     private void automaticSendEvaluationReport(String usercode, EvaluationReport report, ResultReport r1, ResultReport r2, User user, DecimalFormat df, String year, int count) {
@@ -574,7 +573,7 @@ public class MobileController {
             report.setYear(year);
             month = String.valueOf(count);
         }
-       // getEvaluationReports(usercode, report, r1, r2, user, df, year, month);
+        // getEvaluationReports(usercode, report, r1, r2, user, df, year, month);
     }
 
     private void getResultReport(EvaluationReport evaluationReport, ResultReport r, ResultReport resultReport) {
@@ -587,14 +586,14 @@ public class MobileController {
         }
     }
 
-    private void getScoreInfo(EvaluationReport report, DecimalFormat df, User user, String year, String month, List<ScoreFlow> scoreFlows, ResultReport r1, ResultReport r2,String dbtype) {
+    private void getScoreInfo(EvaluationReport report, DecimalFormat df, User user, String year, String month, List<ScoreFlow> scoreFlows, ResultReport r1, ResultReport r2, String dbtype) {
         if (scoreFlows.size() > 0) {
             String mserialno = scoreFlows.get(0).getMserialno();
 //            第二步  计算总分
-            getReportTotalScore(report, df, user, mserialno, r1, r2,dbtype);
+            getReportTotalScore(report, df, user, mserialno, r1, r2, dbtype);
 //            第三步  获取最高分和最低分
-            Double maxScore = flowService.selectMaxScoreByScoredCode(user.getUsercode(), year, month,dbtype);
-            Double minScore = flowService.selectMinScoreByScoredCode(user.getUsercode(), year, month,dbtype);
+            Double maxScore = flowService.selectMaxScoreByScoredCode(user.getUsercode(), year, month, dbtype);
+            Double minScore = flowService.selectMinScoreByScoredCode(user.getUsercode(), year, month, dbtype);
             report.setMaxscore(maxScore);
             report.setMinscore(minScore);
 //            第四步  计算分值差
@@ -620,12 +619,12 @@ public class MobileController {
         }
     }
 
-    private void getReportTotalScore(EvaluationReport report, DecimalFormat df, User user, String mserialno, ResultReport r1, ResultReport r2,String dbtype) {
+    private void getReportTotalScore(EvaluationReport report, DecimalFormat df, User user, String mserialno, ResultReport r1, ResultReport r2, String dbtype) {
         //      获取各类评分人的数量
-        int Acount = flowService.getScoreByTypeCount(mserialno, "A",dbtype);
-        int Bcount = flowService.getScoreByTypeCount(mserialno, "B",dbtype);
-        int Ccount = flowService.getScoreByTypeCount(mserialno, "C",dbtype);
-        int Dcount = flowService.getScoreByTypeCount(mserialno, "D",dbtype);
+        int Acount = flowService.getScoreByTypeCount(mserialno, "A", dbtype);
+        int Bcount = flowService.getScoreByTypeCount(mserialno, "B", dbtype);
+        int Ccount = flowService.getScoreByTypeCount(mserialno, "C", dbtype);
+        int Dcount = flowService.getScoreByTypeCount(mserialno, "D", dbtype);
 //     计算基础得分
         getBasicTotalScore(report, user, mserialno, Acount, Bcount, Ccount, Dcount, df, r1);
 
@@ -773,17 +772,17 @@ public class MobileController {
             if (user.getStationcode() != null || !user.getStationcode().equals("")) {
                 try {
                     //获取指标类型为基础评分类型的相关数据
-                    List<Duty> jichu = dutyService.queryDutyByType("0",user.getStationcode());
+                    List<Duty> jichu = dutyService.queryDutyByType("0", user.getStationcode());
                     //获取指标类型为关键评分类型的相关数据
-                    List<Duty> yiBan = dutyService.queryDutyByType("1",user.getStationcode());
+                    List<Duty> yiBan = dutyService.queryDutyByType("1", user.getStationcode());
                     String year = CalendarUtil.getYear();
                     String month = CalendarUtil.getMonth();
-                  //  String quarter = CalendarUtil.getQuarter(month);
+                    //  String quarter = CalendarUtil.getQuarter(month);
                     int count = Integer.parseInt(month.trim()) - 1;
                     //获取当前系统时间
                     String sysTime = DateUtil.getTime();
 
-                        manualGetSerialNo(usercode, id, detail, report, resultDetails, user, jichu, yiBan, year, month, count, sysTime, dbtype);
+                    manualGetSerialNo(usercode, id, detail, report, resultDetails, user, jichu, yiBan, year, month, count, sysTime, dbtype);
 
 
                     resultDetails = resultDetailService.selectResultDetailByReportCode(id);
@@ -804,7 +803,7 @@ public class MobileController {
                     map.put("data", resultDetails);
                     map.put("code", 0);
                 } catch (Exception e) {
-                    log.error(e.getMessage() , e);
+                    log.error(e.getMessage(), e);
                     map.put("msg", "查询失败");
                     map.put("code", 1);
                 }
@@ -821,16 +820,16 @@ public class MobileController {
         ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
         if (setTime != null) {
 
-                //开始新的月度考核
-                month = quarter;
-                getSerialNo(usercode, id, detail, report, resultDetails, user, jichu, yiBan, setTime.getYear(), setTime.getMonth(), dbtype);
+            //开始新的月度考核
+            month = quarter;
+            getSerialNo(usercode, id, detail, report, resultDetails, user, jichu, yiBan, setTime.getYear(), setTime.getMonth(), dbtype);
 
         }
 
     }
 
     private void getSerialNo(String usercode, Integer id, ResultDetail detail, ResultReport report, List<ResultDetail> resultDetails, User user, List<Duty> jichu, List<Duty> yiBan, String year, String month, String dbtype) {
-        String mserialno = year + "-" + month + "-"+dbtype+"-" + usercode;
+        String mserialno = year + "-" + month + "-" + dbtype + "-" + usercode;
         if (report.getResultreportcode().equals("0")) {//基础评分详情
             getResultDetailInfo(id, detail, report, resultDetails, user, jichu, mserialno);
         } else {//关键评分详情
@@ -847,7 +846,7 @@ public class MobileController {
         } else {
             month = String.valueOf(count);
         }
-       // getSerialNo(usercode, id, detail, report, resultDetails, user, jichu, yiBan, year, month);
+        // getSerialNo(usercode, id, detail, report, resultDetails, user, jichu, yiBan, year, month);
     }
 
     private void getResultDetailInfo(Integer id, ResultDetail detail, ResultReport report, List<ResultDetail> resultDetails, User user, List<Duty> yiBan, String mserialno) {
@@ -941,26 +940,26 @@ public class MobileController {
             new SimpleDateFormat("yyyy-MM-dd");
             flow.setScoredate(new Date());
             //通过评分人和被评分人code查找评分关系数据
-            Score score = scoreService.selectTypeByCode(dto.getEmployeecode(), scorringcode,dto.getDbtype());
+            Score score = scoreService.selectTypeByCode(dto.getEmployeecode(), scorringcode, dto.getDbtype());
             flow.setScoretype(score.getScoretype());
             //新字段 2 已打分
             flow.setScoreState("2");
             User user = userService.findUserByUserCode(dto.getEmployeecode());
             if ("A".equals(flow.getScoretype())) {
-                flow.setRatio(dto.getDbtype().equals("1") ? user.getAratio():user.getAratio2());
+                flow.setRatio(dto.getDbtype().equals("1") ? user.getAratio() : user.getAratio2());
             } else if ("B".equals(flow.getScoretype())) {
-                flow.setRatio(dto.getDbtype().equals("1") ? user.getBratio():user.getBratio2());
+                flow.setRatio(dto.getDbtype().equals("1") ? user.getBratio() : user.getBratio2());
             } else if ("C".equals(flow.getScoretype())) {
-                flow.setRatio(dto.getDbtype().equals("1") ? user.getCratio():user.getCratio2());
+                flow.setRatio(dto.getDbtype().equals("1") ? user.getCratio() : user.getCratio2());
             } else if ("D".equals(flow.getScoretype())) {
-                flow.setRatio(dto.getDbtype().equals("1") ? user.getDratio():user.getDratio2());
+                flow.setRatio(dto.getDbtype().equals("1") ? user.getDratio() : user.getDratio2());
             } else if ("E".equals(flow.getScoretype())) {
-                flow.setRatio(dto.getDbtype().equals("1") ? user.getEratio():user.getEratio2());
+                flow.setRatio(dto.getDbtype().equals("1") ? user.getEratio() : user.getEratio2());
             } else if ("F".equals(flow.getScoretype())) {
-                flow.setRatio(dto.getDbtype().equals("1") ? user.getFratio():user.getFratio2());
+                flow.setRatio(dto.getDbtype().equals("1") ? user.getFratio() : user.getFratio2());
             }
-            List<ScoreFlow> flow1 = flowService.selectByScoreFlow(dto.getSerialno(), scorringcode,dto.getDbtype());
-            flow1 =flow1.stream().filter(p->p.getDbtype()!=null && p.getDbtype().equals(dto.getDbtype())).collect(Collectors.toList());
+            List<ScoreFlow> flow1 = flowService.selectByScoreFlow(dto.getSerialno(), scorringcode, dto.getDbtype());
+            flow1 = flow1.stream().filter(p -> p.getDbtype() != null && p.getDbtype().equals(dto.getDbtype())).collect(Collectors.toList());
             if (flow1.size() > 0) {//不为空  则修改评分信息
                 List<ScoreFlow> list = new ArrayList<>();
                 for (ScoreFlow scoreFlow : flow1) {
@@ -983,12 +982,12 @@ public class MobileController {
             /*========================被打分用户分数添加或更新  往历史评分数据表插数据==================================================*/
             addOrUpdateScoreHistory(dto, year, month, df, user);
             /*=========================打分用户的评分状态更新==========================================================================*/
-            updateScoreStatus(scorringcode, year, month,dto.getDbtype());
+            updateScoreStatus(scorringcode, year, month, dto.getDbtype());
             map.put("msg", "操作成功");
             map.put("code", 0);
 
         } catch (Exception e) {
-            log.error(e.getMessage() , e);
+            log.error(e.getMessage(), e);
             map.put("msg", "操作失败");
             map.put("code", 1);
         }
@@ -996,24 +995,30 @@ public class MobileController {
         return map;
     }
 
-    private void updateScoreStatus(String scorringcode, String year, String month,String dbtype) {
+    private void updateScoreStatus(String scorringcode, String year, String month, String dbtype) {
         ScoreHistory historyState = new ScoreHistory();
         historyState.setYear(year);
         historyState.setMonth(month);
         historyState.setUsercode(scorringcode);
-        UserDto userDto = new UserDto();
-        userDto.setYear(year);
-        userDto.setMonth(month);
-        userDto.setEmployeecode(scorringcode);
-        int dtoTotalCount = userDtoService.getTotalCount(userDto);
-        String mserialno = year + "-" + month;
-        int flowTotalCount = flowService.getTotalCount(mserialno, scorringcode,dbtype);
+//        UserDto userDto = new UserDto();
+//        userDto.setYear(year);
+//        userDto.setMonth(month);
+//        userDto.setEmployeecode(scorringcode);
+        List<ScoreFlow> scorringList = flowService.selectScoreFlowScorringCode(year, month, dbtype, scorringcode);
+//        int dtoTotalCount = userDtoService.getTotalCount(userDto);
+//        String mserialno = year + "-" + month;
+//        int flowTotalCount = flowService.getTotalCount(mserialno, scorringcode,dbtype);
+        int dtoTotalCount = scorringList.size();
+        //ScoreState 1 未评分 2 已评分
+        int flowTotalCount = scorringList.stream().filter(s -> s.getScoreState().equals("2")).collect(Collectors.toList()).size();
         if (flowTotalCount == 0) {
             historyState.setScorestatus("1");
         } else if (flowTotalCount < dtoTotalCount) {
             historyState.setScorestatus("2");
         } else {
-            historyState.setScorestatus("3");
+            // 在计算中计算已完成
+//            historyState.setScorestatus("3");
+            historyState.setScorestatus("2");
         }
         ScoreHistory history = historyService.selectOneByHistory(historyState);
         if (history == null) {//新增操作
@@ -1044,7 +1049,7 @@ public class MobileController {
     private void getTypeUserScore(UserSummaryDto dto, DecimalFormat df, User user, ScoreHistory history) {
         Double totalRatio = 0.0;
         //A类评分
-        Double AScore = flowService.getTypeAvgScore(dto.getSerialno(), "A",dto.getDbtype());
+        Double AScore = flowService.getTypeAvgScore(dto.getSerialno(), "A", dto.getDbtype());
         if (AScore == null) {
             AScore = 0.0;
             history.setAscore(AScore);
@@ -1053,7 +1058,7 @@ public class MobileController {
             totalRatio += user.getAratio();
         }
         //B类评分
-        Double BScore = flowService.getTypeAvgScore(dto.getSerialno(), "B",dto.getDbtype());
+        Double BScore = flowService.getTypeAvgScore(dto.getSerialno(), "B", dto.getDbtype());
         if (BScore == null) {
             BScore = 0.0;
             history.setBscore(BScore);
@@ -1062,7 +1067,7 @@ public class MobileController {
             totalRatio += user.getBratio();
         }
         //C类评分
-        Double CScore = flowService.getTypeAvgScore(dto.getSerialno(), "C",dto.getDbtype());
+        Double CScore = flowService.getTypeAvgScore(dto.getSerialno(), "C", dto.getDbtype());
         if (CScore == null) {
             CScore = 0.0;
             history.setCscore(CScore);
@@ -1071,7 +1076,7 @@ public class MobileController {
             totalRatio += user.getCratio();
         }
         //D类评分
-        Double DScore = flowService.getTypeAvgScore(dto.getSerialno(), "D",dto.getDbtype());
+        Double DScore = flowService.getTypeAvgScore(dto.getSerialno(), "D", dto.getDbtype());
         if (DScore == null) {
             DScore = 0.0;
             history.setDscore(DScore);
@@ -1092,7 +1097,6 @@ public class MobileController {
     }
 
 
-
     private void getEvaluationReportInfo(String state, UserSummaryDto dto, EvaluationReport report) {
         EvaluationReport evaluationReport;
         report.setUsercode(dto.getEmployeecode());
@@ -1101,13 +1105,13 @@ public class MobileController {
 //            月份
         String month = CalendarUtil.getMonth();
 //            月度
-      //  String quarter = CalendarUtil.getQuarter(month);
+        //  String quarter = CalendarUtil.getQuarter(month);
         int count = Integer.parseInt(month) - 1;
         //获取当前系统时间
         String sysTime = DateUtil.getTime();
 
-            //手动考核-查看所有季节总结
-            manualGetReport(report, year, month, count, sysTime, dto.getDbtype());
+        //手动考核-查看所有季节总结
+        manualGetReport(report, year, month, count, sysTime, dto.getDbtype());
 
 
         evaluationReport = evaluationReportService.selectReportByUserCode(report);
@@ -1122,14 +1126,14 @@ public class MobileController {
 
     private void manualGetReport(EvaluationReport report, String year, String quarter, int count, String sysTime, String dbtype) {
         String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "",dbtype);
+        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
         if (setTime != null) {
             try {
-                    //开始新的月度考核
-                    month = quarter;
-                    report.setYear(setTime.getYear());
-                    report.setMonth(setTime.getMonth());
-                    report.setDbtype(dbtype);
+                //开始新的月度考核
+                month = quarter;
+                report.setYear(setTime.getYear());
+                report.setMonth(setTime.getMonth());
+                report.setDbtype(dbtype);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1218,7 +1222,7 @@ public class MobileController {
                         //获取当前月份
                         String month = CalendarUtil.getMonth();
                         //获取当前月度
-                      //  String quarter = CalendarUtil.getQuarter(month);
+                        //  String quarter = CalendarUtil.getQuarter(month);
                         //当前上一个月度
                         int count = Integer.parseInt(month.trim()) - 1;
                         //获取当前系统时间
@@ -1240,7 +1244,7 @@ public class MobileController {
                 map.put("msg", "该用户没有角色或用户不存在,请联系管理员");
                 map.put("code", 1);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             map.put("msg", "用户信息异常");
             map.put("code", 812);
@@ -1253,9 +1257,9 @@ public class MobileController {
         String month;
         ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
         if (setTime != null) {
-                //开始新的月度考核
-                month = quarter;
-                getSummarys(usercode, dto, map, summarys, setTime.getYear(), setTime.getMonth(),dbtype);
+            //开始新的月度考核
+            month = quarter;
+            getSummarys(usercode, dto, map, summarys, setTime.getYear(), setTime.getMonth(), dbtype);
         }
     }
 
@@ -1270,7 +1274,7 @@ public class MobileController {
             month = String.valueOf(count);
         }
         try {
-           // getSummarys(usercode, dto, map, summarys, year, month);
+            // getSummarys(usercode, dto, map, summarys, year, month);
         } catch (Exception e) {
             log.error(LogUtil.getTrace(e));
             map.put("msg", "查询待评分列表数据失败");
@@ -1278,7 +1282,7 @@ public class MobileController {
         }
     }
 
-    private void getSummarys(String usercode, UserSummaryDto dto, ModelMap map, List<UserSummaryDto> summarys, String year, String month , String dbtype) {
+    private void getSummarys(String usercode, UserSummaryDto dto, ModelMap map, List<UserSummaryDto> summarys, String year, String month, String dbtype) {
         List<UserSummaryDto> summaryList;
         dto.setMonth(month);
         dto.setYear(year);
@@ -1290,12 +1294,12 @@ public class MobileController {
             summaryList = summaryDtoService.selectUserSummaryBySixStateNew(dto);
         }
         for (UserSummaryDto dto1 : summaryList) {
-            List<ScoreFlow> flow = flowService.selectByScoreFlow(dto1.getSerialno(), dto1.getScorringcode(),dbtype);
+            List<ScoreFlow> flow = flowService.selectByScoreFlow(dto1.getSerialno(), dto1.getScorringcode(), dbtype);
             if (flow.size() == 0) {
                 dto1.setScoreState("1");
                 summarys.add(dto1);
             }
-            if(flow.size() > 0){
+            if (flow.size() > 0) {
                 dto1.setScoreState(flow.get(0).getScoreState());
                 summarys.add(dto1);
             }
@@ -1363,42 +1367,44 @@ public class MobileController {
                 boolean isMedicalEthics = false;
                 for (Role role : roles) {
                     if (role.getRolecode().equals("50") || role.getRolecode().equals("100") ||
-                        role.getRolecode().equals("150") || role.getRolecode().equals("200") ||
-                        role.getRolecode().equals("300")) {
+                            role.getRolecode().equals("150") || role.getRolecode().equals("200") ||
+                            role.getRolecode().equals("300")) {
                         //组织部
                         isOrganization = true;
                     }
 
-                    if (role.getRolecode().equals(MEDICAL_ETHICS_USER_ROLE)){
+                    if (role.getRolecode().equals(MEDICAL_ETHICS_USER_ROLE)) {
                         //医德医风
                         isMedicalEthics = true;
                     }
                 }
 
                 //不是医德医风
-                if (!isMedicalEthics){{
-                    //是组织部
-                    if (isOrganization){
-                        User user = userService.findUserByUserCode(usercode);
-                        Station station = stationService.selectByStationCode(user.getStationcode());
-                        if (station != null) {
-                            user.setStationname(station.getStationname());
-                            Department department = departmentService.selectByDeptCode(station.getDepartmentcode());
-                            if (department != null) {
-                                user.setDepartmentname(department.getDepartmentname());
+                if (!isMedicalEthics) {
+                    {
+                        //是组织部
+                        if (isOrganization) {
+                            User user = userService.findUserByUserCode(usercode);
+                            Station station = stationService.selectByStationCode(user.getStationcode());
+                            if (station != null) {
+                                user.setStationname(station.getStationname());
+                                Department department = departmentService.selectByDeptCode(station.getDepartmentcode());
+                                if (department != null) {
+                                    user.setDepartmentname(department.getDepartmentname());
+                                }
                             }
+                            map.put("data", user);
+                            map.put("msg", "查询用户成功");
+                            map.put("code", 0);
+                        } else {
+                            //不是组织部
+                            map.put("msg", "该用户不是组织部成员，没有权限进入");
+                            map.put("code", 1);
                         }
-                        map.put("data", user);
-                        map.put("msg", "查询用户成功");
-                        map.put("code", 0);
-                    }else {
-                        //不是组织部
-                        map.put("msg", "该用户不是组织部成员，没有权限进入");
-                        map.put("code", 1);
                     }
-                }}else {
+                } else {
                     //是组织部
-                    if (isOrganization){
+                    if (isOrganization) {
                         User user = userService.findUserByUserCode(usercode);
                         Station station = stationService.selectByStationCode(user.getStationcode());
                         if (station != null) {
@@ -1411,7 +1417,7 @@ public class MobileController {
                         map.put("data", user);
                         map.put("msg", "查询用户成功");
                         map.put("code", 0);
-                    }else {
+                    } else {
                         //是医德医风
                         User user = userService.getUserByUserCode(usercode);
                         map.put("data", user);
@@ -1524,15 +1530,15 @@ public class MobileController {
                 boolean existPermission = false;
                 for (Role role : roles) {
                     if (role.getRolecode().equals("50") || role.getRolecode().equals("100") ||
-                            role.getRolecode().equals("150") || role.getRolecode().equals("200") || role.getRolecode().equals("300") ||role.getRolecode().equals("700")) {
+                            role.getRolecode().equals("150") || role.getRolecode().equals("200") || role.getRolecode().equals("300") || role.getRolecode().equals("700")) {
                         existPermission = true;
                         break;
                     }
                 }
 
-                if (existPermission){
+                if (existPermission) {
                     getLoginUserInfo(req, map, user);
-                }else {
+                } else {
                     map.put("msg", "该用户不是组织部成员，没有权限进入");
                     map.put("code", 1);
                 }
@@ -1548,7 +1554,7 @@ public class MobileController {
         User query = new User();
         query.setUsercode(user.getUsercode());
         User gwBmUser = userService.selectUserBuGwByMoneyCard(query);
-        if(gwBmUser!=null){
+        if (gwBmUser != null) {
             user.setDepartmentname(gwBmUser.getDepartmentname());
             user.setStationname(gwBmUser.getStationname());
             user.setBranchname(gwBmUser.getBranchname());

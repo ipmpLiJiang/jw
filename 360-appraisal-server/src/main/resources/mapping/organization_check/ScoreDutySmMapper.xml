@@ -115,15 +115,25 @@
         FROM
             scoreDutySm
         WHERE
-            Year = #{year,jdbcType=VARCHAR}
-            and Month = #{month,jdbcType=VARCHAR}
-            <if test="scorredcode != null">
-                and ScorredCode =  #{scorredcode,jdbcType=VARCHAR}
+            Year = #{record.year,jdbcType=VARCHAR}
+            and Month = #{record.month,jdbcType=VARCHAR}
+            <if test="record.scorredcode != null">
+                and ScorredCode =  #{record.scorredcode,jdbcType=VARCHAR}
             </if>
-             and dbtype = #{dbtype,jdbcType=VARCHAR}
+             and dbtype = #{record.dbtype,jdbcType=VARCHAR}
+            <if test="postType != null and postType !=''">
+                AND ScorredCode in (
+                select UserCode from user where Flag='0' and UserState='1' and RoleType='0' and postType = #{postType}
+                )
+            </if>
     </select>
 
     <delete id="deleteYM">
         delete from scoreDutySm where year=#{year} and Month=#{month} and dbtype = #{dbtype}
+        <if test="postType != null and postType !=''">
+            AND ScorredCode in (
+                select UserCode from user where postType = #{postType}
+            )
+        </if>
     </delete>
 </mapper>

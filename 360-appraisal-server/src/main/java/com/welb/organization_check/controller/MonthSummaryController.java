@@ -102,7 +102,7 @@ public class MonthSummaryController {
         map.put("year", year);
         map.put("month", month);
         String serialno = year + "-" + month + "-" + summary.getDbtype() + "-"+ usercode;
-        MonthSummary summary1 = summaryService.selectByPrimaryKey(serialno);
+        MonthSummary summary1 = summaryService.selectByPrimaryKey(serialno,summary.getDbtype());
         getSummarys(summary, map, usercode, summary1, pageNum, pageSize);
     }
 
@@ -206,7 +206,7 @@ public class MonthSummaryController {
                 summary.setYear(setTime.getYear());
                 //拼接个人月节唯一标识
                 String serialno = summary.getYear() + "-" + summary.getMonth() + "-" + summary.getDbtype() + "-" + usercode;
-                MonthSummary summary1 = summaryService.selectByPrimaryKey(serialno);
+                MonthSummary summary1 = summaryService.selectByPrimaryKey(serialno,summary.getDbtype());
                 addOrUpdateSummary(summary, map, usercode, serialno, summary1);
         }
     }
@@ -243,7 +243,7 @@ public class MonthSummaryController {
         }
         //拼接个人月节唯一标识
         String serialno = summary.getYear() + "-" + summary.getMonth() + "-" + usercode;
-        MonthSummary summary1 = summaryService.selectByPrimaryKey(serialno);
+        MonthSummary summary1 = summaryService.selectByPrimaryKey(serialno,summary.getDbtype());
         addOrUpdateSummary(summary, map, usercode, serialno, summary1);
     }
 
@@ -280,7 +280,7 @@ public class MonthSummaryController {
         ModelMap map = new ModelMap();
         String time = DateUtil.getTime();
         Date date = null;
-        MonthSummary summary1 = summaryService.selectByPrimaryKey(summary.getSerialno());
+        MonthSummary summary1 = summaryService.selectByPrimaryKey(summary.getSerialno(),summary.getDbtype());
         summary.setState(summary1.getState());
         try {
             date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time);
@@ -349,8 +349,8 @@ public class MonthSummaryController {
 
 
     @RequestMapping("/getOneHistoryContent")
-    public String getOneHistoryContent(String serialno) throws IOException {
-        MonthSummary summary = summaryService.selectByPrimaryKey(serialno);
+    public String getOneHistoryContent(String serialno,String dbtype) throws IOException {
+        MonthSummary summary = summaryService.selectByPrimaryKey(serialno,dbtype);
         byte[] formattext = summary.getFormattext();
         //将字节数组转换成inputstream流
         InputStream sbs = new ByteArrayInputStream(formattext);

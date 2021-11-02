@@ -43,6 +43,23 @@
             </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="5">
+            <el-form-item label="岗位类型">
+              <el-select
+                v-model="search.postType"
+                clearable
+                placeholder="请选择"
+              >
+              <el-option
+                v-for="item in postTypeOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+            </el-form-item>
+          </el-col>
           <el-button
             type="primary"
             @click="searchList"
@@ -84,13 +101,13 @@
           prop="mobile"
         >
         </el-table-column>
-        <el-table-column label="用户状态">
+        <!-- <el-table-column label="用户状态">
           <template slot-scope="scope">
             <span v-if="scope.row.userstate == 0">停用</span>
             <span v-else-if="scope.row.userstate == 1">启用</span>
             <span v-else>未知</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           label="所属部门"
           prop="departmentname"
@@ -102,8 +119,8 @@
         >
         </el-table-column>
         <el-table-column
-          label="角色权限"
-          prop="rolename"
+          label="岗位类型"
+          prop="postTypeName"
         >
         </el-table-column>
         <el-table-column
@@ -187,6 +204,7 @@ export default {
         stationcode: "",
         username: "",
         rolecode: "",
+        postType: ""
       },
       tableData: [],
       stationcode: [""],
@@ -206,6 +224,18 @@ export default {
         {
           value: "300",
           label: "普通用户"
+        }],
+      postTypeOptions: [{
+          value: "1",
+          label: "科主任"
+        },
+        {
+          value: "2",
+          label: "护士长"
+        },
+        {
+          value: "3",
+          label: "行政"
         }],
       page: {
         pageNum: 1,
@@ -264,6 +294,7 @@ export default {
         params.rolecode = ""
       }
       params.username = this.search.username;
+      params.postType = this.search.postType
       
       new Promise((response, reject) => {
         getList(qs.stringify(params))

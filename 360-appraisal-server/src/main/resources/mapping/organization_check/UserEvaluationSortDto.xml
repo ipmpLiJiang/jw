@@ -67,6 +67,9 @@
             <if test='postType != null and postType!=""'>
             AND u.postType = #{postType}
             </if>
+            <if test='dbbk != null and dbbk!=""'>
+                AND u.dbbk = #{dbbk}
+            </if>
         order by er.TotalScore desc
     </select>
 </mapper>

@@ -537,11 +537,12 @@ public class UserController extends BaseController {
                 int i = Integer.parseInt(quarter) - 1;
                 //获取当前系统时间
                 String sysTime = DateUtil.getTime();
+                summary.setDbtype(user.getDbtype());
 
                 //手动考核-查看所有季节总结
                 manualGetSerialNo(user, summary, year, quarter, i, sysTime);
 
-                MonthSummary monthSunmmary = summaryService.selectByPrimaryKey(summary.getSerialno());
+                MonthSummary monthSunmmary = summaryService.selectByPrimaryKey(summary.getSerialno(),user.getDbtype());
                 //修改用户角色
                 if (rolecode != null) {
                     if (rolecode.equals("150")) {//若是打分用户，评分系数都为0.0

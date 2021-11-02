@@ -34,47 +34,47 @@ public class MonthSummaryImpl implements IMonthSummaryService {
     }
 
     @Override
-    public int updateSubmitStateBySerialNo(String serialno) {
-        return monthSummaryMapper.updateSubmitStateBySerialNo(serialno);
+    public int updateSubmitStateBySerialNo(String serialno,String dbtype) {
+        return monthSummaryMapper.updateSubmitStateBySerialNo(serialno,dbtype);
     }
 
     @Override
-    public int updateGradeStateBySerialNo(String serialno) {
-        return monthSummaryMapper.updateGradeStateBySerialNo(serialno);
+    public int updateGradeStateBySerialNo(String serialno,String dbtype) {
+        return monthSummaryMapper.updateGradeStateBySerialNo(serialno,dbtype);
     }
 
     @Override
-    public int updateGradeStateBySerialNoZp(String serialno) {
-        return monthSummaryMapper.updateGradeStateBySerialNoZp(serialno);
+    public int updateGradeStateBySerialNoZp(String serialno,String dbtype) {
+        return monthSummaryMapper.updateGradeStateBySerialNoZp(serialno,dbtype);
     }
 
     @Override
-    public int updateStateAll(String year,String month,String dbtype) {
-        return monthSummaryMapper.updateStateAll(year,month,dbtype);
+    public int updateStateAll(String year,String month,String dbtype,String postType) {
+        return monthSummaryMapper.updateStateAll(year,month,dbtype,postType);
     }
     @Override
-    public int updateStateZpAll(String year,String month,String dbtype){
-        return monthSummaryMapper.updateStateZpAll(year,month,dbtype);
-    }
-
-    @Override
-    public int updateFinishGradeBySerialNo(String serialno) {
-        return monthSummaryMapper.updateFinishGradeBySerialNo(serialno);
+    public int updateStateZpAll(String year,String month,String dbtype,String postType){
+        return monthSummaryMapper.updateStateZpAll(year,month,dbtype,postType);
     }
 
     @Override
-    public int updateFinishGradeAll(String year,String month,String dbtype) {
-        return monthSummaryMapper.updateFinishGradeAll(year,month,dbtype);
+    public int updateFinishGradeBySerialNo(String serialno,String dbtype) {
+        return monthSummaryMapper.updateFinishGradeBySerialNo(serialno,dbtype);
     }
 
     @Override
-    public int deleteByPrimaryKey(String serialno) {
-        return monthSummaryMapper.deleteByPrimaryKey(serialno);
+    public int updateFinishGradeAll(String year,String month,String dbtype,String postType) {
+        return monthSummaryMapper.updateFinishGradeAll(year,month,dbtype,postType);
     }
 
     @Override
-    public MonthSummary selectByPrimaryKey(String serialno) {
-        return monthSummaryMapper.selectByPrimaryKey(serialno);
+    public int deleteByPrimaryKey(String serialno,String dbtype) {
+        return monthSummaryMapper.deleteByPrimaryKey(serialno,dbtype);
+    }
+
+    @Override
+    public MonthSummary selectByPrimaryKey(String serialno,String dbtype) {
+        return monthSummaryMapper.selectByPrimaryKey(serialno,dbtype);
     }
 
     @Override
@@ -93,8 +93,8 @@ public class MonthSummaryImpl implements IMonthSummaryService {
     }
 
     @Override
-    public List<MonthSummary> selectSummaryListByYearAndMonth(String year, String month, String dbtype) {
-        return monthSummaryMapper.selectSummaryListByYearAndMonth(year, month, dbtype);
+    public List<MonthSummary> selectSummaryListByYearAndMonth(String year, String month, String dbtype,String postType) {
+        return monthSummaryMapper.selectSummaryListByYearAndMonth(year, month, dbtype,postType);
     }
 
     @Override
@@ -108,8 +108,8 @@ public class MonthSummaryImpl implements IMonthSummaryService {
     }
 
     @Override
-    public int batchDelete(List<String> serialnos) {
-        return monthSummaryMapper.batchDelete(serialnos);
+    public int batchDelete(List<String> serialnos,String dbtype) {
+        return monthSummaryMapper.batchDelete(serialnos,dbtype);
     }
 
     @Override
@@ -128,16 +128,11 @@ public class MonthSummaryImpl implements IMonthSummaryService {
     }
 
     @Override
-    public List<MonthSummary> selectListByYearAndMonth(String year, String month, String dbtype) {
-        return monthSummaryMapper.selectSummaryListByYearAndMonth(year, month, dbtype);
-    }
-
-    @Override
     public List<MonthSummary>selectSummaryByInEmployeeCode(String year,String month, String dbtype,List<String> codeList){
         return monthSummaryMapper.selectSummaryByInEmployeeCode(year,month, dbtype,codeList);
     }
     @Override
-    public int deleteYM(String year,String month,String dbtype){
-        return monthSummaryMapper.deleteYM(year,month,dbtype);
+    public int deleteYM(String year,String month,String dbtype,String postType){
+        return monthSummaryMapper.deleteYM(year,month,dbtype,postType);
     }
 }

@@ -56,7 +56,7 @@ public interface ScoreDetailMapper {
 
     List<ScoreDetail> batchSelectDetailBySerialNo(@Param("list")List<ScoreDetail> list);
 
-    List<ScoreDetail> selectDetailByMonthSummaryList(String year,String month, String dbtype);
+    List<ScoreDetail> selectDetailByMonthSummaryList(String year,String month, String dbtype,String postType);
 
-    int deleteYM(@Param("year") String year,@Param("month") String month,@Param("dbtype") String dbtype);
+    int deleteYM(String year,String month,String dbtype,String postType);
 }

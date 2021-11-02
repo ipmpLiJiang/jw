@@ -312,13 +312,16 @@
             <if test="history.dbtype != null and history.dbtype !=''">
                 and m.dbtype = #{history.dbtype,jdbcType=VARCHAR}
             </if>
+            <if test="postType != null and postType !=''">
+                and u.postType = #{history.postType}
+            </if>
             <if test="history.dbbk != null and history.dbbk !=''">
-                and m.dbbk = #{history.dbbk,jdbcType=VARCHAR}
+                and u.dbbk = #{history.dbbk,jdbcType=VARCHAR}
             </if>
             and u.UserCode=h.UserCode
             and u.UserCode =m.EmployeeCode
-            and u.RoleType="0"
-            and u.Flag="0"
+            and u.RoleType='0'
+            and u.Flag='0'
             and u.StationCode=s.StationCode
             and s.DepartmentCode=d.DepartmentCode
             and u.UserCode=ur.UserCode
@@ -387,14 +390,14 @@
             </if>
             and u.UserCode=h.UserCode
             and u.UserCode =m.EmployeeCode
-            and u.RoleType="0"
-            and u.Flag="0"
+            and u.RoleType='0'
+            and u.Flag='0'
             and u.StationCode=s.StationCode
             and s.DepartmentCode=d.DepartmentCode
             and u.UserCode=ur.UserCode
             and r.RoleCode=ur.RoleCode
             and u.userCode in(
-                select ScorringCode from score where dbtype= #{dbtype,jdbcType=VARCHAR}
+            select code from (select distinct ScorringCode code from score where dbtype= #{dbtype}) a
             )
             and h.Year=m.Year
             and m.Month=h.Month
@@ -410,10 +413,10 @@
     where h.UserCode=u.UserCode
     and  u.UserCode=ur.UserCode
     and u.userCode in(
-        select ScorringCode from score where dbtype= #{dbtype}
+        select code from (select distinct ScorringCode code from score where dbtype= #{dbtype}) a
     )
-    and  u.Flag="0"
-    and  u.UserState="1"
+    and  u.Flag='0'
+    and  u.UserState='1'
     and  h.Year=#{year}
     and  h.Month=#{month}
         <if test='dbtype != null and dbtype !=""'>
@@ -428,15 +431,18 @@
     select h.* from  scorehistory h,user u,user_role ur
     where h.UserCode=u.UserCode
     and  u.UserCode=ur.UserCode
-    and  u.Flag="0"
-    and  u.UserState="1"
+    and  u.Flag='0'
+    and  u.UserState='1'
     and  h.Year=#{history.year}
     and  h.Month=#{history.month}
     <if test="history.dbtype != null and history.dbtype !=''">
         and h.dbtype = #{history.dbtype,jdbcType=VARCHAR}
     </if>
+    <if test="postType != null and postType !=''">
+        AND u.postType = #{postType}
+    </if>
     <if test="history.dbbk != null and history.dbbk !=''">
-        and h.dbbk = #{history.dbbk,jdbcType=VARCHAR}
+        and u.dbbk = #{history.dbbk,jdbcType=VARCHAR}
     </if>
     <if test="qrcode==null">
         AND u.UserCode in (
@@ -511,8 +517,8 @@
         and h.ScoreStatus !=3
         and u.UserCode=h.UserCode
         and u.UserCode =m.EmployeeCode
-        and u.RoleType="0"
-        and u.Flag="0"
+        and u.RoleType='0'
+        and u.Flag='0'
         and u.StationCode=s.StationCode
         and s.DepartmentCode=d.DepartmentCode
         and u.UserCode=ur.UserCode
@@ -561,8 +567,8 @@
         </where>
         and u.UserCode=h.UserCode
         and u.UserCode =m.EmployeeCode
-        and u.RoleType="0"
-        and u.Flag="0"
+        and u.RoleType='0'
+        and u.Flag='0'
         and u.StationCode=s.StationCode
         and s.DepartmentCode=d.DepartmentCode
         and u.UserCode=ur.UserCode
@@ -590,8 +596,8 @@
     WHERE
         u.UserCode = h.UserCode
         AND u.UserCode = m.EmployeeCode
-        AND u.RoleType = "0"
-        AND u.Flag = "0"
+        AND u.RoleType = '0'
+        AND u.Flag = '0'
         AND u.UserCode = ur.UserCode
         AND r.RoleCode = ur.RoleCode
         <if test='dbtype != null and dbtype !="1"'>
@@ -624,9 +630,19 @@
             AND m.Year = #{year}
             AND m.Month = #{month}
             AND m.dbtype = #{dbtype}
+            <if test="postType != null and postType !=''">
+                AND m.EmployeeCode in (
+                    select UserCode from user where Flag='0' and UserState='1' and RoleType='0' and postType = #{postType}
+                )
+            </if>
     </select>
 
     <delete id="deleteYM">
         delete from scorehistory where year=#{year} and Month=#{month} and dbtype=#{dbtype}
+        <if test="postType != null and postType !=''">
+            AND UserCode in (
+            select UserCode from user where postType = #{postType}
+            )
+        </if>
     </delete>
 </mapper>

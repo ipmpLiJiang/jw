@@ -317,4 +317,14 @@ public class UserScoreBadDto {
     private String scorringdepartmentcode;
 
     private String scorringdepartmentname;
+
+    public String getDbbk() {
+        return dbbk;
+    }
+
+    public void setDbbk(String dbbk) {
+        this.dbbk = dbbk;
+    }
+
+    private  String dbbk;
 }

@@ -24,28 +24,28 @@ public class ScoreFlowServiceImpl implements IScoreFlowService {
     ScoreFlowMapper flowMapper;
 
     @Override
-    public List<ScoreFlow> selectByScoreFlow(String mserialno, String scorringcode,String dbtype) {
+    public List<ScoreFlow> selectByScoreFlow(String mserialno, String scorringcode, String dbtype) {
         return flowMapper.selectByScoreFlow(mserialno, scorringcode, dbtype);
     }
 
     @Override
-    public List<ScoreFlow> selectByScoredCodeFlow(String mserialno,String scoredcode,String dbtype){
+    public List<ScoreFlow> selectByScoredCodeFlow(String mserialno, String scoredcode, String dbtype) {
         return flowMapper.selectByScoredCodeFlow(mserialno, scoredcode, dbtype);
     }
+
     @Override
-    public
-    List<ScoreFlow> selectByScorringScoredFlow(String mserialno,String scorringcode,String scoredcode,String dbtype){
-        return  flowMapper.selectByScorringScoredFlow(mserialno,scorringcode,scoredcode,dbtype);
+    public List<ScoreFlow> selectByScorringScoredFlow(String mserialno, String scorringcode, String scoredcode, String dbtype) {
+        return flowMapper.selectByScorringScoredFlow(mserialno, scorringcode, scoredcode, dbtype);
     }
 
     @Override
-    public Double getScoreByType(String mserialno, String scoretype,String dbtype) {
-        return flowMapper.getScoreByType(mserialno, scoretype,dbtype);
+    public Double getScoreByType(String mserialno, String scoretype, String dbtype) {
+        return flowMapper.getScoreByType(mserialno, scoretype, dbtype);
     }
 
     @Override
-    public int getScoreByTypeCount(String mserialno, String scoretype,String dbtype) {
-        return flowMapper.getScoreByTypeCount(mserialno, scoretype,dbtype);
+    public int getScoreByTypeCount(String mserialno, String scoretype, String dbtype) {
+        return flowMapper.getScoreByTypeCount(mserialno, scoretype, dbtype);
     }
 
     @Override
@@ -54,8 +54,8 @@ public class ScoreFlowServiceImpl implements IScoreFlowService {
     }
 
     @Override
-    public  int insertSelective(ScoreFlow record) {//主键自增长
-        if(record.getSerialno() == null || record.getSerialno().equals("")) {
+    public int insertSelective(ScoreFlow record) {//主键自增长
+        if (record.getSerialno() == null || record.getSerialno().equals("")) {
             String serialNo = StringUtil.getGuid();
             record.setSerialno(serialNo);
         }
@@ -63,33 +63,33 @@ public class ScoreFlowServiceImpl implements IScoreFlowService {
     }
 
     @Override
-    public List<ScoreFlow> selectScoreAllByScoredCode(String scoredcode, String year, String month,String dbtype) {
-        return flowMapper.selectScoreAllByScoredCode(scoredcode, year, month,dbtype);
+    public List<ScoreFlow> selectScoreAllByScoredCode(String scoredcode, String year, String month, String dbtype) {
+        return flowMapper.selectScoreAllByScoredCode(scoredcode, year, month, dbtype);
     }
 
     @Override
     public Double selectMaxScoreByScoredCode(String scoredcode, String year, String month, String dbtype) {
-        return flowMapper.selectMaxScoreByScoredCode(scoredcode, year, month,dbtype);
+        return flowMapper.selectMaxScoreByScoredCode(scoredcode, year, month, dbtype);
     }
 
     @Override
     public Double selectMinScoreByScoredCode(String scoredcode, String year, String month, String dbtype) {
-        return flowMapper.selectMinScoreByScoredCode(scoredcode,year,month,dbtype);
+        return flowMapper.selectMinScoreByScoredCode(scoredcode, year, month, dbtype);
     }
 
     @Override
-    public List<ScoreFlow> selectFlowByScorredCode(String scorredcode,String dbtype) {
-        return flowMapper.selectFlowByScorredCode(scorredcode,dbtype);
+    public List<ScoreFlow> selectFlowByScorredCode(String scorredcode, String dbtype) {
+        return flowMapper.selectFlowByScorredCode(scorredcode, dbtype);
     }
 
     @Override
-    public List<ScoreFlow> selectFlowByScorringCode(String scorringcode,String dbtype) {
-        return flowMapper.selectFlowByScorringCode(scorringcode,dbtype);
+    public List<ScoreFlow> selectFlowByScorringCode(String scorringcode, String dbtype) {
+        return flowMapper.selectFlowByScorringCode(scorringcode, dbtype);
     }
 
     @Override
-    public List<ScoreFlow> getSingleTotalScoreAll(String mserialno, String scoretype, String dutytype, Integer orderid,String dbtype) {
-        return flowMapper.getSingleTotalScoreAll(mserialno, scoretype, dutytype, orderid,dbtype);
+    public List<ScoreFlow> getSingleTotalScoreAll(String mserialno, String scoretype, String dutytype, Integer orderid, String dbtype) {
+        return flowMapper.getSingleTotalScoreAll(mserialno, scoretype, dutytype, orderid, dbtype);
     }
 
     @Override
@@ -118,37 +118,42 @@ public class ScoreFlowServiceImpl implements IScoreFlowService {
     }
 
     @Override
-    public ScoreFlow selectFlowByMserialNoAndScorringCode(String mserialno, String scorringcode,String dbtype) {
-        return flowMapper.selectFlowByMserialNoAndScorringCode(mserialno, scorringcode,dbtype);
+    public ScoreFlow selectFlowByMserialNoAndScorringCode(String mserialno, String scorringcode, String dbtype) {
+        return flowMapper.selectFlowByMserialNoAndScorringCode(mserialno, scorringcode, dbtype);
     }
 
     @Override
-    public Double getTypeAvgScore(String mserialno, String scoretype,String dbtype) {
-        return flowMapper.getTypeAvgScore(mserialno,scoretype,dbtype);
+    public Double getTypeAvgScore(String mserialno, String scoretype, String dbtype) {
+        return flowMapper.getTypeAvgScore(mserialno, scoretype, dbtype);
     }
 
     @Override
-    public int getTotalCount(String mserialno, String scorringcode,String dbtype) {
-        return flowMapper.getTotalCount(mserialno, scorringcode,dbtype);
+    public int getTotalCount(String mserialno, String scorringcode, String dbtype) {
+        return flowMapper.getTotalCount(mserialno, scorringcode, dbtype);
     }
 
     @Override
-    public List<ScoreFlow> findFlowsByCode(String usercode,String dbtype) {
-        return flowMapper.findFlowsByCode(usercode,dbtype);
+    public List<ScoreFlow> findFlowsByCode(String usercode, String dbtype) {
+        return flowMapper.findFlowsByCode(usercode, dbtype);
     }
 
     @Override
-    public List<ScoreFlow> selectByScoreFlowType(String mserialno,String scoreType,String dbtype) {
-        return flowMapper.selectByScoreFlowType(mserialno, scoreType,dbtype);
+    public List<ScoreFlow> selectByScoreFlowType(String mserialno, String scoreType, String dbtype) {
+        return flowMapper.selectByScoreFlowType(mserialno, scoreType, dbtype);
     }
 
     @Override
-    public List<ScoreFlow> selectFlowByMonthSummaryList(String year,String month,String dbtype){
-        return flowMapper.selectFlowByMonthSummaryList(year,month,dbtype);
+    public List<ScoreFlow> selectFlowByMonthSummaryList(String year, String month, String dbtype, String postType) {
+        return flowMapper.selectFlowByMonthSummaryList(year, month, dbtype, postType);
     }
 
     @Override
-    public int deleteYM(String year,String month,String dbtype){
-        return flowMapper.deleteYM(year,month,dbtype);
+    public List<ScoreFlow> selectScoreFlowScorringCode(String year, String month, String dbtype, String scorringcode) {
+        return flowMapper.selectScoreFlowScorringCode(year, month, dbtype, scorringcode);
+    }
+
+    @Override
+    public int deleteYM(String year, String month, String dbtype, String postType) {
+        return flowMapper.deleteYM(year, month, dbtype, postType);
     }
 }

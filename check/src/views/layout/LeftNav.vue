@@ -68,7 +68,7 @@
         <router-link to="/home/scorePeople">
           <el-menu-item index="/home/scorePeople">评分关系管理</el-menu-item>
         </router-link>
-        <router-link to="/home/scoreStationPeople">
+        <router-link to="/home/scoreStationPeople" v-if="this.$store.state.user.user.dbtype=='1'?false:true">
           <el-menu-item index="/home/scoreStationPeople">岗位关系管理</el-menu-item>
         </router-link>
         <router-link to="/home/gradeTotal">
@@ -105,7 +105,9 @@
           <span slot="title">人员评分管理</span>
         </el-menu-item>
       </router-link>
-      <router-link to="/home/userSelf">
+      <router-link to="/home/userSelf"
+      v-if="role != '100' && role != '50'"
+      >
         <el-menu-item index="/home/userSelf">
           <i class="el-icon-user-solid"></i>
           <span slot="title">人员自评</span>

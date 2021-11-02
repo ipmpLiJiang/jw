@@ -25,6 +25,8 @@
         <result column="RoleName" property="rolename" jdbcType="VARCHAR"/>
         <result column="dbtype" property="dbtype" jdbcType="VARCHAR"/>
         <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
+        <result column="postType" property="postType" jdbcType="VARCHAR"/>
+        <result column="isSc" property="isSc" jdbcType="INTEGER"/>
     </resultMap>
     <!--("100","200","300","50")-->
     <select id="selectUserDtoLike" resultMap="BaseResultMap">
@@ -67,7 +69,7 @@
         </if>
         m.SerialNo,m.Year,m.Month,m.State,m.SavePath,m.FileName,m.Title,m.Content,m.ScoreStatus,
         s.StationName,s.StationCode,d.DepartmentCode,d.DepartmentName,
-        r.RoleCode,r.RoleName
+        r.RoleCode,r.RoleName,u.postType,m.dbtype,u.dbbk,m.isSc
         from user u ,monthsummary m,station s,department d,role r,user_role ur
         <where>
             <if test="userDto.username!=null and userDto.username!=''">
@@ -88,8 +90,11 @@
             <if test="userDto.dbtype!=null">
                 and m.dbtype =#{userDto.dbtype}
             </if>
-            <if test='userDto.dbtype!=null and userDto.dbtype!="2"'>
+            <if test='userDto.dbtype!=null and userDto.dbtype!="2" and (userDto.dbbk==null or userDto.dbbk=="")'>
                 and u.dbbk in('3','4')
+            </if>
+            <if test='userDto.dbtype!=null and userDto.dbtype!="2" and userDto.dbbk!=null and userDto.dbbk!=""'>
+                and u.dbbk =#{userDto.dbbk}
             </if>
             <if test="userDto.state!=null and userDto.state !='' and userDto.state!='0'.toString()">
                 and m.State=#{userDto.state}
@@ -175,7 +180,7 @@
         </if>
         m.SerialNo,m.Year,m.Month,m.State,m.SavePath,m.FileName,m.Title,m.Content,m.ScoreStatus,
         s.StationName,s.StationCode,d.DepartmentCode,d.DepartmentName,
-        r.RoleCode,r.RoleName
+        r.RoleCode,r.RoleName,u.postType,m.dbtype,u.dbbk,m.isSc
         from user u ,monthsummary m,station s,department d,role r,user_role ur
         <where>
             <if test="userDto.usercode!=null and userDto.usercode!=''">
@@ -275,7 +280,7 @@
         </if>
         m.SerialNo,m.Year,m.Month,m.State,m.SavePath,m.FileName,m.Title,m.Content,m.ScoreStatus,
         s.StationName,s.StationCode,d.DepartmentCode,d.DepartmentName,
-        r.RoleCode,r.RoleName
+        r.RoleCode,r.RoleName,u.postType,m.dbtype,u.dbbk,m.isSc
         from user u ,monthsummary m,station s,department d,role r,user_role ur
         <where>
             <if test="year!=null and year!=''">
@@ -310,7 +315,7 @@
         select u.UserCode,u.UserName,u.MoneyCard,
         m.SerialNo,m.Year,m.Month,m.ScoreStatus,
         s.StationName,s.StationCode,d.DepartmentCode,d.DepartmentName,
-        r.RoleCode,r.RoleName
+        r.RoleCode,r.RoleName,u.postType,m.dbtype,u.dbbk,m.isSc
         from user u ,monthsummary m,station s,department d,role r,user_role ur
         <where>
             <if test="username!=null and username!=''">
@@ -387,7 +392,7 @@
         </if>
             m.Year,m.Month,m.State,u.StationCode,u.FullStationCode,u.Flag,m.EmployeeCode,m.Pubdate,
             m.SavePath,m.FileName,m.IsSend,u.RoleType,m.Title,m.Content,m.ScoreStatus,r.RoleCode,
-            r.RoleName,m.dbtype,u.dbbk
+            r.RoleName,u.postType,m.dbtype,u.dbbk,m.isSc
         FROM
             USER u,monthsummary m,role r,user_role ur
         WHERE
@@ -401,6 +406,9 @@
                     SELECT ScorringCode code FROM score WHERE dbtype =#{userDto.dbtype}
                 ) a
             )
+            <if test="userDto.postType!=null and userDto.postType!=''">
+                and u.postType=#{userDto.postType}
+            </if>
             AND u.UserCode = m.EmployeeCode
             and u.UserCode=ur.UserCode
             and r.RoleCode=ur.RoleCode

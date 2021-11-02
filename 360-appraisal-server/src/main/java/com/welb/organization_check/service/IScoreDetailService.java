@@ -123,8 +123,8 @@ public interface IScoreDetailService {
      */
     List<ScoreDetail> batchSelectDetailBySerialNo(List<ScoreDetail> list);
 
-    List<ScoreDetail> selectDetailByMonthSummaryList(String year,String month, String dbtype);
+    List<ScoreDetail> selectDetailByMonthSummaryList(String year,String month, String dbtype,String postType);
 
-    int deleteYM(String year,String month,String dbtype);
+    int deleteYM(String year,String month,String dbtype,String postType);
 
 }

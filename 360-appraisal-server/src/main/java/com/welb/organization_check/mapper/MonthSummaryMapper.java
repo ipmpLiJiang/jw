@@ -8,27 +8,27 @@ import java.util.List;
 
 @Mapper
 public interface MonthSummaryMapper {
-    int deleteByPrimaryKey(String serialno);
+    int deleteByPrimaryKey(String serialno,String dbtype);
 
     int insert(MonthSummary summary);
 
     int insertSelective(MonthSummary summary);
 
-    int updateSubmitStateBySerialNo(String serialno);
+    int updateSubmitStateBySerialNo(String serialno,String dbtype);
 
-    int updateGradeStateBySerialNo(String serialno);
+    int updateGradeStateBySerialNo(String serialno,String dbtype);
 
-    int updateGradeStateBySerialNoZp(String serialno);
+    int updateGradeStateBySerialNoZp(String serialno,String dbtype);
 
-    int updateStateZpAll(String year,String month,String dbtype);
+    int updateStateZpAll(String year,String month,String dbtype,String postType);
 
-    int updateStateAll(String year,String month,String dbtype);
+    int updateStateAll(String year,String month,String dbtype,String postType);
 
-    int updateFinishGradeBySerialNo(String serialno);
+    int updateFinishGradeBySerialNo(String serialno,String dbtype);
 
-    int updateFinishGradeAll(String year,String month,String dbtype);
+    int updateFinishGradeAll(String year,String month,String dbtype,String postType);
 
-    MonthSummary selectByPrimaryKey(String serialno);
+    MonthSummary selectByPrimaryKey(String serialno,String dbtype);
 
     int updateByPrimaryKeySelective(MonthSummary summary);
 
@@ -38,15 +38,20 @@ public interface MonthSummaryMapper {
 
     int updateStateBySerialNo(MonthSummary summary);
 
-    List<MonthSummary>selectSummaryByYearAndMonth(@Param("year")String year,@Param("month")String month, @Param("dbtype")String dbtype);
+    List<MonthSummary>selectSummaryByYearAndMonth(@Param("year")String year,
+                                                  @Param("month")String month,
+                                                  @Param("dbtype")String dbtype);
 
-    List<MonthSummary>selectSummaryListByYearAndMonth(@Param("year")String year,@Param("month")String month, @Param("dbtype")String dbtype);
+    List<MonthSummary>selectSummaryListByYearAndMonth(@Param("year") String year,
+                                                      @Param("month") String month,
+                                                      @Param("dbtype") String dbtype,
+                                                      @Param("postType") String postType);
 
     MonthSummary selectSummaryByYearAndMonthAndCode(@Param("year")String year,@Param("month")String month,@Param("employeecode")String employeecode, @Param("dbtype")String dbtype);
 
     List<MonthSummary>findMonthSummaryAll();
 
-    int batchDelete(List<String>serialnos);
+    int batchDelete(@Param("serialnos")List<String>serialnos,@Param("dbtype")String dbtype);
 
     List<MonthSummary>selectSerialNoByEmployeeCode(String employeecode, @Param("dbtype")String dbtype);
 
@@ -58,5 +63,5 @@ public interface MonthSummaryMapper {
 
     List<MonthSummary>selectSummaryByInEmployeeCode(@Param("year")String year,@Param("month")String month, @Param("dbtype")String dbtype,@Param("codeList") List<String> codeList);
 
-    int deleteYM(@Param("year") String year,@Param("month") String month,@Param("dbtype") String dbtype);
+    int deleteYM(@Param("year") String year,@Param("month") String month,@Param("dbtype") String dbtype,@Param("postType") String postType);
 }

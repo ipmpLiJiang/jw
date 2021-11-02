@@ -9,7 +9,7 @@
           label-width="100px"
           show-overflow-tooltip="true"
         >
-          <el-col :span="6">
+          <el-col :span="6" v-if="dbtype==2">
             <el-form-item label="所属岗位">
               <PostList
                 @childSelectDepartment="getSelectStation"
@@ -17,7 +17,25 @@
               ></PostList>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="5" v-if="dbtype==1">
+            <el-form-item label="党内身份">
+            <el-select
+              v-model="search.dbbk"
+              placeholder="请选择"
+              clearable
+              style="width:100%;"
+            >
+              <el-option
+                v-for="item in dbbk"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          </el-col>
+          <el-col :span="5">
             <el-form-item label="员工姓名">
               <el-input
                 placeholder="请输入员工姓名"
@@ -28,7 +46,7 @@
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="5">
             <el-form-item label="年份">
               <el-date-picker
                 v-model="search.year"
@@ -39,7 +57,7 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="5">
             <el-form-item label="季度">
               <el-select
                 v-model="search.month"
@@ -56,7 +74,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6" style="margin-top:20px;">
+          <el-col :span="5" v-if="dbtype=='1'?false:true" style="margin-top:20px;">
             <el-form-item label="岗位类型">
               <el-select
                 v-model="search.postType"
@@ -176,7 +194,8 @@ export default {
         username: "",
         month: "",
         year: "",
-        postType: ""
+        postType: "",
+        dbbk: ""
       },
       tableData: [],
       stationcode: [""],
@@ -192,6 +211,16 @@ export default {
           value: "3",
           label: "行政"
         }],
+      dbbk: [
+        {
+          value: "3",
+          label: "党支部书记"
+        },
+        {
+          value: "4",
+          label: "党总支书记"
+        }
+      ],
       dbtype: this.$store.state.user.user.dbtype,
       page: {
         pageNum: 1,
@@ -245,7 +274,9 @@ export default {
       } else {
         params.postType = "";
       }
-      
+      if(this.dbtype=='1' && this.search.dbbk !=null){
+        params.dbbk = this.search.dbbk
+      }
       this.searchLoading = true;
       params.username = this.search.username;
       params.month = this.search.month;

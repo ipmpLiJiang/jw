@@ -302,4 +302,14 @@ public class MonthSummary {
     public void setIssend(String issend) {
         this.issend = issend;
     }
+
+    public Integer getIsSc() {
+        return isSc;
+    }
+
+    public void setIsSc(Integer isSc) {
+        this.isSc = isSc;
+    }
+
+    Integer isSc;
 }

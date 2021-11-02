@@ -93,12 +93,12 @@ public class ScoreDetailService implements IScoreDetailService {
     }
 
     @Override
-    public List<ScoreDetail> selectDetailByMonthSummaryList(String year,String month, String dbtype){
-        return scoreDetailMapper.selectDetailByMonthSummaryList(year,month, dbtype);
+    public List<ScoreDetail> selectDetailByMonthSummaryList(String year,String month, String dbtype,String postType){
+        return scoreDetailMapper.selectDetailByMonthSummaryList(year,month, dbtype,postType);
     }
 
     @Override
-    public int deleteYM(String year,String month,String dbtype){
-        return scoreDetailMapper.deleteYM(year,month,dbtype);
+    public int deleteYM(String year,String month,String dbtype,String postType){
+        return scoreDetailMapper.deleteYM(year,month,dbtype,postType);
     }
 }

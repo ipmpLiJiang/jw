@@ -18,13 +18,15 @@ public interface ScoreHistoryMapper {
 
     ScoreHistory selectOneByHistory(ScoreHistory history);
 
-    List<ScoreHistory>selectHistoryList(@Param("history") ScoreHistory history,@Param("qrcode") String qrcode);
+    List<ScoreHistory>selectHistoryList(@Param("history") ScoreHistory history,@Param("qrcode") String qrcode,@Param("postType") String postType);
 
     List<ScoreHistory>gradeList(ScoreHistory history);
 
     List<ScoreHistory>selectGradeHisotyList(ScoreHistory history);
 
-    List<ScoreHistory>selectUserHisotyList(@Param("history") ScoreHistory history,@Param("qrcode") String qrcode);
+    List<ScoreHistory>selectUserHisotyList(@Param("history") ScoreHistory history,
+                                           @Param("qrcode") String qrcode,
+                                           @Param("postType") String postType);
 
     int batchInsert(List<ScoreHistory>list);
 
@@ -38,7 +40,10 @@ public interface ScoreHistoryMapper {
 
     List<ScoreHistory>selectHistoryByInUserCode(@Param("year")String year,@Param("month")String month,@Param("dbtype")String dbtype,@Param("codeList")List<String> codeList);
 
-    List<ScoreHistory> selectHistoryByMonthSummaryList(@Param("year")String year,@Param("month")String month,@Param("dbtype")String dbtype);
+    List<ScoreHistory> selectHistoryByMonthSummaryList(@Param("year")String year,
+                                                       @Param("month")String month,
+                                                       @Param("dbtype")String dbtype,
+                                                       @Param("postType")String postType);
 
-    int deleteYM(@Param("year") String year,@Param("month") String month,@Param("dbtype") String dbtype);
+    int deleteYM(@Param("year") String year,@Param("month") String month,@Param("dbtype") String dbtype,@Param("postType")String postType);
 }

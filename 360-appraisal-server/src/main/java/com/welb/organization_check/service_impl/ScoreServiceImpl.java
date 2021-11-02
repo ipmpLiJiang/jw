@@ -130,8 +130,8 @@ public class ScoreServiceImpl implements  IScoreService {
     }
 
     @Override
-    public List<Score> findScoreAll(String dbtype) {
-        return scoreMapper.findScoreAll(dbtype);
+    public List<Score> findScoreAll(String dbtype,String postType) {
+        return scoreMapper.findScoreAll(dbtype,postType);
     }
 
     @Override

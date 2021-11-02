@@ -35,7 +35,7 @@ public interface IScoreHistoryService {
      * @param history
      * @return
      */
-    List<ScoreHistory> selectHistoryList(ScoreHistory history,String qrcode);
+    List<ScoreHistory> selectHistoryList(ScoreHistory history,String qrcode,String postType);
 
     /**
      * 查询所有打分用户的历史数据
@@ -56,7 +56,7 @@ public interface IScoreHistoryService {
      * @param history
      * @return
      */
-    List<ScoreHistory>selectUserHisotyList(ScoreHistory history,String qrcode);
+    List<ScoreHistory>selectUserHisotyList(ScoreHistory history,String qrcode,String postType);
 
 
     /**
@@ -95,7 +95,7 @@ public interface IScoreHistoryService {
 
     List<ScoreHistory>selectHistoryByInUserCode(String year,String month, String dbtype,List<String> codeList);
 
-    List<ScoreHistory> selectHistoryByMonthSummaryList(String year,String month, String dbtype);
+    List<ScoreHistory> selectHistoryByMonthSummaryList(String year,String month, String dbtype, String postType);
 
-    int deleteYM(String year,String month,String dbtype);
+    int deleteYM(String year,String month,String dbtype,String postType);
 }

@@ -55,7 +55,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="6" v-if="dbtype=='1'?false:true">
             <el-form-item label="岗位类型">
               <el-select
                 v-model="search.postType"

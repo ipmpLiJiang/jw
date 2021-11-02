@@ -7,15 +7,15 @@
           label-width="100px"
           show-overflow-tooltip="true"
         >
-          <el-col :span="5">
-            <el-form-item label="所在岗位" v-if="dbtype==2">
-              <PostList
-                @childSelectDepartment="getSelectStation"
-                :selectedOptions="fullstationcode"
-              ></PostList>
-            </el-form-item>
-          </el-col>
-          <el-col :span="5" v-if="dbtype==1">
+        <el-col :span="5" v-if="dbtype==2">
+          <el-form-item label="所在岗位">
+            <PostList
+              @childSelectDepartment="getSelectStation"
+              :selectedOptions="fullstationcode"
+            ></PostList>
+          </el-form-item>
+        </el-col>
+        <el-col :span="5" v-if="dbtype==1">
             <el-form-item label="党内身份">
             <el-select
               v-model="search.dbbk"

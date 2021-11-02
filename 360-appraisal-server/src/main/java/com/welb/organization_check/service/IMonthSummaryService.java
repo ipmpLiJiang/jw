@@ -32,34 +32,34 @@ public interface IMonthSummaryService {
      * @param serialno
      * @return
      */
-    int updateSubmitStateBySerialNo(String serialno);
+    int updateSubmitStateBySerialNo(String serialno,String dbtype);
     /**
      *  通过主键修改季结评分状态
      * @param serialno
      * @return
      */
-    int updateGradeStateBySerialNo(String serialno);
+    int updateGradeStateBySerialNo(String serialno,String dbtype);
 
-    int updateGradeStateBySerialNoZp(String serialno);
+    int updateGradeStateBySerialNoZp(String serialno,String dbtype);
     /**
      * 季结状态全部修改为季节评分
      * @return
      */
-    int updateStateAll(String year,String month,String dbtype);
+    int updateStateAll(String year,String month,String dbtype,String postType);
 
-    int updateStateZpAll(String year,String month,String dbtype);
+    int updateStateZpAll(String year,String month,String dbtype,String postType);
     /**
      * 批量修改状态为季节评分完成
      * @param serialno
      * @return
      */
-    int updateFinishGradeBySerialNo(String serialno);
+    int updateFinishGradeBySerialNo(String serialno,String dbtype);
 
     /**
      * 将状态全部修改为季节评分完成
      * @return
      */
-    int updateFinishGradeAll(String year,String month,String dbtype);
+    int updateFinishGradeAll(String year,String month,String dbtype,String postType);
 
     /**
      * 删除个人月度总结
@@ -67,14 +67,14 @@ public interface IMonthSummaryService {
      * @return
      */
 
-    int deleteByPrimaryKey(String serialno);
+    int deleteByPrimaryKey(String serialno,String dbtype);
 
     /**
      * 通过季节编码查找个人季节总结
      * @param serialno
      * @return
      */
-    MonthSummary selectByPrimaryKey(String serialno);
+    MonthSummary selectByPrimaryKey(String serialno,String dbtype);
 
 
     /**
@@ -106,7 +106,7 @@ public interface IMonthSummaryService {
      * @return
      */
 
-    List<MonthSummary>selectSummaryListByYearAndMonth(String year,String month, String dbtype);
+    List<MonthSummary>selectSummaryListByYearAndMonth(String year,String month, String dbtype, String postType);
 
 
     /**
@@ -129,7 +129,7 @@ public interface IMonthSummaryService {
      * @param serialnos
      * @return
      */
-    int batchDelete(List<String>serialnos);
+    int batchDelete(List<String>serialnos,String dbtype);
 
 
     /**
@@ -153,10 +153,7 @@ public interface IMonthSummaryService {
      */
     int batchUpdate(List<MonthSummary>list);
 
-
-    List<MonthSummary>selectListByYearAndMonth(String year,String month, String dbtype);
-
     List<MonthSummary>selectSummaryByInEmployeeCode(String year,String month, String dbtype,List<String> codeList);
 
-    int deleteYM(String year,String month,String dbtype);
+    int deleteYM(String year,String month,String dbtype,String postType);
 }
