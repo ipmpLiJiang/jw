@@ -35,6 +35,7 @@ public class StationServiceImpl implements IStationService {
             String code = String.valueOf(num);
             station.setStationcode(code);
         }
+        station.setIsEF(0);
         return stationMapper.insertSelective(station);
     }
 
@@ -70,7 +71,13 @@ public class StationServiceImpl implements IStationService {
     }
 
     @Override
+    public List<Station> selectStationByNotEF(String stationcode){
+        return stationMapper.selectStationByNotEF(stationcode);
+    }
+
+    @Override
     public List<Station> findStationByInCodeList(List<String> codeList){
         return stationMapper.findStationByInCodeList(codeList);
     }
+
 }

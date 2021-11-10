@@ -31,6 +31,11 @@
         >医德医风</van-tabbar-item>
       </template> -->
       <van-tabbar-item
+        icon="thumb-circle-o"
+        replace
+        to="/web/tabTwo"
+      >自评</van-tabbar-item>
+      <van-tabbar-item
         icon="manager-o"
         replace
         to="/web/me"
@@ -45,6 +50,7 @@ export default {
     return {
       active: 0,
       flag: false,
+      nameTo: '我的考核',
       dbtype: this.$store.state.user.user.dbtype,
     };
   },
@@ -56,25 +62,19 @@ export default {
       this.$store.commit("$_removeStorage");
       return;
     }
-    //判断用户是否有组织全县
-    this.$store.state.user.user.roleList.forEach((row) => {
-      if (
-        row.rolecode == 50 ||
-        row.rolecode == 100 ||
-        row.rolecode == 150 ||
-        row.rolecode == 200 ||
-        row.rolecode == 300
-      ) {
-        this.flag = true;
-      }
-    });
-    if (!this.flag) {
-      this.active = 2;
-    }
+    
+    this.active = this.$store.state.user.user.active
   },
   watch: {
     $route(to, from) {
       console.log(to);
+      if(to.name=='我的考核'){
+        this.$store.state.user.user.active = 0;
+      }else if(to.name=='自评'){
+        this.$store.state.user.user.active = 1;
+      }else if(to.name=='我'){
+        this.$store.state.user.user.active = 2;
+      }
     },
   },
   methods: {

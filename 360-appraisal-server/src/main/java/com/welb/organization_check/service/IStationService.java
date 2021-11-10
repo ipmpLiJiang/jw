@@ -60,5 +60,7 @@ public interface IStationService {
 
     List<Station> findStationByInCodeList(List<String> codeList);
 
+    List<Station> selectStationByNotEF(String stationcode);
+
 
 }

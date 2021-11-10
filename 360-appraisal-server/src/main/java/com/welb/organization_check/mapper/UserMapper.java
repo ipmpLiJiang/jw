@@ -32,6 +32,8 @@ public interface UserMapper {
 
     List<User> selectUserScoreAll(@Param("user") User user,@Param("roleList") List<String> roleList);
 
+    List<User> selectUserAllBpfr(@Param("dbtype") String dbtype);
+
     List<User>selectUserByStationCode(String stationcode);
 
     List<User>selectUserByDepartmentCode(String departmentcode);
@@ -41,7 +43,10 @@ public interface UserMapper {
     List<User> findUserByRoleCode(@Param("qrcode") String qrcode,
                                   @Param("dbtype") String dbtype,
                                   @Param("postType") String postType,
-                                  @Param("dbbk") String dbbk);
+                                  @Param("dbbk") String dbbk,
+                                  @Param("year") String year,
+                                  @Param("month") String month,
+                                  @Param("isDq") boolean isDq);
 
     List<User>findUserAllBySummary();
 
@@ -74,10 +79,12 @@ public interface UserMapper {
 
     List<User> findUserBranchByDbbk(String dbbk);
 
-    List<User> selectUserPfr(String dbtype);
+    List<User> selectUserPfr(String dbtype,String year,String month,boolean isDq);
 
 
     List<User> findUserByCodeList(@Param("codeList") String[] codeList);
 
     List<User> selectUserScoreStationList();
+
+    List<User> selectUserByInStationCode(@Param("codeList") String[] codeList,@Param("dbtype") String dbtype);
 }

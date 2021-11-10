@@ -74,19 +74,13 @@ public class ScoreController {
             try {
                 if (!username.equals("") && !stationcode.equals("")) {
                     scores = scoreService.selectScoresByscorredAndUser(scorredcode, scoretype, stationcode, username, dbtype);
-                    // getList(map, scores);
                 } else if (!username.equals("") && stationcode.equals("")) {
                     scores = scoreService.selectScoresByscorredAndUserName(scorredcode, scoretype, username, dbtype);
-                    //  getList(map, scores);
                 } else if (username.equals("") && !stationcode.equals("")) {
                     scores = scoreService.selectScoresByscorredAndUserStationCode(scorredcode, scoretype, stationcode, dbtype);
-                    // getList(map, scores);
                 } else {
                     scores = scoreService.selectScoresByScorredCode(scorredcode, scoretype, dbtype);
-                    //  getList(map, scores);
                 }
-                //做数据的筛选  是否党支部数据 是否普通员工数据
-                scores = scores.stream().filter(p -> p.getDbtype() != null && p.getDbtype().equals(dbtype)).collect(Collectors.toList());
                 getList(map, scores);
                 map.put("code", 0);
             } catch (Exception e) {
@@ -137,23 +131,15 @@ public class ScoreController {
             try {
                 if (!username.equals("") && !stationcode.equals("")) {
                     scores = scoreService.selectScoresByScorringAndUser(scorredcode, scoretype, stationcode, username, dbtype);
-                    // getList(map, scores);
-                    map.put("code", 0);
                 } else if (!username.equals("") && stationcode.equals("")) {
                     scores = scoreService.selectScoresByScorringAndUserName(scorredcode, scoretype, username, dbtype);
-                    // getList(map, scores);
-                    map.put("code", 0);
                 } else if (username.equals("") && !stationcode.equals("")) {
                     scores = scoreService.selectScoresByScorringAndUserStationCode(scorredcode, scoretype, stationcode, dbtype);
-                    // getList(map, scores);
-                    map.put("code", 0);
                 } else {
                     scores = scoreService.selectScoresByScorringCode(scorredcode, scoretype, dbtype);
-                    // getList(map, scores);
-                    map.put("code", 0);
                 }
-                scores = scores.stream().filter(p -> p.getDbtype() != null && p.getDbtype().equals(dbtype)).collect(Collectors.toList());
                 getList(map, scores);
+                map.put("code", 0);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
                 map.put("msg", "查询失败");

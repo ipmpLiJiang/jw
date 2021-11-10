@@ -264,6 +264,16 @@ export default {
     //查询列表
     getList() {
       let params = this.page;
+      if (
+        (this.search.month && this.search.year) ||
+        (!this.search.month && !this.search.year)
+      ) {
+        params.month = this.search.month;
+        params.year = this.search.year;
+      }else{
+        this.$message.warning("年份和季度请同时选择");
+        return;
+      }
       if (this.search.stationcode.length > 0) {
         params.stationcode = this.search.stationcode[0];
       } else {
@@ -279,8 +289,6 @@ export default {
       }
       this.searchLoading = true;
       params.username = this.search.username;
-      params.month = this.search.month;
-      params.year = this.search.year;
       params.dbtype = this.dbtype;
       new Promise((response, reject) => {
         getBadList(qs.stringify(params))

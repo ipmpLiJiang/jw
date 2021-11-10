@@ -168,5 +168,27 @@
         </foreach>
         </if>
     </select>
+    <select id="findUserFlowDetailScore" resultType="com.welb.organization_check.dto.UserScoreDto">
+    SELECT
+        sf.ScoredCode,
+        sf.ScorringCode,
+        sd.ScoreType,
+        sf.MSerialNo,
+        sd.FSerialNo,
+        sd.DSerialNo,
+        sd.Ratio,
+        sd.Score
+    FROM
+        scoreflow sf
+        inner join scoredetail sd on
+            sf.SerialNo = sd.FSerialNo
+    WHERE
+        sf.MSerialNo IN (
+            SELECT SerialNo FROM monthsummary where year=#{year} and month=#{month} and dbtype = #{dbtype}
+            <if test="employeeCode != null" >
+                and EmployeeCode = #{employeeCode}
+            </if>
+        )
+    </select>
 </mapper>
 

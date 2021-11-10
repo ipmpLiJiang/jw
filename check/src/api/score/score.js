@@ -68,6 +68,15 @@ export function updateWeight(data) {
     })
 }
 
+//修改权重系数
+export function updateStationWeight(data) {
+    return fetch({
+        url: 'user/updateStationRatio',
+        method: 'post',
+        data: data
+    })
+}
+
 //查询指标打分人员列表
 export function getScoreDutyScorringUserlist(data) {
     return fetch({

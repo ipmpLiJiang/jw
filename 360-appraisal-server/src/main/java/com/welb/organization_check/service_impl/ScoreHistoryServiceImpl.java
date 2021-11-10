@@ -47,23 +47,23 @@ public class ScoreHistoryServiceImpl implements IScoreHistoryService {
     }
 
     @Override
-    public List<ScoreHistory> selectHistoryList(ScoreHistory history,String qrcode,String postType) {
-        return historyMapper.selectHistoryList(history,qrcode,postType);
+    public List<ScoreHistory> selectHistoryList(ScoreHistory history,String qrcode,String postType,boolean isDq) {
+        return historyMapper.selectHistoryList(history,qrcode,postType,isDq);
     }
 
     @Override
-    public List<ScoreHistory> gradeList(ScoreHistory history) {
-        return historyMapper.gradeList(history);
+    public List<ScoreHistory> gradeList(ScoreHistory history,boolean isDq) {
+        return historyMapper.gradeList(history,isDq);
     }
 
     @Override
-    public List<ScoreHistory> selectGradeHisotyList(ScoreHistory history) {
-        return historyMapper.selectGradeHisotyList(history);
+    public List<ScoreHistory> selectGradeHisotyList(ScoreHistory history,boolean isDq) {
+        return historyMapper.selectGradeHisotyList(history,isDq);
     }
 
     @Override
-    public List<ScoreHistory> selectUserHisotyList(ScoreHistory history,String qrcode,String postType) {
-        return historyMapper.selectUserHisotyList(history,qrcode,postType);
+    public List<ScoreHistory> selectUserHisotyList(ScoreHistory history,String qrcode,String postType,boolean isDq) {
+        return historyMapper.selectUserHisotyList(history,qrcode,postType,isDq);
     }
 
     @Override

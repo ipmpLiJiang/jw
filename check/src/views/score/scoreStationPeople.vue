@@ -144,17 +144,10 @@
         >
           <template slot-scope="scope">
             <el-button
-              v-show="dbtype=='1'?true:false"
               @click="setWeight(scope.row)"
               type="text"
               size="small"
             >A:{{scope.row.aratio ? scope.row.aratio : "0"}} B:{{scope.row.bratio ? scope.row.bratio : "0"}} C:{{scope.row.cratio ? scope.row.cratio : "0"}} D:{{scope.row.dratio ? scope.row.dratio : "0"}} E:{{scope.row.eratio ? scope.row.eratio : "0"}} F:{{scope.row.fratio ? scope.row.fratio : "0"}}</el-button>
-            <el-button
-              v-show="dbtype=='2'?true:false"
-              @click="setWeight(scope.row)"
-              type="text"
-              size="small"
-            >A:{{scope.row.aratio2 ? scope.row.aratio2 : "0"}} B:{{scope.row.bratio2 ? scope.row.bratio2 : "0"}} C:{{scope.row.cratio2 ? scope.row.cratio2 : "0"}} D:{{scope.row.dratio2 ? scope.row.dratio2 : "0"}} E:{{scope.row.eratio2 ? scope.row.eratio2 : "0"}} F:{{scope.row.fratio2 ? scope.row.fratio2 : "0"}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -169,18 +162,18 @@
       >
       </el-pagination>
     </el-row>
-    <SetWeight
+    <SetWeightStation
       @childClose="cancel"
       @childGetList="getList"
       :swDialogVisible="swDialogVisible"
       :parentForms="setWeightForm"
-    ></SetWeight>
+    ></SetWeightStation>
   </div>
 </template>
 
 <script>
 
-import SetWeight from "../common/setWeight";
+import SetWeightStation from "../common/setWeightStation";
 import DepartmentList from "../common/departmentList";
 import { getList } from "@/api/post/post";
 import { shengChengScore } from "@/api/score/scoreStation";
@@ -212,7 +205,7 @@ export default {
     };
   },
   components: {
-    SetWeight,
+    SetWeightStation,
     DepartmentList
     // MessageCheck,
   },
@@ -255,7 +248,9 @@ export default {
       } else {
         params.departmentcode = "";
       }
+      params.isEF = 1
       params.stationname = this.search.stationName;
+      params.dbtype = this.dbtype
       new Promise((response, reject) => {
         getList(qs.stringify(params))
           .then(response => {

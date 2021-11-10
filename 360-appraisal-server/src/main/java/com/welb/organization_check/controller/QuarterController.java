@@ -303,6 +303,7 @@ public class QuarterController {
             MonthSummary update = new MonthSummary();
             update.setSerialno(summary.getSerialno());
             update.setState(state);
+            update.setDbtype(summary.getDbtype());
             int count = summaryService.updateStateBySerialNo(update);
             if (count > 0) {
                 map.put("msg", "修改季结状态成功");

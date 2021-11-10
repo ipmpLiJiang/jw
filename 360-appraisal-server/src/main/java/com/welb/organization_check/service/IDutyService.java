@@ -72,5 +72,12 @@ public interface IDutyService {
 
     List<Duty> queryDutyByStationCode(String stationcode,String dbtype);
 
+    List<Duty> queryDutyByDbbkCode(String dbbk,String dbtype);
+
     List<Duty> queryDutyByScorringCode(String scorringCode,String scorredCode,List<String> scoreTypeList,String dbtype);
+
+    List<Duty> selectDutyAllByDbtype(String dbtype);
+
+
+
 }

@@ -94,7 +94,16 @@ public class DutyServiceImpl implements IDutyService {
     }
 
     @Override
+    public List<Duty> queryDutyByDbbkCode(String dbbk,String dbtype) {
+        return dutyMapper.queryDutyByDbbkCode(dbbk,dbtype);
+    }
+
+    @Override
     public List<Duty> queryDutyByScorringCode(String scorringCode,String scorredCode,List<String> scoreTypeList,String dbtype){
         return dutyMapper.queryDutyByScorringCode(scorringCode,scorredCode,scoreTypeList,dbtype);
+    }
+    @Override
+    public List<Duty> selectDutyAllByDbtype(String dbtype){
+        return dutyMapper.selectDutyAllByDbtype(dbtype);
     }
 }

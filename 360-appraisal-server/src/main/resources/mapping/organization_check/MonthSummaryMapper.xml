@@ -238,12 +238,22 @@
     </update>
     <!--把状态全部修改为季节评分完成-->
     <update id="updateFinishGradeAll" parameterType="string">
-        update  monthsummary set State="7" where Year = #{year} and Month = #{month} and dbtype=#{dbtype} and isSc = 1
-        <if test="postType != null and postType !=''">
-            AND EmployeeCode in (
-            select UserCode from user where  postType = #{postType}
-            )
-        </if>
+    update  monthsummary set State="7" where Year = #{year} and Month = #{month} and dbtype=#{dbtype} and isSc = 1
+    <if test="postType != null and postType !=''">
+        AND EmployeeCode in (
+        select UserCode from user where  postType = #{postType}
+        )
+    </if>
+    </update>
+
+    <update id="updateFinishGradeScorringAll" parameterType="string">
+    update  monthsummary set State="7" where Year = #{year} and Month = #{month} and dbtype=#{dbtype} and isSc = 0
+    AND EmployeeCode in (
+        select ScorringCode from (
+            select DISTINCT ScorringCode from score where dbtype =#{dbtype} and ScorringCode not in (
+            SELECT ScorredCode FROM score WHERE dbtype =#{dbtype}
+        ))a
+    )
     </update>
 
     <update id="updateStateBySerialNo" parameterType="com.welb.organization_check.entity.MonthSummary">

@@ -43,7 +43,7 @@ public class DeptAndStationAndUserTrees {
         List<Department> departments;
         List<Department> departments1 = new ArrayList<>();
         try {
-            departments = getDeptAndStationAndUserTrees(department,false,true);
+            departments = getDeptAndStationAndUserTrees(department,null,false,true);
             for (Department department1 : departments) {
                 if (department1.getUpdepartmentcode().equals("0")) {
                     department1.setCommoncode(department1.getDepartmentcode());
@@ -63,12 +63,12 @@ public class DeptAndStationAndUserTrees {
     }
 
     @RequestMapping(value = "treeStationList", produces = "application/json;charset=utf-8")
-    public Object SelectStationAll(Department department,Integer isEd) {
+    public Object SelectStationAll(Department department,Integer isEd,String stationcode) {
         ModelMap map = new ModelMap();
         List<Department> departments;
         List<Department> departments1 = new ArrayList<>();
         try {
-            departments = getDeptAndStationAndUserTrees(department,isEd==0?false:true,false);
+            departments = getDeptAndStationAndUserTrees(department,stationcode,isEd==0?false:true,false);
             for (Department department1 : departments) {
                 if (department1.getUpdepartmentcode().equals("0")) {
                     department1.setCommoncode(department1.getDepartmentcode());
@@ -88,7 +88,7 @@ public class DeptAndStationAndUserTrees {
     }
 
 
-    private List<Department> getDeptAndStationAndUserTrees(Department department,boolean isEf,boolean isUser) {
+    private List<Department> getDeptAndStationAndUserTrees(Department department,String stationcode,boolean isEf,boolean isUser) {
         //查找所有部门
         List<Department> departments = departmentService.selectDepartmentTrees(department);
         //新建一个部门集合
@@ -100,7 +100,7 @@ public class DeptAndStationAndUserTrees {
             for (int i = 0; i < departments.size(); i++) {
                 //递归子部门
                 department1.setUpdepartmentcode(departments.get(i).getDepartmentcode());
-                List<Department> trees = getDeptAndStationAndUserTrees(department1,isEf,isUser);
+                List<Department> trees = getDeptAndStationAndUserTrees(department1,stationcode,isEf,isUser);
                 List<Department> treeList = new ArrayList<>();
                 if (trees.size() > 0) {
                     for (Department dept : trees) {
@@ -125,6 +125,9 @@ public class DeptAndStationAndUserTrees {
                     if (stations.size() > 0) {
                         //查找所有用户
                         for (int j = 0; j < stations.size(); j++) {
+                            if(stationcode != null && !stationcode.equals("") && stations.get(j).getStationcode().equals(stationcode)){
+                                continue;
+                            }
                             //满足前端的要求
                             stations.get(j).setCommoncode(stations.get(j).getStationcode());
                             stations.get(j).setCommonname(stations.get(j).getStationname());

@@ -68,6 +68,11 @@ public class MonthSummaryImpl implements IMonthSummaryService {
     }
 
     @Override
+    public int updateFinishGradeScorringAll(String year,String month,String dbtype) {
+        return monthSummaryMapper.updateFinishGradeScorringAll(year,month,dbtype);
+    }
+
+    @Override
     public int deleteByPrimaryKey(String serialno,String dbtype) {
         return monthSummaryMapper.deleteByPrimaryKey(serialno,dbtype);
     }

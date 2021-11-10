@@ -2,6 +2,7 @@ package com.welb.organization_check.service_impl;
 
 import com.welb.organization_check.dto.UserDto;
 import com.welb.organization_check.dto.UserScoreDto;
+import com.welb.organization_check.entity.Duty;
 import com.welb.organization_check.entity.User;
 import com.welb.organization_check.mapper.UserDtoMapper;
 import com.welb.organization_check.mapper.UserScoreDtoMapper;
@@ -36,6 +37,11 @@ public class UserScoreDtoServiceImpl implements IUserScoreDtoService {
     @Override
     public List<UserScoreDto> findUserDutyScore(String year, String month, String employeeCode, List<String> typeList, String dbtype) {
         return userScoreDtoMapper.findUserDutyScore(year, month, employeeCode, typeList, dbtype);
+    }
+
+    @Override
+    public  List<UserScoreDto> findUserFlowDetailScore(String year,String month,String dbtype,String employeeCode){
+        return userScoreDtoMapper.findUserFlowDetailScore(year,month,dbtype,employeeCode);
     }
 
     @Override

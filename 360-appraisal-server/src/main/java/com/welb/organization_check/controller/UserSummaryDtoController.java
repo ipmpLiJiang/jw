@@ -66,56 +66,23 @@ public class UserSummaryDtoController {
         String state = (String) req.getSession().getAttribute("state");
         if (usercode != null) {
             List<UserSummaryDto> summarys = new ArrayList<>();
-            //获取当前年份
-            String year = CalendarUtil.getYear();
-            //获取当前月份
-            String month = CalendarUtil.getMonth();
-            //获取当前月度
-            String quarter = month;//CalendarUtil.getQuarter(month);
-            //当前上一个月度
-            int count = Integer.parseInt(quarter.trim()) - 1;
-            //获取当前系统时间
-            String sysTime = DateUtil.getTime();
-
-            //手动考核-查看所有季节总结
-            manualSelectUserDtoLke(dto, map, usercode, summarys, year, quarter, count, sysTime);
-
+            ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dto.getDbtype());
+            if (setTime != null) {
+                try {
+                    getSummaryList(dto, map, usercode, summarys, setTime.getYear(), setTime.getMonth());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                map.put("msg", "当前年月没有季度评分数据");
+                map.put("code", 1);
+            }
         } else {
             map.put("msg", "登录用户超时,请重新登录");
             map.put("code", 810);
         }
         return map;
 
-    }
-
-    private void manualSelectUserDtoLke(UserSummaryDto dto, ModelMap map, String usercode, List<UserSummaryDto> summarys, String year, String quarter, int count, String sysTime) {
-        String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dto.getDbtype());
-        if (setTime != null) {
-            //新一月度考核-手动设置的考核时间未超过系统自动考核时间
-            try {
-
-                //开始新的月度考核
-                month = quarter;
-                getSummaryList(dto, map, usercode, summarys, setTime.getYear(), setTime.getMonth());
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-    private void automaticSelectUserDtoLike(UserSummaryDto dto, ModelMap map, String usercode, List<UserSummaryDto> summarys, String year, int count) {
-        String month;
-        if (count == 0) {
-            int lastyear = Integer.parseInt(year.trim()) - 1;
-            year = String.valueOf(lastyear);
-            month = "12";
-        } else {
-            month = String.valueOf(count);
-        }
-        // getSummaryList(dto, map, usercode, summarys, year, month);
     }
 
     private void getSummaryList(UserSummaryDto dto, ModelMap map, String usercode, List<UserSummaryDto> summarys, String year, String month) {
@@ -141,9 +108,7 @@ public class UserSummaryDtoController {
                 if (flow.size() == 0 || (flow.size() > 0 && flow.get(0).getScoreState().equals("1"))) {
                     summarys.add(dto1);
                 }
-
             }
-
             //修改每一位用户的打分状态
 //            updateScoreHistoryScoreStatus(dto, year, month);
             map.put("totalPages", summarys.size());
@@ -210,22 +175,19 @@ public class UserSummaryDtoController {
         if (usercode != null) {
             List<UserSummaryDto> dtos;
             //如果年份和月度同时为空  默认查当前月度的个人评分
-            if (summaryDto.getYear().equals("") && summaryDto.getMonth().equals("") ||
-                    summaryDto.getYear() == null && summaryDto.getMonth() == null) {
-                //获取当前年份
-                String year = CalendarUtil.getYear();
-                //获取当前月份
-                String month = CalendarUtil.getMonth();
-                //获取当前月度
-                String quarter = month;// CalendarUtil.getQuarter(month);
-                //当前上一个月度
-                int count = Integer.parseInt(quarter.trim()) - 1;
-                //获取当前系统时间
-                String sysTime = DateUtil.getTime();
-
-                //手动考核-查看所有季节总结
-                manualSelectUserSummaryLike(summaryDto, map, usercode, year, quarter, count, sysTime, pageNum, pageSize);
-
+            if (summaryDto.getYear() == null && summaryDto.getMonth() == null ||
+                    summaryDto.getYear().equals("") && summaryDto.getMonth().equals("")) {
+                ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", summaryDto.getDbtype());
+                if (setTime != null) {
+                    try {
+                        getSummary(summaryDto, map, usercode, setTime.getYear(), setTime.getMonth(), pageNum, pageSize);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    map.put("msg", "当前年月没有季度评分数据");
+                    map.put("code", 1);
+                }
             } else {
                 try {//当年份或者月度不为空的时候   查询的是历史的个人评分数据
                     summaryDto.setScorringcode(usercode);
@@ -258,12 +220,15 @@ public class UserSummaryDtoController {
         if (usercode != null) {
             ManualSetTime setTime = null;
             //如果年份和月度同时为空  默认查当前月度的个人评分
-            if (summaryDto.getYear().equals("") && summaryDto.getMonth().equals("") ||
-                    summaryDto.getYear() == null && summaryDto.getMonth() == null) {
+            if (summaryDto.getYear() == null && summaryDto.getMonth() == null ||
+                    summaryDto.getYear().equals("") && summaryDto.getMonth().equals("")) {
                 setTime = setTimeService.selectManualByYearAndMonth("", "", summaryDto.getDbtype());
                 if (setTime != null) {
                     summaryDto.setYear(setTime.getYear());
                     summaryDto.setMonth(setTime.getMonth());
+                } else {
+                    map.put("msg", "当前年月没有季度评分数据");
+                    map.put("code", 1);
                 }
             }
             if (setTime != null) {
@@ -275,12 +240,12 @@ public class UserSummaryDtoController {
                     PageInfo<UserSummaryDto> pageInfo = new PageInfo<>(dtos);
                     dtos = pageInfo.getList();
                     map.put("totalPages", pageInfo.getTotal());
-                    map.put("msg", "查询待评分列表数据成功");
+                    map.put("msg", "查询自评列表数据成功");
                     map.put("data", dtos);
                     map.put("code", 0);
                 } catch (Exception e) {
                     log.error(e.getMessage(), e);
-                    map.put("msg", "查询待评分列表数据失败");
+                    map.put("msg", "查询自评列表数据失败");
                     map.put("code", 1);
                 }
             } else {
@@ -292,40 +257,6 @@ public class UserSummaryDtoController {
             map.put("code", 810);
         }
         return map;
-    }
-
-
-    private void manualSelectUserSummaryLike(UserSummaryDto summaryDto, ModelMap map, String usercode, String year, String quarter, int count, String sysTime, int pageNum, int pageSize) {
-        String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", summaryDto.getDbtype());
-        if (setTime != null) {
-            //新一月度考核-手动设置的考核时间未超过系统自动考核时间
-            try {
-                //开始新的月度考核
-
-                month = quarter;
-                getSummary(summaryDto, map, usercode, setTime.getYear(), setTime.getMonth(), pageNum, pageSize);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void automaticSelectUserSummaryLike(UserSummaryDto summaryDto, ModelMap map, String usercode, String year, int count, int pageNum, int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
-        String month;
-        if (count == 0) {
-            int lastyear = Integer.parseInt(year.trim()) - 1;
-            year = String.valueOf(lastyear);
-            month = "12";
-            // getSummary(summaryDto, map, usercode, year, month,pageNum,pageSize);
-
-        } else {
-            month = String.valueOf(count);
-            //getSummary(summaryDto, map, usercode, year, month,pageNum,pageSize);
-
-        }
     }
 
     private void getSummary(UserSummaryDto summaryDto, ModelMap map, String usercode, String year, String month, int pageNum, int pageSize) {

@@ -11,6 +11,12 @@
         label="维度"
         width="180"
       >
+        <template
+          slot-scope="scope"
+          v-if="scope.row.resultreportname"
+        >
+          {{setResultreportName(scope.row)}}
+        </template>
       </el-table-column>
       <!-- <el-table-column
         prop="ascore"
@@ -114,6 +120,31 @@ export default {
     TwoChart
   },
   methods: {
+    setResultreportName(row){
+      if(row.resultreportname=='基础评分'){
+        return row.resultreportname + "(15)";
+      } else if(row.resultreportname=='岗位评分'){
+        return row.resultreportname + "(20)";
+      } else if(row.resultreportname=='重点评分'){
+        return row.resultreportname + "(25)";
+      } else if(row.resultreportname=='目标评分'){
+        return row.resultreportname + "(25)";
+      } else if(row.resultreportname=='党风廉政'){
+        return row.resultreportname + "(15)";
+      } else if(row.resultreportname=='政治建设'){
+        return row.resultreportname + "(20)";
+      } else if(row.resultreportname=='思想建设'){
+        return row.resultreportname + "(20)";
+      } else if(row.resultreportname=='组织建设'){
+        return row.resultreportname + "(20)";
+      } else if(row.resultreportname=='党建创新'){
+        return row.resultreportname + "(20)";
+      } else if(row.resultreportname=='作风建设'){
+        return row.resultreportname + "(20)";
+      } else {
+        return row.resultreportname;
+      }
+    },
     topic(row) {
       this.$router.push({
         path: "/home/twoDimension",

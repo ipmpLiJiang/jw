@@ -32,9 +32,13 @@
             type="primary"
             @click="searchList"
           >搜索</el-button>
-          <el-button
+          <!-- <el-button
             type="primary"
             @click="addGrade"
+          >新增</el-button> -->
+          <el-button
+            type="primary"
+            @click="addGradeEF"
           >新增</el-button>
           <el-button
             type="danger"
@@ -140,6 +144,7 @@
       :dialogVisible="dialogVisible"
       :type="page.scoretype"
       :stationcode="page.scorredstationcode"
+      :paichucode="paichucode"
       :addType="3"
       :dutyArr="dutyArr"
       :isEf="1"
@@ -150,12 +155,19 @@
       :uslDialogVisible="uslDialogVisible"
       :form="data"
     ></StationUpdateList>
+    <StationInsertList
+      @childClose="childClose"
+      @childGetList="getList"
+      :uslEFDialogVisible="uslEFDialogVisible"
+      :form="data"
+    ></StationInsertList>
   </div>
 </template>
 
 <script>
 import DepartmentList from "../common/departmentList";
 import StationUpdateList from "../common/stationUpdateList";
+import StationInsertList from "../common/stationInsertList";
 import StationList from "../common/stationList";
 import { deleteDutyScore } from "@/api/score/scoreStation";
 import { getStationDutyList } from "@/api/score/duty";
@@ -175,8 +187,10 @@ export default {
       },
       total: 0,
       fulldepartmentcode: [""],
+      paichucode:'',
       dialogVisible: false,
       uslDialogVisible: false,
+      uslEFDialogVisible: false,
       dbtype: this.$store.state.user.user.dbtype,
       data: {},
       tableLoading: true,
@@ -189,7 +203,8 @@ export default {
   components: {
     DepartmentList,
     StationList,
-    StationUpdateList
+    StationUpdateList,
+    StationInsertList
   },
   mounted() {},
   created() {
@@ -262,6 +277,7 @@ export default {
     },
     //关闭
     childClose() {
+      this.uslEFDialogVisible = false;
       this.dialogVisible = false;
       this.uslDialogVisible = false;
       this.messageDialogVisible = false;
@@ -269,7 +285,22 @@ export default {
     //设置评分人
     addGrade() {
       if (this.dutyArr.length > 0) {
+        this.paichucode = this.page.scorredstationcode
         this.dialogVisible = true;
+      } else {
+        this.$message.warning("请先勾选指标, 否则无法新增评分人.");
+      }
+    },
+    addGradeEF() {
+      if (this.dutyArr.length > 0) {
+        if (this.dutyArr.length == 1) {
+          this.data = this.dutyArr[0];
+          this.data.scorredstationcode = this.page.scorredstationcode
+          this.data.scoretype = this.page.scoretype
+          this.uslEFDialogVisible = true;
+        } else {
+          this.$message.warning("只能勾选一个指标, 否则无法新增评分人.");
+        }
       } else {
         this.$message.warning("请先勾选指标, 否则无法新增评分人.");
       }
@@ -280,7 +311,6 @@ export default {
       this.data = val;
       this.data.scorredstationcode = this.page.scorredstationcode
       this.data.scoretype = this.page.scoretype
-      
     },
     //删除评分人
     deleteScore(row) {

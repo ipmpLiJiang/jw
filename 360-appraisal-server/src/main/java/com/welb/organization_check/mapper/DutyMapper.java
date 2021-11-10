@@ -35,8 +35,12 @@ public interface DutyMapper {
 
     List<Duty> queryDutyByStationCode(String stationcode,String dbtype);
 
+    List<Duty> queryDutyByDbbkCode(String dbbk,String dbtype);
+
     List<Duty> queryDutyByScorringCode(@Param("scorringCode") String scorringCode,
                                        @Param("scorredCode") String scorredCode,
                                        @Param("scoreTypeList") List<String> scoreTypeList,
                                        @Param("dbtype") String dbtype);
+
+    List<Duty> selectDutyAllByDbtype(String dbtype);
 }

@@ -109,11 +109,11 @@
             <if test="month!=null and month !=''">
                 and m.Month=#{month}
             </if>
+            and m.dbtype = #{dbtype}
             and u.UserCode =m.EmployeeCode
             and m.EmployeeCode=s.ScorredCode
             and m.dbtype = s.dbtype
             and s.ScorringCode=#{scorringcode}
-            and m.dbtype = #{dbtype}
             AND u.UserCode in (
                 select code from (
                     select ScorredCode code from score where dbtype=#{dbtype} union

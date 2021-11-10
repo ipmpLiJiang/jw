@@ -143,11 +143,11 @@ public class UserController extends BaseController {
                 } else {
                     roleList.add("300");
                 }
-                users = userService.selectUserAll(user,roleList);
+                users = userService.selectUserAll(user, roleList);
                 if (user.getDbtype() != null && user.getDbtype().equals("1")) {
                     users = users.stream().filter(p -> p.getDbbk() != null && (
                             p.getDbbk().equals("3") || p.getDbbk().equals("4")
-                            )).collect(Collectors.toList());
+                    )).collect(Collectors.toList());
                 }
                 PageInfo<User> pageInfo = new PageInfo<>(users);
                 users = pageInfo.getList();
@@ -157,7 +157,7 @@ public class UserController extends BaseController {
                 map.put("data", users);
                 map.put("code", 0);
             } catch (Exception e) {
-                log.error(e.getMessage() , e);
+                log.error(e.getMessage(), e);
                 map.put("msg", "查询用户失败");
                 map.put("code", 1);
             }
@@ -201,12 +201,12 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping(value = "/getUserByScoreFlow", produces = "application/json;charset=utf-8")
-    public Object getUserByScoreFlow(HttpServletRequest req, String serialNo, String scoreType,String dbtype) {
+    public Object getUserByScoreFlow(HttpServletRequest req, String serialNo, String scoreType, String dbtype) {
         //获取当前登录用户的编号
         ModelMap map = new ModelMap();
         String usercode = (String) req.getSession().getAttribute("usercode");
         if (usercode != null) {
-            List<User> user = userService.findUserByScoreFlowType(serialNo, scoreType,dbtype,null);
+            List<User> user = userService.findUserByScoreFlowType(serialNo, scoreType, dbtype, null);
             map.put("msg", "查询考核用户列表成功");
             map.put("data", user);
             map.put("code", 0);
@@ -228,12 +228,12 @@ public class UserController extends BaseController {
         if (userCode != null) {
             try {
                 List<String> roleList = new ArrayList<>();
-                    roleList.add("100");
-                    roleList.add("150");
-                    roleList.add("200");
-                    roleList.add("300");
-                    roleList.add("50");
-                List<User> users = userService.selectUserAll(user,roleList);
+                roleList.add("100");
+                roleList.add("150");
+                roleList.add("200");
+                roleList.add("300");
+                roleList.add("50");
+                List<User> users = userService.selectUserAll(user, roleList);
                 users = this.handleUsersMsg(users);
                 //填充ABCD类评分人信息
                 List<ScoreRelationship> excelData = this.loadCategoryMsg(users);
@@ -245,7 +245,7 @@ public class UserController extends BaseController {
                         null);
                 map.put("code", 0);
             } catch (Exception e) {
-                log.error(e.getMessage() , e);
+                log.error(e.getMessage(), e);
                 map.put("msg", "导出失败");
                 map.put("code", 1);
             }
@@ -258,7 +258,7 @@ public class UserController extends BaseController {
     private List<ScoreRelationship> loadCategoryMsg(List<User> users) {
         List<ScoreRelationship> returnList = new ArrayList<>();
         //查出全部评分数据
-        List<Score> scores = scoreService.selectScoresByScorredCode(null, null,null);
+        List<Score> scores = scoreService.selectScoresByScorredCode(null, null, null);
         //填充评分人与被评分人名字
         getName(scores);
         for (User user : users) {
@@ -423,7 +423,7 @@ public class UserController extends BaseController {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage() , e);
+            log.error(e.getMessage(), e);
             map.put("msg", "添加用户失败");
             map.put("code", 1);
         }
@@ -542,7 +542,7 @@ public class UserController extends BaseController {
                 //手动考核-查看所有季节总结
                 manualGetSerialNo(user, summary, year, quarter, i, sysTime);
 
-                MonthSummary monthSunmmary = summaryService.selectByPrimaryKey(summary.getSerialno(),user.getDbtype());
+                MonthSummary monthSunmmary = summaryService.selectByPrimaryKey(summary.getSerialno(), user.getDbtype());
                 //修改用户角色
                 if (rolecode != null) {
                     if (rolecode.equals("150")) {//若是打分用户，评分系数都为0.0
@@ -598,7 +598,7 @@ public class UserController extends BaseController {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage() , e);
+            log.error(e.getMessage(), e);
             map.put("msg", "修改用户失败");
             map.put("code", 1);
         }
@@ -652,6 +652,40 @@ public class UserController extends BaseController {
         return map;
     }
 
+    @RequestMapping(value = "/updateStationRatio", produces = "application/json;charset=utf-8")
+    public Object updateStationRatio(User user) {
+        ModelMap map = new ModelMap();
+        if (user.getStationcode() != null && !user.getStationcode().equals("")) {
+            String[] codeList = new String[1];
+            codeList[0] = user.getStationcode();
+            List<User> userList= userService.selectUserByInStationCode(codeList,"2");
+            int count = 0;
+            for (User item : userList) {
+                User update = new User();
+                update.setUsercode(item.getUsercode());
+                update.setAratio2(user.getAratio2());
+                update.setBratio2(user.getBratio2());
+                update.setCratio2(user.getCratio2());
+                update.setDratio2(user.getDratio2());
+                update.setEratio2(user.getEratio2());
+                update.setFratio2(user.getFratio2());
+                int c = userService.updateByPrimaryKeySelective(update);
+                count += c;
+            }
+            if (count > 0) {
+                map.put("msg", "修改权重成功");
+                map.put("code", 0);
+            } else {
+                map.put("msg", "修改权重失败");
+                map.put("code", 0);
+            }
+        } else {
+            map.put("msg", "修改权重失败");
+            map.put("code", 0);
+        }
+        return map;
+    }
+
     /**
      * 删除用户
      *
@@ -695,7 +729,7 @@ public class UserController extends BaseController {
             map.put("code", 0);
 
         } catch (Exception e) {
-            log.error(e.getMessage() , e);
+            log.error(e.getMessage(), e);
             map.put("msg", "刪除用户失败");
             map.put("code", 1);
         }
@@ -808,7 +842,7 @@ public class UserController extends BaseController {
                 map.put("code", 0);
             }
         } catch (Exception e) {
-            log.error(e.getMessage() , e);
+            log.error(e.getMessage(), e);
             map.put("msg", "查询用户失败");
             map.put("code", 1);
         }
@@ -842,7 +876,7 @@ public class UserController extends BaseController {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage() , e);
+            log.error(e.getMessage(), e);
             map.put("error", LogUtil.getTrace(e));
             map.put("msg", "修改失败");
             map.put("code", 1);

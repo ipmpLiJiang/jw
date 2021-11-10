@@ -74,12 +74,9 @@ public class ScoreStationController {
                 if (!stationname.equals("")) {
                     query.setScorringstationname(stationname);
                     scores = scoreStationService.selectScoreStationScorringLeft(query, departmentcode);
-                    // getList(map, scores);
                 } else {
                     scores = scoreStationService.selectScoreStationScorringLeft(query, departmentcode);
-                    // getList(map, scores);
                 }
-
                 getList(map, scores);
                 map.put("code", 0);
             } catch (Exception e) {
@@ -93,6 +90,7 @@ public class ScoreStationController {
         }
         return map;
     }
+
 
     /**
      * 获取集合通用方法
@@ -134,14 +132,11 @@ public class ScoreStationController {
                 if (!stationname.equals("")) {
                     query.setScorringstationname(stationname);
                     scores = scoreStationService.selectScoreStationScorringLeft(query, departmentcode);
-                    // getList(map, scores);
-                    map.put("code", 0);
                 } else {
                     scores = scoreStationService.selectScoreStationScorringLeft(query, departmentcode);
-                    // getList(map, scores);
-                    map.put("code", 0);
                 }
                 getList(map, scores);
+                map.put("code", 0);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
                 map.put("msg", "查询失败");
@@ -569,6 +564,129 @@ public class ScoreStationController {
         return map;
     }
 
+    @RequestMapping(value = "/batchUpdateScoreStation", produces = "application/json;charset=utf-8")
+    public Object batchUpdateScoreStation1(String scorredStationCode, String scoretype, String dutycode, String dbtype, String fullStationCode) {
+        ModelMap map = new ModelMap();
+        try {
+            String[] scorredstationcodes = fullStationCode.split(",");
+            List<Station> stationList = stationService.selectStationByNotEF(scorredStationCode);
+            List<ScoreStation> scoreStationList = scoreStationService.selectScoreStationByScorredTypeDuty(scorredStationCode, null, dutycode, dbtype);
+            List<ScoreStation> createList = new ArrayList<>();
+            List<ScoreStation> updateList = new ArrayList<>();
+            List<String> codeList = new ArrayList<>();
+            long count = 0;
+            if (scorredstationcodes.length > 0) {
+                for (String code : scorredstationcodes) {
+                    if (code != null && !code.equals("")) {
+                        codeList.add(code);
+                    }
+                }
+            }
+            if (scoreStationList.size() > 0) {
+                List<ScoreStation> query = new ArrayList<>();
+                for (Station station : stationList) {
+                    count = codeList.stream().filter(s -> s.equals(station.getStationcode())).count();
+                    if (count > 0) {
+                        if (scoretype.equals("E")) {
+                            query = scoreStationList.stream().filter(s -> s.getScorringstationcode().equals(station.getStationcode())).collect(Collectors.toList());
+                            if (query.size() > 0) {
+                                if (!scoretype.equals(query.get(0).getScoretype())) {
+                                    ScoreStation update = new ScoreStation();
+                                    update.setScoretype(scoretype);
+                                    update.setId(query.get(0).getId());
+                                    updateList.add(update);
+                                }
+                            } else {
+                                this.insertScoreStation(scorredStationCode, station.getStationcode(), scoretype, dutycode, dbtype, createList);
+                            }
+                        } else {
+                            query = scoreStationList.stream().filter(s -> s.getScorringstationcode().equals(station.getStationcode())).collect(Collectors.toList());
+                            if (query.size() > 0) {
+                                if (!scoretype.equals(query.get(0).getScoretype())) {
+                                    ScoreStation update = new ScoreStation();
+                                    update.setScoretype("F");
+                                    update.setId(query.get(0).getId());
+                                    updateList.add(update);
+                                }
+                            } else {
+                                this.insertScoreStation(scorredStationCode, station.getStationcode(), "F", dutycode, dbtype, createList);
+                            }
+                        }
+                    } else {
+                        if (scoretype.equals("E")) {
+                            query = scoreStationList.stream().filter(s -> s.getScorringstationcode().equals(station.getStationcode())).collect(Collectors.toList());
+                            if (query.size() > 0) {
+                                if (scoretype.equals(query.get(0).getScoretype())) {
+                                    ScoreStation update = new ScoreStation();
+                                    update.setScoretype("F");
+                                    update.setId(query.get(0).getId());
+                                    updateList.add(update);
+                                }
+                            } else {
+                                this.insertScoreStation(scorredStationCode, station.getStationcode(), "F", dutycode, dbtype, createList);
+                            }
+                        } else {
+                            query = scoreStationList.stream().filter(s -> s.getScorringstationcode().equals(station.getStationcode())).collect(Collectors.toList());
+                            if (query.size() > 0) {
+                                if (scoretype.equals(query.get(0).getScoretype())) {
+                                    ScoreStation update = new ScoreStation();
+                                    update.setScoretype("E");
+                                    update.setId(query.get(0).getId());
+                                    updateList.add(update);
+                                }
+                            } else {
+                                this.insertScoreStation(scorredStationCode, station.getStationcode(), "E", dutycode, dbtype, createList);
+                            }
+                        }
+                    }
+                }
+            } else {
+                for (Station station : stationList) {
+                    if (codeList.size() > 0) {
+                        count = codeList.stream().filter(s -> s.equals(station.getStationcode())).count();
+                        if (count > 0) {
+                            this.insertScoreStation(scorredStationCode, station.getStationcode(), scoretype, dutycode, dbtype, createList);
+                        } else {
+                            this.insertScoreStation(scorredStationCode, station.getStationcode(), scoretype.equals("E") ? "F" : "E", dutycode, dbtype, createList);
+                        }
+
+                    } else {
+                        this.insertScoreStation(scorredStationCode, station.getStationcode(), scoretype.equals("E") ? "F" : "E", dutycode, dbtype, createList);
+                    }
+                }
+            }
+            boolean isEdit = false;
+            if (createList.size() > 0) {
+                isEdit = true;
+                for (ScoreStation insert : createList) {
+                    scoreStationService.insertSelective(insert);
+                }
+            }
+            if (updateList.size() > 0) {
+                isEdit = true;
+                for (ScoreStation update : updateList) {
+                    scoreStationService.updateByPrimaryKeySelective(update);
+                }
+            }
+            map.put("msg", isEdit ? "批量更新成功" : "无更新数据");
+            map.put("code", 0);
+        }catch (Exception e) {
+            log.error(e.getMessage(), e);
+            map.put("msg", "批量更新失败");
+            map.put("code", 1);
+        }
+        return map;
+    }
+
+    private void insertScoreStation(String ScorredStationCode, String ScorringStationCode, String scoreType, String dutyCode, String dbtype, List<ScoreStation> createList) {
+        ScoreStation insert = new ScoreStation();
+        insert.setScorringstationcode(ScorringStationCode);
+        insert.setScorredstationcode(ScorredStationCode);
+        insert.setScoretype(scoreType);
+        insert.setDutycode(dutyCode);
+        insert.setDbtype(dbtype);
+        createList.add(insert);
+    }
 
     /**
      * 删除评分关系数据

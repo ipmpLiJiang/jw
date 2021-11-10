@@ -31,6 +31,9 @@ import tabOne from '@/views/webShow/tabOne.vue'
 import me from '@/views/webShow/me.vue'
 import webShow from '@/views/webShow/index.vue'
 import webShow2 from '@/views/webShow/index2.vue'
+import tabTwo from '@/views/webShow/tabTwo.vue'
+import webShowZp from '@/views/webShow/indexZp.vue'
+import webShowZp2 from '@/views/webShow/indexZp2.vue'
 import webShowSuccess from '@/views/webShow/success.vue'
 import webShowLogin from '@/views/webShow/login.vue'
 import webShowPersonal from '@/views/webShow/personal/personal.vue'
@@ -224,6 +227,11 @@ export default new Router({
             component: webShowPersonal,
             meta: { title: '个人评估报告' },
         }, {
+            path: 'tabTwo',
+            name: "自评",
+            component: tabTwo,
+            meta: { title: '自评' },
+        },{
             path: 'me',
             name: "我",
             component: me,
@@ -282,13 +290,23 @@ export default new Router({
     },
     {
         path: '/webShow',
-        name: "医院考核问卷",
+        name: "医院考核",
         component: webShow,
     },
     {
         path: '/webShow2',
-        name: "医院考核问卷2",
+        name: "医院考核2",
         component: webShow2,
+    },
+    {
+        path: '/webShowZp',
+        name: "医院考核自评",
+        component: webShowZp,
+    },
+    {
+        path: '/webShowZp2',
+        name: "医院考核自评2",
+        component: webShowZp2,
     },
     {
         path: '/webShowSuccess',

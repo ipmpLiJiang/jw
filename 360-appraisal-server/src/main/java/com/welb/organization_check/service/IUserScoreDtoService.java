@@ -2,6 +2,8 @@ package com.welb.organization_check.service;
 
 import com.welb.organization_check.dto.UserDto;
 import com.welb.organization_check.dto.UserScoreDto;
+import com.welb.organization_check.entity.Duty;
+import com.welb.organization_check.entity.User;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -20,4 +22,6 @@ public interface IUserScoreDtoService {
     List<UserScoreDto> findUserDutyScore(String year,String month,String employeeCode,List<String> typeList,String dbtype);
 
     List<UserScoreDto> getTypeUserDutyScore(List<UserScoreDto> list,boolean isJisuan);
+
+    List<UserScoreDto> findUserFlowDetailScore(String year, String month, String dbtype, String employeeCode);
 }

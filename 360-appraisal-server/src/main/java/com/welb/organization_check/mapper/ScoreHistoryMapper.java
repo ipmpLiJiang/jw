@@ -18,15 +18,15 @@ public interface ScoreHistoryMapper {
 
     ScoreHistory selectOneByHistory(ScoreHistory history);
 
-    List<ScoreHistory>selectHistoryList(@Param("history") ScoreHistory history,@Param("qrcode") String qrcode,@Param("postType") String postType);
+    List<ScoreHistory>selectHistoryList(@Param("history") ScoreHistory history,@Param("qrcode") String qrcode,@Param("postType") String postType,@Param("isDq") boolean isDq);
 
-    List<ScoreHistory>gradeList(ScoreHistory history);
+    List<ScoreHistory>gradeList(@Param("history") ScoreHistory history,@Param("isDq") boolean isDq);
 
-    List<ScoreHistory>selectGradeHisotyList(ScoreHistory history);
+    List<ScoreHistory>selectGradeHisotyList(@Param("history") ScoreHistory history,@Param("isDq") boolean isDq);
 
     List<ScoreHistory>selectUserHisotyList(@Param("history") ScoreHistory history,
                                            @Param("qrcode") String qrcode,
-                                           @Param("postType") String postType);
+                                           @Param("postType") String postType,@Param("isDq") boolean isDq);
 
     int batchInsert(List<ScoreHistory>list);
 

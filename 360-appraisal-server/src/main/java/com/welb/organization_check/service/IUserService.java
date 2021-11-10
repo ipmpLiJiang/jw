@@ -88,7 +88,7 @@ public interface IUserService {
      */
     List<User>findUserAll();
 
-    List<User> findUserByRoleCode(String qrcode, String dbtype,String postType,String dbbk);
+    List<User> findUserByRoleCode(String qrcode, String dbtype,String postType,String dbbk,String year,String month,boolean isDq);
 
     User selectUserBuGwByMoneyCard(User user);
 
@@ -97,6 +97,8 @@ public interface IUserService {
      * @return
      */
     List<User>findFlagUsers();
+
+    List<User> selectUserAllBpfr(String dbtype);
 
 
     User findOne(String usercode);
@@ -171,10 +173,12 @@ public interface IUserService {
 
     List<User> findUserBranchByDbbk(String dbbk);
 
-    List<User> selectUserPfr(String dbtype);
+    List<User> selectUserPfr(String dbtype,String year,String month,boolean isDq);
 
     List<User> findUserByCodeList(String[] codeList);
 
     List<User> selectUserScoreStationList();
+
+    List<User> selectUserByInStationCode(String[] codeList,String dbtype);
 
 }

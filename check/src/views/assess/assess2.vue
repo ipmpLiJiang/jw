@@ -599,7 +599,6 @@ export default {
                 type: "error"
               });
             }
-            this.tableLoading = false;
             this.pageLoading = false;
           })
           .catch(error => {
@@ -873,7 +872,6 @@ export default {
                 type: "error"
               });
             }
-            this.tableLoading = false;
             this.searchLoading = false;
           })
           .catch(error => {
@@ -941,7 +939,6 @@ export default {
         }
         if (this.laberror != ''){
           this.$message.warning(this.laberror);
-          this.tableLoading = false;
           this.submitLoading = false;
           return
         }
@@ -971,7 +968,6 @@ export default {
                   type: "error"
                 });
               }
-              this.tableLoading = false;
               this.submitLoading = false;
             })
             .catch(error => {

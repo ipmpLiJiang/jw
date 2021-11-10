@@ -266,10 +266,10 @@ public class EvaluationReportController {
             evaluation.setLastTotalscore(defScore);
             evaluation.setLastAvgscore(defScore);
         }
-        if(evaluation.getAvgscore() == null) {
+        if (evaluation.getAvgscore() == null) {
             evaluation.setAvgscore(defScore);
         }
-        if(evaluation.getTotalscore() == null) {
+        if (evaluation.getTotalscore() == null) {
             evaluation.setTotalscore(defScore);
         }
     }
@@ -503,34 +503,10 @@ public class EvaluationReportController {
             try {
                 List<UserEvaluationDto> evaluationReports;
                 if (evaluationDto.getYear().equals("") && evaluationDto.getMonth().equals("")) {
-
-                    //年份
-                    String year = CalendarUtil.getYear();
-                    //月份
-                    String month = CalendarUtil.getMonth();
-                    //月度
-                    String quarter = month;// CalendarUtil.getQuarter(month);
-                    int count = Integer.parseInt(quarter) - 1;
-                    //获取当前系统时间
-                    String sysTime = DateUtil.getTime();
-
                     //手动考核-查看所有月节总结
-                    manualSelectAllReport(evaluationDto, year, quarter, count, sysTime, dbtype);
+                    manualSelectAllReport(evaluationDto, dbtype);
                 }
-
-                //计算整体平均分--2020.7.15修改
-//                DecimalFormat formart = new DecimalFormat("0.00");
-//                Double totalScore = evaluationReportService.selectReportTotalScore(evaluationDto.getYear(), evaluationDto.getMonth());
-//                int reportCount = evaluationReportService.selectReportCount(evaluationDto.getYear(), evaluationDto.getMonth());
-//                if (totalScore!=null){
-//                double avgScore = totalScore == 0 ? 0.0 :totalScore / reportCount;
-//                Double formatAvgScore = Double.valueOf(formart.format(avgScore));
-//                evaluationReportService.updateAvgScore(formatAvgScore,evaluationDto.getYear(), evaluationDto.getMonth());
                 PageHelper.startPage(pageNum, pageSize);
-//                List<String> roleList = new ArrayList<>();
-//                if(dbtype.equals("2")) {
-//                    roleList.add("300");//普通用戶
-//                }
                 evaluationReports = evaluationReportService.selectAllEvaluationReportLike(evaluationDto);
                 if (evaluationReports.size() > 0) {
                     for (UserEvaluationDto evaluation : evaluationReports) {
@@ -545,19 +521,6 @@ public class EvaluationReportController {
                         getStationName(userDtos, dto, evaluationDto);
                         //获取各类评分的分数
                         getScoreTypeMarks(evaluation, userDtos, dbtype);
-                       /* DecimalFormat formart = new DecimalFormat("0.00");
-                        //计算整体平均分
-                        Double totalScore = evaluationReportService.selectReportTotalScore(dto.getYear(), dto.getMonth());
-
-                        int reportCount = evaluationReportService.selectReportCount(dto.getYear(), dto.getMonth());
-                        double avgScore = totalScore / reportCount;
-                        Double formatAvgScore = Double.valueOf(formart.format(avgScore));
-                        evaluation.setAvgscore(formatAvgScore);*/
-                        //填充evaluation信息
-//                        EvaluationReport report = getEvaluationReport(evaluation);
-//                        report.setAvgscore(evaluation.getAvgscore());
-//                        evaluationReportService.updateByPrimaryKeySelective(report);
-
                     }
 
                     PageInfo<UserEvaluationDto> pageInfo = new PageInfo<>(evaluationReports);
@@ -570,11 +533,6 @@ public class EvaluationReportController {
                     map.put("msg", "数据为空");
                     map.put("code", 0);
                 }
-//                } else {
-//                    map.put("msg", "数据为空");
-//                    map.put("code", 0);
-//                }
-
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
                 map.put("msg", "查询失败");
@@ -587,13 +545,9 @@ public class EvaluationReportController {
         return map;
     }
 
-    private void manualSelectAllReport(UserEvaluationDto evaluationDto, String year, String quarter, int count, String sysTime, String dbtype) throws ParseException {
-        String month;
+    private void manualSelectAllReport(UserEvaluationDto evaluationDto, String dbtype) throws ParseException {
         ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
         if (setTime != null) {
-
-            //开始新的月度考核
-            month = quarter;
             evaluationDto.setYear(setTime.getYear());
             evaluationDto.setMonth(setTime.getMonth());
         }
@@ -664,97 +618,101 @@ public class EvaluationReportController {
         try {
             for (UserDto userDto : userDtoList) {
                 if (userDto.getUsercode().equals(dto.getUsercode())) {
-//                    if(dto.getDbtype().equals("1")) {
-                    //获取各类评分的总人数和分数
-                    Double Ascore = flowService.getScoreByType(userDto.getSerialno(), "A", dto.getDbtype());
-                    int Acount = flowService.getScoreByTypeCount(userDto.getSerialno(), "A", dto.getDbtype());
-                    Double totalRatio = 0.0;
-                    Double Ascore1;
-                    if (Ascore == null) {
-                        Ascore1 = 0.0;
-                        userDto.setAScore(Ascore1);
-                    } else {
-                        Ascore1 = Ascore == 0 ? 0.0 : Ascore / Acount;//A类总分/A类人数
-                        userDto.setAScore(Double.parseDouble(df.format(Ascore1)));
-                        totalRatio += userDto.getAratio();
-                    }
-                    Double Bscore = flowService.getScoreByType(userDto.getSerialno(), "B", dto.getDbtype());
-                    int Bcount = flowService.getScoreByTypeCount(userDto.getSerialno(), "B", dto.getDbtype());
-                    Double Bscore1;
-                    if (Bscore == null) {
-                        Bscore1 = 0.0;
-                        userDto.setBScore(Bscore1);
-                    } else {
-                        Bscore1 = Bscore == 0 ? 0.0 : Bscore / Bcount;
-                        userDto.setBScore(Double.parseDouble(df.format(Bscore1)));
-                        totalRatio += userDto.getBratio();
-                    }
-                    Double Cscore = flowService.getScoreByType(userDto.getSerialno(), "C", dto.getDbtype());
-                    int Ccount = flowService.getScoreByTypeCount(userDto.getSerialno(), "C", dto.getDbtype());
-                    Double Cscore1;
-                    if (Cscore == null) {
-                        Cscore1 = 0.0;
-                        userDto.setCScore(Cscore1);
-                    } else {
-                        Cscore1 = Cscore == 0 ? 0.0 : Cscore / Ccount;
-                        userDto.setCScore(Double.parseDouble(df.format(Cscore1)));
-                        totalRatio += userDto.getCratio();
-                    }
-                    Double Dscore = flowService.getScoreByType(userDto.getSerialno(), "D", dto.getDbtype());
-                    int Dcount = flowService.getScoreByTypeCount(userDto.getSerialno(), "D", dto.getDbtype());
-                    Double Dscore1;
-                    if (Dscore == null) {
-                        Dscore1 = 0.0;
-                        userDto.setDScore(Dscore1);
-                    } else {
-                        Dscore1 = Dscore == 0 ? 0.0 : Dscore / Dcount;
-                        userDto.setDScore(Double.parseDouble(df.format(Dscore1)));
-                        totalRatio += userDto.getDratio();
-                    }
-                    Double Escore = flowService.getScoreByType(userDto.getSerialno(), "E", dto.getDbtype());
-                    int Ecount = flowService.getScoreByTypeCount(userDto.getSerialno(), "E", dto.getDbtype());
-                    Double Escore1;
-                    if (Escore == null) {
-                        Escore1 = 0.0;
-                        userDto.setEScore(Escore1);
-                    } else {
-                        Escore1 = Escore == 0 ? 0.0 : Escore / Ecount;
-                        userDto.setEScore(Double.parseDouble(df.format(Escore1)));
-                        totalRatio += userDto.getEratio();
-                    }
-                    Double Fscore = flowService.getScoreByType(userDto.getSerialno(), "F", dto.getDbtype());
-                    int Fcount = flowService.getScoreByTypeCount(userDto.getSerialno(), "F", dto.getDbtype());
-                    Double Fscore1;
-                    if (Fscore == null) {
-                        Fscore1 = 0.0;
-                        userDto.setFScore(Fscore1);
-                    } else {
-                        Fscore1 = Fscore == 0 ? 0.0 : Fscore / Fcount;
-                        userDto.setFScore(Double.parseDouble(df.format(Fscore1)));
-                        totalRatio += userDto.getFratio();
-                    }
-                    //获取总分  总分= A类总分 X A类评分人系数 +  B类总分 X B类评分人系数 + C类总分 X C类评分人系数 + D类总分 X D类评分人系数
+//                    if (dto.getDbtype().equals("1")) {
+                        //获取各类评分的总人数和分数
+                        Double Ascore = flowService.getScoreByType(userDto.getSerialno(), "A", dto.getDbtype());
+                        int Acount = flowService.getScoreByTypeCount(userDto.getSerialno(), "A", dto.getDbtype());
+                        Double totalRatio = 0.0;
+                        Double Ascore1;
+                        if (Ascore == null) {
+                            Ascore1 = 0.0;
+                            userDto.setAScore(Ascore1);
+                        } else {
+                            Ascore1 = Ascore == 0 ? 0.0 : Ascore / Acount;//A类总分/A类人数
+                            userDto.setAScore(Double.parseDouble(df.format(Ascore1)));
+                            totalRatio += userDto.getAratio();
+                        }
+                        Double Bscore = flowService.getScoreByType(userDto.getSerialno(), "B", dto.getDbtype());
+                        int Bcount = flowService.getScoreByTypeCount(userDto.getSerialno(), "B", dto.getDbtype());
+                        Double Bscore1;
+                        if (Bscore == null) {
+                            Bscore1 = 0.0;
+                            userDto.setBScore(Bscore1);
+                        } else {
+                            Bscore1 = Bscore == 0 ? 0.0 : Bscore / Bcount;
+                            userDto.setBScore(Double.parseDouble(df.format(Bscore1)));
+                            totalRatio += userDto.getBratio();
+                        }
+                        Double Cscore = flowService.getScoreByType(userDto.getSerialno(), "C", dto.getDbtype());
+                        int Ccount = flowService.getScoreByTypeCount(userDto.getSerialno(), "C", dto.getDbtype());
+                        Double Cscore1;
+                        if (Cscore == null) {
+                            Cscore1 = 0.0;
+                            userDto.setCScore(Cscore1);
+                        } else {
+                            Cscore1 = Cscore == 0 ? 0.0 : Cscore / Ccount;
+                            userDto.setCScore(Double.parseDouble(df.format(Cscore1)));
+                            totalRatio += userDto.getCratio();
+                        }
+                        Double Dscore = flowService.getScoreByType(userDto.getSerialno(), "D", dto.getDbtype());
+                        int Dcount = flowService.getScoreByTypeCount(userDto.getSerialno(), "D", dto.getDbtype());
+                        Double Dscore1;
+                        if (Dscore == null) {
+                            Dscore1 = 0.0;
+                            userDto.setDScore(Dscore1);
+                        } else {
+                            Dscore1 = Dscore == 0 ? 0.0 : Dscore / Dcount;
+                            userDto.setDScore(Double.parseDouble(df.format(Dscore1)));
+                            totalRatio += userDto.getDratio();
+                        }
+                        Double Escore = flowService.getScoreByType(userDto.getSerialno(), "E", dto.getDbtype());
+                        int Ecount = flowService.getScoreByTypeCount(userDto.getSerialno(), "E", dto.getDbtype());
+                        Double Escore1;
+                        if (Escore == null) {
+                            Escore1 = 0.0;
+                            userDto.setEScore(Escore1);
+                        } else {
+                            Escore1 = Escore == 0 ? 0.0 : Escore / Ecount;
+                            userDto.setEScore(Double.parseDouble(df.format(Escore1)));
+                            totalRatio += userDto.getEratio();
+                        }
+                        Double Fscore = flowService.getScoreByType(userDto.getSerialno(), "F", dto.getDbtype());
+                        int Fcount = flowService.getScoreByTypeCount(userDto.getSerialno(), "F", dto.getDbtype());
+                        Double Fscore1;
+                        if (Fscore == null) {
+                            Fscore1 = 0.0;
+                            userDto.setFScore(Fscore1);
+                        } else {
+                            Fscore1 = Fscore == 0 ? 0.0 : Fscore / Fcount;
+                            userDto.setFScore(Double.parseDouble(df.format(Fscore1)));
+                            totalRatio += userDto.getFratio();
+                        }
+                        //获取总分  总分= A类总分 X A类评分人系数 +  B类总分 X B类评分人系数 + C类总分 X C类评分人系数 + D类总分 X D类评分人系数
 
-                    Double totalscore = userDto.getAScore() * userDto.getAratio() + userDto.getBScore() * userDto.getBratio() +
-                            userDto.getCScore() * userDto.getCratio() + userDto.getDScore() * userDto.getDratio() +
-                            userDto.getEScore() * userDto.getEratio() + userDto.getFScore() * userDto.getFratio();
-                    if (totalscore == 0.0 || totalscore == null) {
-                        userDto.setTotalScore(0.0);
-                    } else {
-                        userDto.setTotalScore(Double.parseDouble(df.format(totalscore == 0 ? 0.0 : totalscore / totalRatio)));
-                    }
-//                    }else{
-//                        List<UserScoreDto> scoreDtoList = userScoreDtoService.findUserDutyScore(dto.getYear(),dto.getMonth(),dto.getUsercode(),null,dto.getDbtype());
-//                        List<UserScoreDto> dutyAndRatioList = userScoreDtoService.getTypeUserDutyScore(scoreDtoList,false);
+                        Double totalscore = userDto.getAScore() * userDto.getAratio() + userDto.getBScore() * userDto.getBratio() +
+                                userDto.getCScore() * userDto.getCratio() + userDto.getDScore() * userDto.getDratio() +
+                                userDto.getEScore() * userDto.getEratio() + userDto.getFScore() * userDto.getFratio();
+                        if (totalscore == 0.0 || totalscore == null) {
+                            userDto.setTotalScore(0.0);
+                        } else {
+                            userDto.setTotalScore(Double.parseDouble(df.format(totalscore == 0 ? 0.0 : totalscore / totalRatio)));
+                        }
+//                    } else {
+//                        List<UserScoreDto> scoreDtoList = userScoreDtoService.findUserDutyScore(dto.getYear(), dto.getMonth(), dto.getUsercode(), null, dto.getDbtype());
+//                        List<UserScoreDto> dutyAndRatioList = userScoreDtoService.getTypeUserDutyScore(scoreDtoList, false);
 //                        Double sumScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getScore).sum();
 //                        Double aScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getAscore).sum();
 //                        Double bScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getBscore).sum();
 //                        Double cScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getCscore).sum();
 //                        Double dScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getDscore).sum();
+//                        Double eScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getEscore).sum();
+//                        Double fScore = dutyAndRatioList.stream().mapToDouble(UserScoreDto::getFscore).sum();
 //                        userDto.setAScore(Double.parseDouble(df.format(aScore)));
 //                        userDto.setBScore(Double.parseDouble(df.format(bScore)));
 //                        userDto.setCScore(Double.parseDouble(df.format(cScore)));
 //                        userDto.setDScore(Double.parseDouble(df.format(dScore)));
+//                        userDto.setEScore(Double.parseDouble(df.format(eScore)));
+//                        userDto.setFScore(Double.parseDouble(df.format(fScore)));
 //                        userDto.setTotalScore(Double.parseDouble(df.format(sumScore)));
 //                    }
                 }
@@ -863,7 +821,7 @@ public class EvaluationReportController {
     }
 
     @RequestMapping(value = "/updateState", produces = "application/json;charset=utf-8")
-    public Object updateState(String ids,Integer state) {
+    public Object updateState(String ids, Integer state) {
         ModelMap map = new ModelMap();
         try {
             String[] arrId = ids.split(",");
@@ -881,7 +839,7 @@ public class EvaluationReportController {
                 map.put("msg", "批量推送状态修改失败");
                 map.put("code", 1);
             }
-        } catch ( Exception e){
+        } catch (Exception e) {
             map.put("msg", "异常中,批量推送状态修改失败");
             map.put("code", 1);
             log.error(e.getMessage(), e);
@@ -890,7 +848,7 @@ public class EvaluationReportController {
     }
 
     @RequestMapping(value = "/updateStateAll", produces = "application/json;charset=utf-8")
-    public Object updateStateAll(String year,String month,String dbtype,int state) {
+    public Object updateStateAll(String year, String month, String dbtype, int state) {
         ModelMap map = new ModelMap();
         try {
             if (year == null || month == null || year.equals("") || month.equals("")) {

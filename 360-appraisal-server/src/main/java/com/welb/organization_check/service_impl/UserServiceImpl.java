@@ -108,10 +108,15 @@ public class UserServiceImpl implements IUserService {
         return userMapper.findUserAll();
     }
 
+    @Override
+    public List<User> selectUserAllBpfr(String dbtype){
+        return userMapper.selectUserAllBpfr(dbtype);
+    }
+
     //查询当前评分关系人员数据
     @Override
-    public List<User> findUserByRoleCode(String qrcode,String dbtype,String postType,String dbbk) {
-        return userMapper.findUserByRoleCode(qrcode, dbtype,postType,dbbk);
+    public List<User> findUserByRoleCode(String qrcode,String dbtype,String postType,String dbbk,String year,String month,boolean isDq) {
+        return userMapper.findUserByRoleCode(qrcode, dbtype,postType,dbbk,year,month,isDq);
     }
 
     @Override
@@ -195,8 +200,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public List<User>  selectUserPfr(String dbtype){
-        return  userMapper.selectUserPfr(dbtype);
+    public List<User>  selectUserPfr(String dbtype,String year,String month,boolean isDq){
+        return  userMapper.selectUserPfr(dbtype,year,month,isDq);
     }
 
     @Override
@@ -207,6 +212,11 @@ public class UserServiceImpl implements IUserService {
     @Override
     public List<User> selectUserScoreStationList(){
         return  userMapper.selectUserScoreStationList();
+    }
+
+    @Override
+    public List<User> selectUserByInStationCode(String[] codeList,String dbtype){
+        return userMapper.selectUserByInStationCode(codeList,dbtype);
     }
 
 }

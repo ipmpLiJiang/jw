@@ -27,6 +27,22 @@ export function getScorredTypeDutyList(data) {
     })
 }
 
+export function updateScoreStation(data) {
+    return fetch({
+        url: 'scoreStation/batchUpdateScoreStation',
+        method: 'post',
+        data: data
+    })
+}
+
+export function getScorredTypeDutyEFList(data) {
+    return fetch({
+        url: 'station/getDutyScorringStationEF',
+        method: 'post',
+        data: data
+    })
+}
+
 //添加人员
 export function addUser(data) {
     return fetch({

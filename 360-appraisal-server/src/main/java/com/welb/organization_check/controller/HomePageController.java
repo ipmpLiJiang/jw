@@ -106,19 +106,7 @@ public class HomePageController {
                             map.put("code", 0);
                         }
                     } else {
-//                    当前年份
-                        String year = CalendarUtil.getYear();
-//                    当前月份h
-                        String month = CalendarUtil.getMonth();
-//                    当前月度
-                        String quarter = month;//CalendarUtil.getQuarter(month);
-                        //当前上一月度
-                        int count = Integer.parseInt(month.trim()) - 1;
-                        //获取当前系统时间
-                        String sysTime = DateUtil.getTime();
-
-                        //手动考核  --个人考核详情页面
-                        manualGetDetail(dtos, map, usercode, data, year, quarter, count, sysTime, false, 1);
+                        manualGetDetail(dtos, map, usercode, data, false, 1);
 
                     }
                 } catch (Exception e) {
@@ -153,10 +141,14 @@ public class HomePageController {
                 map.put("code", 810);
             } else {
                 try {
+//                    if(dtos.getScorringcode()!=null && !dtos.getScorringcode().equals("")){
+//                        usercode = dtos.getScorringcode();
+//                    }
                     if (dtos.getMonth() != null && dtos.getYear() != null) {
                         dto = dtoService.selectUserSummaryByLike(dtos);
                         if (dto != null) {
                             //查找岗位
+                            dto.setYear(dtos.getYear());
                             dto.setMonth(dtos.getMonth());
                             getMapList(map, usercode, data, dto, scorringUserCode, true, 1);
                         } else {
@@ -164,19 +156,7 @@ public class HomePageController {
                             map.put("code", 0);
                         }
                     } else {
-//                    当前年份
-                        String year = CalendarUtil.getYear();
-//                    当前月份h
-                        String month = CalendarUtil.getMonth();
-//                    当前月度
-                        String quarter = month;//CalendarUtil.getQuarter(month);
-                        //当前上一月度
-                        int count = Integer.parseInt(month.trim()) - 1;
-                        //获取当前系统时间
-                        String sysTime = DateUtil.getTime();
-
-                        //手动考核  --个人考核详情页面
-                        manualGetDetail(dtos, map, usercode, data, year, quarter, count, sysTime, true, 1);
+                        manualGetDetail(dtos, map, usercode, data, true, 1);
 
                     }
                 } catch (Exception e) {
@@ -206,32 +186,31 @@ public class HomePageController {
                 map.put("msg", "用户登录过期，请重新登录");
                 map.put("code", 810);
             } else {
-                boolean isDuty = dtos.getDbtype().equals("1") ? false : true;
                 try {
                     if (dtos.getMonth() != null && dtos.getYear() != null) {
                         dto = dtoService.selectUserSummaryByLike(dtos);
                         if (dto != null) {
                             //查找岗位
+                            dto.setYear(dtos.getYear());
                             dto.setMonth(dtos.getMonth());
-                            getMapList(map, usercode, data, dto, null, isDuty, 2);
+                            this.getMapZpList(map, data, dto);
                         } else {
                             map.put("msg", "数据为空");
                             map.put("code", 0);
                         }
                     } else {
-//                    当前年份
-                        String year = CalendarUtil.getYear();
-//                    当前月份h
-                        String month = CalendarUtil.getMonth();
-//                    当前月度
-                        String quarter = month;//CalendarUtil.getQuarter(month);
-                        //当前上一月度
-                        int count = Integer.parseInt(month.trim()) - 1;
-                        //获取当前系统时间
-                        String sysTime = DateUtil.getTime();
+                        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dtos.getDbtype());
+                        if (setTime != null) {
+                            dtos.setYear(setTime.getYear());
+                            dtos.setMonth(setTime.getMonth());
 
-                        //手动考核  --个人考核详情页面
-                        manualGetDetail(dtos, map, usercode, data, year, quarter, count, sysTime, isDuty, 2);
+                            dto = dtoService.selectUserSummaryByLike(dtos);
+                            dto.setMonth(setTime.getMonth());
+                            this.getMapZpList(map, data, dto);
+                        } else {
+                            map.put("msg", "当前年月没有季度评分数据");
+                            map.put("code", 1);
+                        }
 
                     }
                 } catch (Exception e) {
@@ -245,6 +224,76 @@ public class HomePageController {
             map.put("code", 810);
         }
         return map;
+    }
+
+    private void getMapZpList(ModelMap map, Map<String, Object> data, UserSummaryDto dto) {
+        List<Duty> dutyList = new ArrayList<>();
+        Station station = stationService.selectByStationCode(dto.getStationcode());
+        if (dto.getDbtype().equals("2")) {
+            dutyList = dutyService.queryDutyByStationCode(station.getStationcode(), dto.getDbtype());
+        } else {
+            dutyList = dutyService.queryDutyByDbbkCode(dto.getDbbk(), dto.getDbtype());
+        }
+        if (dutyList.size() > 0) {
+            MonthSummary monthSummary = monthSummaryService.selectSummaryByYearAndMonthAndCode(dto.getYear(), dto.getMonth(), dto.getEmployeecode(), dto.getDbtype());
+            if (monthSummary != null) {
+                if (monthSummary.getState().equals("5")) {
+                    dto.setIsedit("0");
+                } else {
+                    dto.setIsedit("1");
+                }
+                List<ScoreDutySm> dutySmList = this.getDutySmList(dto.getYear(), dto.getMonth(), dto.getUsercode(), dto.getDbtype());
+                data.put("detail", dto);
+                data.put("stations", station);
+                List<Duty> dutyJichu = new ArrayList<>();
+                List<Duty> dutyYiban = new ArrayList<>();
+                List<Duty> dutyZhongdian = new ArrayList<>();
+                List<Duty> dutyMubiao = new ArrayList<>();
+                List<Duty> dutyZuofeng = new ArrayList<>();
+                if (dto.getDbtype().equals("2")) {
+                    dutyJichu = dutyList.stream().filter(s -> s.getDutytype().equals("0")).collect(Collectors.toList());
+                    dutyYiban = dutyList.stream().filter(s -> s.getDutytype().equals("1")).collect(Collectors.toList());
+                    dutyZhongdian = dutyList.stream().filter(s -> s.getDutytype().equals("2")).collect(Collectors.toList());
+                    dutyMubiao = dutyList.stream().filter(s -> s.getDutytype().equals("3")).collect(Collectors.toList());
+                    data.put("dutyJichu", dutyJichu);
+                    data.put("dutyYiban", dutyYiban);
+                    data.put("dutyZhongdian", dutyZhongdian);
+                    data.put("dutyMubiao", dutyMubiao);
+                } else {
+                    dutyJichu = dutyList.stream().filter(s -> s.getDutytype().equals("4")).collect(Collectors.toList());
+                    dutyYiban = dutyList.stream().filter(s -> s.getDutytype().equals("5")).collect(Collectors.toList());
+                    dutyZhongdian = dutyList.stream().filter(s -> s.getDutytype().equals("6")).collect(Collectors.toList());
+                    dutyMubiao = dutyList.stream().filter(s -> s.getDutytype().equals("7")).collect(Collectors.toList());
+                    dutyZuofeng = dutyList.stream().filter(s -> s.getDutytype().equals("8")).collect(Collectors.toList());
+                    data.put("dutyJichu", dutyJichu);
+                    data.put("dutyYiban", dutyYiban);
+                    data.put("dutyZhongdian", dutyZhongdian);
+                    data.put("dutyMubiao", dutyMubiao);
+                    data.put("dutyZuofeng", dutyZuofeng);
+                }
+                if (dutySmList.size() > 0) {
+                    this.getZpsm(dutyJichu, dutySmList);
+                    this.getZpsm(dutyYiban, dutySmList);
+                    this.getZpsm(dutyZhongdian, dutySmList);
+                    this.getZpsm(dutyMubiao, dutySmList);
+                    this.getZpsm(dutyZuofeng, dutySmList);
+                }
+                map.put("msg", "查询个人考核详情成功");
+                map.put("data", data);
+                map.put("code", 0);
+            }
+        }
+    }
+
+    private void getZpsm(List<Duty> dutyList, List<ScoreDutySm> dutySmList) {
+        List<ScoreDutySm> queryDutySmList = new ArrayList<>();
+        for (Duty duty : dutyList) {
+            queryDutySmList = dutySmList.stream().filter(s -> s.getDutycode().equals(duty.getDutycode())).collect(Collectors.toList());
+            if (queryDutySmList.size() > 0) {
+                duty.setZpsm(queryDutySmList.get(0).getZpsm());
+            }
+
+        }
     }
 
     private void getMapList(ModelMap map, String usercode, Map<String, Object> data, UserSummaryDto dto, String scorringUserCode, boolean isDuty, int type) {
@@ -275,15 +324,19 @@ public class HomePageController {
                 }
             }
         }
-
-        List<ScoreDutySm> dutySmList = this.getDutySmList(dto.getYear(), dto.getMonth(), dto.getUsercode(), dto.getDbtype());
-        if (isDuty) {
-            if (scorringUserCode != null && !scorringUserCode.equals("")) {
-                usercode = scorringUserCode;
+        if (flow.size() > 0) {
+            List<ScoreDutySm> dutySmList = this.getDutySmList(dto.getYear(), dto.getMonth(), dto.getUsercode(), dto.getDbtype());
+            if (isDuty) {
+                if (scorringUserCode != null && !scorringUserCode.equals("")) {
+                    usercode = scorringUserCode;
+                }
+                getDutyFlow(map, data, dto, station, flow, usercode, dutySmList, type);
+            } else {
+                getFlow(map, data, dto, station, flow, dutySmList, type);
             }
-            getDutyFlow(map, data, dto, station, flow, usercode, dutySmList, type);
         } else {
-            getFlow(map, data, dto, station, flow, dutySmList, type);
+            map.put("msg", "数据为空");
+            map.put("code", 1);
         }
     }
 
@@ -296,14 +349,12 @@ public class HomePageController {
         return scoreDutySmService.selectScoreDutySmList(query, null);
     }
 
-    private void manualGetDetail(UserSummaryDto dtos, ModelMap map, String usercode, Map<String, Object> data, String year, String quarter, int count, String sysTime, boolean isDuty, int type) throws ParseException {
-        String month;
+    private void manualGetDetail(UserSummaryDto dtos, ModelMap map, String usercode, Map<String, Object> data, boolean isDuty, int type) throws ParseException {
         UserSummaryDto dto;
         ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dtos.getDbtype());
         if (setTime != null) {
             //新一月度考核-手动设置的考核时间未超过系统自动考核时间
             //开始新的月度考核
-            month = quarter;
             dtos.setYear(setTime.getYear());
             dtos.setMonth(setTime.getMonth());
 
@@ -313,6 +364,9 @@ public class HomePageController {
             getMapList(map, usercode, data, dto, null, isDuty, type);
 
 
+        } else {
+            map.put("msg", "当前年月没有季度评分数据");
+            map.put("code", 1);
         }
     }
 
@@ -340,21 +394,24 @@ public class HomePageController {
         List<String> scoreTypeList = new ArrayList<>();
         String scoreType = "";
         boolean isEdit = false;
+        boolean isEF = false;
         long count = 0;
         if (scoreList.size() > 0) {
             count = scoreList.stream().filter(s -> (s.getScoretype().equals("E"))).count();
             if (count > 0) {
                 scoreTypeList.add("E");
+                isEF = true;
             }
             count = scoreList.stream().filter(s -> (s.getScoretype().equals("F"))).count();
             if (count > 0) {
                 scoreTypeList.add("F");
+                isEF = true;
             }
         }
         List<Duty> dutyList = new ArrayList<>();
         boolean isDuty = false;
         // 判断是否有 E、F
-        if (count > 0) {
+        if (isEF) {
             isDuty = true;
             // 判断是否有 A,B,C
             List<Score> scoreAbcList = scoreList.stream().filter(s -> (!s.getScoretype().equals("E") && !s.getScoretype().equals("F"))).collect(Collectors.toList());
@@ -872,12 +929,6 @@ public class HomePageController {
         DecimalFormat df = new DecimalFormat("0.00");
         try {
             List<Score> scoreList = scoreService.selectTypeByCodeList(dto.getEmployeecode(), scorringcode, dto.getDbtype());
-//            String scoreTypeEF = "";
-//            if(scoreList.size()>0) {
-//                if (this.isEF(scoreList.get(0).getScoretype())){
-//                    scoreTypeEF = scoreList.get(0).getScoretype();
-//                }
-//            }
             List<Score> scoreABCList = scoreList.stream().filter(s -> !s.getScoretype().equals("E") && !s.getScoretype().equals("F")).collect(Collectors.toList());
             List<Score> scoreEFList = scoreList.stream().filter(s -> (s.getScoretype().equals("E") || s.getScoretype().equals("F"))).collect(Collectors.toList());
             List<String> typeList = new ArrayList<>();
@@ -959,7 +1010,7 @@ public class HomePageController {
         ModelMap map = new ModelMap();
         try {
             if (!dutySm.equals("")) {
-                List<ScoreDutySm> dutySmList = this.getDutySmList(dto.getYear(), dto.getMonth(), dto.getUsercode(), dto.getDbtype());
+                List<ScoreDutySm> dutySmList = this.getDutySmList(dto.getYear(), dto.getMonth(), dto.getEmployeecode(), dto.getDbtype());
                 List<ScoreDutySm> queryList = new ArrayList<>();
                 List<ScoreDutySm> insertList = new ArrayList<>();
                 List<ScoreDutySm> updateList = new ArrayList<>();
@@ -2175,6 +2226,40 @@ public class HomePageController {
         return map;
     }
 
+    private List<UserScoreDto> getUserDutyScore(String year, String month, String dbtype, String employeeCode) {
+        List<UserScoreDto> list = userScoreDtoService.findUserFlowDetailScore(year, month, dbtype, employeeCode);
+        List<User> userList = userService.selectUserAllBpfr(dbtype);
+        List<Duty> dutyList = dutyService.selectDutyAllByDbtype(dbtype);
+        List<User> queryUser = new ArrayList<>();
+        List<Duty> queryDuty = new ArrayList<>();
+        if (userList.size() > 0 || dutyList.size() > 0) {
+            for (UserScoreDto item : list) {
+                item.setYear(year);
+                item.setMonth(month);
+                if (userList.size() > 0) {
+                    queryUser = userList.stream().filter(s -> s.getUsercode().equals(item.getScoredCode())).collect(Collectors.toList());
+                    if (queryUser.size() > 0) {
+                        item.setAratio(queryUser.get(0).getAratio());
+                        item.setBratio(queryUser.get(0).getBratio());
+                        item.setCratio(queryUser.get(0).getCratio());
+                        item.setDratio(queryUser.get(0).getDratio());
+                        item.setEratio(queryUser.get(0).getEratio());
+                        item.setFratio(queryUser.get(0).getFratio());
+                        item.setPostType(queryUser.get(0).getPostType());
+                        item.setDbbk(queryUser.get(0).getDbbk());
+                        item.setBranchCode(queryUser.get(0).getBranchcode());
+                    }
+                }
+                if (dutyList.size() > 0) {
+                    queryDuty = dutyList.stream().filter(s -> s.getDutycode().equals(item.getDserialNo())).collect(Collectors.toList());
+                    if (queryDuty.size() > 0) {
+                        item.setDutyType(queryDuty.get(0).getDutytype());
+                    }
+                }
+            }
+        }
+        return list;
+    }
 
     public Object jisuanDuty(HttpServletRequest req, String dbtype) {
         //获取当前登录用户的编号
@@ -2199,7 +2284,8 @@ public class HomePageController {
                                 typeList.add("1");
                                 typeList.add("2");
                                 typeList.add("3");
-                                List<UserScoreDto> userScoreDtoList = userScoreDtoService.findUserDutyScore(year, month, null, typeList, dbtype);
+//                                List<UserScoreDto> userScoreDtoList = userScoreDtoService.findUserDutyScore(year, month, null, typeList, dbtype);
+                                List<UserScoreDto> userScoreDtoList = this.getUserDutyScore(year, month, dbtype, null);
                                 if (userScoreDtoList.size() > 0) {
 //                                    Map<String, List<UserScoreDto>> byAuthor = userScoreDtoList.stream().map()
 //                                            .collect(Collectors.groupingBy(UserScoreDto::getScoreType));
@@ -2495,6 +2581,7 @@ public class HomePageController {
         }
         return map;
     }
+
 
     private double getScore(List<UserScoreDto> userQueryList, String stype, String dtype) {
         long pingfenCount = userQueryList.stream().filter(

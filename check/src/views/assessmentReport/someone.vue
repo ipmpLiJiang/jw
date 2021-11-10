@@ -51,49 +51,49 @@
             岗位：{{detailData.stationname}}</span>&nbsp;&nbsp;&nbsp;
             <span v-show="postTypeName!=''?true:false">岗位类型：{{postTypeName}}</span>
           </h4>
-          <el-col :span="2">
+          <el-col :span="3">
             <h5>{{detailData.totalscore}}</h5>
-            <p>总得分</p>
+            <p>总得分(100)</p>
           </el-col>
           <el-col :span="3" v-show="dbtype=='1'?false:true">
             <h5>{{detailData.basicscore}}</h5>
-            <p>基础得分</p>
+            <p>基础得分(15)</p>
           </el-col>
           <el-col :span="3" v-show="dbtype=='2'?false:true">
             <h5>{{detailData.basicscore}}</h5>
-            <p>政治建设</p>
+            <p>政治建设(20)</p>
           </el-col>
           <el-col :span="3" v-show="dbtype=='1'?false:true">
             <h5>{{detailData.keyscore}}</h5>
-            <p>岗位得分</p>
+            <p>岗位得分(20)</p>
           </el-col>
           <el-col :span="3" v-show="dbtype=='2'?false:true">
             <h5>{{detailData.keyscore}}</h5>
-            <p>思想建设</p>
+            <p>思想建设(20)</p>
           </el-col>
           <el-col :span="3" v-show="dbtype=='1'?false:true">
             <h5>{{detailData.zdScore}}</h5>
-            <p>重点得分</p>
+            <p>重点得分(25)</p>
           </el-col>
           <el-col :span="3" v-show="dbtype=='2'?false:true">
             <h5>{{detailData.zdScore}}</h5>
-            <p>组织建设</p>
+            <p>组织建设(20)</p>
           </el-col>
           <el-col :span="3" v-show="dbtype=='1'?false:true">
             <h5>{{detailData.mbScore + detailData.sumMbAvgScore}}</h5>
-            <p>目标得分</p>
+            <p>目标得分(25)</p>
           </el-col>
           <el-col :span="3" v-show="dbtype=='2'?false:true">
             <h5>{{detailData.mbScore}}</h5>
-            <p>党建创新</p>
+            <p>党建创新(20)</p>
           </el-col>
           <el-col :span="3" v-show="dbtype=='1'?false:true">
             <h5>{{detailData.dfScore}}</h5>
-            <p>党风廉政</p>
+            <p>党风廉政(15)</p>
           </el-col>
           <el-col :span="3" v-show="dbtype=='2'?false:true">
             <h5>{{detailData.zfScore}}</h5>
-            <p>作风建设</p>
+            <p>作风建设(20)</p>
           </el-col>
           <el-col :span="4">
             <h5>{{detailData.avgscore}}</h5>
@@ -112,7 +112,6 @@
             整体平均分 差距 {{jisuanScore(detailData,1)}}%
             ，较个人上一季度 {{jisuanScore(detailData,2)}}% 差距。</font></b>
           <br><br>
-          <b><font style="font-size: 16px;">另附：总得分和单项得分的柱状图（实际得分和平均分）</font></b>
         </el-col>
       </el-row>
       <div class="box-data">
@@ -215,9 +214,9 @@ export default {
       data.dbtype = this.dbtype
 
       if(data.dbtype == '1') {
-        this.dutyType = ["政治建设", "思想建设", "组织建设", "党建创新","作风建设"]
+        this.dutyType = ["政治建设(20)", "思想建设(20)", "组织建设(20)", "党建创新(20)","作风建设(20)"]
       } else {
-        this.dutyType = ["基础评分", "关键评分", "重点评分", "目标评分","党风廉政"]
+        this.dutyType = ["基础评分(15)", "关键评分(20)", "重点评分(25)", "目标评分(25)","党风廉政(15)"]
       }
       
       const loading = this.$loading({

@@ -166,4 +166,13 @@ public class ScoreStation {
 
     private String dbbk;
 
+    public Integer getIsEF() {
+        return isEF;
+    }
+
+    public void setIsEF(Integer isEF) {
+        this.isEF = isEF;
+    }
+
+    private Integer isEF;
 }

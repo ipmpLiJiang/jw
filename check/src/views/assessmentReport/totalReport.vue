@@ -561,11 +561,19 @@ export default {
     },
     //查询列表
     getList() {
-      this.tableLoading = true
       let params = this.page;
+      if (
+        (this.search.month && this.search.year) ||
+        (!this.search.month && !this.search.year)
+      ) {
+        params.month = this.search.month;
+        params.year = this.search.year;
+      }else{
+        this.$message.warning("年份和季度请同时选择");
+        return;
+      }
+      this.tableLoading = true
       params.username = this.search.username;
-      params.year = this.search.year;
-      params.month = this.search.month;
       params.dbtype = this.dbtype
       if (this.search.postType !=null) {
         params.postType = this.search.postType

@@ -61,6 +61,8 @@ public interface IMonthSummaryService {
      */
     int updateFinishGradeAll(String year,String month,String dbtype,String postType);
 
+    int updateFinishGradeScorringAll(String year,String month,String dbtype);
+
     /**
      * 删除个人月度总结
      * @param serialno

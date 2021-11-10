@@ -226,23 +226,84 @@ public class Station {
 
     private Integer isEF;
 
-    private  Integer scoreId;
-
-    public Integer getScoreId() {
-        return scoreId;
+    public Integer getScoreid() {
+        return scoreid;
     }
 
-    public void setScoreId(Integer scoreId) {
-        this.scoreId = scoreId;
+    public void setScoreid(Integer scoreid) {
+        this.scoreid = scoreid == null ? null : scoreid;
     }
 
-    public String getScoreType() {
-        return scoreType;
+    public String getScoretype() {
+        return scoretype;
     }
 
-    public void setScoreType(String scoreType) {
-        this.scoreType = scoreType;
+    public void setScoretype(String scoretype) {
+        this.scoretype = scoretype == null ? null : scoretype.trim();
     }
 
-    private  String scoreType;
+    private  Integer scoreid;
+
+    private  String scoretype;
+
+
+    public Double getAratio() {
+        return aratio;
+    }
+
+    public void setAratio(Double aratio) {
+        this.aratio = aratio;
+    }
+
+    public Double getBratio() {
+        return bratio;
+    }
+
+    public void setBratio(Double bratio) {
+        this.bratio = bratio;
+    }
+
+    public Double getCratio() {
+        return cratio;
+    }
+
+    public void setCratio(Double cratio) {
+        this.cratio = cratio;
+    }
+
+    public Double getDratio() {
+        return dratio;
+    }
+
+    public void setDratio(Double dratio) {
+        this.dratio = dratio;
+    }
+
+    public Double getEratio() {
+        return eratio;
+    }
+
+    public void setEratio(Double eratio) {
+        this.eratio = eratio;
+    }
+
+    public Double getFratio() {
+        return fratio;
+    }
+
+    public void setFratio(Double fratio) {
+        this.fratio = fratio;
+    }
+
+    private Double aratio;
+
+    private Double bratio;
+
+    private Double cratio;
+
+    private Double dratio;
+
+    private Double eratio;
+
+    private Double fratio;
 }

@@ -21,6 +21,15 @@
     <result column="FullDepartmentCode" jdbcType="VARCHAR" property="fulldepartmentcode" />
       <result column="isEF" jdbcType="INTEGER" property="isEF" />
   </resultMap>
+    <resultMap id="BaseResultMap1" type="com.welb.organization_check.entity.Station">
+        <result column="StationCode" jdbcType="VARCHAR" property="stationcode" />
+        <result column="StationName" jdbcType="VARCHAR" property="stationname" />
+        <result column="DepartmentCode" jdbcType="VARCHAR" property="departmentcode" />
+        <result column="DepartmentName" jdbcType="VARCHAR" property="departmentname" />
+        <result column="scoretype" jdbcType="VARCHAR" property="scoretype" />
+        <result column="scoreid" jdbcType="INTEGER" property="scoreid" />
+        <result column="isEF" jdbcType="INTEGER" property="isEF" />
+    </resultMap>
   <insert id="insert" parameterType="com.welb.organization_check.entity.Station">
     insert into station (StationCode, StationName, DepartmentCode,
       StationDesc, DutyDesc, Relation1,
@@ -239,6 +248,9 @@
             <if test="stationname!=null and stationname!=''">
                 and station.StationName like concat('%',#{stationname},'%')
             </if>
+            <if test="isEF!=null">
+                and station.isEF = #{isEF}
+            </if>
           and d.DepartmentCode=station.DepartmentCode
         </where>
         order by station.StationCode+0
@@ -249,29 +261,51 @@
         and d.DepartmentCode=#{departmentcode}
     </select>
 
-
-    <select id="selectStationScoreEF" resultType="com.welb.organization_check.entity.Station">
+    <select id="selectStationByNotEF" resultType="com.welb.organization_check.entity.Station">
         SELECT
-            s.*,
+            s.StationCode,
+            s.StationName,
+            d.DepartmentCode,
             d.DepartmentName ,
-            ss.ScoreType,
-            ss.Id scoreId
+            s.isEF
+        FROM
+            station s,department d
+        where
+            d.DepartmentCode=s.DepartmentCode
+            <if test="stationcode!=null and stationcode!=''">
+                and s.StationCode != #{stationcode}
+            </if>
+            and s.isEF = 1
+        ORDER BY
+            s.StationCode +0;
+    </select>
+
+    <!-- selectStationScoreEF left 字段为null 有值的字段取不到值 无语 待解决问题 -->
+    <select id="selectStationScoreEF" resultMap="BaseResultMap1">
+        SELECT
+            s.StationCode,
+            s.StationName,
+            d.DepartmentCode,
+            d.DepartmentName ,
+            s.isEF,
+            s1.id as scoreid,
+	        s1.ScoreType as scoretype
         FROM
             station s
             inner join department d on
                 d.DepartmentCode=s.DepartmentCode
-            left join scorestation ss on
-                ss.ScorringStationCode = s.StationCode
-                AND ss.ScorredStationCode = #{scorredStationCode}
-                AND ss.ScoreType = #{scoreType}
-                AND ss.DutyCode = #{dutyCode}
-                AND ss.dbtype = #{dbtype}
+            left join (
+                select * from scorestation where ScorredStationCode = #{scorredStationCode} and
+                ScoreType = #{scoreType} and DutyCode = #{dutyCode} and dbtype = #{dbtype}
+            ) s1 on
+                s1.ScorringStationCode = s.StationCode
         where
             s.StationCode != #{scorredStationCode} AND
             s.isEF = 1
         ORDER BY
             s.StationCode +0;
     </select>
+
     <select id="findStationByInCodeList" resultMap="BaseResultMap">
     select s.*,d.DepartmentName
     from station s

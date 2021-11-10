@@ -40,4 +40,5 @@ public interface ScoreStationMapper {
     List<ScoreStation> findScoreStationDutyInList(@Param("scoreStation") ScoreStation scoreStation, @Param("dutyCodeList") String[] dutyCodeList);
 
     List<ScoreStation> selectScoreStationByScorredTypeDuty(String scorredstationcode,String scoretype,String dutycode, String dbtype);
+
 }

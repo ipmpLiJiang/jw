@@ -89,9 +89,9 @@ public class UserDtoController {
 
                     this.shengChengDelete(setTime.getYear(),setTime.getMonth(),dbtype,postType,summaryList);
                     long count = 0;
-                    List<User> scorringUserList = userService.selectUserPfr(dbtype);
+                    List<User> scorringUserList = userService.selectUserPfr(dbtype,setTime.getYear(),setTime.getMonth(),true);
                     if (scorringUserList.size() > 0) {
-                        List<User> users = userService.findUserByRoleCode(null, dbtype,postType,null);
+                        List<User> users = userService.findUserByRoleCode(null, dbtype,postType,null,null,null,true);
                         for (User u : scorringUserList) {
                             count = users.stream().filter(s -> s.getUsercode().equals(u.getUsercode())).count();
                             if (count == 0) {
@@ -282,11 +282,12 @@ public class UserDtoController {
             dutyQuery.setDbtype(dbtype);
             List<Duty> dutyList = dutyService.selectDutyAll(dutyQuery);
             List<Score> scoreList = scoreService.findScoreAll(dbtype,postType);
-            ScoreDutySm queryDutySm = new ScoreDutySm();
-            queryDutySm.setYear(year);
-            queryDutySm.setMonth(month);
-            queryDutySm.setDbtype(dbtype);
-            List<ScoreDutySm> dutySmList = scoreDutySmService.selectScoreDutySmList(queryDutySm,postType);
+//            默认自评
+//            ScoreDutySm queryDutySm = new ScoreDutySm();
+//            queryDutySm.setYear(year);
+//            queryDutySm.setMonth(month);
+//            queryDutySm.setDbtype(dbtype);
+//            List<ScoreDutySm> dutySmList = scoreDutySmService.selectScoreDutySmList(queryDutySm,postType);
 
             // History
             List<ScoreHistory> insertHistoryList = new ArrayList<>();
@@ -297,8 +298,9 @@ public class UserDtoController {
             List<ScoreFlow> updateFlowList = new ArrayList<>();
             // Detail
             List<ScoreDetail> insertDetailList = new ArrayList<>();
-            //DutySm
-            List<ScoreDutySm> insertDutySmList = new ArrayList<>();
+            //默认自评
+//            List<ScoreDutySm> insertDutySmList = new ArrayList<>();
+
             List<String> scoreTypeList = new ArrayList<>();
             scoreTypeList.add("A");
             scoreTypeList.add("B");
@@ -308,11 +310,15 @@ public class UserDtoController {
             scoreTypeList.add("F");
 
             if (dbtype.equals("1")) {
+//                this.getShengChengResult(year, month, scoreTypeList, bdfrUserDboList, dutyList, scoreList, historyList,
+//                        bdfrHistoryList, bdfrFlowList, bdfrDetailList, insertFlowList, updateFlowList, insertHistoryList, updateHistoryList, insertDetailList, dutySmList, insertDutySmList, dbtype);
                 this.getShengChengResult(year, month, scoreTypeList, bdfrUserDboList, dutyList, scoreList, historyList,
-                        bdfrHistoryList, bdfrFlowList, bdfrDetailList, insertFlowList, updateFlowList, insertHistoryList, updateHistoryList, insertDetailList, dutySmList, insertDutySmList, dbtype);
+                        bdfrHistoryList, bdfrFlowList, bdfrDetailList, insertFlowList, updateFlowList, insertHistoryList, updateHistoryList, insertDetailList, dbtype);
             } else {
+//                this.getDutyShengChengResult(year, month, scoreTypeList, bdfrUserDboList, dutyList, scoreList, historyList,
+//                        bdfrHistoryList, bdfrFlowList, bdfrDetailList, insertFlowList, updateFlowList, insertHistoryList, updateHistoryList, insertDetailList, dutySmList, insertDutySmList, dbtype);
                 this.getDutyShengChengResult(year, month, scoreTypeList, bdfrUserDboList, dutyList, scoreList, historyList,
-                        bdfrHistoryList, bdfrFlowList, bdfrDetailList, insertFlowList, updateFlowList, insertHistoryList, updateHistoryList, insertDetailList, dutySmList, insertDutySmList, dbtype);
+                        bdfrHistoryList, bdfrFlowList, bdfrDetailList, insertFlowList, updateFlowList, insertHistoryList, updateHistoryList, insertDetailList, dbtype);
             }
             if (insertHistoryList.size() > 0) {
                 for(ScoreHistory item:insertHistoryList){
@@ -340,12 +346,12 @@ public class UserDtoController {
                 }
 //                scoreDetailService.batchInset(insertDetailList);
             }
-            if (insertDutySmList.size() > 0) {
-                for(ScoreDutySm item:insertDutySmList){
-                    scoreDutySmService.insertSelective(item);
-                }
-//                scoreDutySmService.batchInset(insertDutySmList);
-            }
+//            默认自评
+//            if (insertDutySmList.size() > 0) {
+//                for(ScoreDutySm item:insertDutySmList){
+//                    scoreDutySmService.insertSelective(item);
+//                }
+//            }
             for (UserDto dto : userDtoList) {
                 MonthSummary update = new MonthSummary();
                 update.setSerialno(dto.getSerialno());
@@ -359,13 +365,21 @@ public class UserDtoController {
         }
     }
 
+//    private void getDutyShengChengResult(String year, String month, List<String> scoreTypeList, List<UserDto> bdfrUserDboList,
+//                                         List<Duty> dutyList, List<Score> scoreList,
+//                                         List<ScoreHistory> historyList, List<ScoreHistory> bdfrHistoryList,
+//                                         List<ScoreFlow> bdfrFlowList, List<ScoreDetail> bdfrDetailList,
+//                                         List<ScoreFlow> insertFlowList, List<ScoreFlow> updateFlowList,
+//                                         List<ScoreHistory> insertHistoryList, List<ScoreHistory> updateHistoryList,
+//                                         List<ScoreDetail> insertDetailList, List<ScoreDutySm> dutySmList, List<ScoreDutySm> insertDutySmList, String dbtype) {
+
     private void getDutyShengChengResult(String year, String month, List<String> scoreTypeList, List<UserDto> bdfrUserDboList,
                                          List<Duty> dutyList, List<Score> scoreList,
                                          List<ScoreHistory> historyList, List<ScoreHistory> bdfrHistoryList,
                                          List<ScoreFlow> bdfrFlowList, List<ScoreDetail> bdfrDetailList,
                                          List<ScoreFlow> insertFlowList, List<ScoreFlow> updateFlowList,
                                          List<ScoreHistory> insertHistoryList, List<ScoreHistory> updateHistoryList,
-                                         List<ScoreDetail> insertDetailList, List<ScoreDutySm> dutySmList, List<ScoreDutySm> insertDutySmList, String dbtype) {
+                                         List<ScoreDetail> insertDetailList, String dbtype) {
         List<Score> queryScoreListEF = new ArrayList<>();
         // 查询
         List<Duty> queryDutyList = new ArrayList<>();
@@ -374,18 +388,20 @@ public class UserDtoController {
         List<ScoreFlow> queryFlowList = new ArrayList<>();
         List<ScoreFlow> queryHbFlowList = new ArrayList<>();
         List<ScoreDetail> queryDetailList = new ArrayList<>();
-        List<ScoreDutySm> queryDutySmList = new ArrayList<>();
+//        默认自评
+//        List<ScoreDutySm> queryDutySmList = new ArrayList<>();
 
         Double sumScore = 0.0;
         Double ratio = 0.0;
         long count = 0;
-        boolean isDutySm = false;
+//        默认自评
+//        boolean isDutySm = false;
         List<String> fSerialNoList = new ArrayList<>();
         boolean isEFSerialNo = false;
         for (UserDto dto : bdfrUserDboList) {
             queryDutyList = dutyList.stream().filter(s -> s.getStationcode().equals(dto.getStationcode())).collect(Collectors.toList());
-
-            isDutySm = false;
+//        默认自评
+//            isDutySm = false;
             queryHistoryList = bdfrHistoryList.stream().filter(s -> s.getUsercode().equals(dto.getUsercode())).collect(Collectors.toList());
             if (queryHistoryList.size() == 0) {
                 ScoreHistory history = new ScoreHistory();
@@ -406,7 +422,7 @@ public class UserDtoController {
                 historyList.add(queryHistoryList.get(0));
             }
             if (queryDutyList.size() > 0) {
-                queryDutySmList = dutySmList.stream().filter(s -> s.getScorredcode().equals(dto.getUsercode())).collect(Collectors.toList());
+//                queryDutySmList = dutySmList.stream().filter(s -> s.getScorredcode().equals(dto.getUsercode())).collect(Collectors.toList());
                 for (String scoreType : scoreTypeList) {
                     queryScoreList = scoreList.stream().filter(s -> s.getScoretype().equals(scoreType) &&
                             s.getScorredcode().equals(dto.getUsercode())).collect(Collectors.toList());
@@ -478,20 +494,20 @@ public class UserDtoController {
                                         detail.setDbtype(dbtype);
                                         insertDetailList.add(detail);
                                         sumScore += duty.getDefScore() == null ? 0 : Double.parseDouble(duty.getDefScore());
-
-                                        if (queryDutySmList.size() == 0 && !isDutySm) {
-                                            if(insertDutySmList.stream().filter(s-> s.getScorredcode().equals(dto.getUsercode()) &&
-                                                            s.getDutycode().equals(duty.getDutycode()) && s.getDbtype().equals(dbtype)).count() == 0) {
-                                                ScoreDutySm dutySm = new ScoreDutySm();
-                                                dutySm.setYear(year);
-                                                dutySm.setMonth(month);
-                                                dutySm.setDutycode(duty.getDutycode());
-                                                dutySm.setScorredcode(dto.getUsercode());
-                                                dutySm.setZpsm("");
-                                                dutySm.setDbtype(dbtype);
-                                                insertDutySmList.add(dutySm);
-                                            }
-                                        }
+//默认自评
+//                                        if (queryDutySmList.size() == 0 && !isDutySm) {
+//                                            if(insertDutySmList.stream().filter(s-> s.getScorredcode().equals(dto.getUsercode()) &&
+//                                                            s.getDutycode().equals(duty.getDutycode()) && s.getDbtype().equals(dbtype)).count() == 0) {
+//                                                ScoreDutySm dutySm = new ScoreDutySm();
+//                                                dutySm.setYear(year);
+//                                                dutySm.setMonth(month);
+//                                                dutySm.setDutycode(duty.getDutycode());
+//                                                dutySm.setScorredcode(dto.getUsercode());
+//                                                dutySm.setZpsm("");
+//                                                dutySm.setDbtype(dbtype);
+//                                                insertDutySmList.add(dutySm);
+//                                            }
+//                                        }
                                     }
                                 }
                                 scoreFlow.setScore(sumScore);
@@ -527,20 +543,20 @@ public class UserDtoController {
                                                     detail.setDbtype(dbtype);
                                                     insertDetailList.add(detail);
                                                     sumScore += duty.getDefScore() == null ? 0 : Double.parseDouble(duty.getDefScore());
-
-                                                    if (queryDutySmList.size() == 0 && !isDutySm) {
-                                                        if(insertDutySmList.stream().filter(s-> s.getScorredcode().equals(dto.getUsercode()) &&
-                                                                s.getDutycode().equals(duty.getDutycode()) && s.getDbtype().equals(dbtype)).count() == 0) {
-                                                            ScoreDutySm dutySm = new ScoreDutySm();
-                                                            dutySm.setYear(year);
-                                                            dutySm.setMonth(month);
-                                                            dutySm.setDutycode(duty.getDutycode());
-                                                            dutySm.setScorredcode(dto.getUsercode());
-                                                            dutySm.setZpsm("");
-                                                            dutySm.setDbtype(dbtype);
-                                                            insertDutySmList.add(dutySm);
-                                                        }
-                                                    }
+//默认自评
+//                                                    if (queryDutySmList.size() == 0 && !isDutySm) {
+//                                                        if(insertDutySmList.stream().filter(s-> s.getScorredcode().equals(dto.getUsercode()) &&
+//                                                                s.getDutycode().equals(duty.getDutycode()) && s.getDbtype().equals(dbtype)).count() == 0) {
+//                                                            ScoreDutySm dutySm = new ScoreDutySm();
+//                                                            dutySm.setYear(year);
+//                                                            dutySm.setMonth(month);
+//                                                            dutySm.setDutycode(duty.getDutycode());
+//                                                            dutySm.setScorredcode(dto.getUsercode());
+//                                                            dutySm.setZpsm("");
+//                                                            dutySm.setDbtype(dbtype);
+//                                                            insertDutySmList.add(dutySm);
+//                                                        }
+//                                                    }
                                                 }
                                             }
                                         }
@@ -626,13 +642,20 @@ public class UserDtoController {
         return false;
     }
 
+//    private void getShengChengResult(String year, String month, List<String> scoreTypeList, List<UserDto> bdfrUserDboList,
+//                                     List<Duty> dutyList, List<Score> scoreList,
+//                                     List<ScoreHistory> historyList, List<ScoreHistory> bdfrHistoryList,
+//                                     List<ScoreFlow> bdfrFlowList, List<ScoreDetail> bdfrDetailList,
+//                                     List<ScoreFlow> insertFlowList, List<ScoreFlow> updateFlowList,
+//                                     List<ScoreHistory> insertHistoryList, List<ScoreHistory> updateHistoryList,
+//                                     List<ScoreDetail> insertDetailList, List<ScoreDutySm> dutySmList, List<ScoreDutySm> insertDutySmList, String dbtype) {
     private void getShengChengResult(String year, String month, List<String> scoreTypeList, List<UserDto> bdfrUserDboList,
                                      List<Duty> dutyList, List<Score> scoreList,
                                      List<ScoreHistory> historyList, List<ScoreHistory> bdfrHistoryList,
                                      List<ScoreFlow> bdfrFlowList, List<ScoreDetail> bdfrDetailList,
                                      List<ScoreFlow> insertFlowList, List<ScoreFlow> updateFlowList,
                                      List<ScoreHistory> insertHistoryList, List<ScoreHistory> updateHistoryList,
-                                     List<ScoreDetail> insertDetailList, List<ScoreDutySm> dutySmList, List<ScoreDutySm> insertDutySmList, String dbtype) {
+                                     List<ScoreDetail> insertDetailList, String dbtype) {
         // 查询
         List<Duty> queryDutyList = new ArrayList<>();
         List<Score> queryScoreList = new ArrayList<>();
@@ -640,14 +663,17 @@ public class UserDtoController {
         List<ScoreFlow> queryFlowList = new ArrayList<>();
         List<ScoreFlow> queryHbFlowList = new ArrayList<>();
         List<ScoreDetail> queryDetailList = new ArrayList<>();
-        List<ScoreDutySm> queryDutySmList = new ArrayList<>();
+//        默认自评
+//        List<ScoreDutySm> queryDutySmList = new ArrayList<>();
 
         Double sumScore = 0.0;
         Double ratio = 0.0;
-        boolean isDutySm = false;
+//        默认自评
+//        boolean isDutySm = false;
         for (UserDto dto : bdfrUserDboList) {
             queryDutyList = dutyList.stream().filter(s -> s.getDbbk().equals(dto.getDbbk())).collect(Collectors.toList());
-            isDutySm = false;
+//        默认自评
+//            isDutySm = false;
             queryHistoryList = bdfrHistoryList.stream().filter(s -> s.getUsercode().equals(dto.getUsercode())).collect(Collectors.toList());
             if (queryHistoryList.size() == 0) {
                 ScoreHistory history = new ScoreHistory();
@@ -669,7 +695,8 @@ public class UserDtoController {
             }
 
             if (queryDutyList.size() > 0) {
-                queryDutySmList = dutySmList.stream().filter(s -> s.getScorredcode().equals(dto.getUsercode())).collect(Collectors.toList());
+//                默认自评
+//                queryDutySmList = dutySmList.stream().filter(s -> s.getScorredcode().equals(dto.getUsercode())).collect(Collectors.toList());
                 for (String scoreType : scoreTypeList) {
                     queryScoreList = scoreList.stream().filter(s -> s.getScoretype().equals(scoreType) &&
                             s.getScorredcode().equals(dto.getUsercode())).collect(Collectors.toList());
@@ -719,17 +746,17 @@ public class UserDtoController {
                                     detail.setDbtype(dbtype);
                                     insertDetailList.add(detail);
                                     sumScore += duty.getDefScore() == null ? 0 : Double.parseDouble(duty.getDefScore());
-
-                                    if (queryDutySmList.size() == 0 && !isDutySm) {
-                                        ScoreDutySm dutySm = new ScoreDutySm();
-                                        dutySm.setYear(year);
-                                        dutySm.setMonth(month);
-                                        dutySm.setDutycode(duty.getDutycode());
-                                        dutySm.setScorredcode(dto.getUsercode());
-                                        dutySm.setZpsm("");
-                                        dutySm.setDbtype(dbtype);
-                                        insertDutySmList.add(dutySm);
-                                    }
+//                                  默认自评
+//                                    if (queryDutySmList.size() == 0 && !isDutySm) {
+//                                        ScoreDutySm dutySm = new ScoreDutySm();
+//                                        dutySm.setYear(year);
+//                                        dutySm.setMonth(month);
+//                                        dutySm.setDutycode(duty.getDutycode());
+//                                        dutySm.setScorredcode(dto.getUsercode());
+//                                        dutySm.setZpsm("");
+//                                        dutySm.setDbtype(dbtype);
+//                                        insertDutySmList.add(dutySm);
+//                                    }
                                 }
                                 scoreFlow.setScore(sumScore);
                                 insertFlowList.add(scoreFlow);
@@ -748,17 +775,17 @@ public class UserDtoController {
                                         detail.setDbtype(dbtype);
                                         insertDetailList.add(detail);
                                         sumScore += duty.getDefScore() == null ? 0 : Double.parseDouble(duty.getDefScore());
-
-                                        if (queryDutySmList.size() == 0 && !isDutySm) {
-                                            ScoreDutySm dutySm = new ScoreDutySm();
-                                            dutySm.setYear(year);
-                                            dutySm.setMonth(month);
-                                            dutySm.setDutycode(duty.getDutycode());
-                                            dutySm.setScorredcode(dto.getUsercode());
-                                            dutySm.setZpsm("");
-                                            dutySm.setDbtype(dbtype);
-                                            insertDutySmList.add(dutySm);
-                                        }
+//                                      默认自评
+//                                        if (queryDutySmList.size() == 0 && !isDutySm) {
+//                                            ScoreDutySm dutySm = new ScoreDutySm();
+//                                            dutySm.setYear(year);
+//                                            dutySm.setMonth(month);
+//                                            dutySm.setDutycode(duty.getDutycode());
+//                                            dutySm.setScorredcode(dto.getUsercode());
+//                                            dutySm.setZpsm("");
+//                                            dutySm.setDbtype(dbtype);
+//                                            insertDutySmList.add(dutySm);
+//                                        }
 
                                     }
                                 }
@@ -767,7 +794,8 @@ public class UserDtoController {
                                     updateFlowList.add(updateFlow);
                                 }
                             }
-                            isDutySm = true;
+//                            默认自评
+//                            isDutySm = true;
                         }
                     }
                 }
@@ -991,6 +1019,7 @@ public class UserDtoController {
         ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
         if (setTime != null) {
             int count = summaryService.updateFinishGradeAll(setTime.getYear(), setTime.getMonth(), dbtype,postType);
+            summaryService.updateFinishGradeScorringAll(setTime.getYear(), setTime.getMonth(), dbtype);
             if (count > 0) {
                 map.put("msg", "全部修改季结评分完成成功");
                 map.put("code", 0);
@@ -1464,18 +1493,26 @@ public class UserDtoController {
             try {
                 postType = history.getDbtype().equals("2") ? postType : null;
                 String qrcode = "bpfr";
+                String year = history.getYear();
+                String month = history.getMonth();
+                boolean isDq = true;
                 ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth("", "", history.getDbtype());
-                if (history.getYear() != null && !history.getYear().equals("") && history.getMonth() != null && !history.getMonth().equals("")) {
-                    manualSetTime.setYear(history.getYear());
-                    manualSetTime.setMonth(history.getMonth());
+                if(year !=null && !year.equals("") && month!=null && !month.equals("")) {
+                    if(!manualSetTime.getYear().equals(year) || !manualSetTime.getMonth().equals(month)) {
+                        manualSetTime.setYear(year);
+                        manualSetTime.setMonth(month);
+                        manualSetTime.setDbtype(history.getDbtype());
+                        isDq = false;
+                    }
                 }
+                //生成被打分人数据，自动生成 默认评分此处不执行
                 //初始化列表
-                initUserList(map, state, qrcode, manualSetTime, postType,history.getDbbk());
+//                initUserList(map, state, qrcode, manualSetTime, postType,history.getDbbk(),isDq);
                 PageHelper.startPage(pageNum, pageSize);
 
                 history.setYear(manualSetTime.getYear());
                 history.setMonth(manualSetTime.getMonth());
-                historieList = historyService.selectHistoryList(history,qrcode,postType);
+                historieList = historyService.selectHistoryList(history,qrcode,postType,isDq);
                 PageInfo<ScoreHistory> pageInfo = new PageInfo<>(historieList);
                 historieList = pageInfo.getList();
                 map.put("totalPages", pageInfo.getTotal());
@@ -1497,8 +1534,10 @@ public class UserDtoController {
 
     }
 
-    private void initUserList(ModelMap map, String state, String qrcode, ManualSetTime manualSetTime,String postType,String dbbk) throws ParseException {
-        List<User> users = userService.findUserByRoleCode(qrcode, manualSetTime.getDbtype(),postType,dbbk);
+    //生成被打分人数据，自动生成 默认评分此处不执行
+    private void initUserList(ModelMap map, String state, String qrcode, ManualSetTime manualSetTime,String postType,String dbbk,boolean isDq) throws ParseException {
+        List<User> users = userService.findUserByRoleCode(
+                qrcode, manualSetTime.getDbtype(),postType,dbbk,manualSetTime.getYear(),manualSetTime.getMonth(),isDq);
 //        List<User> users = userService.findUserAllBySummary();
         //获取当前年份
         String year = CalendarUtil.getYear();
@@ -1519,11 +1558,11 @@ public class UserDtoController {
         if(scoreHistory.getDbtype().equals("1") && dbbk!=null && !dbbk.equals("")){
             scoreHistory.setDbbk(dbbk);
         }
-        List<ScoreHistory> historyList = historyService.selectUserHisotyList(scoreHistory, qrcode,postType);
+        List<ScoreHistory> historyList = historyService.selectUserHisotyList(scoreHistory, qrcode,postType,isDq);
         if (users.size() == 0) {
             map.put("msg", "数据为空");
             map.put("code", 0);
-        } else if (users.size() > historyList.size()) {
+        } else if (users.size() > historyList.size() && isDq) {
             List<ScoreHistory> scoreHistoryList = new ArrayList<>();
             for (User user : users) {
                 scoreHistory.setUsercode(user.getUsercode());
@@ -1569,13 +1608,24 @@ public class UserDtoController {
         if (usercode != null) {
             List<ScoreHistory> userDtoList;
             try {
+                String year = history.getYear();
+                String month = history.getMonth();
+                boolean isDq = true;
                 ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth("", "", history.getDbtype());
+                if(year !=null && !year.equals("") && month!=null && !month.equals("")) {
+                    if(!manualSetTime.getYear().equals(year) || !manualSetTime.getMonth().equals(month)) {
+                        manualSetTime.setYear(year);
+                        manualSetTime.setMonth(month);
+                        manualSetTime.setDbtype(history.getDbtype());
+                        isDq = false;
+                    }
+                }
                 //初始化列表
-                initGradeList(map, state, manualSetTime);
+                initGradeList(map, state, manualSetTime,isDq);
                 PageHelper.startPage(pageNum, pageSize);
                 history.setYear(manualSetTime.getYear());
                 history.setMonth(manualSetTime.getMonth());
-                userDtoList = historyService.gradeList(history);
+                userDtoList = historyService.gradeList(history,isDq);
                 PageInfo<ScoreHistory> pageInfo = new PageInfo<>(userDtoList);
                 map.put("totalPages", pageInfo.getTotal());
                 map.put("msg", "查询成功");
@@ -1596,8 +1646,8 @@ public class UserDtoController {
 
     }
 
-    private void initGradeList(ModelMap map, String state, ManualSetTime manualSetTime) throws ParseException {
-        List<User> users = userService.selectUserPfr(manualSetTime.getDbtype());
+    private void initGradeList(ModelMap map, String state, ManualSetTime manualSetTime,boolean isDq) throws ParseException {
+        List<User> users = userService.selectUserPfr(manualSetTime.getDbtype(),manualSetTime.getYear(),manualSetTime.getMonth(),isDq);
         //获取当前年份selectUserPfr
         String year = CalendarUtil.getYear();
         //获取当前月份
@@ -1615,11 +1665,11 @@ public class UserDtoController {
         scoreHistory.setMonth(manualSetTime.getMonth());
         scoreHistory.setDbtype(manualSetTime.getDbtype());
         // 查询打分用户
-        List<ScoreHistory> historyList = historyService.selectGradeHisotyList(scoreHistory);
+        List<ScoreHistory> historyList = historyService.selectGradeHisotyList(scoreHistory,isDq);
         if (users.size() == 0) {
             map.put("msg", "故数据为空");
             map.put("code", 0);
-        } else if (users.size() > historyList.size()) {
+        } else if (users.size() > historyList.size() && isDq) {
             List<ScoreHistory> scoreHistoryList = new ArrayList<>();
             for (User user : users) {
                 scoreHistory.setUsercode(user.getUsercode());
@@ -1671,7 +1721,7 @@ public class UserDtoController {
         dto.setMonth(info1.getMonth());
         dto.setState(info1.getState());
         dto.setScorestatus(info1.getScorestatus());
-        userDtos = historyService.gradeList(dto);
+        userDtos = historyService.gradeList(dto,false);
         // 创建ExportExcel对象
         try {
             // 獲取工作表
@@ -1749,7 +1799,7 @@ public class UserDtoController {
         dto.setState(info1.getState());
         dto.setScorestatus(info1.getScorestatus());
         dto.setDbtype(info1.getDbtype());
-        userDtos = historyService.selectHistoryList(dto, null,null);
+        userDtos = historyService.selectHistoryList(dto, null,null,true);
         // 创建ExportExcel对象
         try {
             // 獲取工作表

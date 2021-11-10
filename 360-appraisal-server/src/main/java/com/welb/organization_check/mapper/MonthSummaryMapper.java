@@ -28,6 +28,8 @@ public interface MonthSummaryMapper {
 
     int updateFinishGradeAll(String year,String month,String dbtype,String postType);
 
+    int updateFinishGradeScorringAll(String year,String month,String dbtype);
+
     MonthSummary selectByPrimaryKey(String serialno,String dbtype);
 
     int updateByPrimaryKeySelective(MonthSummary summary);

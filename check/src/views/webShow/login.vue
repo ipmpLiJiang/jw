@@ -114,6 +114,7 @@ export default {
           .then((response) => {
             if (response.data.code == 0) {
               response.data.data.dbtype = this.dbtype
+              response.data.data.active = 0
               this.$store.commit("$_setStorage", {
                 user: response.data.data,
               });

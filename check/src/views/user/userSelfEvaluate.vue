@@ -100,7 +100,7 @@
           label="状态"
         >
           <template slot-scope="scope">
-            <span v-if="scope.row.state == 6">进行中</span>
+            <span v-if="scope.row.state == 6">评分中</span>
             <span v-else-if="scope.row.state == 5">自评中</span>
             <span v-else-if="scope.row.state == 7">已完成</span>
           </template>

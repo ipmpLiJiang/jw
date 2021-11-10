@@ -97,4 +97,5 @@ public class ScoreStationServiceImpl implements IScoreStationService {
     public List<ScoreStation> selectScoreStationByScorredTypeDuty(String scorredstationcode,String scoretype,String dutycode, String dbtype){
         return scoreStationMapper.selectScoreStationByScorredTypeDuty(scorredstationcode,scoretype,dutycode,dbtype);
     }
+
 }

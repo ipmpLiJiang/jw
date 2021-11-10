@@ -35,28 +35,28 @@ public interface IScoreHistoryService {
      * @param history
      * @return
      */
-    List<ScoreHistory> selectHistoryList(ScoreHistory history,String qrcode,String postType);
+    List<ScoreHistory> selectHistoryList(ScoreHistory history,String qrcode,String postType,boolean isDq);
 
     /**
      * 查询所有打分用户的历史数据
      * @param history
      * @return
      */
-    List<ScoreHistory>gradeList(ScoreHistory history);
+    List<ScoreHistory>gradeList(ScoreHistory history,boolean isDq);
 
     /**
      * 查询所有打分用户的当前月度评分数据
      * @param history
      * @return
      */
-    List<ScoreHistory>selectGradeHisotyList(ScoreHistory history);
+    List<ScoreHistory>selectGradeHisotyList(ScoreHistory history,boolean isDq);
 
     /**
      * 查询所有打分用户的当前月度评分数据
      * @param history
      * @return
      */
-    List<ScoreHistory>selectUserHisotyList(ScoreHistory history,String qrcode,String postType);
+    List<ScoreHistory>selectUserHisotyList(ScoreHistory history,String qrcode,String postType,boolean isDq);
 
 
     /**

@@ -8,6 +8,14 @@ export function mobilGetList(data) {
     })
 }
 //移动端考核详情
+export function mobilGetZpList(data) {
+    return fetch({
+        url: '/mobile/listZp',
+        method: 'post',
+        data: data
+    })
+}
+//移动端考核详情
 export function mobilGetDetail(data) {
     return fetch({
         url: '/mobile/getDetail',

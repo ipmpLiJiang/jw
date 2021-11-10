@@ -1215,24 +1215,14 @@ public class MobileController {
                 for (Role role : roles) {
                     if (role.getRolecode().equals("50") || role.getRolecode().equals("100") ||
                             role.getRolecode().equals("150") || role.getRolecode().equals("200") || role.getRolecode().equals("300")) {
-                        String state = (String) req.getSession().getAttribute("state");
-                        List<UserSummaryDto> summarys = new ArrayList<>();
-                        //获取当前年份
-                        String year = CalendarUtil.getYear();
-                        //获取当前月份
-                        String month = CalendarUtil.getMonth();
-                        //获取当前月度
-                        //  String quarter = CalendarUtil.getQuarter(month);
-                        //当前上一个月度
-                        int count = Integer.parseInt(month.trim()) - 1;
-                        //获取当前系统时间
-                        String sysTime = DateUtil.getTime();
-                        if (state.equals("1")) {
-                            //手动考核-查看所有季节总结
-                            manualSelectUserDtoLike(usercode, dto, map, summarys, year, month, count, sysTime, dbtype);
+//                        List<UserSummaryDto> summarys = new ArrayList<>();
+                        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
+                        if (setTime != null) {
+//                            getSummarys(usercode, dto, map, summarys, setTime.getYear(), setTime.getMonth(), dbtype);
+                            getSummarys(usercode,dto,map,setTime.getYear(), setTime.getMonth());
                         } else {
-                            //自动考核-查看所有季节总结
-                            automaticSelectUserDtoLike(usercode, dto, map, summarys, year, count);
+                            map.put("msg", "该考核季度为空");
+                            map.put("code", 1);
                         }
                         break;
                     } else {
@@ -1253,35 +1243,99 @@ public class MobileController {
 
     }
 
-    private void manualSelectUserDtoLike(String usercode, UserSummaryDto dto, ModelMap map, List<UserSummaryDto> summarys, String year, String quarter, int count, String sysTime, String dbtype) throws ParseException {
-        String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
-        if (setTime != null) {
-            //开始新的月度考核
-            month = quarter;
-            getSummarys(usercode, dto, map, summarys, setTime.getYear(), setTime.getMonth(), dbtype);
-        }
-    }
-
-    private void automaticSelectUserDtoLike(String usercode, UserSummaryDto dto, ModelMap map, List<UserSummaryDto> summarys, String year, int count) {
-        String month;
-        if (count == 0) {
-            int lastyear = Integer.parseInt(year.trim()) - 1;
-            year = String.valueOf(lastyear);
-            month = "12";
-
-        } else {
-            month = String.valueOf(count);
-        }
+    @RequestMapping(value = "/listZp", produces = "application/json;charset=utf-8")
+    public Object selectUserSummaryScorredCode(UserSummaryDto summaryDto, HttpServletRequest req) {
+        ModelMap map = new ModelMap();
         try {
-            // getSummarys(usercode, dto, map, summarys, year, month);
+            List<Role> roles = roleService.selectRoleListByUserCode(summaryDto.getUsercode());
+            if (roles.size() > 0) {
+                for (Role role : roles) {
+                    if (role.getRolecode().equals("50") || role.getRolecode().equals("100") ||
+                            role.getRolecode().equals("150") || role.getRolecode().equals("200") || role.getRolecode().equals("300")) {
+                        String state = (String) req.getSession().getAttribute("state");
+                        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", summaryDto.getDbtype());
+
+                        if (setTime != null) {
+                            summaryDto.setYear(setTime.getYear());
+                            summaryDto.setMonth(setTime.getMonth());
+                            summaryDto.setScorredcode(summaryDto.getUsercode());
+                            List<UserSummaryDto> dtos = summaryDtoService.selectUserSummaryScorredCode(summaryDto);
+                            getSummaryInfo(dtos, summaryDto.getDbtype());
+                            map.put("totalPages", dtos.size());
+                            map.put("msg", "查询自评列表数据成功");
+                            map.put("data", dtos);
+                            map.put("code", 0);
+                        } else {
+                            map.put("msg", "当前年月没有季度评分数据");
+                            map.put("code", 1);
+                        }
+                        break;
+                    } else {
+                        map.put("msg", "该用户不是组织部成员，没有权限进入");
+                        map.put("code", 1);
+                    }
+                }
+            } else {
+                map.put("msg", "该用户没有角色或用户不存在,请联系管理员");
+                map.put("code", 1);
+            }
         } catch (Exception e) {
-            log.error(LogUtil.getTrace(e));
-            map.put("msg", "查询待评分列表数据失败");
-            map.put("code", 1);
+            e.printStackTrace();
+            map.put("msg", "用户信息异常");
+            map.put("code", 812);
+        }
+        return map;
+    }
+
+    private void getSummaryInfo(List<UserSummaryDto> dtos, String dbtype) {
+        for (UserSummaryDto dto : dtos) {
+            User user = userService.findUserByUserCode(dto.getScorredcode());
+            if (user != null) {
+                //获取被评分人的编号和姓名
+                dto.setScorredname(user.getUsername());
+                Station station = stationService.selectByStationCode(dto.getStationcode());
+                dto.setStationcode(user.getStationcode());
+                if (station != null) {//获取岗位的编号和名称
+                    dto.setStationname(station.getStationname());
+                    Department department = departmentService.selectByDeptCode(station.getDepartmentcode());
+                    dto.setDepartmentcode(station.getDepartmentcode());
+                    if (department != null) {//获取部门的编号和名字
+                        dto.setDepartmentname(department.getDepartmentname());
+                    } else {
+                        dto.setDepartmentname("");
+                    }
+                } else {
+                    dto.setStationname("");
+                }
+            } else {
+                dto.setUsername("");
+            }
+            String mesrialno = dto.getSerialno();
+            String scorringcode = dto.getScorringcode();
+            List<ScoreFlow> flow = flowService.selectByScoreFlow(mesrialno, scorringcode, dbtype);
+            if (flow.size() > 0) {
+                Double sumScore = flow.stream().mapToDouble(ScoreFlow::getScore).sum();
+//                dto.setStatus(sumScore.toString());
+                dto.setStatus(sumScore > 0 ? "1" : "2");
+//                for (ScoreFlow flow1 : flow) {
+//                    String totalscore = String.valueOf(flow1.getScore());
+//                    dto.setStatus(totalscore);
+//                }
+            } else {
+                dto.setStatus("0");
+            }
+            if (scorringcode != null) {
+                List<ScoreFlow> flowScorringScorredcode = flowService.selectByScorringScoredFlow(mesrialno, scorringcode, user.getUsercode(), dbtype);
+                if (flowScorringScorredcode.size() > 0) {
+                    dto.setScoreState(flowScorringScorredcode.get(0).getScoreState());
+                } else {
+                    dto.setScoreState("1");
+                }
+            }
         }
     }
 
+    //手机端 默认显示状态为 5
     private void getSummarys(String usercode, UserSummaryDto dto, ModelMap map, List<UserSummaryDto> summarys, String year, String month, String dbtype) {
         List<UserSummaryDto> summaryList;
         dto.setMonth(month);
@@ -1309,6 +1363,28 @@ public class MobileController {
         map.put("msg", "查询待评分列表数据成功");
         map.put("data", summarys);
         map.put("code", 0);
+    }
+    //手机端 默认显示状态为 5,6
+    private void getSummarys(String usercode,UserSummaryDto dto, ModelMap map,  String year, String month) {
+        try {
+            dto.setYear(year);
+            dto.setMonth(month);
+            dto.setScorringcode(usercode);
+            List<UserSummaryDto> dtos = summaryDtoService.selectUserSummary(dto);
+            getSummaryInfo(dtos, dto.getDbtype());
+            if(dtos.size()>0) {
+                dtos = dtos.stream().sorted(Comparator.comparing(UserSummaryDto::getState).
+                        thenComparing(Comparator.comparing(UserSummaryDto::getScoreState))).collect(Collectors.toList());
+            }
+            map.put("totalPages", dtos.size());
+            map.put("msg", "查询待评分列表数据成功");
+            map.put("data", dtos);
+            map.put("code", 0);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            map.put("msg", "查询待评分列表数据失败");
+            map.put("code", 1);
+        }
     }
 
 

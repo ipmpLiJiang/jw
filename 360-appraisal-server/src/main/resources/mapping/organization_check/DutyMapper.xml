@@ -269,6 +269,12 @@
         order by OrderId
     </select>
 
+    <select id="queryDutyByDbbkCode" resultMap="BaseResultMap">
+        select DutyCode, DutyName, DutyType, AScore, BScore, CScore, DScore,defScore from duty
+        where dbbk= #{dbbk} and dbtype=#{dbtype}
+        order by OrderId
+    </select>
+
     <!--通过ScorringCode查询指标类型为关键量化指标的数据-->
     <select id="queryDutyByScorringCode" resultMap="BaseResultMap">
         SELECT
@@ -287,4 +293,8 @@
         ORDER BY
             d.OrderId
     </select>
+    <select id="selectDutyAllByDbtype" resultMap="BaseResultMap">
+        select * from duty where dbtype=#{dbtype}
+    </select>
+
 </mapper>

@@ -328,20 +328,44 @@
             and r.RoleCode=ur.RoleCode
             <if test="qrcode==null">
             AND u.UserCode in (
-                select code from (
-                    SELECT ScorredCode code FROM score WHERE dbtype =#{history.dbtype} union
-                    SELECT ScorringCode code FROM score WHERE dbtype =#{history.dbtype}
-                ) a
+                <if test="isDq">
+                    select code from (
+                        SELECT ScorredCode code FROM score WHERE dbtype =#{history.dbtype} union
+                        SELECT ScorringCode code FROM score WHERE dbtype =#{history.dbtype}
+                    ) a
+                </if>
+                <if test="!isDq">
+                    select code from (
+                        select sf.ScoredCode code from monthsummary m,scoreflow sf where m.SerialNo = sf.MSerialNo and
+                        m.dbtype = sf.dbtype and m.year = #{history.year} and m.month=#{history.month} and m.dbtype=#{history.dbtype}
+                        select sf.ScorringCode code from monthsummary m,scoreflow sf where m.SerialNo = sf.MSerialNo and
+                        m.dbtype = sf.dbtype and m.year = #{history.year} and m.month=#{history.month} and m.dbtype=#{history.dbtype}
+                    ) a
+                </if>
             )
             </if>
             <if test='qrcode!=null and qrcode=="pfr"'>
                 AND u.UserCode in (
-                select ScorringCode from (SELECT DISTINCT ScorringCode FROM score WHERE dbtype =#{history.dbtype}) a
+                <if test="isDq">
+                    select ScorringCode from (SELECT DISTINCT ScorringCode FROM score WHERE dbtype =#{history.dbtype}) a
+                </if>
+                <if test="!isDq">
+                    select ScorringCode from (
+                    select DISTINCT sf.ScorringCode from monthsummary m,scoreflow sf where m.SerialNo = sf.MSerialNo and
+                    m.dbtype = sf.dbtype and m.year = #{history.year} and m.month=#{history.month} and m.dbtype=#{history.dbtype}) a
+                </if>
                 )
             </if>
             <if test='qrcode!=null and qrcode=="bpfr"'>
                 AND u.UserCode in (
-                select ScorredCode from (SELECT DISTINCT ScorredCode FROM score WHERE dbtype =#{history.dbtype}) a
+                <if test="isDq">
+                    select ScorredCode from (SELECT DISTINCT ScorredCode FROM score WHERE dbtype =#{history.dbtype}) a
+                </if>
+                <if test="!isDq">
+                    select ScoredCode from (
+                    select DISTINCT sf.ScoredCode from monthsummary m,scoreflow sf where m.SerialNo = sf.MSerialNo and
+                    m.dbtype = sf.dbtype and m.year = #{history.year} and m.month=#{history.month} and m.dbtype=#{history.dbtype}) a
+                </if>
                 )
             </if>
             and h.Year=m.Year
@@ -359,34 +383,34 @@
         r.RoleCode,r.RoleName
         from scorehistory h, user u ,monthsummary m,station s,department d,role r,user_role ur
         <where>
-            <if test="username!=null and username!=''">
-                and u.UserName like concat('%',#{username},'%')
+            <if test="history.username!=null and history.username!=''">
+                and u.UserName like concat('%',#{history.username},'%')
             </if>
-            <if test="stationcode!=null and stationcode!=''">
-                and u.StationCode=#{stationcode}
+            <if test="history.stationcode!=null and history.stationcode!=''">
+                and u.StationCode=#{history.stationcode}
             </if>
 
-            <if test="year!=null and year!=''">
-                and h.Year=#{year}
+            <if test="history.year!=null and history.year!=''">
+                and h.Year=#{history.year}
             </if>
-            <if test="month!=null and month !=''">
-                and h.Month=#{month}
+            <if test="history.month!=null and history.month !=''">
+                and h.Month=#{history.month}
             </if>
-            <if test="state!=null and state !='' and state!='0'.toString()">
-                and m.State=#{state}
+            <if test="history.state!=null and history.state !='' and history.state!='0'.toString()">
+                and m.State=#{history.state}
             </if>
-            <if test='state=="0"'>
+            <if test='history.state=="0"'>
                 and (m.Title is null or m.Title='')
                 and (m.Content is null or m.Content='')
             </if>
-            <if test="scorestatus!=null and scorestatus !=''">
-                and h.ScoreStatus=#{scorestatus}
+            <if test="history.scorestatus!=null and history.scorestatus !=''">
+                and h.ScoreStatus=#{history.scorestatus}
             </if>
-            <if test="dbtype != null and dbtype !=''">
-                and m.dbtype = #{dbtype,jdbcType=VARCHAR}
+            <if test="history.dbtype != null and history.dbtype !=''">
+                and m.dbtype = #{history.dbtype,jdbcType=VARCHAR}
             </if>
-            <if test="dbbk != null and dbbk !=''">
-                and m.dbbk = #{dbbk,jdbcType=VARCHAR}
+            <if test="history.dbbk != null and history.dbbk !=''">
+                and m.dbbk = #{history.dbbk,jdbcType=VARCHAR}
             </if>
             and u.UserCode=h.UserCode
             and u.UserCode =m.EmployeeCode
@@ -397,7 +421,14 @@
             and u.UserCode=ur.UserCode
             and r.RoleCode=ur.RoleCode
             and u.userCode in(
-            select code from (select distinct ScorringCode code from score where dbtype= #{dbtype}) a
+            <if test="isDq">
+            select code from (select distinct ScorringCode code from score where dbtype= #{history.dbtype}) a
+            </if>
+            <if test="!isDq">
+                select ScorringCode from (
+                select DISTINCT sf.ScorringCode from monthsummary m,scoreflow sf where m.SerialNo = sf.MSerialNo and
+                m.dbtype = sf.dbtype and m.year = #{history.year} and m.month=#{history.month} and m.dbtype=#{history.dbtype}) a
+            </if>
             )
             and h.Year=m.Year
             and m.Month=h.Month
@@ -413,17 +444,24 @@
     where h.UserCode=u.UserCode
     and  u.UserCode=ur.UserCode
     and u.userCode in(
-        select code from (select distinct ScorringCode code from score where dbtype= #{dbtype}) a
+        <if test="isDq">
+            select code from (select distinct ScorringCode code from score where dbtype= #{history.dbtype}) a
+        </if>
+        <if test="!isDq">
+            select ScorringCode from (
+            select DISTINCT sf.ScorringCode from monthsummary m,scoreflow sf where m.SerialNo = sf.MSerialNo and
+            m.dbtype = sf.dbtype and m.year = #{history.year} and m.month=#{history.month} and m.dbtype=#{history.dbtype}) a
+        </if>
     )
     and  u.Flag='0'
     and  u.UserState='1'
-    and  h.Year=#{year}
-    and  h.Month=#{month}
-        <if test='dbtype != null and dbtype !=""'>
-            and h.dbtype = #{dbtype}
+    and  h.Year=#{history.year}
+    and  h.Month=#{history.month}
+        <if test='history.dbtype != null and history.dbtype !=""'>
+            and h.dbtype = #{history.dbtype}
         </if>
-        <if test='dbbk != null and dbbk !=""'>
-            and h.dbbk = #{dbbk}
+        <if test='history.dbbk != null and history.dbbk !=""'>
+            and h.dbbk = #{history.dbbk}
         </if>
   </select>
     <!--查询当前月度打分用户完成情况数据-->
@@ -444,24 +482,48 @@
     <if test="history.dbbk != null and history.dbbk !=''">
         and u.dbbk = #{history.dbbk,jdbcType=VARCHAR}
     </if>
-    <if test="qrcode==null">
-        AND u.UserCode in (
-            select code from (
+        <if test="qrcode==null">
+            AND u.UserCode in (
+            <if test="isDq">
+                select code from (
                 SELECT ScorredCode code FROM score WHERE dbtype =#{history.dbtype} union
                 SELECT ScorringCode code FROM score WHERE dbtype =#{history.dbtype}
-            ) a
-        )
-    </if>
-    <if test='qrcode!=null and qrcode=="pfr"'>
-        AND u.UserCode in (
-        select ScorringCode from (SELECT DISTINCT ScorringCode FROM score WHERE dbtype =#{history.dbtype}) a
-        )
-    </if>
-    <if test='qrcode!=null and qrcode=="bpfr"'>
-        AND u.UserCode in (
-        select ScorredCode from (SELECT DISTINCT ScorredCode FROM score WHERE dbtype =#{history.dbtype}) a
-        )
-    </if>
+                ) a
+            </if>
+            <if test="!isDq">
+                select code from (
+                select sf.ScoredCode code from monthsummary m,scoreflow sf where m.SerialNo = sf.MSerialNo and
+                m.dbtype = sf.dbtype and m.year = #{history.year} and m.month=#{history.month} and m.dbtype=#{history.dbtype}
+                select sf.ScorringCode code from monthsummary m,scoreflow sf where m.SerialNo = sf.MSerialNo and
+                m.dbtype = sf.dbtype and m.year = #{history.year} and m.month=#{history.month} and m.dbtype=#{history.dbtype}
+                ) a
+            </if>
+            )
+        </if>
+        <if test='qrcode!=null and qrcode=="pfr"'>
+            AND u.UserCode in (
+            <if test="isDq">
+                select ScorringCode from (SELECT DISTINCT ScorringCode FROM score WHERE dbtype =#{history.dbtype}) a
+            </if>
+            <if test="!isDq">
+                select ScorringCode from (
+                select DISTINCT sf.ScorringCode from monthsummary m,scoreflow sf where m.SerialNo = sf.MSerialNo and
+                m.dbtype = sf.dbtype and m.year = #{history.year} and m.month=#{history.month} and m.dbtype=#{history.dbtype}) a
+            </if>
+            )
+        </if>
+        <if test='qrcode!=null and qrcode=="bpfr"'>
+            AND u.UserCode in (
+            <if test="isDq">
+                select ScorredCode from (SELECT DISTINCT ScorredCode FROM score WHERE dbtype =#{history.dbtype}) a
+            </if>
+            <if test="!isDq">
+                select ScoredCode from (
+                select DISTINCT sf.ScoredCode from monthsummary m,scoreflow sf where m.SerialNo = sf.MSerialNo and
+                m.dbtype = sf.dbtype and m.year = #{history.year} and m.month=#{history.month} and m.dbtype=#{history.dbtype}) a
+            </if>
+            )
+        </if>
   </select>
 
 

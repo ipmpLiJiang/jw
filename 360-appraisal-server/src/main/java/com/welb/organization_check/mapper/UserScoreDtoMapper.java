@@ -20,4 +20,9 @@ public interface UserScoreDtoMapper {
     List<UserScoreDto> findUserScore(@Param("year")String year, @Param("month")String month,@Param("typeList")List<String> typeList,@Param("dbtype")String dbtype);
 
     List<UserScoreDto> findUserDutyScore(@Param("year")String year, @Param("month")String month,@Param("employeeCode")String employeeCode,@Param("typeList")List<String> typeList,@Param("dbtype")String dbtype);
+
+    List<UserScoreDto> findUserFlowDetailScore(@Param("year")String year,
+                                               @Param("month")String month,
+                                               @Param("dbtype") String dbtype,
+                                               @Param("employeeCode")String employeeCode);
 }

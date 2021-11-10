@@ -94,7 +94,7 @@
             v-if="historyTotal"
           >总分：<span style="color:#f00;">{{historyTotal}}</span></li>
           <li class="li-title">
-            <div class="title">政治建设(总分15)</div>
+            <div class="title">政治建设(总分20)</div>
           </li>
           <li
             v-for="(item,index) in dutyJichu" :key="'zz'+index"
@@ -164,7 +164,7 @@
             </el-col>
           </li>
           <li class="li-title">
-            <div class="title">组织建设(总分25)</div>
+            <div class="title">组织建设(总分20)</div>
           </li>
           <li
             v-for="(item,index) in dutyZhongdian" :key="'zzjs'+index"
@@ -199,7 +199,7 @@
             </el-col>
           </li>
           <li class="li-title">
-            <div class="title">党建创新(总分25)</div>
+            <div class="title">党建创新(总分20)</div>
           </li>
           <li
             v-for="(item,index) in dutyMubiao" :key="'djcx'+index"
@@ -234,7 +234,7 @@
             </el-col>
           </li>
            <li class="li-title">
-            <div class="title">作风建设(总分25)</div>
+            <div class="title">作风建设(总分20)</div>
           </li>
            <li
             v-for="(item,index) in dutyZuofeng" :key="'zfjs'+index"

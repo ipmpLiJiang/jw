@@ -26,6 +26,8 @@ public interface StationMapper {
 
     List<Station>selectStationsByDeptCode(String departmentcode);
 
+    List<Station> selectStationByNotEF(@Param("stationcode") String stationcode);
+
     List<Station> selectStationScoreEF(String scorredStationCode,String scoreType,String dutyCode,String dbtype);
 
     List<Station> findStationByInCodeList(@Param("codeList") List<String> codeList);

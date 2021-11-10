@@ -14,10 +14,6 @@
               <span>{{detailData.username}}</span>
             </div>
             <div class="form-msg">
-              <span>账号：</span>
-              <span>{{detailData.usercode}}</span>
-            </div>
-            <div class="form-msg">
               <span>部门：</span>
               <span>{{detailData.departmentname}}</span>
             </div>
@@ -588,8 +584,6 @@ export default {
         }
         if (this.laberror != ''){
           this.$message.warning(this.laberror);
-          this.tableLoading = false;
-          this.submitLoading = false;
           return
         }
         data.dutyJiChu = JSON.stringify(data.dutyJiChu);
@@ -616,8 +610,6 @@ export default {
                   type: "error"
                 });
               }
-              this.tableLoading = false;
-              this.submitLoading = false;
             })
             .catch(error => {
               reject(error);
