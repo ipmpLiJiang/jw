@@ -112,4 +112,56 @@ public class ScoreDetail
     public void setZpsm(String zpsm) {
         this.zpsm = zpsm == null ? null : zpsm.trim();
     }
+
+
+    private String scoredcode;
+
+    private String scorringcode;
+
+    private String scorringname;
+
+    private String mserialno;
+
+    private String scoreState;
+
+    public String getScoredcode() {
+        return scoredcode;
+    }
+
+    public void setScoredcode(String scoredcode) {
+        this.scoredcode = scoredcode;
+    }
+
+    public String getScorringcode() {
+        return scorringcode;
+    }
+
+    public void setScorringcode(String scorringcode) {
+        this.scorringcode = scorringcode;
+    }
+
+    public String getScorringname() {
+        return scorringname;
+    }
+
+    public void setScorringname(String scorringname) {
+        this.scorringname = scorringname;
+    }
+
+    public String getMserialno() {
+        return mserialno;
+    }
+
+    public void setMserialno(String mserialno) {
+        this.mserialno = mserialno;
+    }
+
+    public String getScoreState() {
+        return scoreState;
+    }
+
+    public void setScoreState(String scoreState) {
+        this.scoreState = scoreState;
+    }
+
 }

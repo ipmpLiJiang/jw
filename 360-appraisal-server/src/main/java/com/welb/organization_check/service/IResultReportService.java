@@ -65,5 +65,5 @@ public interface IResultReportService {
 
     List<ResultReport> selectResultReportByYearMonth(String year, String month,String dbtype);
 
-    int deleteYM(String year,String month,String dbtype);
+    int deleteYM(String year,String month,String dbtype,String postType,String userCode);
 }

@@ -318,10 +318,11 @@ public class ScoreStationController {
                 scoreStation1.setDbtype(dbtype);
                 scoreStation1.setScorringstationcode(stationCode);
                 List<ScoreStation> selectScoreByCode = scoreStationService.selectTypeByCodeList(scoreStation1.getScorredstationcode(), scoreStation1.getScorringstationcode(), dbtype);
-                if (scoreStation1.getScorringstationcode().equals(scoreStation1.getScorredstationcode())) {
-                    flag = 1;
-                    break;
-                }
+//                可以加自己岗位来评分
+//                if (scoreStation1.getScorringstationcode().equals(scoreStation1.getScorredstationcode())) {
+//                    flag = 1;
+//                    break;
+//                }
                 if (selectScoreByCode.size() > 0) {
                     temp = true;
                     sb.append(stationName + "(" + scoretype + ")").append(";");
@@ -330,36 +331,36 @@ public class ScoreStationController {
                     scorringcode.add(scoreStation1.getScorringstationcode());
                 }
             }
-            if (flag == 1) {
-                map.put("msg", "不能添加被评分岗位作为评分岗位。");
+//          可以加自己岗位来评分
+//            if (flag == 1) {
+//                map.put("msg", "不能添加被评分岗位作为评分岗位。");
+//                map.put("code", 1);
+//            } else {
+            if (temp) {
+                sb.append("以上岗位已被选择为其他类评分岗位，请重新选择。");
+                map.put("msg", sb);
                 map.put("code", 1);
             } else {
-                if (temp) {
-                    sb.append("以上岗位已被选择为其他类评分岗位，请重新选择。");
-                    map.put("msg", sb);
-                    map.put("code", 1);
-                } else {
-                    if (scorringcode.size() == scorringstationcodes.length) {
-                        ScoreStation newScore = new ScoreStation();
-                        for (int i = 0; i < scorringcode.size(); i++) {
-                            newScore.setScorredstationcode(scoreStation.getScorredstationcode());
-                            newScore.setScoretype(scoreStation.getScoretype());
-                            newScore.setDbtype(dbtype);
-                            newScore.setScorringstationcode(scorringcode.get(i));
-                            int count = scoreStationService.insertSelective(newScore);
-                            ncount += count;
-                        }
-                        if (ncount > 0) {
-                            map.put("msg", "添加" + scoretype + "类评分岗位成功");
-                            map.put("code", 0);
-                        } else {
-                            map.put("msg", "添加" + scoretype + "类评分岗位失败");
-                            map.put("code", 1);
-                        }
+                if (scorringcode.size() == scorringstationcodes.length) {
+                    ScoreStation newScore = new ScoreStation();
+                    for (int i = 0; i < scorringcode.size(); i++) {
+                        newScore.setScorredstationcode(scoreStation.getScorredstationcode());
+                        newScore.setScoretype(scoreStation.getScoretype());
+                        newScore.setDbtype(dbtype);
+                        newScore.setScorringstationcode(scorringcode.get(i));
+                        int count = scoreStationService.insertSelective(newScore);
+                        ncount += count;
+                    }
+                    if (ncount > 0) {
+                        map.put("msg", "添加" + scoretype + "类评分岗位成功");
+                        map.put("code", 0);
+                    } else {
+                        map.put("msg", "添加" + scoretype + "类评分岗位失败");
+                        map.put("code", 1);
                     }
                 }
             }
-
+//            }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -412,35 +413,36 @@ public class ScoreStationController {
                                     && (s.getDutycode() == null || s.getDutycode().equals(""))
                     ).count();
                     if (count == 0) {
-                        if (flag == 0) {
-                            if (scoreStation.getScorredstationcode().equals(st.getStationcode())) {
-                                flag = 1;
-                            } else {
-                                for (String code : dutyCodeList) {
-                                    count = dutyScoreStationList.stream().filter(
-                                            s -> s.getScorringstationcode().equals(st.getStationcode())
-                                                    && s.getScorredstationcode().equals(scoreStation.getScorredstationcode())
-                                                    && s.getDutycode().equals(code)
-                                    ).count();
+//                        if (flag == 0) {
+//                            可以加自己岗位评分
+//                            if (scoreStation.getScorredstationcode().equals(st.getStationcode())) {
+//                                flag = 1;
+//                            } else {
+                        for (String code : dutyCodeList) {
+                            count = dutyScoreStationList.stream().filter(
+                                    s -> s.getScorringstationcode().equals(st.getStationcode())
+                                            && s.getScorredstationcode().equals(scoreStation.getScorredstationcode())
+                                            && s.getDutycode().equals(code)
+                            ).count();
 
-                                    if (count == 0) {
-                                        ScoreStation insert = new ScoreStation();
-                                        insert.setScoretype(scoreType);
-                                        insert.setScorredstationcode(scoreStation.getScorredstationcode());
-                                        insert.setScorringstationcode(st.getStationcode());
-                                        insert.setDutycode(code);
-                                        insert.setDbtype(scoreStation.getDbtype());
-                                        createList.add(insert);
-                                    } else {
-                                        temp1 = true;
-                                        userMsg = st.getStationname() + "(" + st.getDepartmentname() + ")";
-                                        if (sb1.indexOf(userMsg) == -1) {
-                                            sb1.append(userMsg).append(";");
-                                        }
-                                    }
+                            if (count == 0) {
+                                ScoreStation insert = new ScoreStation();
+                                insert.setScoretype(scoreType);
+                                insert.setScorredstationcode(scoreStation.getScorredstationcode());
+                                insert.setScorringstationcode(st.getStationcode());
+                                insert.setDutycode(code);
+                                insert.setDbtype(scoreStation.getDbtype());
+                                createList.add(insert);
+                            } else {
+                                temp1 = true;
+                                userMsg = st.getStationname() + "(" + st.getDepartmentname() + ")";
+                                if (sb1.indexOf(userMsg) == -1) {
+                                    sb1.append(userMsg).append(";");
                                 }
                             }
                         }
+//                            }
+//                        }
                     } else {
                         temp1 = true;
                         userMsg = st.getStationname() + "(" + st.getDepartmentname() + ")";
@@ -449,33 +451,33 @@ public class ScoreStationController {
                         }
                     }
                 }
-
-                if (flag == 1) {
-                    map.put("msg", "不能添加被评分岗位作为评分岗位。");
-                    map.put("code", 1);
-                } else {
-                    boolean isAdd = false;
-                    if (createList.size() > 0) {
-                        for (ScoreStation insert : createList) {
-                            scoreStationService.insertSelective(insert);
-                        }
-                        isAdd = true;
+//              可以加自己岗位评分
+//                if (flag == 1) {
+//                    map.put("msg", "不能添加被评分岗位作为评分岗位。");
+//                    map.put("code", 1);
+//                } else {
+                boolean isAdd = false;
+                if (createList.size() > 0) {
+                    for (ScoreStation insert : createList) {
+                        scoreStationService.insertSelective(insert);
                     }
+                    isAdd = true;
+                }
 
-                    if (temp1) {
-                        sb1.append("以上岗位已添加或已被其他选择为类评分岗位，请重新选择。");
-                        map.put("msg", (isAdd ? "部分评分岗位添加成功。" : "") + sb1);
-                        map.put("code", isAdd ? 0 : 1);
+                if (temp1) {
+                    sb1.append("以上岗位已添加或已被其他选择为类评分岗位，请重新选择。");
+                    map.put("msg", (isAdd ? "部分评分岗位添加成功。" : "") + sb1);
+                    map.put("code", isAdd ? 0 : 1);
+                } else {
+                    if (isAdd) {
+                        map.put("msg", "添加" + scoreType + "类评分岗位成功.");
+                        map.put("code", 0);
                     } else {
-                        if (isAdd) {
-                            map.put("msg", "添加" + scoreType + "类评分岗位成功.");
-                            map.put("code", 0);
-                        } else {
-                            map.put("msg", "添加" + scoreType + "类评分岗位失败.");
-                            map.put("code", 1);
-                        }
+                        map.put("msg", "添加" + scoreType + "类评分岗位失败.");
+                        map.put("code", 1);
                     }
                 }
+//                }
             } else {
                 map.put("msg", "选择的指标无效，请重新选择");
                 map.put("code", 1);
@@ -569,7 +571,9 @@ public class ScoreStationController {
         ModelMap map = new ModelMap();
         try {
             String[] scorredstationcodes = fullStationCode.split(",");
-            List<Station> stationList = stationService.selectStationByNotEF(scorredStationCode);
+//                需求需要修改不排除自己岗位
+//                List<Station> stationList = stationService.selectStationByNotEF(scorredStationCode);
+            List<Station> stationList = stationService.selectStationByNotEF(null);
             List<ScoreStation> scoreStationList = scoreStationService.selectScoreStationByScorredTypeDuty(scorredStationCode, null, dutycode, dbtype);
             List<ScoreStation> createList = new ArrayList<>();
             List<ScoreStation> updateList = new ArrayList<>();
@@ -670,7 +674,7 @@ public class ScoreStationController {
             }
             map.put("msg", isEdit ? "批量更新成功" : "无更新数据");
             map.put("code", 0);
-        }catch (Exception e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
             map.put("msg", "批量更新失败");
             map.put("code", 1);
@@ -879,22 +883,23 @@ public class ScoreStationController {
                 List<User> userListAll = userService.selectUserScoreStationList();
                 List<User> user300List = userListAll.stream().filter(s -> s.getRolecode().equals("300")).collect(Collectors.toList());
                 List<Score> createList = new ArrayList<>();
-                List<User> queryUserList = new ArrayList<>();
-                String ScorringUserCode = "";
+                List<User> queryScorringUserList = new ArrayList<>();
+                List<User> queryScorredUserList = new ArrayList<>();
                 for (ScoreStation item : scoreStationList) {
-                    queryUserList = userListAll.stream().filter(s -> s.getStationcode().equals(item.getScorringstationcode())).collect(Collectors.toList());
-                    if (queryUserList.size() > 0) {
-                        ScorringUserCode = queryUserList.get(0).getUsercode();
-                        queryUserList = user300List.stream().filter(s -> s.getStationcode().equals(item.getScorredstationcode())).collect(Collectors.toList());
-                        if (queryUserList.size() > 0) {
-                            for (User u : queryUserList) {
-                                Score score = new Score();
-                                score.setScorredcode(u.getUsercode());
-                                score.setScorringcode(ScorringUserCode);
-                                score.setScoretype(item.getScoretype());
-                                score.setDutycode(item.getDutycode());
-                                score.setDbtype(item.getDbtype());
-                                createList.add(score);
+                    queryScorredUserList = user300List.stream().filter(s -> s.getStationcode().equals(item.getScorredstationcode())).collect(Collectors.toList());
+                    for (User ued : queryScorredUserList) {
+                        if (ued.getUsercode() != null && !ued.getUsercode().equals("")) {
+                            queryScorringUserList = userListAll.stream().filter(s -> s.getStationcode().equals(item.getScorringstationcode())).collect(Collectors.toList());
+                            for (User u : queryScorringUserList) {
+                                if (u.getUsercode() != null && !u.getUsercode().equals("") && !ued.getUsercode().equals(u.getUsercode())) {
+                                    Score score = new Score();
+                                    score.setScorredcode(ued.getUsercode());
+                                    score.setScorringcode(u.getUsercode());
+                                    score.setScoretype(item.getScoretype());
+                                    score.setDutycode(item.getDutycode());
+                                    score.setDbtype(item.getDbtype());
+                                    createList.add(score);
+                                }
                             }
                         }
                     }

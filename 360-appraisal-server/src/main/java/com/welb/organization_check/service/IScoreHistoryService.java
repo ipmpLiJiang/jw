@@ -95,7 +95,7 @@ public interface IScoreHistoryService {
 
     List<ScoreHistory>selectHistoryByInUserCode(String year,String month, String dbtype,List<String> codeList);
 
-    List<ScoreHistory> selectHistoryByMonthSummaryList(String year,String month, String dbtype, String postType);
+    List<ScoreHistory> selectHistoryByMonthSummaryList(String year,String month, String dbtype, String postType,String userCode);
 
-    int deleteYM(String year,String month,String dbtype,String postType);
+    int deleteYM(String year,String month,String dbtype,String postType,String userCode);
 }

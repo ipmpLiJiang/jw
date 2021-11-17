@@ -151,6 +151,12 @@
         <router-link v-if="role == '100' || role == '50' || role=='200' " to="/home/scoreBadGrade">
           <el-menu-item index="/home/scoreBadGrade">差评评分汇总</el-menu-item>
         </router-link>
+        <router-link v-if="role == '100' || role == '50' || role=='200' " to="/home/scoreDutySmTjGrade">
+          <el-menu-item index="/home/scoreDutySmTjGrade">自评情况统计表</el-menu-item>
+        </router-link>
+        <router-link v-if="role == '100' || role == '50' || role=='200' " to="/home/scoreFlowTjGrade">
+          <el-menu-item index="/home/scoreFlowTjGrade">测评打分情况统计表</el-menu-item>
+        </router-link>
         <router-link v-if="role == '100' || role == '50' || role=='200' " to="/home/scoreSortGrade">
           <el-menu-item index="/home/scoreSortGrade">评分排序汇总</el-menu-item>
         </router-link>

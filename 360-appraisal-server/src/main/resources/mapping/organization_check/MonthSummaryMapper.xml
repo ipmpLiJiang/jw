@@ -283,6 +283,9 @@
         <if test="postType != null and postType !=''">
             and u.postType = #{postType}
         </if>
+        <if test="userCode != null and userCode !=''">
+            and u.UserCode = #{userCode}
+        </if>
          and u.UserCode=m.EmployeeCode
          and u.UserState="1"
          and u.Flag="0"
@@ -399,8 +402,11 @@
         delete from monthsummary where year=#{year} and Month=#{month} and dbtype = #{dbtype}
         <if test="postType != null and postType !=''">
             AND EmployeeCode in (
-            select UserCode from user where  postType = #{postType}
+                select UserCode from user where  postType = #{postType}
             )
+        </if>
+        <if test="userCode != null and userCode !=''">
+            AND EmployeeCode = #{userCode}
         </if>
   </delete>
 </mapper>

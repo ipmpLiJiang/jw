@@ -405,6 +405,9 @@
             select UserCode from user where Flag='0' and UserState='1' and RoleType='0' and postType = #{postType}
             )
         </if>
+        <if test="userCode != null and userCode !=''">
+            AND ScorredCode = #{userCode}
+        </if>
     </select>
 
     <select id="findScoreScorringInList" resultMap="BaseResultMap">

@@ -74,15 +74,19 @@ public interface ScoreFlowMapper {
     List<ScoreFlow> selectByScoreFlowType(@Param("mserialno") String mserialno, @Param("scoreType") String scoreType, @Param("dbtype") String dbtype);
 
 
-    List<ScoreFlow> selectFlowByMonthSummaryList(@Param("year") String year,
-                                                 @Param("month") String month,
-                                                 @Param("dbtype") String dbtype,
-                                                 @Param("postType") String postType);
+    List<ScoreFlow> selectFlowByMonthSummaryList(String year,
+                                                 String month,
+                                                 String dbtype,
+                                                 String postType,
+                                                 String userCode);
 
     List<ScoreFlow> selectScoreFlowScorringCode(@Param("year") String year,
                                                 @Param("month") String month,
                                                 @Param("dbtype") String dbtype,
                                                 @Param("scorringcode") String scorringcode);
 
-    int deleteYM(@Param("year") String year, @Param("month") String month, @Param("dbtype") String dbtype,@Param("postType") String postType);
+    int deleteYM(String year, String month, String dbtype,String postType,String userCode);
+
+    List<ScoreFlow> selectSummaryFlowByYMTOrPTList(@Param("year") String year, @Param("month") String month, @Param("dbtype") String dbtype,@Param("postType") String postType);
+
 }

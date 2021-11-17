@@ -84,7 +84,7 @@ public class QuarterController {
         try {
             //开始新的月度考核
             month = quarter;
-            List<MonthSummary> summaryList = summaryService.selectSummaryListByYearAndMonth(year, month, dbtype,null);
+            List<MonthSummary> summaryList = summaryService.selectSummaryListByYearAndMonth(year, month, dbtype,null,null);
             summaryList.stream().filter(p -> p.getDbtype().equals(dbtype)).collect(Collectors.toList());
             if (summaryList.size() != users.size()) {
                 addMonthSummary(year, month, users, dbtype);
@@ -99,7 +99,7 @@ public class QuarterController {
     }
 
     private void getSummaryList(int pageNum, int pageSize, UserDto dto, ModelMap map, List<User> users, String year, String month, String dbtype) {
-        List<MonthSummary> summaryList = summaryService.selectSummaryListByYearAndMonth(year, month, dbtype,null);
+        List<MonthSummary> summaryList = summaryService.selectSummaryListByYearAndMonth(year, month, dbtype,null,null);
         if (summaryList.size() != users.size()) {
             addMonthSummary(year, month, users, dbtype);
         }

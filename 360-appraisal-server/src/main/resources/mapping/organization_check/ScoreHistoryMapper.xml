@@ -697,14 +697,20 @@
                     select UserCode from user where Flag='0' and UserState='1' and RoleType='0' and postType = #{postType}
                 )
             </if>
+            <if test="userCode != null and userCode !=''">
+                AND m.EmployeeCode = #{userCode}
+            </if>
     </select>
 
     <delete id="deleteYM">
         delete from scorehistory where year=#{year} and Month=#{month} and dbtype=#{dbtype}
         <if test="postType != null and postType !=''">
             AND UserCode in (
-            select UserCode from user where postType = #{postType}
+                select UserCode from user where postType = #{postType}
             )
+        </if>
+        <if test="userCode != null and userCode !=''">
+            AND UserCode = #{userCode}
         </if>
     </delete>
 </mapper>

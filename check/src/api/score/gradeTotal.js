@@ -44,3 +44,10 @@ export function shengcheng(data) {
         data: data
     })
 }
+export function oneDelete(data) {
+    return fetch({
+        url: 'history/oneShengChengDelete',
+        method: 'post',
+        data: data
+    })
+}

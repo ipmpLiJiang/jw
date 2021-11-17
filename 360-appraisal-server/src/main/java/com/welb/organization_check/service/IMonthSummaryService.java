@@ -108,7 +108,7 @@ public interface IMonthSummaryService {
      * @return
      */
 
-    List<MonthSummary>selectSummaryListByYearAndMonth(String year,String month, String dbtype, String postType);
+    List<MonthSummary>selectSummaryListByYearAndMonth(String year,String month, String dbtype, String postType,String userCode);
 
 
     /**
@@ -157,5 +157,5 @@ public interface IMonthSummaryService {
 
     List<MonthSummary>selectSummaryByInEmployeeCode(String year,String month, String dbtype,List<String> codeList);
 
-    int deleteYM(String year,String month,String dbtype,String postType);
+    int deleteYM(String year,String month,String dbtype,String postType,String userCode);
 }

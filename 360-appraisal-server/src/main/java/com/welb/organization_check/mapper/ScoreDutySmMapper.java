@@ -25,5 +25,5 @@ public interface ScoreDutySmMapper {
 
     List<ScoreDutySm> selectScoreDutySmList(@Param("record") ScoreDutySm record,@Param("postType") String postType);
 
-    int deleteYM(@Param("year") String year, @Param("month") String month, @Param("dbtype") String dbtype,@Param("postType") String postType);
+    int deleteYM(String year, String month,String dbtype,String postType,String userCode);
 }

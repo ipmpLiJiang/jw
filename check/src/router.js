@@ -96,6 +96,8 @@ import byGradeStationList from '@/views/score/byGradeStationList.vue' // 设置�
 import gradeTotal from '@/views/score/gradeTotal.vue'//评分汇总管理
 import historyGrade from '@/views/score/historyGrade.vue'//历史评分汇总
 import scoreBadGrade from '@/views/score/scoreBadGrade.vue'//差评评分汇总
+import scoreDutySmTjGrade from '@/views/score/scoreDutySmTjGrade.vue'//自评情况统计表
+import scoreFlowTjGrade from '@/views/score/scoreFlowTjGrade.vue'//测评打分情况统计表成功
 import scoreSortGrade from '@/views/score/scoreSortGrade.vue'//评分排序汇总
 import quarter from '@/views/score/quarter.vue'//月度总结管理
 import leaderUser from '@/views/score/leader.vue'//打分用户管理
@@ -401,6 +403,14 @@ export default new Router({
             path: 'scoreBadGrade',
             name: "差评评分汇总",
             component: scoreBadGrade
+        }, {
+            path: 'scoreDutySmTjGrade',
+            name: "自评情况统计表",
+            component: scoreDutySmTjGrade
+        }, {
+            path: 'scoreFlowTjGrade',
+            name: "测评打分情况统计表",
+            component: scoreFlowTjGrade
         }, {
             path: 'scoreSortGrade',
             name: "评分排序汇总",

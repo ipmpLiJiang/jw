@@ -190,5 +190,35 @@
             </if>
         )
     </select>
+
+    <select id="selectUserDetailByYMDTAndPTAndSTList"  resultType="com.welb.organization_check.dto.UserScoreDto" >
+        select
+        sf.ScoredCode,
+        sf.ScorringCode,
+        sd.ScoreType,
+        sf.MSerialNo,
+        sd.FSerialNo,
+        sd.DSerialNo,
+        sf.ScoreState,
+        u.postType,
+        u.dbbk,
+        u.BranchCode
+        from
+        monthsummary m,scoreflow sf,scoredetail sd,user u
+        where
+        m.SerialNo = sf.MSerialNo and
+        m.dbtype = sf.dbtype and
+        sf.SerialNo = sd.FSerialNo and
+        m.EmployeeCode = u.UserCode and
+        m.year=#{year} and
+        m.month=#{month} and
+        m.dbtype=#{dbtype} and
+        m.isSc = 1 and
+        u.postType = #{postType} and
+        sf.ScoreType in
+        <foreach item="item" index="index" collection="typeList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 </mapper>
 

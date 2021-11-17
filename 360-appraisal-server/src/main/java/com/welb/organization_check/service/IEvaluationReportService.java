@@ -133,5 +133,5 @@ public interface IEvaluationReportService {
 
     int updateStateById(Integer state,Integer Id);
 
-    int deleteYM(String year,String month,String dbtype);
+    int deleteYM(String year,String month,String dbtype,String postType,String userCode);
 }

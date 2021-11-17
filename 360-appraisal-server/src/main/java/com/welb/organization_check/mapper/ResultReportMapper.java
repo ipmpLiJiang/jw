@@ -27,5 +27,5 @@ public interface ResultReportMapper {
 
     List<ResultReport> selectResultReportByYearMonth(@Param("year") String year,@Param("month") String month,@Param("dbtype") String dbtype);
 
-    int deleteYM(@Param("year") String year,@Param("month") String month,@Param("dbtype") String dbtype);
+    int deleteYM(String year,String month,String dbtype,String postType,String userCode);
 }

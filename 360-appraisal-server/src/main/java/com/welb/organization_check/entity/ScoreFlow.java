@@ -174,4 +174,41 @@ public class ScoreFlow {
         this.scoreState = scoreState == null ? "1" : scoreState.trim();
     }
 
+    public String getStationcode() {
+        return stationcode;
+    }
+
+    public void setStationcode(String stationcode) {
+        this.stationcode = stationcode;
+    }
+
+    public String getBranchcode() {
+        return branchcode;
+    }
+
+    public void setBranchcode(String branchcode) {
+        this.branchcode = branchcode;
+    }
+
+    public String getPosttype() {
+        return posttype;
+    }
+
+    public void setPosttype(String posttype) {
+        this.posttype = posttype;
+    }
+
+    public String getScoredname() {
+        return scoredname;
+    }
+
+    public void setScoredname(String scoredname) {
+        this.scoredname = scoredname;
+    }
+
+    private  String scoredname;
+    private  String stationcode;
+    private  String branchcode;
+    private String posttype;
+
 }

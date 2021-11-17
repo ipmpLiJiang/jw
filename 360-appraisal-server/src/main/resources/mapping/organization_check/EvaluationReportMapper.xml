@@ -448,7 +448,16 @@
     <update id="updateStateById">
     update  evaluationreport set State=#{state} where Id = #{Id}
   </update>
+
     <delete id="deleteYM">
-        delete from evaluationreport where year=#{year} and Month=#{month} and dbtype = #{dbtype}
-  </delete>
+        delete from evaluationreport where year =#{year} and month=#{month} and dbtype=#{dbtype}
+        <if test="postType != null and postType !=''">
+        AND UserCode in (
+            select UserCode from user where postType = #{postType}
+        )
+        </if>
+        <if test="userCode != null and userCode !=''">
+        AND UserCode= #{userCode}
+        </if>
+    </delete>
 </mapper>

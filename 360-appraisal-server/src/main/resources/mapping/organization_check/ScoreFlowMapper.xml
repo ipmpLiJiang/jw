@@ -397,6 +397,9 @@
             select UserCode from user where Flag='0' and UserState='1' and RoleType='0' and postType = #{postType}
             )
         </if>
+        <if test="userCode != null and userCode !=''">
+            AND m.EmployeeCode = #{userCode}
+        </if>
   </select>
     <select id="selectScoreFlowScorringCode" resultMap="BaseResultMap">
         SELECT
@@ -419,6 +422,40 @@
             <if test="postType != null and postType !=''">
                 and u.postType = #{postType}
             </if>
+            <if test="userCode != null and userCode !=''">
+                and u.UserCode = #{userCode}
+            </if>
         )
     </delete>
+
+    <select id="selectSummaryFlowByYMTOrPTList" resultType="com.welb.organization_check.entity.ScoreFlow">
+        select
+            m.State,
+            sf.SerialNo,
+            sf.MSerialNo,
+            sf.ScoredCode,
+            u.UserName scoredname,
+            sf.ScorringCode,
+            sf.ScoreType,
+            sf.Score,
+            sf.Ratio,
+            sf.ScoreState,
+            u.postType,
+            u.StationCode,
+            u.BranchCode,
+            m.dbtype
+        from
+            monthsummary m,scoreflow sf,user u
+        where
+            m.SerialNo = sf.MSerialNo and
+            m.dbtype = sf.dbtype and
+            m.EmployeeCode = u.UserCode and
+            m.year=#{year} and
+            m.month=#{month} and
+            m.dbtype=#{dbtype} and
+            m.isSc = 1
+            <if test="postType != null and postType !=''">
+                and u.postType = #{postType}
+            </if>
+    </select>
 </mapper>

@@ -155,7 +155,9 @@ public class StationController {
         String userCode = (String) req.getSession().getAttribute("usercode");
         if (userCode != null) {
             try {
-                List<Station> stationList = stationService.selectStationByNotEF(scorredStationCode);
+//                需求需要修改不排除自己岗位
+//                List<Station> stationList = stationService.selectStationByNotEF(scorredStationCode);
+                List<Station> stationList = stationService.selectStationByNotEF(null);
                 List<ScoreStation> scoreStationList = scoreStationService.selectScoreStationByScorredTypeDuty(scorredStationCode, scoretype, dutycode, dbtype);
                 if (scoreStationList.size() > 0) {
                     List<ScoreStation> query = new ArrayList<>();

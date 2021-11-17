@@ -1429,7 +1429,7 @@ public class HomePageController {
                 if (setTime != null) {
                     String year = setTime.getYear();
                     String month = setTime.getMonth();
-                    List<MonthSummary> monthSummaryList = monthSummaryService.selectSummaryListByYearAndMonth(year, month, dbtype, null);
+                    List<MonthSummary> monthSummaryList = monthSummaryService.selectSummaryListByYearAndMonth(year, month, dbtype, null,null);
                     if (monthSummaryList != null) {
                         long count = monthSummaryList.stream().filter(s -> !s.getState().equals("7")).count();
                         if (count == 0) {
@@ -1848,7 +1848,7 @@ public class HomePageController {
                 if (setTime != null) {
                     String year = setTime.getYear();
                     String month = setTime.getMonth();
-                    List<MonthSummary> monthSummaryList = monthSummaryService.selectSummaryListByYearAndMonth(year, month, dbtype, null);
+                    List<MonthSummary> monthSummaryList = monthSummaryService.selectSummaryListByYearAndMonth(year, month, dbtype, null,null);
                     if (monthSummaryList != null) {
                         long count = monthSummaryList.stream().filter(s -> !s.getState().equals("7")).count();
                         if (count == 0) {
@@ -2273,7 +2273,7 @@ public class HomePageController {
                 if (setTime != null) {
                     String year = setTime.getYear();
                     String month = setTime.getMonth();
-                    List<MonthSummary> monthSummaryList = monthSummaryService.selectSummaryListByYearAndMonth(year, month, dbtype, null);
+                    List<MonthSummary> monthSummaryList = monthSummaryService.selectSummaryListByYearAndMonth(year, month, dbtype, null,null);
                     if (monthSummaryList != null) {
                         long count = monthSummaryList.stream().filter(s -> !s.getState().equals("7")).count();
                         if (count == 0) {

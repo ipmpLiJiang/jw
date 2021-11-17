@@ -259,4 +259,14 @@ public class UserScoreDto {
     public void setPostType(String postType) {
         this.postType = postType == null ? null : postType.trim();
     }
+
+    public String getScoreState() {
+        return scoreState;
+    }
+
+    public void setScoreState(String scoreState) {
+        this.scoreState = scoreState;
+    }
+
+    private String scoreState;
 }

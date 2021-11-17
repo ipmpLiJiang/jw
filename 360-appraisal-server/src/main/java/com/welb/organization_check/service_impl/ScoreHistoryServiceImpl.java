@@ -96,12 +96,12 @@ public class ScoreHistoryServiceImpl implements IScoreHistoryService {
     }
 
     @Override
-    public List<ScoreHistory> selectHistoryByMonthSummaryList(String year,String month, String dbtype,String postType){
-        return historyMapper.selectHistoryByMonthSummaryList(year,month,dbtype,postType);
+    public List<ScoreHistory> selectHistoryByMonthSummaryList(String year,String month, String dbtype,String postType,String userCode){
+        return historyMapper.selectHistoryByMonthSummaryList(year,month,dbtype,postType,userCode);
     }
 
     @Override
-    public int deleteYM(String year,String month,String dbtype,String postType){
-        return historyMapper.deleteYM(year,month,dbtype,postType);
+    public int deleteYM(String year,String month,String dbtype,String postType,String userCode){
+        return historyMapper.deleteYM(year,month,dbtype,postType,userCode);
     }
 }

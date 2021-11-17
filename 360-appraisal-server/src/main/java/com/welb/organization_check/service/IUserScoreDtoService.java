@@ -24,4 +24,6 @@ public interface IUserScoreDtoService {
     List<UserScoreDto> getTypeUserDutyScore(List<UserScoreDto> list,boolean isJisuan);
 
     List<UserScoreDto> findUserFlowDetailScore(String year, String month, String dbtype, String employeeCode);
+
+    List<UserScoreDto> selectUserDetailByYMDTAndPTAndSTList(String year, String month,String dbtype, String postType,List<String> typeList);
 }

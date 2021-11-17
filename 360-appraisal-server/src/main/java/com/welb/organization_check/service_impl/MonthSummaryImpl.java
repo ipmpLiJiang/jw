@@ -98,8 +98,8 @@ public class MonthSummaryImpl implements IMonthSummaryService {
     }
 
     @Override
-    public List<MonthSummary> selectSummaryListByYearAndMonth(String year, String month, String dbtype,String postType) {
-        return monthSummaryMapper.selectSummaryListByYearAndMonth(year, month, dbtype,postType);
+    public List<MonthSummary> selectSummaryListByYearAndMonth(String year, String month, String dbtype,String postType,String userCode) {
+        return monthSummaryMapper.selectSummaryListByYearAndMonth(year, month, dbtype,postType,userCode);
     }
 
     @Override
@@ -137,7 +137,7 @@ public class MonthSummaryImpl implements IMonthSummaryService {
         return monthSummaryMapper.selectSummaryByInEmployeeCode(year,month, dbtype,codeList);
     }
     @Override
-    public int deleteYM(String year,String month,String dbtype,String postType){
-        return monthSummaryMapper.deleteYM(year,month,dbtype,postType);
+    public int deleteYM(String year,String month,String dbtype,String postType,String userCode){
+        return monthSummaryMapper.deleteYM(year,month,dbtype,postType,userCode);
     }
 }

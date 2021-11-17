@@ -74,9 +74,13 @@ public class UserDtoController {
     IUserScoreDtoService userScoreDtoService;
     @Autowired
     IScoreDutySmService scoreDutySmService;
+    @Autowired
+    IEvaluationReportService evaluationReportService;
+    @Autowired
+    IResultReportService resultReportService;
 
     @RequestMapping(value = "/scoreShengCheng", produces = "application/json;charset=utf-8")
-    public Object scoreShengChengUser(HttpServletRequest req, String dbtype,String postType) {
+    public Object scoreShengChengUser(HttpServletRequest req, String dbtype, String postType, String userCode) {
         ModelMap map = new ModelMap();
         String usercode = (String) req.getSession().getAttribute("usercode");
         String state = (String) req.getSession().getAttribute("state");
@@ -84,14 +88,14 @@ public class UserDtoController {
             try {
                 ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
                 if (setTime != null) {
-                    postType = dbtype.equals("2") ? postType:null;
-                    List<MonthSummary> summaryList = summaryService.selectSummaryListByYearAndMonth(setTime.getYear(), setTime.getMonth(), dbtype,postType);
+                    postType = dbtype.equals("2") ? postType : null;
+                    List<MonthSummary> summaryList = summaryService.selectSummaryListByYearAndMonth(setTime.getYear(), setTime.getMonth(), dbtype, postType, null);
 
-                    this.shengChengDelete(setTime.getYear(),setTime.getMonth(),dbtype,postType,summaryList);
+//                    this.shengChengDelete(setTime.getYear(), setTime.getMonth(), dbtype, postType, userCode, summaryList);
                     long count = 0;
-                    List<User> scorringUserList = userService.selectUserPfr(dbtype,setTime.getYear(),setTime.getMonth(),true);
+                    List<User> scorringUserList = userService.selectUserPfr(dbtype, setTime.getYear(), setTime.getMonth(), true);
                     if (scorringUserList.size() > 0) {
-                        List<User> users = userService.findUserByRoleCode(null, dbtype,postType,null,null,null,true);
+                        List<User> users = userService.findUserByRoleCode(null, dbtype, postType, null, null, null, true);
                         for (User u : scorringUserList) {
                             count = users.stream().filter(s -> s.getUsercode().equals(u.getUsercode())).count();
                             if (count == 0) {
@@ -102,7 +106,7 @@ public class UserDtoController {
                             if (summaryList.size() != users.size()) {
                                 addMonthSummary(setTime.getYear(), setTime.getMonth(), users, dbtype);
                             }
-                            this.getShengCheng(setTime.getYear(), setTime.getMonth(), dbtype,postType);
+                            this.getShengCheng(setTime.getYear(), setTime.getMonth(), dbtype, postType, userCode);
                             map.put("msg", "生成数据成功");
                             map.put("code", 0);
                         }
@@ -111,7 +115,7 @@ public class UserDtoController {
                         map.put("code", 1);
                     }
                 } else {
-                    map.put("msg", "生成数据失败,setTime无数据.");
+                    map.put("msg", "生成数据失败，setTime无数据.");
                     map.put("code", 1);
                 }
             } catch (Exception e) {
@@ -125,15 +129,89 @@ public class UserDtoController {
         }
         return map;
     }
-    private void shengChengDelete(String year,String month,String dbtype,String postType,List<MonthSummary> monthSummaryList){
-        long count = monthSummaryList.stream().filter(s-> !s.getState().equals("0")).count();
-        if(count == 0) {
-            scoreDetailService.deleteYM(year, month, dbtype,postType);
-            historyService.deleteYM(year, month, dbtype,postType);
-            flowService.deleteYM(year, month, dbtype,postType);
-            summaryService.deleteYM(year, month, dbtype,postType);
-            scoreDutySmService.deleteYM(year, month, dbtype,postType);
+
+    private void shengChengDelete(String year, String month, String dbtype, String postType, String userCode, List<MonthSummary> monthSummaryList) {
+        long count = 0;
+        if (userCode != null && !userCode.equals("")) {
+            List<MonthSummary> query = monthSummaryList.stream().filter(s -> s.getEmployeecode().equals(userCode)).collect(Collectors.toList());
+            if (query.size() > 0) {
+                MonthSummary monthSummary = query.get(0);
+                if (monthSummary.getState().equals("0")) {
+                    count = 0;
+                } else {
+                    count = 1;
+                }
+            } else {
+                count = 1;
+            }
+        } else {
+            count = monthSummaryList.stream().filter(s -> !s.getState().equals("0")).count();
         }
+        if (count == 0) {
+            resultReportService.deleteYM(year, month, dbtype, postType, userCode);
+            evaluationReportService.deleteYM(year, month, dbtype, postType, userCode);
+            scoreDetailService.deleteYM(year, month, dbtype, postType, userCode);
+            historyService.deleteYM(year, month, dbtype, postType, userCode);
+            flowService.deleteYM(year, month, dbtype, postType, userCode);
+            summaryService.deleteYM(year, month, dbtype, postType, userCode);
+            scoreDutySmService.deleteYM(year, month, dbtype, postType, userCode);
+        }
+    }
+
+    @RequestMapping(value = "/oneShengChengDelete", produces = "application/json;charset=utf-8")
+    public Object oneShengChengDelete1(HttpServletRequest req, String dbtype, String userCode) {
+        ModelMap map = new ModelMap();
+        String usercode = (String) req.getSession().getAttribute("usercode");
+        String state = (String) req.getSession().getAttribute("state");
+        if (usercode != null) {
+            try {
+                ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
+                if (setTime != null) {
+                    List<MonthSummary> summaryList = summaryService.selectSummaryListByYearAndMonth(setTime.getYear(), setTime.getMonth(), dbtype, null, userCode);
+                    if (summaryList.size() > 0) {
+                        MonthSummary monthSummary = summaryList.get(0);
+                        if (monthSummary.getState().equals("0")) {
+                            this.oneShengChengDelete(setTime.getYear(), setTime.getMonth(), dbtype, userCode);
+                            MonthSummary update = new MonthSummary();
+                            update.setSerialno(monthSummary.getSerialno());
+                            update.setState("0");
+                            update.setIsSc(0);
+                            update.setDbtype(dbtype);
+                            summaryService.updateByPrimaryKeySelective(update);
+                            map.put("msg", "删除数据成功.");
+                            map.put("code", 0);
+                        } else {
+                            map.put("msg", "删除数据失败，考核已开启，状态是未提交才能删除.");
+                            map.put("code", 1);
+                        }
+                    } else {
+                        map.put("msg", "删除数据失败，monthSummary null.");
+                        map.put("code", 1);
+                    }
+                } else {
+                    map.put("msg", "删除数据失败，setTime无数据.");
+                    map.put("code", 1);
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+                map.put("msg", "删除数据失败");
+                map.put("code", 1);
+            }
+        } else {
+            map.put("msg", "登录用户超时,请重新登录");
+            map.put("code", 810);
+        }
+        return map;
+    }
+
+    private void oneShengChengDelete(String year, String month, String dbtype, String userCode) {
+        resultReportService.deleteYM(year, month, dbtype, null, userCode);
+        evaluationReportService.deleteYM(year, month, dbtype, null, userCode);
+        scoreDetailService.deleteYM(year, month, dbtype, null, userCode);
+        historyService.deleteYM(year, month, dbtype, null, userCode);
+        flowService.deleteYM(year, month, dbtype, null, userCode);
+        scoreDutySmService.deleteYM(year, month, dbtype, null, userCode);
+
     }
 
 
@@ -167,60 +245,12 @@ public class UserDtoController {
         }
         return map;
     }
-    /*
-    private void manualSelectUserDtoLikeByUserAndState(UserDto dto, ModelMap map, String dbtype, int pageNum, int pageSize) throws ParseException {
-        String month;
-        ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
-        if (setTime != null) {
-            //开始新的月度考核
-            List<User> users = new ArrayList<>();
-            long count = 0;
-            List<User> scorringUserList = userService.selectUserPfr(dbtype);
-            if (scorringUserList.size() > 0) {
-                if (dbtype.equals("2")) {
-                    List<String> roleList = new ArrayList<>();
-                    roleList.add("300"); //普通用户
-                    roleList.add("150"); //打分用户
-                    users = userService.findUserByRoleCode(roleList, dbtype);
-                } else { //党支部考核
-                    List<String> roleList = new ArrayList<>();
-                    roleList.add("100");
-                    roleList.add("150");
-                    roleList.add("200");
-                    roleList.add("300");
-                    roleList.add("50");
-                    User user = new User();
-                    user.setDbtype(dbtype);
-                    users = userService.selectUserScoreAll(user, roleList);
-                }
-                for (User u : scorringUserList) {
-                    count = users.stream().filter(s -> s.getUsercode().equals(u.getUsercode())).count();
-                    if (count == 0) {
-                        users.add(u);
-                    }
-                }
-                if (users.size() > 0) {
-                    List<MonthSummary> summaryList = summaryService.selectSummaryListByYearAndMonth(setTime.getYear(), setTime.getMonth(), dbtype);
-                    // summaryList =summaryList.stream().filter(p->p.getDbtype()!=null && p.getDbtype().equals(dbtype)).collect(Collectors.toList());
-                    if (summaryList.size() != users.size()) {
-                        addMonthSummary(setTime.getYear(), setTime.getMonth(), users, dbtype);
 
-                    }
-                    getUserDtos(dto, map, setTime.getYear(), setTime.getMonth(), pageNum, pageSize, dbtype);
-
-                }
-            } else {
-                map.put("msg", "未创建评分人关系.");
-                map.put("code", 1);
-            }
-        }
-    }
-    */
     private void addMonthSummary(String year, String month, List<User> users, String dbtype) {
         List<MonthSummary> list = new ArrayList<>();
         for (User user : users) {
             String serialno = year + "-" + month + "-" + dbtype + "-" + user.getUsercode();
-            MonthSummary monthSummary = summaryService.selectByPrimaryKey(serialno,dbtype);
+            MonthSummary monthSummary = summaryService.selectByPrimaryKey(serialno, dbtype);
             if (monthSummary == null) {
                 MonthSummary summary = new MonthSummary();
                 summary.setSerialno(serialno);
@@ -243,7 +273,7 @@ public class UserDtoController {
         dto.setYear(year);
         dto.setMonth(month);
         dto.setDbtype(dbtype);
-        if(dbtype.equals("1") && dto.getDbbk()!=null && !dto.getDbbk().equals("")){
+        if (dbtype.equals("1") && dto.getDbbk() != null && !dto.getDbbk().equals("")) {
             dto.setDbbk(dto.getDbbk());
         }
         PageHelper.startPage(pageNum, pageSize);
@@ -258,13 +288,16 @@ public class UserDtoController {
         map.put("code", 0);
     }
 
-    private void getShengCheng(String year, String month, String dbtype,String postType) {
+    private void getShengCheng(String year, String month, String dbtype, String postType, String userCode) {
         postType = dbtype.equals("2") ? postType : null;
         UserDto query = new UserDto();
         query.setYear(year);
         query.setMonth(month);
         query.setDbtype(dbtype);
         query.setPostType(postType);
+        if (userCode != null && !userCode.equals("")) {
+            query.setUsercode(userCode);
+        }
         List<UserDto> userDtoList = dtoService.selectUserByMonthSummaryList(query);
         List<UserDto> bdfrUserDboList = new ArrayList<>();
         //筛选出被打分人
@@ -275,13 +308,13 @@ public class UserDtoController {
             bdfrUserDboList = userDtoList.stream().filter(s -> s.getRolecode().equals("300")).collect(Collectors.toList());
         }
         if (bdfrUserDboList.size() > 0) {
-            List<ScoreHistory> bdfrHistoryList = historyService.selectHistoryByMonthSummaryList(year, month, dbtype,postType);
-            List<ScoreFlow> bdfrFlowList = flowService.selectFlowByMonthSummaryList(year, month, dbtype,postType);
-            List<ScoreDetail> bdfrDetailList = scoreDetailService.selectDetailByMonthSummaryList(year, month, dbtype,postType);
+            List<ScoreHistory> bdfrHistoryList = historyService.selectHistoryByMonthSummaryList(year, month, dbtype, postType, userCode);
+            List<ScoreFlow> bdfrFlowList = flowService.selectFlowByMonthSummaryList(year, month, dbtype, postType, userCode);
+            List<ScoreDetail> bdfrDetailList = scoreDetailService.selectDetailByMonthSummaryList(year, month, dbtype, postType, userCode);
             Duty dutyQuery = new Duty();
             dutyQuery.setDbtype(dbtype);
             List<Duty> dutyList = dutyService.selectDutyAll(dutyQuery);
-            List<Score> scoreList = scoreService.findScoreAll(dbtype,postType);
+            List<Score> scoreList = scoreService.findScoreAll(dbtype, postType, userCode);
 //            默认自评
 //            ScoreDutySm queryDutySm = new ScoreDutySm();
 //            queryDutySm.setYear(year);
@@ -321,7 +354,7 @@ public class UserDtoController {
                         bdfrHistoryList, bdfrFlowList, bdfrDetailList, insertFlowList, updateFlowList, insertHistoryList, updateHistoryList, insertDetailList, dbtype);
             }
             if (insertHistoryList.size() > 0) {
-                for(ScoreHistory item:insertHistoryList){
+                for (ScoreHistory item : insertHistoryList) {
                     historyService.insertSelective(item);
                 }
 //                historyService.batchInsert(insertHistoryList);
@@ -331,7 +364,7 @@ public class UserDtoController {
                     historyService.updateByPrimaryKeySelective(history);
             }
             if (insertFlowList.size() > 0) {
-                for(ScoreFlow item:insertFlowList){
+                for (ScoreFlow item : insertFlowList) {
                     flowService.insertSelective(item);
                 }
 //                flowService.batchInsert(insertFlowList);
@@ -341,7 +374,7 @@ public class UserDtoController {
                     flowService.updateByPrimaryKeySelective(flow);
             }
             if (insertDetailList.size() > 0) {
-                for(ScoreDetail item:insertDetailList){
+                for (ScoreDetail item : insertDetailList) {
                     scoreDetailService.insertSelective(item);
                 }
 //                scoreDetailService.batchInset(insertDetailList);
@@ -439,7 +472,7 @@ public class UserDtoController {
                                     s.getScorringcode().equals(score.getScorringcode()) &&
                                     s.getScoretype().equals(score.getScoretype())).count();
 
-                            if(scoreType.equals("E") || scoreType.equals("F")) {
+                            if (scoreType.equals("E") || scoreType.equals("F")) {
                                 queryScoreListEF = scoreList.stream().filter(s -> s.getScorredcode().equals(score.getScorredcode()) &&
                                         s.getScorringcode().equals(score.getScorringcode()) &&
                                         s.getScoretype().equals(scoreType) &&
@@ -525,7 +558,7 @@ public class UserDtoController {
                                         }
                                     }
                                     sumScore = 0.0;
-                                    if(!isEFSerialNo) {
+                                    if (!isEFSerialNo) {
                                         for (Duty duty : queryDutyList) {
                                             count = queryScoreListEF.stream().filter(s -> s.getDutycode().equals(duty.getDutycode())).count();
 
@@ -642,7 +675,7 @@ public class UserDtoController {
         return false;
     }
 
-//    private void getShengChengResult(String year, String month, List<String> scoreTypeList, List<UserDto> bdfrUserDboList,
+    //    private void getShengChengResult(String year, String month, List<String> scoreTypeList, List<UserDto> bdfrUserDboList,
 //                                     List<Duty> dutyList, List<Score> scoreList,
 //                                     List<ScoreHistory> historyList, List<ScoreHistory> bdfrHistoryList,
 //                                     List<ScoreFlow> bdfrFlowList, List<ScoreDetail> bdfrDetailList,
@@ -988,14 +1021,14 @@ public class UserDtoController {
      * @return
      */
     @RequestMapping(value = "/updateFinishGradeBySerialNo", produces = "application/json;charset=utf-8")
-    public Object updateFinishGradeBySerialNo(String serialnos,String dbtype) {
+    public Object updateFinishGradeBySerialNo(String serialnos, String dbtype) {
         ModelMap map = new ModelMap();
         String[] serialno = serialnos.split(",");
 
         int counts = 0;
         for (int i = 0; i < serialno.length; i++) {
 
-            int count = summaryService.updateFinishGradeBySerialNo(serialno[i],dbtype);
+            int count = summaryService.updateFinishGradeBySerialNo(serialno[i], dbtype);
             counts += count;
         }
         if (counts > 0) {
@@ -1014,11 +1047,11 @@ public class UserDtoController {
      * @return
      */
     @RequestMapping(value = "/updateFinishGradeAll", produces = "application/json;charset=utf-8")
-    public Object updateFinishGradeAll(String dbtype,String postType) {
+    public Object updateFinishGradeAll(String dbtype, String postType) {
         ModelMap map = new ModelMap();
         ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
         if (setTime != null) {
-            int count = summaryService.updateFinishGradeAll(setTime.getYear(), setTime.getMonth(), dbtype,postType);
+            int count = summaryService.updateFinishGradeAll(setTime.getYear(), setTime.getMonth(), dbtype, postType);
             summaryService.updateFinishGradeScorringAll(setTime.getYear(), setTime.getMonth(), dbtype);
             if (count > 0) {
                 map.put("msg", "全部修改季结评分完成成功");
@@ -1484,7 +1517,7 @@ public class UserDtoController {
 
 
     @RequestMapping(value = "/list", produces = "application/json;charset=utf-8")
-    public Object selectUserDtoLike(HttpServletRequest req, ScoreHistory history,String postType, int pageNum, int pageSize) {
+    public Object selectUserDtoLike(HttpServletRequest req, ScoreHistory history, String postType, int pageNum, int pageSize) {
         ModelMap map = new ModelMap();
         String usercode = (String) req.getSession().getAttribute("usercode");
         String state = (String) req.getSession().getAttribute("state");
@@ -1497,8 +1530,8 @@ public class UserDtoController {
                 String month = history.getMonth();
                 boolean isDq = true;
                 ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth("", "", history.getDbtype());
-                if(year !=null && !year.equals("") && month!=null && !month.equals("")) {
-                    if(!manualSetTime.getYear().equals(year) || !manualSetTime.getMonth().equals(month)) {
+                if (year != null && !year.equals("") && month != null && !month.equals("")) {
+                    if (!manualSetTime.getYear().equals(year) || !manualSetTime.getMonth().equals(month)) {
                         manualSetTime.setYear(year);
                         manualSetTime.setMonth(month);
                         manualSetTime.setDbtype(history.getDbtype());
@@ -1512,7 +1545,7 @@ public class UserDtoController {
 
                 history.setYear(manualSetTime.getYear());
                 history.setMonth(manualSetTime.getMonth());
-                historieList = historyService.selectHistoryList(history,qrcode,postType,isDq);
+                historieList = historyService.selectHistoryList(history, qrcode, postType, isDq);
                 PageInfo<ScoreHistory> pageInfo = new PageInfo<>(historieList);
                 historieList = pageInfo.getList();
                 map.put("totalPages", pageInfo.getTotal());
@@ -1535,9 +1568,9 @@ public class UserDtoController {
     }
 
     //生成被打分人数据，自动生成 默认评分此处不执行
-    private void initUserList(ModelMap map, String state, String qrcode, ManualSetTime manualSetTime,String postType,String dbbk,boolean isDq) throws ParseException {
+    private void initUserList(ModelMap map, String state, String qrcode, ManualSetTime manualSetTime, String postType, String dbbk, boolean isDq) throws ParseException {
         List<User> users = userService.findUserByRoleCode(
-                qrcode, manualSetTime.getDbtype(),postType,dbbk,manualSetTime.getYear(),manualSetTime.getMonth(),isDq);
+                qrcode, manualSetTime.getDbtype(), postType, dbbk, manualSetTime.getYear(), manualSetTime.getMonth(), isDq);
 //        List<User> users = userService.findUserAllBySummary();
         //获取当前年份
         String year = CalendarUtil.getYear();
@@ -1555,10 +1588,10 @@ public class UserDtoController {
         scoreHistory.setYear(manualSetTime.getYear());
         scoreHistory.setMonth(manualSetTime.getMonth());
         scoreHistory.setDbtype(manualSetTime.getDbtype());
-        if(scoreHistory.getDbtype().equals("1") && dbbk!=null && !dbbk.equals("")){
+        if (scoreHistory.getDbtype().equals("1") && dbbk != null && !dbbk.equals("")) {
             scoreHistory.setDbbk(dbbk);
         }
-        List<ScoreHistory> historyList = historyService.selectUserHisotyList(scoreHistory, qrcode,postType,isDq);
+        List<ScoreHistory> historyList = historyService.selectUserHisotyList(scoreHistory, qrcode, postType, isDq);
         if (users.size() == 0) {
             map.put("msg", "数据为空");
             map.put("code", 0);
@@ -1612,8 +1645,8 @@ public class UserDtoController {
                 String month = history.getMonth();
                 boolean isDq = true;
                 ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth("", "", history.getDbtype());
-                if(year !=null && !year.equals("") && month!=null && !month.equals("")) {
-                    if(!manualSetTime.getYear().equals(year) || !manualSetTime.getMonth().equals(month)) {
+                if (year != null && !year.equals("") && month != null && !month.equals("")) {
+                    if (!manualSetTime.getYear().equals(year) || !manualSetTime.getMonth().equals(month)) {
                         manualSetTime.setYear(year);
                         manualSetTime.setMonth(month);
                         manualSetTime.setDbtype(history.getDbtype());
@@ -1621,11 +1654,11 @@ public class UserDtoController {
                     }
                 }
                 //初始化列表
-                initGradeList(map, state, manualSetTime,isDq);
+                initGradeList(map, state, manualSetTime, isDq);
                 PageHelper.startPage(pageNum, pageSize);
                 history.setYear(manualSetTime.getYear());
                 history.setMonth(manualSetTime.getMonth());
-                userDtoList = historyService.gradeList(history,isDq);
+                userDtoList = historyService.gradeList(history, isDq);
                 PageInfo<ScoreHistory> pageInfo = new PageInfo<>(userDtoList);
                 map.put("totalPages", pageInfo.getTotal());
                 map.put("msg", "查询成功");
@@ -1646,8 +1679,8 @@ public class UserDtoController {
 
     }
 
-    private void initGradeList(ModelMap map, String state, ManualSetTime manualSetTime,boolean isDq) throws ParseException {
-        List<User> users = userService.selectUserPfr(manualSetTime.getDbtype(),manualSetTime.getYear(),manualSetTime.getMonth(),isDq);
+    private void initGradeList(ModelMap map, String state, ManualSetTime manualSetTime, boolean isDq) throws ParseException {
+        List<User> users = userService.selectUserPfr(manualSetTime.getDbtype(), manualSetTime.getYear(), manualSetTime.getMonth(), isDq);
         //获取当前年份selectUserPfr
         String year = CalendarUtil.getYear();
         //获取当前月份
@@ -1665,7 +1698,7 @@ public class UserDtoController {
         scoreHistory.setMonth(manualSetTime.getMonth());
         scoreHistory.setDbtype(manualSetTime.getDbtype());
         // 查询打分用户
-        List<ScoreHistory> historyList = historyService.selectGradeHisotyList(scoreHistory,isDq);
+        List<ScoreHistory> historyList = historyService.selectGradeHisotyList(scoreHistory, isDq);
         if (users.size() == 0) {
             map.put("msg", "故数据为空");
             map.put("code", 0);
@@ -1721,7 +1754,7 @@ public class UserDtoController {
         dto.setMonth(info1.getMonth());
         dto.setState(info1.getState());
         dto.setScorestatus(info1.getScorestatus());
-        userDtos = historyService.gradeList(dto,false);
+        userDtos = historyService.gradeList(dto, false);
         // 创建ExportExcel对象
         try {
             // 獲取工作表
@@ -1799,7 +1832,7 @@ public class UserDtoController {
         dto.setState(info1.getState());
         dto.setScorestatus(info1.getScorestatus());
         dto.setDbtype(info1.getDbtype());
-        userDtos = historyService.selectHistoryList(dto, null,null,true);
+        userDtos = historyService.selectHistoryList(dto, null, null, true);
         // 创建ExportExcel对象
         try {
             // 獲取工作表

@@ -40,10 +40,11 @@ public interface ScoreHistoryMapper {
 
     List<ScoreHistory>selectHistoryByInUserCode(@Param("year")String year,@Param("month")String month,@Param("dbtype")String dbtype,@Param("codeList")List<String> codeList);
 
-    List<ScoreHistory> selectHistoryByMonthSummaryList(@Param("year")String year,
-                                                       @Param("month")String month,
-                                                       @Param("dbtype")String dbtype,
-                                                       @Param("postType")String postType);
+    List<ScoreHistory> selectHistoryByMonthSummaryList(String year,
+                                                       String month,
+                                                       String dbtype,
+                                                       String postType,
+                                                       String userCode);
 
-    int deleteYM(@Param("year") String year,@Param("month") String month,@Param("dbtype") String dbtype,@Param("postType")String postType);
+    int deleteYM(String year,String month,String dbtype,String postType,String userCode);
 }

@@ -133,3 +133,27 @@ export function getSortList(data) {
         data: data
     })
 }
+
+
+export function getScoreDutySmTjList(data) {
+    return fetch({
+        url: 'scoredutysm/scoreDutySmTjList',
+        method: 'post',
+        data: data
+    })
+}
+
+export function getFlowTjList(data) {
+    return fetch({
+        url: 'scoreflow/scoreFlowTjList',
+        method: 'post',
+        data: data
+    })
+}
+export function getFlowDetailTjList(data) {
+    return fetch({
+        url: 'scoreflow/scoreFlowDetailTjList',
+        method: 'post',
+        data: data
+    })
+}

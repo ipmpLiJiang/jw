@@ -228,6 +228,30 @@
             >修改</el-button>
           </template>
         </el-table-column>
+        <el-table-column
+          label="生成"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <el-button
+              @click="oneShengCheng(scope.row)"
+              type="text"
+              size="small"
+            >重新生成</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="删除"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <el-button
+              @click="oneDelete(scope.row)"
+              type="text"
+              size="small"
+            >删除生成</el-button>
+          </template>
+        </el-table-column>
         <!-- <el-table-column
           :label="khtitle+'修改/查看'"
           align="center"
@@ -334,7 +358,8 @@ import {
   updateFinishGradeBySerialNo,
   updateFinishGradeAll,
   upload,
-  shengcheng
+  shengcheng,
+  oneDelete
 } from "@/api/score/gradeTotal";
 import { 
   updateSummaryGradeState,
@@ -376,6 +401,10 @@ export default {
         }
       ],
       statusOptions: [
+        {
+          value: "0",
+          label: '未提交'
+        },
         {
           value: "5",
           label: '季结自评'
@@ -650,6 +679,77 @@ export default {
         filename: row.filename
       };
       this.dialogVisible = true;
+    },
+    oneShengCheng(row){
+      this.$confirm(
+        "此操作将生成/更改数据, 是否继续?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      ).then(() => {
+        this.searchLoading = true;
+        this.tableLoading = true;
+        let data = {dbtype: this.dbtype}
+        data.postType = row.postType
+        data.userCode = row.usercode
+        new Promise((response, reject) => {
+          shengcheng(qs.stringify(data))
+            .then(response => {
+              if (response.data.code == 0) {
+                this.$message.success(response.data.msg);
+                this.getList();
+              } else {
+                this.$message({
+                  message: response.data.msg,
+                  type: "error"
+                });
+              }
+              this.searchLoading = false;
+              this.tableLoading = false;
+            })
+            .catch(error => {
+              reject(error);
+            });
+        });
+      }).catch(() => {});
+    },
+    oneDelete(row){
+      this.$confirm(
+        "此操作将删除数据, 是否继续?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      ).then(() => {
+        this.searchLoading = true;
+        this.tableLoading = true;
+        let data = {dbtype: this.dbtype}
+        data.userCode = row.usercode
+        new Promise((response, reject) => {
+          oneDelete(qs.stringify(data))
+            .then(response => {
+              if (response.data.code == 0) {
+                this.$message.success(response.data.msg);
+                this.getList();
+              } else {
+                this.$message({
+                  message: response.data.msg,
+                  type: "error"
+                });
+              }
+              this.searchLoading = false;
+              this.tableLoading = false;
+            })
+            .catch(error => {
+              reject(error);
+            });
+        });
+      }).catch(() => {});
     },
     //打开修改状态
     openStatus(row) {

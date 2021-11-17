@@ -48,7 +48,7 @@ public class ManualSetTimeController {
         String year = manualSetTime.getYear();
         String month = manualSetTime.getMonth();
 
-        List<MonthSummary> list = monthSummaryService.selectSummaryListByYearAndMonth(year, month,dbtype,null);
+        List<MonthSummary> list = monthSummaryService.selectSummaryListByYearAndMonth(year, month,dbtype,null,null);
         boolean isFinish = true;
         for (MonthSummary summary : list) {
             if (!summary.getState().equals("7")) {

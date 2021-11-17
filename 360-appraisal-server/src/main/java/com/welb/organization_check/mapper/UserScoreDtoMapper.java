@@ -25,4 +25,7 @@ public interface UserScoreDtoMapper {
                                                @Param("month")String month,
                                                @Param("dbtype") String dbtype,
                                                @Param("employeeCode")String employeeCode);
+
+    List<UserScoreDto> selectUserDetailByYMDTAndPTAndSTList( @Param("year")String year, @Param("month")String month,@Param("dbtype")String dbtype,
+                                                        @Param("postType")String postType,@Param("typeList")List<String> typeList);
 }

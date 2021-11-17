@@ -68,7 +68,7 @@ public class ResultReportServiceImpl implements IResultReportService {
     }
 
     @Override
-    public int deleteYM(String year,String month,String dbtype){
-        return reportMapper.deleteYM(year,month,dbtype);
+    public int deleteYM(String year,String month,String dbtype,String postType,String userCode){
+        return reportMapper.deleteYM(year,month,dbtype,postType,userCode);
     }
 }

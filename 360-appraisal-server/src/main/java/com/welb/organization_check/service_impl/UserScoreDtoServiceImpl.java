@@ -163,4 +163,9 @@ public class UserScoreDtoServiceImpl implements IUserScoreDtoService {
 
         return dutyAndRatioList;
     }
+
+    @Override
+    public List<UserScoreDto> selectUserDetailByYMDTAndPTAndSTList(String year, String month,String dbtype, String postType,List<String> typeList){
+        return userScoreDtoMapper.selectUserDetailByYMDTAndPTAndSTList(year, month,dbtype, postType, typeList);
+    }
 }

@@ -282,15 +282,6 @@ export default {
       this.uslDialogVisible = false;
       this.messageDialogVisible = false;
     },
-    //设置评分人
-    addGrade() {
-      if (this.dutyArr.length > 0) {
-        this.paichucode = this.page.scorredstationcode
-        this.dialogVisible = true;
-      } else {
-        this.$message.warning("请先勾选指标, 否则无法新增评分人.");
-      }
-    },
     addGradeEF() {
       if (this.dutyArr.length > 0) {
         if (this.dutyArr.length == 1) {
@@ -307,10 +298,11 @@ export default {
     },
     //编辑评分人
     editScore(val) {
-      this.uslDialogVisible = true;
+      // this.uslDialogVisible = true;
       this.data = val;
       this.data.scorredstationcode = this.page.scorredstationcode
       this.data.scoretype = this.page.scoretype
+      this.uslEFDialogVisible = true;
     },
     //删除评分人
     deleteScore(row) {

@@ -155,6 +155,7 @@ export default {
                     type: "success"
                   });
                   this.getList();
+                  this.$emit("childGetList");
             } else {
               this.$message({
                 message: response.data.msg,

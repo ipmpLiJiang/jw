@@ -63,7 +63,7 @@ public class ScoreDutySmServiceImpl implements IScoreDutySmService {
     }
 
     @Override
-    public int deleteYM(String year,String month,String dbtype,String postType){
-        return scoreDutySmMapper.deleteYM(year,month,dbtype,postType);
+    public int deleteYM(String year,String month,String dbtype,String postType,String userCode){
+        return scoreDutySmMapper.deleteYM(year,month,dbtype,postType,userCode);
     }
 }

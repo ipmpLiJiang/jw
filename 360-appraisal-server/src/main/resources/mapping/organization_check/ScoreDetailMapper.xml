@@ -305,6 +305,7 @@
     scoredetail sd
   where
     m.SerialNo = sf.MSerialNo
+    AND m.dbtype = sf.dbtype
     AND sf.SerialNo = sd.FSerialNo
     AND m.Year = #{year}
     AND m.Month = #{month}
@@ -313,7 +314,11 @@
       AND m.EmployeeCode in (
       select UserCode from user where Flag='0' and UserState='1' and RoleType='0' and postType = #{postType}
       )
-    </if></select>
+    </if>
+    <if test="userCode != null and userCode !=''">
+      AND m.EmployeeCode = #{userCode}
+    </if>
+  </select>
 
     <delete id="deleteYM">
         delete from scoredetail where FSerialNo in(
@@ -321,9 +326,13 @@
                 select m.SerialNo from monthsummary m,user u where m.EmployeeCode = u.UserCode and
                 m.year=#{year} and m.Month=#{month} and m.dbtype=#{dbtype}
                 <if test="postType != null and postType !=''">
-                    and u.postType = #{postType}
+                  and u.postType = #{postType}
+                </if>
+                <if test="userCode != null and userCode !=''">
+                  AND u.UserCode = #{userCode}
                 </if>
             )
         )
     </delete>
+
 </mapper>

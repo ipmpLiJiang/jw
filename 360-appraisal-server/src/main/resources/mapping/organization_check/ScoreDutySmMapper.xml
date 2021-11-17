@@ -117,10 +117,10 @@
         WHERE
             Year = #{record.year,jdbcType=VARCHAR}
             and Month = #{record.month,jdbcType=VARCHAR}
+            and dbtype = #{record.dbtype,jdbcType=VARCHAR}
             <if test="record.scorredcode != null">
                 and ScorredCode =  #{record.scorredcode,jdbcType=VARCHAR}
             </if>
-             and dbtype = #{record.dbtype,jdbcType=VARCHAR}
             <if test="postType != null and postType !=''">
                 AND ScorredCode in (
                 select UserCode from user where Flag='0' and UserState='1' and RoleType='0' and postType = #{postType}
@@ -134,6 +134,9 @@
             AND ScorredCode in (
                 select UserCode from user where postType = #{postType}
             )
+        </if>
+        <if test="userCode != null and userCode !=''">
+            AND ScorredCode = #{userCode}
         </if>
     </delete>
 </mapper>

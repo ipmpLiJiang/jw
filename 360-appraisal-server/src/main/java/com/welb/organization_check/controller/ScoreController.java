@@ -879,7 +879,7 @@ public class ScoreController {
     public Object findAll(String dbtype) {
         ModelMap map = new ModelMap();
         try {
-            List<Score> scoreAll = scoreService.findScoreAll(dbtype,null);
+            List<Score> scoreAll = scoreService.findScoreAll(dbtype,null,null);
             if (scoreAll.size() > 0) {
                 for (Score score : scoreAll) {
                     User user1 = userService.findOne(score.getScorredcode());
@@ -909,6 +909,7 @@ public class ScoreController {
                 PageInfo<Score> pageInfo = new PageInfo<>(scores);
                 scores = pageInfo.getList();
                 map.put("totalPages", pageInfo.getTotal());
+//                map.put("totalPages", scores.size());
                 map.put("msg", "查询评分用户成功");
                 map.put("data", scores);
                 map.put("code", 0);

@@ -143,8 +143,8 @@ public class ScoreFlowServiceImpl implements IScoreFlowService {
     }
 
     @Override
-    public List<ScoreFlow> selectFlowByMonthSummaryList(String year, String month, String dbtype, String postType) {
-        return flowMapper.selectFlowByMonthSummaryList(year, month, dbtype, postType);
+    public List<ScoreFlow> selectFlowByMonthSummaryList(String year, String month, String dbtype, String postType,String userCode) {
+        return flowMapper.selectFlowByMonthSummaryList(year, month, dbtype, postType,userCode);
     }
 
     @Override
@@ -153,7 +153,12 @@ public class ScoreFlowServiceImpl implements IScoreFlowService {
     }
 
     @Override
-    public int deleteYM(String year, String month, String dbtype, String postType) {
-        return flowMapper.deleteYM(year, month, dbtype, postType);
+    public int deleteYM(String year, String month, String dbtype, String postType,String userCode) {
+        return flowMapper.deleteYM(year, month, dbtype, postType,userCode);
+    }
+
+    @Override
+    public List<ScoreFlow> selectSummaryFlowByYMTOrPTList(String year, String month, String dbtype, String postType) {
+        return flowMapper.selectSummaryFlowByYMTOrPTList(year, month, dbtype, postType);
     }
 }

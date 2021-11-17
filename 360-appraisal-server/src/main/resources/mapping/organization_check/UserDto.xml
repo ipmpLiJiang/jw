@@ -409,6 +409,9 @@
             <if test="userDto.postType!=null and userDto.postType!=''">
                 and u.postType=#{userDto.postType}
             </if>
+            <if test="userDto.usercode!=null and userDto.usercode!=''">
+                and u.usercode=#{userDto.usercode}
+            </if>
             AND u.UserCode = m.EmployeeCode
             and u.UserCode=ur.UserCode
             and r.RoleCode=ur.RoleCode

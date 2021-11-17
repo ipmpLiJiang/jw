@@ -132,7 +132,7 @@ public class EvaluationReportServiceImpl implements IEvaluationReportService {
     }
 
     @Override
-    public int deleteYM(String year,String month,String dbtype){
-        return evaluationReportMapper.deleteYM(year,month,dbtype);
+    public int deleteYM(String year,String month,String dbtype,String postType,String userCode){
+        return evaluationReportMapper.deleteYM(year,month,dbtype,postType,userCode);
     }
 }

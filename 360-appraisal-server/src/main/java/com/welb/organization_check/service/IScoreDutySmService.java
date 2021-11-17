@@ -23,5 +23,5 @@ public interface IScoreDutySmService {
 
     List<ScoreDutySm> selectScoreDutySmList(ScoreDutySm record,String postType);
 
-    int deleteYM(String year,String month,String dbtype,String postType);
+    int deleteYM(String year,String month,String dbtype,String postType,String userCode);
 }

@@ -76,7 +76,7 @@ public interface ScoreMapper {
     int batchDelete(List<String>scorredIds);
 
 
-    List<Score>findScoreAll(String dbtype,String postType);
+    List<Score>findScoreAll(String dbtype,String postType,String userCode);
 
     List<Score> findScoreScorringInList(@Param("score")Score score,@Param("scorringList") String[] scorringList);
 

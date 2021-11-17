@@ -47,7 +47,8 @@ public interface MonthSummaryMapper {
     List<MonthSummary>selectSummaryListByYearAndMonth(@Param("year") String year,
                                                       @Param("month") String month,
                                                       @Param("dbtype") String dbtype,
-                                                      @Param("postType") String postType);
+                                                      @Param("postType") String postType,
+                                                      @Param("userCode") String userCode);
 
     MonthSummary selectSummaryByYearAndMonthAndCode(@Param("year")String year,@Param("month")String month,@Param("employeecode")String employeecode, @Param("dbtype")String dbtype);
 
@@ -65,5 +66,5 @@ public interface MonthSummaryMapper {
 
     List<MonthSummary>selectSummaryByInEmployeeCode(@Param("year")String year,@Param("month")String month, @Param("dbtype")String dbtype,@Param("codeList") List<String> codeList);
 
-    int deleteYM(@Param("year") String year,@Param("month") String month,@Param("dbtype") String dbtype,@Param("postType") String postType);
+    int deleteYM(String year,String month,String dbtype,String postType,String userCode);
 }
