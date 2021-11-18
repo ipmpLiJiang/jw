@@ -100,13 +100,14 @@ public class ScoreFlowController {
     }
 
     private void getFlowABCDEFPostTypeList(List<ScoreFlow> flowList, ScoreFlowScorringTjDto dto, String postType) {
-        List<ScoreFlowScorringTjDto> list = new ArrayList<>();
-        List<ScoreFlowScorringTjDto> query = new ArrayList<>();
+//        List<ScoreFlowScorringTjDto> list = new ArrayList<>();
+//        List<ScoreFlowScorringTjDto> query = new ArrayList<>();
         List<ScoreFlow> flowPostTypeList = new ArrayList<>();
         List<ScoreFlow> flowABCList = new ArrayList<>();
         List<ScoreFlow> flowDList = new ArrayList<>();
         List<ScoreFlow> flowEFList1 = new ArrayList<>();
         List<ScoreFlow> flowEFList = new ArrayList<>();
+        List<ScoreFlow> list = new ArrayList<>();
         List<ScoreFlow> flowABCDEFList = new ArrayList<>();
         flowPostTypeList = flowList.stream().filter(s -> s.getPosttype().equals(postType)).collect(Collectors.toList());
         if (flowPostTypeList.size() > 0) {
@@ -127,36 +128,86 @@ public class ScoreFlowController {
                     flowEFList.add(flowEF);
                 }
             }
+            int count = 0;
+            count = flowPostTypeList.stream().collect(Collectors.groupingBy(ScoreFlow::getScoredcode)).size();
+            dto.setKhrs(count);
 
-            for (ScoreFlow flow : flowPostTypeList) {
-                if (list.stream().filter(s -> s.getScorredcode().equals(flow.getScoredcode())).count() == 0) {
-                    dto.setKhrs(dto.getKhrs() + 1);
-                    dto.setYcyABCrs(flowABCList.size());
-                    dto.setYcyDrs(flowDList.size());
-                    dto.setYcyEFrs(flowEFList.size());
-                    flowABCDEFList = flowABCList.stream().filter(s -> s.getScoredcode().equals(flow.getScoredcode())).collect(Collectors.toList());
-                    for (ScoreFlow sbcFlow : flowABCDEFList) {
-                        if (sbcFlow.getScoreState().equals("2")) {
-                            dto.setSjcyABCrs(dto.getSjcyABCrs() + 1);
-                        }
+//            count = flowABCList.stream().collect(Collectors.groupingBy(ScoreFlow::getScorringcode)).size();
+//            dto.setYcyABCrs(count);
+//            count = flowDList.stream().collect(Collectors.groupingBy(ScoreFlow::getScorringcode)).size();
+//            dto.setYcyDrs(count);
+//            count = flowEFList.stream().collect(Collectors.groupingBy(ScoreFlow::getScorringcode)).size();
+//            dto.setYcyEFrs(count);
+            for (ScoreFlow flow : flowABCList) {
+                if (list.stream().filter(s -> s.getScorringcode().equals(flow.getScorringcode())).count() == 0) {
+                    dto.setYcyABCrs(dto.getYcyABCrs() + 1);
+                    flowABCDEFList = flowABCList.stream().filter(s -> s.getScorringcode().equals(flow.getScorringcode()) &&
+                            s.getScoreState().equals("2")).collect(Collectors.toList());
+                    if(flowABCDEFList.size() > 0) {
+                        dto.setSjcyABCrs(dto.getSjcyABCrs() + 1);
                     }
-                    flowABCDEFList = flowDList.stream().filter(s -> s.getScoredcode().equals(flow.getScoredcode())).collect(Collectors.toList());
-                    for (ScoreFlow dflow : flowABCDEFList) {
-                        if (dflow.getScoreState().equals("2")) {
-                            dto.setSjcyDrs(dto.getSjcyDrs() + 1);
-                        }
-                    }
-                    flowABCDEFList = flowEFList.stream().filter(s -> s.getScoredcode().equals(flow.getScoredcode())).collect(Collectors.toList());
-                    for (ScoreFlow efFlow : flowABCDEFList) {
-                        if (efFlow.getScoreState().equals("2")) {
-                            dto.setSjcyEFrs(dto.getSjcyEFrs() + 1);
-                        }
-                    }
-                    ScoreFlowScorringTjDto item = new ScoreFlowScorringTjDto();
-                    item.setScorredcode(flow.getScoredcode());
+                    ScoreFlow item = new ScoreFlow();
+                    item.setScorringcode(flow.getScorringcode());
                     list.add(item);
                 }
             }
+            flowABCDEFList.clear();
+            list.clear();
+            for (ScoreFlow flow : flowDList) {
+                if (list.stream().filter(s -> s.getScorringcode().equals(flow.getScorringcode())).count() == 0) {
+                    dto.setYcyDrs(dto.getYcyDrs() + 1);
+                    flowABCDEFList = flowDList.stream().filter(s -> s.getScorringcode().equals(flow.getScorringcode()) &&
+                            s.getScoreState().equals("2")).collect(Collectors.toList());
+                    if(flowABCDEFList.size() > 0) {
+                        dto.setSjcyDrs(dto.getSjcyDrs() + 1);
+                    }
+                    ScoreFlow item = new ScoreFlow();
+                    item.setScorringcode(flow.getScorringcode());
+                    list.add(item);
+                }
+            }
+            flowABCDEFList.clear();
+            list.clear();
+            for (ScoreFlow flow : flowEFList) {
+                if (list.stream().filter(s -> s.getScorringcode().equals(flow.getScorringcode())).count() == 0) {
+                    dto.setYcyEFrs(dto.getYcyEFrs() + 1);
+                    flowABCDEFList = flowEFList.stream().filter(s -> s.getScorringcode().equals(flow.getScorringcode()) &&
+                            s.getScoreState().equals("2")).collect(Collectors.toList());
+                    if(flowABCDEFList.size() > 0) {
+                        dto.setSjcyEFrs(dto.getSjcyEFrs() + 1);
+                    }
+                    ScoreFlow item = new ScoreFlow();
+                    item.setScorringcode(flow.getScorringcode());
+                    list.add(item);
+                }
+            }
+
+//            for (ScoreFlow flow : flowPostTypeList) {
+//                if (list.stream().filter(s -> s.getScorredcode().equals(flow.getScoredcode())).count() == 0) {
+//                    dto.setKhrs(dto.getKhrs() + 1);
+//                    flowABCDEFList = flowABCList.stream().filter(s -> s.getScoredcode().equals(flow.getScoredcode())).collect(Collectors.toList());
+//                    for (ScoreFlow sbcFlow : flowABCDEFList) {
+//                        if (sbcFlow.getScoreState().equals("2")) {
+//                            dto.setSjcyABCrs(dto.getSjcyABCrs() + 1);
+//                        }
+//                    }
+//                    flowABCDEFList = flowDList.stream().filter(s -> s.getScoredcode().equals(flow.getScoredcode())).collect(Collectors.toList());
+//                    for (ScoreFlow dflow : flowABCDEFList) {
+//                        if (dflow.getScoreState().equals("2")) {
+//                            dto.setSjcyDrs(dto.getSjcyDrs() + 1);
+//                        }
+//                    }
+//                    flowABCDEFList = flowEFList.stream().filter(s -> s.getScoredcode().equals(flow.getScoredcode())).collect(Collectors.toList());
+//                    for (ScoreFlow efFlow : flowABCDEFList) {
+//                        if (efFlow.getScoreState().equals("2")) {
+//                            dto.setSjcyEFrs(dto.getSjcyEFrs() + 1);
+//                        }
+//                    }
+//                    ScoreFlowScorringTjDto item = new ScoreFlowScorringTjDto();
+//                    item.setScorredcode(flow.getScoredcode());
+//                    list.add(item);
+//                }
+//            }
         }
     }
 

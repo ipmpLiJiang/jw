@@ -109,8 +109,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public List<User> selectUserAllBpfr(String dbtype){
-        return userMapper.selectUserAllBpfr(dbtype);
+    public List<User> selectUserAllBpfr(String dbtype,String postType){
+        return userMapper.selectUserAllBpfr(dbtype,postType);
     }
 
     //查询当前评分关系人员数据

@@ -86,8 +86,8 @@ public class ScoreHistoryServiceImpl implements IScoreHistoryService {
     }
 
     @Override
-    public List<ScoreHistory> findUserScoreHistory(String year, String month,String dbtype,String dbbk) {
-        return historyMapper.findUserScoreHistory(year, month,dbtype,dbbk);
+    public List<ScoreHistory> findUserScoreHistory(String year, String month,String dbtype,String dbbk,String postType) {
+        return historyMapper.findUserScoreHistory(year, month,dbtype,dbbk,postType);
     }
 
     @Override

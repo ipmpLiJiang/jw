@@ -112,8 +112,8 @@ public class EvaluationReportServiceImpl implements IEvaluationReportService {
         return evaluationReportMapper.updateAvgScore(avgscore, year, month,dbtype);
     }
     @Override
-    public List<EvaluationReport> selectEvaluationReportList(EvaluationReport report){
-        return  evaluationReportMapper.selectEvaluationReportList(report);
+    public List<EvaluationReport> selectEvaluationReportList(EvaluationReport report,String postType){
+        return  evaluationReportMapper.selectEvaluationReportList(report,postType);
     }
 
     @Override

@@ -309,8 +309,13 @@ public class QuarterController {
                 map.put("msg", "修改季结状态成功");
                 map.put("code", 0);
             } else {
-                map.put("msg", "修改季结状态失败");
-                map.put("code", 1);
+                if(summary.getIsSc() == 0) {
+                    map.put("msg", "修改季结状态失败，该数据是否已数据生成？");
+                    map.put("code", 1);
+                } else {
+                    map.put("msg", "修改季结状态失败.");
+                    map.put("code", 1);
+                }
             }
         } else {
             map.put("msg", "当前用户(" + username + ") 未分配评分关系,修改季结状态失败");

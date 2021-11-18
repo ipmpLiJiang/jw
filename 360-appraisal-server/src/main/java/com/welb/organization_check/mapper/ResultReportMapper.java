@@ -23,7 +23,7 @@ public interface ResultReportMapper {
 
     int batchDelete(List<Integer>resultReportIds);
 
-    List<ResultReport> selectResultReportList(@Param("year") String year,@Param("month") String month,@Param("dbtype") String dbtype);
+    List<ResultReport> selectResultReportList(@Param("year") String year,@Param("month") String month,@Param("dbtype") String dbtype,@Param("postType") String postType);
 
     List<ResultReport> selectResultReportByYearMonth(@Param("year") String year,@Param("month") String month,@Param("dbtype") String dbtype);
 

@@ -46,7 +46,7 @@ public interface EvaluationReportMapper {
 
     int updateAvgScore(@Param("avgscore") double avgscore, @Param("year") String year, @Param("month") String month, @Param("dbtype") String dbtype);
 
-    List<EvaluationReport> selectEvaluationReportList(EvaluationReport report);
+    List<EvaluationReport> selectEvaluationReportList(@Param("report") EvaluationReport report,@Param("postType") String postType);
 
     List<EvaluationReport> selectEvaluationReportByInUserCode(@Param("year") String year, @Param("month") String month, @Param("dbtype") String dbtype, @Param("codeList") List<String> codeList);
 

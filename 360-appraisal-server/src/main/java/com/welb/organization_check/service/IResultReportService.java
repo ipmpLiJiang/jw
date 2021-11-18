@@ -61,7 +61,7 @@ public interface IResultReportService {
      */
     int batchDelete(List<Integer>resultReportIds);
 
-    List<ResultReport> selectResultReportList(String year, String month,String dbtype);
+    List<ResultReport> selectResultReportList(String year, String month,String dbtype,String postType);
 
     List<ResultReport> selectResultReportByYearMonth(String year, String month,String dbtype);
 

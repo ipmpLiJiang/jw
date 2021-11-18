@@ -124,7 +124,7 @@ public interface IEvaluationReportService {
     int updateAvgScore(double avgscore,String year,String month, String dbtype);
 
 
-    List<EvaluationReport> selectEvaluationReportList(EvaluationReport report);
+    List<EvaluationReport> selectEvaluationReportList(EvaluationReport report,String postType);
 
     List<EvaluationReport>selectEvaluationReportByInUserCode(String year,String month,String dbtype,List<String> codeList);
 

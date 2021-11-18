@@ -616,6 +616,13 @@ export default {
       console.log("shangc")
     },
      jisuanChang() {
+      if(this.dbtype == '2' && (this.search.postType == null || this.search.postType == "")) {
+        this.$message({
+          message: '干部考核，必须选择 岗位类型，才能 计算.',
+          type: "error"
+        });
+        return;
+      }
       //此操作将计算 重点、目标 指标的平均值, 是否继续?
       this.$confirm(
         "此操作将计算各项指标平均值, 是否继续?",
@@ -631,6 +638,9 @@ export default {
           this.tableLoading = true
           let params = {}
           params.dbtype = this.dbtype
+          if(this.dbtype == '2' && this.search.postType != null && this.search.postType != "") {
+            params.postType = this.search.postType
+          }
           new Promise((response, reject) => {
             JiSuan(qs.stringify(params))
               .then(response => {

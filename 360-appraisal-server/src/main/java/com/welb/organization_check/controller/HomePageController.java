@@ -1409,11 +1409,11 @@ public class HomePageController {
     }
 
     @RequestMapping(value = "/jisuanScore", produces = "application/json;charset=utf-8")
-    public Object jisuanScore(HttpServletRequest req, String dbtype) {
+    public Object jisuanScore(HttpServletRequest req, String dbtype, String postType) {
         if (dbtype.equals("1")) {
             return this.jisuan(req, dbtype);
         } else {
-            return this.jisuanDuty(req, dbtype);
+            return this.jisuanDuty(req, dbtype, postType);
         }
     }
 
@@ -1429,11 +1429,11 @@ public class HomePageController {
                 if (setTime != null) {
                     String year = setTime.getYear();
                     String month = setTime.getMonth();
-                    List<MonthSummary> monthSummaryList = monthSummaryService.selectSummaryListByYearAndMonth(year, month, dbtype, null,null);
+                    List<MonthSummary> monthSummaryList = monthSummaryService.selectSummaryListByYearAndMonth(year, month, dbtype, null, null);
                     if (monthSummaryList != null) {
                         long count = monthSummaryList.stream().filter(s -> !s.getState().equals("7")).count();
                         if (count == 0) {
-                            List<ScoreHistory> shList = historyService.findUserScoreHistory(year, month, dbtype, null);
+                            List<ScoreHistory> shList = historyService.findUserScoreHistory(year, month, dbtype, null, null);
                             List<ScoreHistory> scoreHistoryList = shList.stream().filter(s -> s.getDbbk() != null && s.getDbbk() != "" && (
                                     s.getDbbk().equals("3") || s.getDbbk().equals("4"))).collect(Collectors.toList());
                             if (scoreHistoryList.size() > 0) {
@@ -1647,7 +1647,7 @@ public class HomePageController {
                                     query.setYear(year);
                                     query.setMonth(month);
                                     query.setDbtype(dbtype);
-                                    List<EvaluationReport> evaluationReportList = evaluationReportService.selectEvaluationReportList(query);
+                                    List<EvaluationReport> evaluationReportList = evaluationReportService.selectEvaluationReportList(query,null);
                                     List<EvaluationReport> queryErList = new ArrayList<>();
 
                                     Double avgScore = totalSumScore / scoreHistoryList.size();
@@ -1848,11 +1848,11 @@ public class HomePageController {
                 if (setTime != null) {
                     String year = setTime.getYear();
                     String month = setTime.getMonth();
-                    List<MonthSummary> monthSummaryList = monthSummaryService.selectSummaryListByYearAndMonth(year, month, dbtype, null,null);
+                    List<MonthSummary> monthSummaryList = monthSummaryService.selectSummaryListByYearAndMonth(year, month, dbtype, null, null);
                     if (monthSummaryList != null) {
                         long count = monthSummaryList.stream().filter(s -> !s.getState().equals("7")).count();
                         if (count == 0) {
-                            List<ScoreHistory> scoreHistoryList = historyService.findUserScoreHistory(year, month, dbtype, null);
+                            List<ScoreHistory> scoreHistoryList = historyService.findUserScoreHistory(year, month, dbtype, null, null);
                             if (scoreHistoryList.size() > 0) {
                                 List<String> typeList = new ArrayList<>();
                                 typeList.add("0");
@@ -1926,7 +1926,7 @@ public class HomePageController {
                                     queryYdyf.setYear(setTime.getYear());
                                     queryYdyf.setMonth(setTime.getMonth());
                                     List<ScoreYdyf> ydyfQueryList = new ArrayList<>();
-                                    List<ScoreYdyf> ydyfList = ydyfService.findYdyfList(queryYdyf);
+                                    List<ScoreYdyf> ydyfList = ydyfService.findYdyfList(queryYdyf,null);
                                     for (ScoreHistory item : scoreHistoryList) {
                                         totalRatio = 0.0;
                                         userQueryList = userScoreDtoList.stream().filter(
@@ -2129,7 +2129,7 @@ public class HomePageController {
                                     query.setYear(year);
                                     query.setMonth(month);
                                     query.setDbtype(dbtype);
-                                    List<EvaluationReport> evaluationReportList = evaluationReportService.selectEvaluationReportList(query);
+                                    List<EvaluationReport> evaluationReportList = evaluationReportService.selectEvaluationReportList(query,null);
                                     List<EvaluationReport> queryErList = new ArrayList<>();
 
                                     Double avgKzrScore = kzrCount == 0 ? 0 : totalKzrSumScore / kzrCount;
@@ -2194,7 +2194,7 @@ public class HomePageController {
                                         historyService.updateByPrimaryKeySelective(scoreHistory);
                                     }
                                     if (rrList.size() > 0) {
-                                        this.updateOrInsertResultReportMb(rrList, year, month, avgMbKzrScore, avgMbHszScore, avgMbXzScore, mbMaxCount, dbtype);
+                                        this.updateOrInsertResultReportMb(rrList, year, month, avgMbKzrScore, avgMbHszScore, avgMbXzScore, mbMaxCount, dbtype,null);
                                     }
                                     msg = "OK";
                                 } else {
@@ -2226,9 +2226,9 @@ public class HomePageController {
         return map;
     }
 
-    private List<UserScoreDto> getUserDutyScore(String year, String month, String dbtype, String employeeCode) {
-        List<UserScoreDto> list = userScoreDtoService.findUserFlowDetailScore(year, month, dbtype, employeeCode);
-        List<User> userList = userService.selectUserAllBpfr(dbtype);
+    private List<UserScoreDto> getUserDutyScore(String year, String month, String dbtype, String employeeCode, String postType) {
+        List<UserScoreDto> list = userScoreDtoService.findUserFlowDetailScore(year, month, dbtype, employeeCode, postType);
+        List<User> userList = userService.selectUserAllBpfr(dbtype, postType);
         List<Duty> dutyList = dutyService.selectDutyAllByDbtype(dbtype);
         List<User> queryUser = new ArrayList<>();
         List<Duty> queryDuty = new ArrayList<>();
@@ -2261,7 +2261,7 @@ public class HomePageController {
         return list;
     }
 
-    public Object jisuanDuty(HttpServletRequest req, String dbtype) {
+    public Object jisuanDuty(HttpServletRequest req, String dbtype, String postType) {
         //获取当前登录用户的编号
         ModelMap map = new ModelMap();
         String usercode = (String) req.getSession().getAttribute("usercode");
@@ -2273,11 +2273,11 @@ public class HomePageController {
                 if (setTime != null) {
                     String year = setTime.getYear();
                     String month = setTime.getMonth();
-                    List<MonthSummary> monthSummaryList = monthSummaryService.selectSummaryListByYearAndMonth(year, month, dbtype, null,null);
+                    List<MonthSummary> monthSummaryList = monthSummaryService.selectSummaryListByYearAndMonth(year, month, dbtype, postType, null);
                     if (monthSummaryList != null) {
                         long count = monthSummaryList.stream().filter(s -> !s.getState().equals("7")).count();
                         if (count == 0) {
-                            List<ScoreHistory> scoreHistoryList = historyService.findUserScoreHistory(year, month, dbtype, null);
+                            List<ScoreHistory> scoreHistoryList = historyService.findUserScoreHistory(year, month, dbtype, null, postType);
                             if (scoreHistoryList.size() > 0) {
                                 List<String> typeList = new ArrayList<>();
                                 typeList.add("0");
@@ -2285,7 +2285,7 @@ public class HomePageController {
                                 typeList.add("2");
                                 typeList.add("3");
 //                                List<UserScoreDto> userScoreDtoList = userScoreDtoService.findUserDutyScore(year, month, null, typeList, dbtype);
-                                List<UserScoreDto> userScoreDtoList = this.getUserDutyScore(year, month, dbtype, null);
+                                List<UserScoreDto> userScoreDtoList = this.getUserDutyScore(year, month, dbtype, null, postType);
                                 if (userScoreDtoList.size() > 0) {
 //                                    Map<String, List<UserScoreDto>> byAuthor = userScoreDtoList.stream().map()
 //                                            .collect(Collectors.groupingBy(UserScoreDto::getScoreType));
@@ -2351,7 +2351,7 @@ public class HomePageController {
                                     queryYdyf.setYear(setTime.getYear());
                                     queryYdyf.setMonth(setTime.getMonth());
                                     List<ScoreYdyf> ydyfQueryList = new ArrayList<>();
-                                    List<ScoreYdyf> ydyfList = ydyfService.findYdyfList(queryYdyf);
+                                    List<ScoreYdyf> ydyfList = ydyfService.findYdyfList(queryYdyf,postType);
                                     for (ScoreHistory item : scoreHistoryList) {
                                         userQueryList = userScoreDtoList.stream().filter(
                                                 s -> s.getScoredCode().equals(item.getUsercode())
@@ -2487,7 +2487,7 @@ public class HomePageController {
                                     query.setYear(year);
                                     query.setMonth(month);
                                     query.setDbtype(dbtype);
-                                    List<EvaluationReport> evaluationReportList = evaluationReportService.selectEvaluationReportList(query);
+                                    List<EvaluationReport> evaluationReportList = evaluationReportService.selectEvaluationReportList(query,postType);
                                     List<EvaluationReport> queryErList = new ArrayList<>();
 
                                     Double avgKzrScore = kzrCount == 0 ? 0 : totalKzrSumScore / kzrCount;
@@ -2550,7 +2550,7 @@ public class HomePageController {
                                         historyService.updateByPrimaryKeySelective(scoreHistory);
                                     }
                                     if (rrList.size() > 0) {
-                                        this.updateOrInsertResultReportMb(rrList, year, month, avgMbKzrScore, avgMbHszScore, avgMbXzScore, mbMaxCount, dbtype);
+                                        this.updateOrInsertResultReportMb(rrList, year, month, avgMbKzrScore, avgMbHszScore, avgMbXzScore, mbMaxCount, dbtype,postType);
                                     }
                                     msg = "OK";
                                 } else {
@@ -2602,7 +2602,7 @@ public class HomePageController {
         query.setYear(year);
         query.setMonth(month);
         query.setDbtype(dbtype);
-        List<EvaluationReport> evaluationReportList = evaluationReportList = evaluationReportService.selectEvaluationReportList(query);
+        List<EvaluationReport> evaluationReportList = evaluationReportList = evaluationReportService.selectEvaluationReportList(query,null);
         long count1 = rrList.stream().filter(s -> s.getResultreportcode().equals("4")).count();
         Double jcScore1 = this.getAvgScore(rrList, "4", count1);
         Double gwScore1 = this.getAvgScore(rrList, "5", count1);
@@ -2610,7 +2610,7 @@ public class HomePageController {
         Double mbScore1 = this.getAvgScore(rrList, "7", count1);
         Double dfScore1 = this.getAvgScore(rrList, "8", count1);
         if (evaluationReportList.size() > 0) {
-            List<ResultReport> resultReportList = resultReportService.selectResultReportList(year, month, dbtype);
+            List<ResultReport> resultReportList = resultReportService.selectResultReportList(year, month, dbtype,null);
             List<ResultReport> rrQueryList = new ArrayList<>();
             if (resultReportList.size() > 0) {
                 List<ResultReport> rList = new ArrayList<>();
@@ -2671,12 +2671,12 @@ public class HomePageController {
         return count == 0 ? 0 : score / count;
     }
 
-    private void updateOrInsertResultReportMb(List<ResultReport> rrList, String year, String month, Double avgMbKzrScore, Double avgMbHszScore, Double avgMbXzScore, Integer mbMaxCount, String dbtype) {
+    private void updateOrInsertResultReportMb(List<ResultReport> rrList, String year, String month, Double avgMbKzrScore, Double avgMbHszScore, Double avgMbXzScore, Integer mbMaxCount, String dbtype,String postType) {
         EvaluationReport query = new EvaluationReport();
         query.setYear(year);
         query.setMonth(month);
         query.setDbtype(dbtype);
-        List<EvaluationReport> evaluationReportList = evaluationReportService.selectEvaluationReportList(query);
+        List<EvaluationReport> evaluationReportList = evaluationReportService.selectEvaluationReportList(query,postType);
 
         // PostType 1、科主任 2、护士长 3、行政
         // Resultreportcode 重点目标
@@ -2717,7 +2717,7 @@ public class HomePageController {
         Double dfScore3 = this.getPostScore(rrList, "3", "10", count3);
 
         if (evaluationReportList.size() > 0) {
-            List<ResultReport> resultReportList = resultReportService.selectResultReportList(year, month, dbtype);
+            List<ResultReport> resultReportList = resultReportService.selectResultReportList(year, month, dbtype,postType);
             List<ResultReport> rrQueryList = new ArrayList<>();
             if (resultReportList.size() > 0) {
                 List<ResultReport> rList = new ArrayList<>();

@@ -40,8 +40,8 @@ public class UserScoreDtoServiceImpl implements IUserScoreDtoService {
     }
 
     @Override
-    public  List<UserScoreDto> findUserFlowDetailScore(String year,String month,String dbtype,String employeeCode){
-        return userScoreDtoMapper.findUserFlowDetailScore(year,month,dbtype,employeeCode);
+    public  List<UserScoreDto> findUserFlowDetailScore(String year,String month,String dbtype,String employeeCode,String postType){
+        return userScoreDtoMapper.findUserFlowDetailScore(year,month,dbtype,employeeCode,postType);
     }
 
     @Override

@@ -53,8 +53,8 @@ public class ResultReportServiceImpl implements IResultReportService {
     }
 
     @Override
-    public List<ResultReport> selectResultReportList(String year, String month,String dbtype){
-        return reportMapper.selectResultReportList(year,month,dbtype);
+    public List<ResultReport> selectResultReportList(String year, String month,String dbtype,String postType){
+        return reportMapper.selectResultReportList(year,month,dbtype,postType);
     }
 
     @Override

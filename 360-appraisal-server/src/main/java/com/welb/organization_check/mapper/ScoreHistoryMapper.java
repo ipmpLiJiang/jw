@@ -36,7 +36,7 @@ public interface ScoreHistoryMapper {
 
     List<ScoreHistory>findScoreHistoryList(@Param("year")String year,@Param("month")String month);
 
-    List<ScoreHistory> findUserScoreHistory(@Param("year")String year,@Param("month")String month,@Param("dbtype")String dbtype,@Param("dbbk")String dbbk);
+    List<ScoreHistory> findUserScoreHistory(String year,String month,String dbtype,String dbbk,String postType);
 
     List<ScoreHistory>selectHistoryByInUserCode(@Param("year")String year,@Param("month")String month,@Param("dbtype")String dbtype,@Param("codeList")List<String> codeList);
 

@@ -676,6 +676,9 @@
         <if test="dbbk != null and dbbk !=''">
             and h.dbbk = #{dbbk,jdbcType=VARCHAR}
         </if>
+        <if test="postType != null and postType !=''">
+            and u.postType = #{postType,jdbcType=VARCHAR}
+        </if>
 </select>
 
     <select id="selectHistoryByMonthSummaryList" resultType="com.welb.organization_check.entity.ScoreHistory">

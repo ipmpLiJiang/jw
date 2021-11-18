@@ -87,9 +87,14 @@
     from
         scoreydyf
     where
-        Year=#{year} and Month=#{month}
-        <if test="moneyCard != null and moneyCard != ''">
-            and MoneyCard=#{moneyCard}
+        Year=#{ydyf.year} and Month=#{ydyf.month}
+        <if test="ydyf.moneyCard != null and ydyf.moneyCard != ''">
+            and MoneyCard=#{ydyf.moneyCard}
+        </if>
+        <if test="postType != null and postType !=''">
+            AND MoneyCard in(
+                select MoneyCard from user where postType = #{postType}
+            )
         </if>
   </select>
     <delete id="deleteYM">

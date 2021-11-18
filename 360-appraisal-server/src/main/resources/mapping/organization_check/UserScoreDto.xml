@@ -189,6 +189,11 @@
                 and EmployeeCode = #{employeeCode}
             </if>
         )
+        <if test="postType != null and postType !=''">
+            AND sf.ScoredCode in (
+                select UserCode from user where postType= #{postType}
+            )
+        </if>
     </select>
 
     <select id="selectUserDetailByYMDTAndPTAndSTList"  resultType="com.welb.organization_check.dto.UserScoreDto" >

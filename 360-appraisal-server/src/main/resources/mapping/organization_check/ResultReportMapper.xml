@@ -172,6 +172,9 @@
         and e.dbtype = #{dbtype}
 		and r.EvaluationReportCode = e.Id
         and u.UserCode=e.UserCode
+        <if test="postType != null and postType !=''">
+          AND u.postType = #{postType}
+        </if>
   </select>
   <delete id="batchDelete">
     delete from resultreport where Id in

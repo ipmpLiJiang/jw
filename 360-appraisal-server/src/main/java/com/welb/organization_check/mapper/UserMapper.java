@@ -32,7 +32,7 @@ public interface UserMapper {
 
     List<User> selectUserScoreAll(@Param("user") User user,@Param("roleList") List<String> roleList);
 
-    List<User> selectUserAllBpfr(@Param("dbtype") String dbtype);
+    List<User> selectUserAllBpfr(String dbtype,String postType);
 
     List<User>selectUserByStationCode(String stationcode);
 

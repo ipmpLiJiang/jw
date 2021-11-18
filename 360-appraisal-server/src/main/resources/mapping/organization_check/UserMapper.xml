@@ -859,6 +859,9 @@
     from user u where u.UserCode in (
         select code from (select distinct ScorredCode code from score where dbtype= #{dbtype}) a
     )
+    <if test="postType != null and postType !=''">
+        AND u.postType= #{postType}
+    </if>
     </select>
     <select id="selectUserPfr" resultMap="BaseResultMap">
         select u.UserCode,u.UserName,u.StationCode,u.Mobile,u.Sex,u.Nation,u.UserState,

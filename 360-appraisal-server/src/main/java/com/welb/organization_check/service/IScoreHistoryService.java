@@ -91,7 +91,7 @@ public interface IScoreHistoryService {
     List<ScoreHistory>findScoreHistoryList(@Param("year")String year, @Param("month")String month);
 
 
-    List<ScoreHistory> findUserScoreHistory(String year,String month,String dbtype,String dbbk);
+    List<ScoreHistory> findUserScoreHistory(String year,String month,String dbtype,String dbbk,String postType);
 
     List<ScoreHistory>selectHistoryByInUserCode(String year,String month, String dbtype,List<String> codeList);
 

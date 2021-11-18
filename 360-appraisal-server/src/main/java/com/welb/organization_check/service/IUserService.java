@@ -98,7 +98,7 @@ public interface IUserService {
      */
     List<User>findFlagUsers();
 
-    List<User> selectUserAllBpfr(String dbtype);
+    List<User> selectUserAllBpfr(String dbtype,String postType);
 
 
     User findOne(String usercode);

@@ -24,7 +24,8 @@ public interface UserScoreDtoMapper {
     List<UserScoreDto> findUserFlowDetailScore(@Param("year")String year,
                                                @Param("month")String month,
                                                @Param("dbtype") String dbtype,
-                                               @Param("employeeCode")String employeeCode);
+                                               @Param("employeeCode")String employeeCode,
+                                               @Param("postType")String postType);
 
     List<UserScoreDto> selectUserDetailByYMDTAndPTAndSTList( @Param("year")String year, @Param("month")String month,@Param("dbtype")String dbtype,
                                                         @Param("postType")String postType,@Param("typeList")List<String> typeList);

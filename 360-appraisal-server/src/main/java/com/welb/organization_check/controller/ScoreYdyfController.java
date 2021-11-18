@@ -60,7 +60,7 @@ public class ScoreYdyfController {
             PageHelper.startPage(pageNum, pageSize);
             List<ScoreYdyf> ydyfs;
             try {
-                ydyfs = ydyfService.findYdyfList(ydyf);
+                ydyfs = ydyfService.findYdyfList(ydyf,null);
                 PageInfo<ScoreYdyf> pageInfo = new PageInfo<>(ydyfs);
                 ydyfs = pageInfo.getList();
                 //获取总数据量
@@ -106,7 +106,7 @@ public class ScoreYdyfController {
                                 ScoreYdyf query = new ScoreYdyf();
                                 query.setYear(setTime.getYear());
                                 query.setMonth(setTime.getMonth());
-                                List<ScoreYdyf> list = ydyfService.findYdyfList(query);
+                                List<ScoreYdyf> list = ydyfService.findYdyfList(query,null);
                                 List<User> userList = userService.findUserAll();
                                 Double maxSoore = 15.0;
                                 boolean isUpdate = true;

@@ -43,8 +43,8 @@ public class ScoreYdyfServiceImpl implements IScoreYdyfService {
     }
 
     @Override
-    public List<ScoreYdyf> findYdyfList(ScoreYdyf ydyf) {
-        return ydyfMapper.selectYdyfList(ydyf);
+    public List<ScoreYdyf> findYdyfList(ScoreYdyf ydyf,String postType) {
+        return ydyfMapper.selectYdyfList(ydyf,postType);
     }
 
 

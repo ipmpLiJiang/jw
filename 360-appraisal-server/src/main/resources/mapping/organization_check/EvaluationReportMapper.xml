@@ -349,10 +349,13 @@
     e.MinCompareMark, e.Plan, e.SumMbAvgScore, e.MbScore, e.ZdScore,
     e.DfScore,e.state, u.postType ,u.dbtype, u.dbbk, e.ZfScore, u.BranchCode
     from evaluationreport e ,user u
-    where e.Year=#{year}
-    and e.Month=#{month}
-    and e.dbtype =#{dbtype}
+    where e.Year=#{report.year}
+    and e.Month=#{report.month}
+    and e.dbtype =#{report.dbtype}
     and u.UserCode=e.UserCode
+    <if test="postType != null and postType !=''">
+        AND u.postType = #{postType}
+    </if>
   </select>
     <!--计算总分 -->
     <select id="selectReportTotalScore" resultType="double">

@@ -17,7 +17,7 @@ public interface ScoreYdyfMapper {
 
     int updateByPrimaryKeySelective(ScoreYdyf ydyf);
 
-    List<ScoreYdyf> selectYdyfList(ScoreYdyf Ydyf);
+    List<ScoreYdyf> selectYdyfList(@Param("ydyf")ScoreYdyf ydyf,@Param("postType") String postType);
 
     int deleteYM(@Param("year") String year, @Param("month") String month);
 
