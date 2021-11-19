@@ -1,11 +1,11 @@
 package com.welb.organization_check.controller;
 
-
+import com.welb.organization_check.info.Info;
+import net.sf.json.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.welb.organization_check.dto.SortTemp;
 import com.welb.organization_check.dto.UserEvaluationSortDto;
-import com.welb.organization_check.dto.UserScoreBadDto;
 import com.welb.organization_check.entity.ManualSetTime;
 import com.welb.organization_check.entity.ResultReport;
 import com.welb.organization_check.entity.User;
@@ -15,12 +15,21 @@ import com.welb.organization_check.service.IUserEvaluationSortDtoService;
 import com.welb.organization_check.service.IUserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -75,7 +84,7 @@ public class UserEvaluationSortDtoController {
 //                long current = pageNum == 1 ? 0 : (pageNum - 1) * pageSize;
 //                List<UserEvaluationSortDto> userEvaluationSortList = userEvaluationSortDtos.stream().sorted(Comparator.comparing(UserEvaluationSortDto::getSortNum)).skip(current).limit(pageSize).collect(Collectors.toList());
                 List<UserEvaluationSortDto> userEvaluationSortList = pageInfo.getList();
-                this.getResultReport(dto.getYear(), dto.getMonth(), dto.getDbtype(), userEvaluationSortList,dtoAllList);
+                this.getResultReport(dto.getYear(), dto.getMonth(), dto.getDbtype(), userEvaluationSortList, dtoAllList);
 
                 //数据总量userScoreBadList
                 map.put("totalPages", pageInfo.getTotal());
@@ -94,7 +103,7 @@ public class UserEvaluationSortDtoController {
         return map;
     }
 
-    private void setEvaluationSortNum(List<UserEvaluationSortDto> dtoList){
+    private void setEvaluationSortNum(List<UserEvaluationSortDto> dtoList) {
         List<SortTemp> sortList = new ArrayList<>();
         List<Double> scoreList = new ArrayList<>();
 
@@ -123,9 +132,9 @@ public class UserEvaluationSortDtoController {
         }
     }
 
-    private void getUserName(UserEvaluationSortDto item, List<User> userList, List<User> userQueryList){
-        userQueryList = userList.stream().filter(s->s.getUsercode().equals(item.getUsercode())).collect(Collectors.toList());
-        if(userQueryList.size() == 0) {
+    private void getUserName(UserEvaluationSortDto item, List<User> userList, List<User> userQueryList) {
+        userQueryList = userList.stream().filter(s -> s.getUsercode().equals(item.getUsercode())).collect(Collectors.toList());
+        if (userQueryList.size() == 0) {
             User userQuery = new User();
             userQuery.setUsercode(item.getUsercode());
             User user = userService.selectUserBuGwByMoneyCard(userQuery);
@@ -146,7 +155,7 @@ public class UserEvaluationSortDtoController {
     }
 
     private List<ResultReport> getResultReport(String year, String month, String dbtype,
-                                               List<UserEvaluationSortDto> dtoList,List<UserEvaluationSortDto> dtoAllList) {
+                                               List<UserEvaluationSortDto> dtoList, List<UserEvaluationSortDto> dtoAllList) {
         List<ResultReport> reportList = resultReportService.selectResultReportByYearMonth(year, month, dbtype);
         List<ResultReport> rrList = new ArrayList<>();
         boolean isMb = false;
@@ -191,11 +200,11 @@ public class UserEvaluationSortDtoController {
 
             List<UserEvaluationSortDto> queryAll = new ArrayList<>();
             for (UserEvaluationSortDto item : dtoList) {
-                queryAll = dtoAllList.stream().filter(s->s.getId().equals(item.getId())).collect(Collectors.toList());
-                if(queryAll.size() >0){
+                queryAll = dtoAllList.stream().filter(s -> s.getId().equals(item.getId())).collect(Collectors.toList());
+                if (queryAll.size() > 0) {
                     item.setSortNum(queryAll.get(0).getSortNum());
                 }
-                this.getUserName(item,userList,userQueryList);
+                this.getUserName(item, userList, userQueryList);
                 if (isMb) {
                     item.setSumMbAvgScore(item.getSumMbAvgScore() == null ? 0 : item.getSumMbAvgScore());
                     item.setMbScore(item.getMbScore() == null ? 0 : item.getMbScore());
@@ -267,5 +276,95 @@ public class UserEvaluationSortDtoController {
             }
         }
     }
+
+
+    @RequestMapping(value = "/export", produces = "application/json;charset=utf-8")
+    public void exportExcelData1(HttpServletResponse response, String info) {
+        //json字符串转对象
+        JSONObject jsonObject = JSONObject.fromObject(info);
+        Info info1 = (Info) JSONObject.toBean(jsonObject, Info.class);
+        UserEvaluationSortDto dto = new UserEvaluationSortDto();
+        if (info1.getYear().equals("") || info1.getMonth().equals("")) {
+            ManualSetTime manualSetTime = setTimeService.selectManualByYearAndMonth("", "", info1.getDbtype());
+            dto.setYear(manualSetTime.getYear());
+            dto.setMonth(manualSetTime.getMonth());
+        } else {
+            dto.setYear(info1.getYear());
+            dto.setMonth(info1.getMonth());
+        }
+        dto.setDbtype(info1.getDbtype());
+        List<UserEvaluationSortDto> dtoList = userEvaluationSortDtoService.selectUserEvaluationReportSortList(dto);
+        this.setEvaluationSortNum(dtoList);
+        this.getResultReport(dto.getYear(), dto.getMonth(), dto.getDbtype(), dtoList, dtoList);
+        // 创建ExportExcel对象
+        try {
+            // 獲取工作表
+            Workbook workbook = exportBigDataExcel(dtoList);
+            // 完成下載
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            workbook.write(os);
+
+            downFile(os, response, dto.getYear() + "-" + dto.getMonth() + "评分排序汇总.xlsx");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private SXSSFWorkbook exportBigDataExcel(List<UserEvaluationSortDto> dtoList) {
+        // 1.获取数据
+        // 2.创建工作簿
+        // 阈值，内存中的对象数量最大值，超过这个值会生成一个临时文件存放到硬盘中
+        SXSSFWorkbook wb = new SXSSFWorkbook(100);
+        Sheet sheet = wb.createSheet("sheet1");
+        String[] titles = new String[]{"总排名", "用户姓名", "岗位名称", "总得分", "总平均分", "基础指标得分", "基础指标平均分",
+        "基础指标排名","岗位职责得分","岗位职责平均分","岗位职责排名","重点任务得分","重点任务平均分","重点任务排名",
+                "目标任务得分","目标任务平均分","目标任务排名"};
+
+        Row titleRow = sheet.createRow(0);
+        for (int i = 0; i < titles.length; i++) {
+            Cell cell = titleRow.createCell(i);
+            cell.setCellValue(titles[i]);
+        }
+        // 3.从集合中取数据并赋值
+        for (int i = 0; i < dtoList.size(); i++) {
+            Row row = sheet.createRow(i + 1);
+            UserEvaluationSortDto item = dtoList.get(i);
+            row.createCell(0).setCellValue(setNull(item.getSortNum()));
+            row.createCell(1).setCellValue(item.getUsername());
+            row.createCell(2).setCellValue(item.getStationname());
+            row.createCell(3).setCellValue(setNull(item.getTotalscore()));
+            row.createCell(4).setCellValue(setNull(item.getAvgscore()));
+            row.createCell(5).setCellValue(setNull(item.getBasicscore()));
+            row.createCell(6).setCellValue(setNull(item.getBasicAvgScore()));
+            row.createCell(7).setCellValue(setNull(item.getBasicSortNum()));
+            row.createCell(8).setCellValue(setNull(item.getKeyscore()));
+            row.createCell(9).setCellValue(setNull(item.getKeyAvgScore()));
+            row.createCell(10).setCellValue(setNull(item.getKeySortNum()));
+            row.createCell(11).setCellValue(setNull(item.getZdScore()));
+            row.createCell(12).setCellValue(setNull(item.getZdAvgScore()));
+            row.createCell(13).setCellValue(setNull(item.getZdSortNum()));
+            row.createCell(14).setCellValue(setNull(item.getMbScore()));
+            row.createCell(15).setCellValue(setNull(item.getMbAvgScore()));
+            row.createCell(16).setCellValue(setNull(item.getMbSortNum()));
+        }
+        return wb;
+    }
+    private String setNull(Object o){
+        if(o == null) {
+            return "";
+        }
+        return  o.toString();
+    }
+
+    private void downFile(ByteArrayOutputStream os, HttpServletResponse response, String fileName) throws IOException {
+        response.setContentType("application/octet-stream");
+        response.setCharacterEncoding("utf-8");
+        response.addHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes("gb2312"), "ISO8859-1"));
+        ServletOutputStream outputStream = response.getOutputStream();
+        os.writeTo(outputStream);
+        os.close();
+        outputStream.flush();
+    }
+
 
 }

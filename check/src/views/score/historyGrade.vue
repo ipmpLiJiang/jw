@@ -152,10 +152,10 @@
                 type="warning"
                 @click="exportExcel"
               >导出excel</el-button>
-              <el-button
+              <!-- <el-button
                 type="primary"
                 @click="notDialogVisible = true"
-              >一键导出未评分和未完成用户</el-button>
+              >一键导出未评分和未完成用户</el-button> -->
             </el-form-item>
           </el-col>
         </el-form>
@@ -685,7 +685,8 @@ export default {
       //   "history/exportHistoryScore?info=" +
       //   JSON.stringify(info);
       window.location.href =
-        process.env.VUE_APP_ITEM_NAME +
+        // process.env.VUE_APP_ITEM_NAME +
+        "http://localhost:8080/" +
         "history/exportHistoryScore?info=" +
         JSON.stringify(info);
     },

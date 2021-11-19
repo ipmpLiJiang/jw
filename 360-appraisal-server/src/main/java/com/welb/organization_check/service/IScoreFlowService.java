@@ -183,5 +183,5 @@ public interface IScoreFlowService {
 
     int deleteYM(String year,String month,String dbtype,String postType,String userCode);
 
-    List<ScoreFlow> selectSummaryFlowByYMTOrPTList(String year,String month,String dbtype,String postType);
+    List<ScoreFlow> selectSummaryFlowByYMTOrPTList(String year,String month,String dbtype,String postType,List<String> typeList);
 }

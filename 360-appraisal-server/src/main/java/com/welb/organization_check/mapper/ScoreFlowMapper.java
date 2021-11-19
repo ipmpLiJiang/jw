@@ -87,6 +87,8 @@ public interface ScoreFlowMapper {
 
     int deleteYM(String year, String month, String dbtype,String postType,String userCode);
 
-    List<ScoreFlow> selectSummaryFlowByYMTOrPTList(@Param("year") String year, @Param("month") String month, @Param("dbtype") String dbtype,@Param("postType") String postType);
+    List<ScoreFlow> selectSummaryFlowByYMTOrPTList(@Param("year") String year, @Param("month") String month,
+                                                   @Param("dbtype") String dbtype,@Param("postType") String postType,
+                                                   @Param("typeList") List<String> typeList);
 
 }

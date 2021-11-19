@@ -158,7 +158,7 @@ public class ScoreFlowServiceImpl implements IScoreFlowService {
     }
 
     @Override
-    public List<ScoreFlow> selectSummaryFlowByYMTOrPTList(String year, String month, String dbtype, String postType) {
-        return flowMapper.selectSummaryFlowByYMTOrPTList(year, month, dbtype, postType);
+    public List<ScoreFlow> selectSummaryFlowByYMTOrPTList(String year, String month, String dbtype, String postType,List<String> typeList) {
+        return flowMapper.selectSummaryFlowByYMTOrPTList(year, month, dbtype, postType,typeList);
     }
 }

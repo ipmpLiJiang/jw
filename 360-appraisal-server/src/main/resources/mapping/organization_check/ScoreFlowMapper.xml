@@ -457,5 +457,11 @@
             <if test="postType != null and postType !=''">
                 and u.postType = #{postType}
             </if>
+            <if test="typeList != null">
+            and sf.ScoreType in
+                <foreach item="item" index="index" collection="typeList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
     </select>
 </mapper>

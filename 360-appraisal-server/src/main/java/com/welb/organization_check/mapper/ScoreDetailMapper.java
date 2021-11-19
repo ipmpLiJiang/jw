@@ -60,5 +60,8 @@ public interface ScoreDetailMapper {
 
     int deleteYM(String year,String month,String dbtype,String postType,String userCode);
 
+    List<ScoreDetail> selectDetailByInFSerialNoList(@Param("year")String year,@Param("month")String month, @Param("dbtype")String dbtype,
+                                                    @Param("postType")String postType,@Param("typeList")List<String> typeList);
+
 
 }

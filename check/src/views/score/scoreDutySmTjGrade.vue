@@ -20,10 +20,10 @@
                 @click="searchList"
                 :loading="searchLoading"
               >搜索</el-button>
-              <!-- <el-button
+              <el-button
                 type="warning"
                 @click="exportExcel"
-              >导出excel</el-button> -->
+              >导出excel</el-button>
             </el-form-item>
           </el-col>
         </el-form>
@@ -184,9 +184,12 @@ export default {
     },
     //导出
     exportExcel() {
+      let info = this.search;
+      info.dbtype = this.dbtype;
       window.location.href =
-        process.env.VUE_APP_ITEM_NAME +
-        "history/exportHistoryScore?info=" +
+        // process.env.VUE_APP_ITEM_NAME +
+        "http://localhost:8080/" +
+        "scoredutysm/export?info=" +
         JSON.stringify(info);
     },
   },

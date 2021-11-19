@@ -3,12 +3,10 @@ package com.welb.organization_check.controller;
 import com.welb.organization_check.dto.ScoreFlowScorringTjDto;
 import com.welb.organization_check.dto.UserScoreDto;
 import com.welb.organization_check.entity.ManualSetTime;
+import com.welb.organization_check.entity.ScoreDetail;
 import com.welb.organization_check.entity.ScoreFlow;
 import com.welb.organization_check.entity.User;
-import com.welb.organization_check.service.IManualSetTimeService;
-import com.welb.organization_check.service.IScoreFlowService;
-import com.welb.organization_check.service.IUserScoreDtoService;
-import com.welb.organization_check.service.IUserService;
+import com.welb.organization_check.service.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.ui.ModelMap;
@@ -35,6 +33,8 @@ public class ScoreFlowController {
     IUserScoreDtoService userScoreDtoService;
     @Resource
     IUserService userService;
+    @Resource
+    IScoreDetailService scoreDetailService;
 
     @RequestMapping(value = "/scoreFlowTjList", produces = "application/json;charset=utf-8")
     public Object selectScoreFlowTjList(HttpServletRequest req, String year, String month, String dbtype, String postType) {
@@ -48,7 +48,7 @@ public class ScoreFlowController {
                     month = setTime.getMonth();
                 }
 
-                List<ScoreFlow> flowList = scoreFlowService.selectSummaryFlowByYMTOrPTList(year, month, dbtype, postType);
+                List<ScoreFlow> flowList = scoreFlowService.selectSummaryFlowByYMTOrPTList(year, month, dbtype, postType, null);
                 List<ScoreFlowScorringTjDto> list = new ArrayList<>();
                 ScoreFlowScorringTjDto dto1 = new ScoreFlowScorringTjDto();
                 dto1.setNum(1);
@@ -96,7 +96,6 @@ public class ScoreFlowController {
             map.put("code", 810);
         }
         return map;
-
     }
 
     private void getFlowABCDEFPostTypeList(List<ScoreFlow> flowList, ScoreFlowScorringTjDto dto, String postType) {
@@ -120,7 +119,7 @@ public class ScoreFlowController {
 
             for (ScoreFlow flow : flowEFList1) {
                 if (flowEFList.stream().filter(s -> s.getScoredcode().equals(flow.getScoredcode()) &&
-                        s.getScorringcode().equals(flow.getScorringcode()) && s.getScoreState().equals(flow.getScoreState())).count() == 0){
+                        s.getScorringcode().equals(flow.getScorringcode()) && s.getScoreState().equals(flow.getScoreState())).count() == 0) {
                     ScoreFlow flowEF = new ScoreFlow();
                     flowEF.setScoredcode(flow.getScoredcode());
                     flowEF.setScorringcode(flow.getScorringcode());
@@ -143,7 +142,7 @@ public class ScoreFlowController {
                     dto.setYcyABCrs(dto.getYcyABCrs() + 1);
                     flowABCDEFList = flowABCList.stream().filter(s -> s.getScorringcode().equals(flow.getScorringcode()) &&
                             s.getScoreState().equals("2")).collect(Collectors.toList());
-                    if(flowABCDEFList.size() > 0) {
+                    if (flowABCDEFList.size() > 0) {
                         dto.setSjcyABCrs(dto.getSjcyABCrs() + 1);
                     }
                     ScoreFlow item = new ScoreFlow();
@@ -158,7 +157,7 @@ public class ScoreFlowController {
                     dto.setYcyDrs(dto.getYcyDrs() + 1);
                     flowABCDEFList = flowDList.stream().filter(s -> s.getScorringcode().equals(flow.getScorringcode()) &&
                             s.getScoreState().equals("2")).collect(Collectors.toList());
-                    if(flowABCDEFList.size() > 0) {
+                    if (flowABCDEFList.size() > 0) {
                         dto.setSjcyDrs(dto.getSjcyDrs() + 1);
                     }
                     ScoreFlow item = new ScoreFlow();
@@ -173,7 +172,7 @@ public class ScoreFlowController {
                     dto.setYcyEFrs(dto.getYcyEFrs() + 1);
                     flowABCDEFList = flowEFList.stream().filter(s -> s.getScorringcode().equals(flow.getScorringcode()) &&
                             s.getScoreState().equals("2")).collect(Collectors.toList());
-                    if(flowABCDEFList.size() > 0) {
+                    if (flowABCDEFList.size() > 0) {
                         dto.setSjcyEFrs(dto.getSjcyEFrs() + 1);
                     }
                     ScoreFlow item = new ScoreFlow();
@@ -211,8 +210,117 @@ public class ScoreFlowController {
         }
     }
 
+
+    private List<String> getTypeList(String scoreType) {
+        List<String> typeList = new ArrayList<>();
+        if (scoreType.equals("ABC")) {
+            typeList.add("A");
+            typeList.add("B");
+            typeList.add("C");
+        } else if (scoreType.equals("D")) {
+            typeList.add("D");
+        } else {
+            typeList.add("E");
+            typeList.add("F");
+        }
+        return typeList;
+    }
+
     @RequestMapping(value = "/scoreFlowDetailTjList", produces = "application/json;charset=utf-8")
-    public Object selectScoreFlowTjList(HttpServletRequest req, String year, String month, String dbtype, String postType, String scoreType) {
+    public Object scoreFlowDetailTjList(HttpServletRequest req, String year, String month, String dbtype, String postType, String scoreType) {
+        ModelMap map = new ModelMap();
+        String userCode = (String) req.getSession().getAttribute("usercode");
+        if (userCode != null) {
+            try {
+                if (year == null || month == null || year.equals("") || month.equals("")) {
+                    ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
+                    year = setTime.getYear();
+                    month = setTime.getMonth();
+                }
+                List<String> typeList = this.getTypeList(scoreType);
+                List<ScoreFlow> flowList = scoreFlowService.selectSummaryFlowByYMTOrPTList(year, month, dbtype, postType, typeList);
+                List<ScoreFlowScorringTjDto> list = new ArrayList<>();
+                if (flowList.size() > 0) {
+                    List<ScoreDetail> detailList = scoreDetailService.selectDetailByInFSerialNoList(year, month, dbtype, postType, typeList);
+                    list = this.getScorringTjDto(flowList, detailList);
+                    for (ScoreFlowScorringTjDto item : list) {
+                        User userQuery = new User();
+                        userQuery.setUsercode(item.getScorringcode());
+                        User user = userService.selectUserBuGwByMoneyCard(userQuery);
+                        if (user != null)
+                            item.setScorringname(user.getUsername());
+                    }
+                    if (list.size() > 0) {
+                        list = list.stream().sorted(Comparator.comparing(ScoreFlowScorringTjDto::getYcyrs).reversed()).collect(Collectors.toList());
+                    }
+                }
+                map.put("totalPages", list.size());
+                map.put("msg", "打分详情统计表成功");
+                map.put("data", list);
+                map.put("code", 0);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+                map.put("msg", "打分详情统计表失败");
+                map.put("code", 1);
+            }
+        } else {
+            map.put("msg", "登录用户超时,请重新登录");
+            map.put("code", 810);
+        }
+        return map;
+
+    }
+
+    private List<ScoreFlowScorringTjDto> getScorringTjDto(List<ScoreFlow> flowList, List<ScoreDetail> detailList) {
+        List<ScoreFlowScorringTjDto> list = new ArrayList<>();
+        List<ScoreFlowScorringTjDto> ssfList = new ArrayList<>();
+        List<ScoreDetail> query = new ArrayList<>();
+        List<ScoreFlowScorringTjDto> tjQuery = new ArrayList<>();
+        for (ScoreFlow flow : flowList) {
+            if (ssfList.stream().filter(s -> s.getFserialno().equals(flow.getSerialno())).count() == 0) {
+                query = detailList.stream().filter(s -> s.getFSerialNo().equals(flow.getSerialno())).collect(Collectors.toList());
+                ScoreFlowScorringTjDto item = new ScoreFlowScorringTjDto();
+                item.setFserialno(flow.getSerialno());
+                item.setScorringcode(flow.getScorringcode());
+                item.setScorredcode(flow.getScoredcode());
+                item.setScorestate(flow.getScoreState());
+                item.setScoretype(flow.getScoretype());
+                item.setYcyzb(query.size());
+                if (flow.getScoreState().equals("2")) {
+                    item.setSjcyzb(query.size());
+                } else {
+                    item.setSjcyzb(0);
+                }
+                item.setScorestate(flow.getScoreState());
+                ssfList.add(item);
+            }
+        }
+
+        int count = 0;
+        double sum = 0.0;
+        for (ScoreFlowScorringTjDto tjDto : ssfList) {
+            if (list.stream().filter(s -> s.getScorringcode().equals(tjDto.getScorringcode())).count() == 0) {
+                tjQuery = ssfList.stream().filter(s -> s.getScorringcode().equals(tjDto.getScorringcode())).collect(Collectors.toList());
+                ScoreFlowScorringTjDto item = new ScoreFlowScorringTjDto();
+                item.setScorringcode(tjDto.getScorringcode());
+                count = tjQuery.stream().collect(Collectors.groupingBy(ScoreFlowScorringTjDto::getScorredcode)).size();
+                item.setYcyrs(count);
+                count = tjQuery.stream().filter(s -> s.getScorestate().equals("2")).collect(Collectors.groupingBy(ScoreFlowScorringTjDto::getScorredcode)).size();
+                item.setSjcyrs(count);
+                sum = tjQuery.stream().mapToDouble(ScoreFlowScorringTjDto::getYcyzb).sum();
+                item.setYcyzb((int) sum);
+                sum = tjQuery.stream().mapToDouble(ScoreFlowScorringTjDto::getSjcyzb).sum();
+                item.setSjcyzb((int) sum);
+                list.add(item);
+            }
+        }
+
+        return list;
+    }
+
+    /*
+    @RequestMapping(value = "/scoreFlowDetailTjList1", produces = "application/json;charset=utf-8")
+    public Object scoreFlowDetailTjList1(HttpServletRequest req, String year, String month, String dbtype, String postType, String scoreType) {
         ModelMap map = new ModelMap();
         String userCode = (String) req.getSession().getAttribute("usercode");
         if (userCode != null) {
@@ -269,7 +377,6 @@ public class ScoreFlowController {
                 item.setYcyzb(query.size());
                 query = query.stream().filter(s -> s.getScoreState().equals("2")).collect(Collectors.toList());
                 item.setSjcyzb(query.size());
-                item.setScorestate(dto.getScoreState());
                 ssfList.add(item);
             }
         }
@@ -294,20 +401,5 @@ public class ScoreFlowController {
         }
         return list;
     }
-
-    private List<String> getTypeList(String scoreType) {
-        List<String> typeList = new ArrayList<>();
-        if (scoreType.equals("ABC")) {
-            typeList.add("A");
-            typeList.add("B");
-            typeList.add("C");
-        } else if (scoreType.equals("D")) {
-            typeList.add("D");
-        } else {
-            typeList.add("E");
-            typeList.add("F");
-        }
-        return typeList;
-    }
-
+*/
 }

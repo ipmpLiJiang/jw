@@ -127,4 +127,6 @@ public interface IScoreDetailService {
 
     int deleteYM(String year,String month,String dbtype,String postType,String userCode);
 
+    List<ScoreDetail> selectDetailByInFSerialNoList(String year,String month, String dbtype,String postType,List<String> typeList);
+
 }

@@ -101,4 +101,9 @@ public class ScoreDetailService implements IScoreDetailService {
     public int deleteYM(String year,String month,String dbtype,String postType,String userCode){
         return scoreDetailMapper.deleteYM(year,month,dbtype,postType,userCode);
     }
+
+    @Override
+    public List<ScoreDetail> selectDetailByInFSerialNoList(String year,String month, String dbtype,String postType,List<String> typeList){
+        return scoreDetailMapper.selectDetailByInFSerialNoList(year,month, dbtype,postType,typeList);
+    }
 }

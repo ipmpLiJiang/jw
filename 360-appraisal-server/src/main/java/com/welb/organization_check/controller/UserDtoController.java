@@ -1841,7 +1841,7 @@ public class UserDtoController {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             workbook.write(os);
 
-            downFile(os, response, info1.getYear() + "-" + info1.getMonth() + "历史评分汇总.xlsx");
+            downFile(os, response, dto.getYear() + "-" + dto.getMonth() + "历史评分汇总.xlsx");
         } catch (IOException e) {
             e.printStackTrace();
         }

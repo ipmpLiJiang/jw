@@ -618,7 +618,7 @@ export default {
      jisuanChang() {
       if(this.dbtype == '2' && (this.search.postType == null || this.search.postType == "")) {
         this.$message({
-          message: '干部考核，必须选择 岗位类型，才能 计算.',
+          message: '干部考核，必须选择 岗位类型，才能 操作计算.',
           type: "error"
         });
         return;

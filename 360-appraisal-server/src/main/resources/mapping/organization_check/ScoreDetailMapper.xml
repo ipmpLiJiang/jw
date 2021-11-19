@@ -335,4 +335,35 @@
         )
     </delete>
 
+  <select id="selectDetailByInFSerialNoList" resultMap="BaseResultMap">
+    SELECT
+        *
+    FROM
+        scoredetail
+    where
+        FSerialNo IN(
+          select
+            sf.SerialNo
+          from
+            monthsummary m,scoreflow sf,user u
+          where
+            m.SerialNo = sf.MSerialNo and
+            m.dbtype = sf.dbtype and
+            m.EmployeeCode = u.UserCode and
+            m.year=#{year} and
+            m.month=#{month} and
+            m.dbtype=#{dbtype} and
+            m.isSc = 1
+            <if test="postType != null and postType !=''">
+            and u.postType = #{postType}
+            </if>
+            <if test="typeList != null">
+            and sf.ScoreType in
+            <foreach item="item" index="index" collection="typeList" open="(" separator="," close=")">
+              #{item}
+            </foreach>
+            </if>
+        )
+  </select>
+
 </mapper>
