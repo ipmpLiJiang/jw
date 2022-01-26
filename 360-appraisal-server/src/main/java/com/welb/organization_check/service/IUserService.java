@@ -171,7 +171,7 @@ public interface IUserService {
     List<User>findUserByScoreFlowType(String mserialNo, String scoreType,String dbtype,String dbbk);
 
 
-    List<User> findUserBranchByDbbk(String dbbk);
+    List<User> findUserBranchByDbbk(User user);
 
     List<User> selectUserPfr(String dbtype,String year,String month,boolean isDq);
 

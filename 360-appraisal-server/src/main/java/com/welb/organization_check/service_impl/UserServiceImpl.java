@@ -195,8 +195,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public List<User> findUserBranchByDbbk(String dbbk){
-        return  userMapper.findUserBranchByDbbk(dbbk);
+    public List<User> findUserBranchByDbbk(User user){
+        return  userMapper.findUserBranchByDbbk(user);
     }
 
     @Override

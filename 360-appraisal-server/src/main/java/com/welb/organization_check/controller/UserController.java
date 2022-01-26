@@ -140,6 +140,8 @@ public class UserController extends BaseController {
                     roleList.add("200");
                     roleList.add("300");
                     roleList.add("50");
+                    roleList.add("1000");
+                    roleList.add("2000");
                 } else {
                     roleList.add("300");
                 }
@@ -149,6 +151,36 @@ public class UserController extends BaseController {
                             p.getDbbk().equals("3") || p.getDbbk().equals("4")
                     )).collect(Collectors.toList());
                 }
+                PageInfo<User> pageInfo = new PageInfo<>(users);
+                users = pageInfo.getList();
+                users = this.handleUsersMsg(users);
+                map.put("totalPages", pageInfo.getTotal());
+                map.put("msg", "查询用户成功");
+                map.put("data", users);
+                map.put("code", 0);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+                map.put("msg", "查询用户失败");
+                map.put("code", 1);
+            }
+        } else {
+            map.put("msg", "登录用户超时,请重新登录");
+            map.put("code", 810);
+        }
+        return map;
+
+    }
+
+    @RequestMapping(value = "/dzblist", produces = "application/json;charset=utf-8")
+    public Object selectDzbUserAll(HttpServletRequest req, User user, int pageNum, int pageSize) {
+        ModelMap map = new ModelMap();
+        String userCode = (String) req.getSession().getAttribute("usercode");
+        if (userCode != null) {
+            //分页
+            PageHelper.startPage(pageNum, pageSize);
+            List<User> users;
+            try {
+                users = userService.findUserBranchByDbbk(user);
                 PageInfo<User> pageInfo = new PageInfo<>(users);
                 users = pageInfo.getList();
                 users = this.handleUsersMsg(users);
@@ -233,6 +265,8 @@ public class UserController extends BaseController {
                 roleList.add("200");
                 roleList.add("300");
                 roleList.add("50");
+                roleList.add("1000");
+                roleList.add("2000");
                 List<User> users = userService.selectUserAll(user, roleList);
                 users = this.handleUsersMsg(users);
                 //填充ABCD类评分人信息
@@ -384,7 +418,9 @@ public class UserController extends BaseController {
                     map.put("code", 1);
                 } else {
                     //有权限
-                    if (roleCodeList.contains("100") || roleCodeList.contains("150") || roleCodeList.contains("200") || roleCodeList.contains("300") || roleCodeList.contains("50")) {
+                    if (roleCodeList.contains("100") || roleCodeList.contains("150") || roleCodeList.contains("200") ||
+                            roleCodeList.contains("300") || roleCodeList.contains("50") ||
+                            roleCodeList.contains("1000") || roleCodeList.contains("2000")) {
                         //包含组织部任一角色,无法添加
                         map.put("msg", "该用户已存在");
                         map.put("code", 1);

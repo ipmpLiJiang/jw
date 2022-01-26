@@ -64,6 +64,11 @@ public class ScoreStationServiceImpl implements IScoreStationService {
     }
 
     @Override
+    public List<ScoreStation> findScoreStationByScorredStationCode(String scorredstationcode,String dbtype){
+        return  scoreStationMapper.findScoreStationByScorredStationCode(scorredstationcode,dbtype);
+    }
+
+    @Override
     public List<ScoreStation> selectScoreStationScorringLeft(ScoreStation scoreStation,String departmentcode){
         return  scoreStationMapper.selectScoreStationScorringLeft(scoreStation,departmentcode);
     }

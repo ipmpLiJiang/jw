@@ -52,6 +52,8 @@ public interface IScoreStationService {
 
     List<ScoreStation> findScoreStationAll(String dbtype);
 
+    List<ScoreStation> findScoreStationByScorredStationCode(String scorredstationcode,String dbtype);
+
     List<ScoreStation> selectScoreStationScorringLeft(ScoreStation scoreStation,String departmentcode);
 
     ScoreStation selectTypeByCodeDutyIsNull(String scorredstationcode,String scorringstationcode,String dbtype);

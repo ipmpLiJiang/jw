@@ -193,43 +193,14 @@ public class ScoreDutySmController {
         Sheet sheet = wb.createSheet("sheet1");
         String[] titles = new String[]{"序号", "被考核对象", "被考核人数(人)", "完成自评人数(人)", "未自评人数(人)", "未自评人员"};
 
-        Row titleRow1 = sheet.createRow(0);
-        Cell celXh = titleRow1.createCell(0);
-        celXh.setCellValue("序号");
-        Cell celDx = titleRow1.createCell(1);
-        celDx.setCellValue("被考核对象");
-        Cell celRs = titleRow1.createCell(2);
-        celRs.setCellValue("被考核人数(人)");
-        Cell celYcySj = titleRow1.createCell(3);
-        celYcySj.setCellValue("应参与 / 实际参与测评打分人数(人)");
-
-        Row titleRow2 = sheet.createRow(1);
-        Cell celYld = titleRow2.createCell(3);
-        celYld.setCellValue("院领导");
-        Cell celZchb = titleRow2.createCell(4);
-        celZchb.setCellValue("中层干部");
-        Cell celYg = titleRow2.createCell(5);
-        celYg.setCellValue("员工");
-
-        CellRangeAddress region = new CellRangeAddress(0, 0, 3, 5);
-        sheet.addMergedRegion(region);
-        CellRangeAddress region1 = new CellRangeAddress(0, 1, 0, 0);
-        sheet.addMergedRegion(region1);
-        CellRangeAddress region2 = new CellRangeAddress(0, 1, 1, 1);
-        sheet.addMergedRegion(region2);
-        CellRangeAddress region3 = new CellRangeAddress(0, 1, 2, 2);
-        sheet.addMergedRegion(region3);
-
-        // 被考核对象  被考核人数(人)   应参与 / 实际参与测评打分人数(人)   院领导  中层干部  员工
-
-        Row titleRow = sheet.createRow(2);
+        Row titleRow = sheet.createRow(0);
         for (int i = 0; i < titles.length; i++) {
             Cell cell = titleRow.createCell(i);
             cell.setCellValue(titles[i]);
         }
         // 3.从集合中取数据并赋值
         for (int i = 0; i < list.size(); i++) {
-            Row row = sheet.createRow(i + 3);
+            Row row = sheet.createRow(i + 1);
             ScoreDutySmTjDto scoreDutySmTjDto = list.get(i);
             row.createCell(0).setCellValue(i + 1);
             row.createCell(1).setCellValue(scoreDutySmTjDto.getScoreProj());

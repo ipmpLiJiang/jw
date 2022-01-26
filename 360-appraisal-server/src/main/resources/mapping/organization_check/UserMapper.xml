@@ -667,7 +667,6 @@
     and u.Flag="0"
     and u.UserState="1"
     and u.RoleType="0"
-    and r.RoleCode in("100","150","200","300","50")
   </select>
     <!--修改用户密码-->
     <update id="updateUserPassword" parameterType="com.welb.organization_check.entity.User">
@@ -744,6 +743,15 @@
             </if>
             <if test="user.postType!=null and user.postType!=''">
                 and u.postType=#{user.postType}
+            </if>
+            <if test="user.dbbk!=null and user.dbbk!=''">
+                and u.dbbk=#{user.dbbk}
+            </if>
+            <if test="user.branchcode!=null and user.branchcode!=''">
+                and u.branchcode=#{user.branchcode}
+            </if>
+            <if test='user.political != null and user.political != ""'>
+                AND Political = #{user.political}
             </if>
             and u.Flag ="0"
             and u.RoleType="0"
@@ -943,7 +951,6 @@
        select u.UserCode,u.Mobile,u.UserName,u.MoneyCard,r.RoleCode,ur.* from user u,role r,user_role ur
        where u.UserCode=ur.UserCode
        and r.RoleCode=ur.RoleCode
-       and ur.RoleCode in("100","150","200","300","50")
        and u.Flag="0"
        and u.UserState="1"
        and u.RoleType="0"
@@ -1044,8 +1051,27 @@
         Flag = "0"
         AND UserState = "1"
         AND RoleType = "0"
-        AND dbbk = #{dbbk}
-        AND BranchCode != ''
+        <if test='user.username != null and user.username != ""'>
+            AND UserName like concat('%',#{user.username},'%')
+        </if>
+        <if test='user.dbbk != null and user.dbbk != ""'>
+            AND dbbk = #{user.dbbk}
+        </if>
+        <if test='user.branchcode != null and user.branchcode != ""'>
+            AND BranchCode = #{user.branchcode}
+        </if>
+        <if test='user.political != null and user.political != ""'>
+            AND Political = #{user.political}
+        </if>
+        <if test='user.usercode != null and user.usercode != ""'>
+            AND UserCode != #{user.usercode}
+        </if>
+        <if test='(user.dbbk != null and user.dbbk == "") or user.dbbk == null'>
+            AND dbbk != ''
+        </if>
+        <if test='(user.branchcode != null and user.branchcode == "") or user.branchcode == null'>
+            AND BranchCode != ''
+        </if>
     </select>
 
     <select id="selectPersonnelUserByMoneyCard" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -1135,7 +1161,6 @@
         and u.Flag ="0"
         and u.RoleType="0"
         and u.UserState="1"
-        and r.RoleCode in ("100","150","200","300","50")
         and u.UserCode in
         <foreach item="item" index="index" collection="codeList" open="(" separator="," close=")">
             #{item}
@@ -1149,7 +1174,7 @@
         from
             user u
             inner join (
-                select UserCode,RoleCode from user_role where RoleCode in ('150','300')
+                select UserCode,RoleCode from user_role where RoleCode in ('150','300','1000','2000')
             ) r on u.UserCode = r.UserCode
          where
             u.Flag = 0 and

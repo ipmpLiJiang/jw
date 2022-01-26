@@ -27,6 +27,7 @@
         <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
         <result column="postType" property="postType" jdbcType="VARCHAR"/>
         <result column="isSc" property="isSc" jdbcType="INTEGER"/>
+        <result column="branchcode" property="branchcode" jdbcType="VARCHAR"/>
     </resultMap>
     <!--("100","200","300","50")-->
     <select id="selectUserDtoLike" resultMap="BaseResultMap">
@@ -69,7 +70,7 @@
         </if>
         m.SerialNo,m.Year,m.Month,m.State,m.SavePath,m.FileName,m.Title,m.Content,m.ScoreStatus,
         s.StationName,s.StationCode,d.DepartmentCode,d.DepartmentName,
-        r.RoleCode,r.RoleName,u.postType,m.dbtype,u.dbbk,m.isSc
+        r.RoleCode,r.RoleName,u.postType,m.dbtype,u.dbbk,m.isSc,u.branchcode
         from user u ,monthsummary m,station s,department d,role r,user_role ur
         <where>
             <if test="userDto.username!=null and userDto.username!=''">
@@ -110,6 +111,9 @@
             </if>
             <if test='userDto.postType != null and userDto.postType!=""'>
                 AND u.postType = #{userDto.postType}
+            </if>
+            <if test='userDto.branchcode != null and userDto.branchcode!=""'>
+                AND u.branchcode = #{userDto.branchcode}
             </if>
             and u.UserCode =m.EmployeeCode
             and u.RoleType="0"
@@ -180,7 +184,7 @@
         </if>
         m.SerialNo,m.Year,m.Month,m.State,m.SavePath,m.FileName,m.Title,m.Content,m.ScoreStatus,
         s.StationName,s.StationCode,d.DepartmentCode,d.DepartmentName,
-        r.RoleCode,r.RoleName,u.postType,m.dbtype,u.dbbk,m.isSc
+        r.RoleCode,r.RoleName,u.postType,m.dbtype,u.dbbk,m.isSc,u.branchcode
         from user u ,monthsummary m,station s,department d,role r,user_role ur
         <where>
             <if test="userDto.usercode!=null and userDto.usercode!=''">
@@ -305,7 +309,6 @@
             and s.DepartmentCode=d.DepartmentCode
             and u.UserCode=ur.UserCode
             and r.RoleCode=ur.RoleCode
-            and r.RoleCode in("100","150","200","300","50")
         </where>
         order by m.Year+0 desc, m.Month+0 desc,m.Pubdate desc
     </select>

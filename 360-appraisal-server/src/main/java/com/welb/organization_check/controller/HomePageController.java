@@ -1726,7 +1726,9 @@ public class HomePageController {
 
 
     private void getZongScoreHistoryData(String year, String month, String dbtype, String zdzb, List<ScoreHistory> zongShList, List<ScoreHistory> shList) {
-        List<User> userZdzbList = userService.findUserBranchByDbbk(zdzb);
+        User query = new User();
+        query.setDbbk(zdzb);
+        List<User> userZdzbList = userService.findUserBranchByDbbk(query);
         List<String> codeList = new ArrayList<>();
         long count = 0;
         for (User user : userZdzbList) {

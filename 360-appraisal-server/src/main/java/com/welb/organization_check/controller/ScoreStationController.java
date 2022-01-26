@@ -885,20 +885,34 @@ public class ScoreStationController {
                 List<Score> createList = new ArrayList<>();
                 List<User> queryScorringUserList = new ArrayList<>();
                 List<User> queryScorredUserList = new ArrayList<>();
-                for (ScoreStation item : scoreStationList) {
-                    queryScorredUserList = user300List.stream().filter(s -> s.getStationcode().equals(item.getScorredstationcode())).collect(Collectors.toList());
-                    for (User ued : queryScorredUserList) {
-                        if (ued.getUsercode() != null && !ued.getUsercode().equals("")) {
-                            queryScorringUserList = userListAll.stream().filter(s -> s.getStationcode().equals(item.getScorringstationcode())).collect(Collectors.toList());
-                            for (User u : queryScorringUserList) {
-                                if (u.getUsercode() != null && !u.getUsercode().equals("") && !ued.getUsercode().equals(u.getUsercode())) {
-                                    Score score = new Score();
-                                    score.setScorredcode(ued.getUsercode());
-                                    score.setScorringcode(u.getUsercode());
-                                    score.setScoretype(item.getScoretype());
-                                    score.setDutycode(item.getDutycode());
-                                    score.setDbtype(item.getDbtype());
-                                    createList.add(score);
+                List<ScoreStation> queryScoreStationList = new ArrayList<>();
+                long count = 0;
+                List<String> typeList = this.getTypeList();
+                for (String type : typeList) {
+                    queryScoreStationList = scoreStationList.stream().filter(s -> s.getScoretype().equals(type)).collect(Collectors.toList());
+                    for (ScoreStation item : queryScoreStationList) {
+                        if (item.getScorredstationcode() != null && !item.getScorredstationcode().equals("")) {
+                            queryScorredUserList = user300List.stream().filter(s -> s.getStationcode().equals(item.getScorredstationcode())).collect(Collectors.toList());
+                            for (User ued : queryScorredUserList) {
+                                if (ued.getUsercode() != null && !ued.getUsercode().equals("")) {
+                                    queryScorringUserList = userListAll.stream().filter(s -> s.getStationcode().equals(item.getScorringstationcode())).collect(Collectors.toList());
+                                    for (User u : queryScorringUserList) {
+                                        count = createList.stream().filter(s -> s.getScorredcode().equals(ued.getUsercode()) &&
+                                                s.getScorringcode().equals(u.getUsercode())).count();
+                                        if(count == 0 && (type.equals("E") || type.equals("F"))) {
+                                            count = createList.stream().filter(s -> s.getScorredcode().equals(ued.getUsercode()) &&
+                                                    s.getScorringcode().equals(u.getUsercode()) && s.getDutycode().equals(item.getDutycode())).count();
+                                        }
+                                        if (count == 0 && !ued.getUsercode().equals(u.getUsercode())) {
+                                            Score score = new Score();
+                                            score.setScorredcode(ued.getUsercode());
+                                            score.setScorringcode(u.getUsercode());
+                                            score.setScoretype(item.getScoretype());
+                                            score.setDutycode(item.getDutycode());
+                                            score.setDbtype(item.getDbtype());
+                                            createList.add(score);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -923,6 +937,85 @@ public class ScoreStationController {
             map.put("code", 1);
         }
         return map;
+    }
+
+    @RequestMapping("/shengChengUserScore")
+    public Object shengChengScoreUser(String usercode, String dbtype) {
+        ModelMap map = new ModelMap();
+        try {
+            List<User> userListAll = userService.selectUserScoreStationList();
+            List<User> queryUserList = userListAll.stream().filter(s -> s.getUsercode().equals(usercode)).collect(Collectors.toList());
+            if (queryUserList.size() > 0) {
+                User user = queryUserList.get(0);
+                List<String> typeList = this.getTypeList();
+                if (user.getStationcode() != null && !user.getStationcode().equals("")) {
+                    List<ScoreStation> scoreStationList = scoreStationService.findScoreStationByScorredStationCode(user.getStationcode(), dbtype);
+                    if (scoreStationList.size() > 0) {
+                        scoreService.deleteByScorredCodeAndDbtype(user.getUsercode(), dbtype);
+                        List<Score> createList = new ArrayList<>();
+                        List<User> queryScorringUserList = new ArrayList<>();
+                        List<ScoreStation> queryScoreStationList = new ArrayList<>();
+                        long count = 0;
+                        for (String type : typeList) {
+                            queryScoreStationList = scoreStationList.stream().filter(s -> s.getScoretype().equals(type)).collect(Collectors.toList());
+                            for (ScoreStation item : queryScoreStationList) {
+                                queryScorringUserList = userListAll.stream().filter(s -> s.getStationcode().equals(item.getScorringstationcode())).collect(Collectors.toList());
+                                for (User u : queryScorringUserList) {
+                                    count = createList.stream().filter(s -> s.getScorredcode().equals(user.getUsercode()) &&
+                                            s.getScorringcode().equals(u.getUsercode())).count();
+                                    if(count == 0 && (type.equals("E") || type.equals("F"))) {
+                                        count = createList.stream().filter(s -> s.getScorredcode().equals(user.getUsercode()) &&
+                                                s.getScorringcode().equals(u.getUsercode()) && s.getDutycode().equals(item.getDutycode())).count();
+                                    }
+                                    if (count == 0 && !user.getUsercode().equals(u.getUsercode())) {
+                                        Score score = new Score();
+                                        score.setScorredcode(user.getUsercode());
+                                        score.setScorringcode(u.getUsercode());
+                                        score.setScoretype(item.getScoretype());
+                                        score.setDutycode(item.getDutycode());
+                                        score.setDbtype(item.getDbtype());
+                                        createList.add(score);
+                                    }
+                                }
+                            }
+                        }
+                        if (createList.size() > 0) {
+                            for (Score score : createList)
+                                scoreService.insertSelective(score);
+                            map.put("msg", "生成成功");
+                            map.put("code", 0);
+                        } else {
+                            map.put("msg", "无创建数据，生成失败");
+                            map.put("code", 0);
+                        }
+                    } else {
+                        map.put("msg", "无岗位关系，生成失败");
+                        map.put("code", 0);
+                    }
+                } else {
+                    map.put("msg", "岗位为空，生成失败");
+                    map.put("code", 0);
+                }
+            } else {
+                map.put("msg", "无数据，生成失败");
+                map.put("code", 0);
+            }
+        } catch (Exception e) {
+            map.put("msg", "生成失败");
+            map.put("code", 1);
+        }
+        return map;
+    }
+
+    private List<String> getTypeList() {
+        List<String> typeList = new ArrayList<>();
+        typeList.add("A");
+        typeList.add("B");
+        typeList.add("C");
+        typeList.add("D");
+        typeList.add("E");
+        typeList.add("F");
+        return typeList;
     }
 
 }

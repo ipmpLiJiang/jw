@@ -2,6 +2,7 @@ package com.welb.organization_check.dto;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author luoyaozu
@@ -14,6 +15,7 @@ public class UserSummaryDto {
     //个人月度总结属性
     public static HashMap<String, String> states = new LinkedHashMap<>();
     public static HashMap<String, String> months = new LinkedHashMap<>();
+    public static Map<String, String> dbbks = new LinkedHashMap<>();
 
     static {
         states.put("", "--");
@@ -23,6 +25,11 @@ public class UserSummaryDto {
         states.put("5", "自评中");
         states.put("6", "评分中");
         states.put("7", "评分完成");
+
+        dbbks.put("1","组织委员纪检委员");
+        dbbks.put("2","宣传委员青年委员");
+        dbbks.put("3","党支部书记");
+        dbbks.put("4","党总支书记");
 
         months.put("1", "第1季度");
         months.put("2", "第2季度");
@@ -96,7 +103,25 @@ public class UserSummaryDto {
 
     private String isedit;//是否可编辑  0：可编辑   1：不可编辑
 
+    private String branchcode;
 
+    private String branchname;
+
+    public String getBranchcode() {
+        return branchcode;
+    }
+
+    public void setBranchcode(String branchcode) {
+        this.branchcode = branchcode == null ? null : branchcode.trim();
+    }
+
+    public String getBranchname() {
+        return branchname;
+    }
+
+    public void setBranchname(String branchname) {
+        this.branchname = branchname;
+    }
 
     public static HashMap<String, String> getStates() {
         return states;
@@ -155,6 +180,28 @@ public class UserSummaryDto {
     public void setDbbk(String dbbk) {
         this.dbbk = dbbk == null ? null : dbbk.trim();
     }
+
+    public static Map<String, String> getDbbks() {
+        return dbbks;
+    }
+
+    public static void setDbbks(Map<String, String> dbbks) {
+        UserDto.dbbks = dbbks;
+    }
+
+    private String dbbkName;
+
+    public String getDbbkName() {
+        if (dbbk!=null){
+            return dbbks.get(this.dbbk);
+        }
+        return dbbkName;
+    }
+
+    public void setDbbkName(String dbbkName) {
+        this.dbbkName = dbbkName;
+    }
+
     public void setMonthname(String monthname) {
         this.monthname = monthname;
     }

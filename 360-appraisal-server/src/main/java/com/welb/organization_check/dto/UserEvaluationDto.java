@@ -419,4 +419,24 @@ public class UserEvaluationDto {
     public void setPostType(String postType) {
         this.postType = postType;
     }
+
+    private String branchcode;
+
+    public String getBranchcode() {
+        return branchcode;
+    }
+
+    public void setBranchcode(String branchcode) {
+        this.branchcode = branchcode == null ? null : branchcode.trim();
+    }
+
+    private String branchname;
+
+    public String getBranchname() {
+        return branchname;
+    }
+
+    public void setBranchname(String branchname) {
+        this.branchname = branchname;
+    }
 }

@@ -148,6 +148,10 @@
         select * from scoreStation where dbtype = #{dbtype}
     </select>
 
+    <select id="findScoreStationByScorredStationCode" resultMap="BaseResultMap">
+        select * from scoreStation where scorredstationcode = #{scorredstationcode} and dbtype = #{dbtype}
+    </select>
+
     <delete id="batchDelete">
         delete from ScoreStation where Id in
         <foreach collection="list" item="scorredIds" separator="," open="(" close=")">

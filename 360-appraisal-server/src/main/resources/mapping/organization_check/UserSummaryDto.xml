@@ -22,6 +22,7 @@
         <result column="postType" jdbcType="VARCHAR" property="postType"/>
         <result column="dbtype" jdbcType="VARCHAR" property="dbtype"/>
         <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
+        <result column="branchcode" property="branchcode" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--通过被评分人的code,年份，月度查找相关数据-->
@@ -56,7 +57,7 @@
     <select id="selectUserSummaryBySixState" resultMap="BaseResultMap">
         select u.UserCode,u.UserName,
         m.SerialNo,m.Year,m.Month,m.Title,m.State,m.EmployeeCode,
-        s.* from user u ,monthsummary m,score s
+        sf.ScorringCode,sf.ScoredCode ScorredCode,UUID() Id, null ScoreType, null DutyCode from user u ,monthsummary m,scoreflow sf
         <where>
             <if test="username!=null and username!=''">
                 and u.UserName like concat('%',#{username},'%')
@@ -74,15 +75,16 @@
                 and m.dbtype=#{dbtype}
             </if>
             and u.UserCode =m.EmployeeCode
-            and m.EmployeeCode=s.ScorredCode
-            and s.ScorringCode=#{scorringcode}
+            and m.EmployeeCode=sf.ScoredCode
+            AND m.SerialNo = sf.MSerialNo
+            and sf.ScorringCode=#{scorringcode}
             AND u.UserCode in (
                 select code from (
                     SELECT ScorredCode code FROM score WHERE dbtype =#{dbtype} union
                     SELECT ScorringCode code FROM score WHERE dbtype =#{dbtype}
                 ) a
             )
-            and m.dbtype = s.dbtype
+            and m.dbtype = sf.dbtype
             and m.State ="6"
             and u.RoleType="0"
             and u.Flag="0"
@@ -95,7 +97,7 @@
     <select id="selectUserSummaryBySixStateNew" resultMap="BaseResultMap">
         select distinct u.UserCode,u.UserName,
         m.SerialNo,m.Year,m.Month,m.Title,m.State,m.EmployeeCode,
-        s.ScorringCode,s.ScorredCode,UUID() Id, null ScoreType, null DutyCode from user u ,monthsummary m,score s
+        sf.ScorringCode,sf.ScoredCode ScorredCode,UUID() Id, null ScoreType, null DutyCode from user u ,monthsummary m,scoreflow sf
         <where>
             <if test="username!=null and username!=''">
                 and u.UserName like concat('%',#{username},'%')
@@ -111,9 +113,10 @@
             </if>
             and m.dbtype = #{dbtype}
             and u.UserCode =m.EmployeeCode
-            and m.EmployeeCode=s.ScorredCode
-            and m.dbtype = s.dbtype
-            and s.ScorringCode=#{scorringcode}
+            and m.EmployeeCode=sf.ScoredCode
+            AND m.SerialNo = sf.MSerialNo
+            and m.dbtype = sf.dbtype
+            and sf.ScorringCode=#{scorringcode}
             AND u.UserCode in (
                 select code from (
                     select ScorredCode code from score where dbtype=#{dbtype} union
@@ -132,7 +135,7 @@
     <select id="selectUserSummary" resultMap="BaseResultMap">
         select distinct u.MoneyCard,u.UserCode,u.UserName, u.StationCode,
         m.SerialNo,m.Year,m.Month,m.Title,m.State,UUID() Id,
-        m.EmployeeCode,s.ScorringCode,s.ScorredCode, null ScoreType from user u ,monthsummary m,score s
+        m.EmployeeCode,sf.ScorringCode,sf.ScoredCode ScorredCode, null ScoreType,u.dbbk from user u ,monthsummary m,scoreflow sf
         <where>
             <if test="year!=null and year!=''">
                 and m.Year=#{year}
@@ -150,9 +153,10 @@
                 and u.StationCode=#{stationcode}
             </if>
             and u.UserCode =m.EmployeeCode
-            and m.EmployeeCode=s.ScorredCode
-            and m.dbtype = s.dbtype
-            and s.ScorringCode=#{scorringcode}
+            and m.EmployeeCode=sf.ScoredCode
+            AND m.SerialNo = sf.MSerialNo
+            and m.dbtype = sf.dbtype
+            and sf.ScorringCode=#{scorringcode}
             and m.State in ("6","7")
             and u.RoleType="0"
             and u.Flag="0"
@@ -188,7 +192,7 @@
     <select id="selectUserSummaryNew" resultMap="BaseResultMap">
         select distinct u.UserCode,u.UserName,
         m.SerialNo,m.Year,m.Month,m.Title,m.State,m.EmployeeCode,s1.StationCode,s1.StationName,d.DepartmentCode,d.DepartmentName,
-        s.ScorringCode,s.ScorredCode,UUID() Id, null ScoreType, null DutyCode from user u ,monthsummary m,score s,station s1,department d
+        sf.ScorringCode,sf.ScoredCode ScorredCode,UUID() Id, null ScoreType, null DutyCode from user u ,monthsummary m,scoreflow sf,station s1,department d
         <where>
             <if test="year!=null and year!=''">
                 and m.Year=#{year}
@@ -203,10 +207,11 @@
                 and u.StationCode=#{stationcode}
             </if>
             and u.UserCode =m.EmployeeCode
-            and m.EmployeeCode=s.ScorredCode
+            and m.EmployeeCode=sf.ScoredCode
+            AND m.SerialNo = sf.MSerialNo
             and m.dbtype = #{dbtype}
-            and m.dbtype = s.dbtype
-            and s.ScorringCode=#{scorringcode}
+            and m.dbtype = sf.dbtype
+            and sf.ScorringCode=#{scorringcode}
             and u.StationCode=s1.StationCode
             and d.DepartmentCode=s1.DepartmentCode
             and m.State in ("6","7")

@@ -172,4 +172,9 @@ public class ScoreServiceImpl implements  IScoreService {
     public int deleteDbtype(String dbtype){
         return scoreMapper.deleteDbtype(dbtype);
     }
+
+    @Override
+    public int deleteByScorredCodeAndDbtype(String scorredcode,String dbtype){
+        return scoreMapper.deleteByScorredCodeAndDbtype(scorredcode, dbtype);
+    }
 }

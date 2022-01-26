@@ -22,6 +22,16 @@ public class Info {
 
     private String dbtype;
 
+    public String getPostType() {
+        return postType;
+    }
+
+    public void setPostType(String postType) {
+        this.postType = postType;
+    }
+
+    private String postType;
+
     public String getUsername() {
         return username;
     }

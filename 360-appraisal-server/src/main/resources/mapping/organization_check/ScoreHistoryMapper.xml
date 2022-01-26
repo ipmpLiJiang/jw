@@ -21,6 +21,7 @@
         <result column="DfScore" property="dfScore" jdbcType="DOUBLE"/>
         <result column="dbtype" property="dbtype" jdbcType="VARCHAR"/>
         <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
+        <result column="branchcode" property="branchcode" jdbcType="VARCHAR"/>
     </resultMap>
     <resultMap id="BaseResultMap2" type="com.welb.organization_check.entity.ScoreHistory">
         <id column="Id" property="id" jdbcType="INTEGER"/>
@@ -50,9 +51,10 @@
         <result column="BranchCode" jdbcType="VARCHAR" property="branchcode"/>
         <result column="dbtype" property="dbtype" jdbcType="VARCHAR"/>
         <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
+        <result column="branchcode" property="branchcode" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-    Id, UserCode, Year, month, ScoreStatus, AScore, BScore, CScore, DScore, EScore, FScore, TotalScore, SumZdScore, SumMbScore, SumZfScore, AvgZdScore, AvgMbScore, SumTotalScore, DfScore, dbtype,dbbk
+    Id, UserCode, Year, month, ScoreStatus, AScore, BScore, CScore, DScore, EScore, FScore, TotalScore, SumZdScore, SumMbScore, SumZfScore, AvgZdScore, AvgMbScore, SumTotalScore, DfScore, dbtype,dbbk,branchcode
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -280,7 +282,7 @@
         h.DfScore,
         h.dbtype,
         h.SumZfScore,
-        u.UserName,u.MoneyCard,
+        u.UserName,u.MoneyCard,u.branchcode,
         m.SerialNo,m.Year,m.Month,m.State,m.SavePath,m.FileName,m.Title,m.Content,
         s.StationName,s.StationCode,d.DepartmentCode,d.DepartmentName,
         r.RoleCode,r.RoleName,u.dbbk
@@ -317,6 +319,9 @@
             </if>
             <if test="history.dbbk != null and history.dbbk !=''">
                 and u.dbbk = #{history.dbbk,jdbcType=VARCHAR}
+            </if>
+            <if test="history.branchcode != null and history.branchcode !=''">
+                and u.branchcode = #{history.branchcode,jdbcType=VARCHAR}
             </if>
             and u.UserCode=h.UserCode
             and u.UserCode =m.EmployeeCode
@@ -635,9 +640,6 @@
         and s.DepartmentCode=d.DepartmentCode
         and u.UserCode=ur.UserCode
         and r.RoleCode=ur.RoleCode
-        <if test="dbtype != null and dbtype !='1'">
-            and r.RoleCode in("100","150","200","300","50")
-        </if>
         and h.Year=m.Year
         and m.Month=h.Month
         AND h.dbtype = m.dbtype

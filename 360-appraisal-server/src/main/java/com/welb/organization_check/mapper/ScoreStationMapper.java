@@ -25,6 +25,7 @@ public interface ScoreStationMapper {
 
     List<ScoreStation> findScoreStationAll(String dbtype);
 
+    List<ScoreStation> findScoreStationByScorredStationCode(String scorredstationcode,String dbtype);
 
     List<ScoreStation> selectScoreStationScorringLeft(@Param("scoreStation") ScoreStation scoreStation, @Param("departmentcode") String departmentcode);
 

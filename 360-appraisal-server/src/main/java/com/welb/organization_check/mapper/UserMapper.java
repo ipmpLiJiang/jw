@@ -77,7 +77,7 @@ public interface UserMapper {
 
     void add(User user);
 
-    List<User> findUserBranchByDbbk(String dbbk);
+    List<User> findUserBranchByDbbk(@Param("user") User user);
 
     List<User> selectUserPfr(String dbtype,String year,String month,boolean isDq);
 

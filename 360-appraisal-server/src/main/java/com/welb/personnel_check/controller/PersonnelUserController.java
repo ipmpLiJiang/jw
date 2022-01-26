@@ -209,7 +209,8 @@ public class PersonnelUserController {
                     List<UserRoleKey> roleList = userRoleService.selectUserRoleByUserCode(selectByMoneyCard.getUsercode());
                     if (roleList.size() > 0) {
                         for (UserRoleKey role : roleList) {
-                            if (role.getRolecode().equals("150") || role.getRolecode().equals("500") || role.getRolecode().equals("400") || role.getRolecode().equals("700")) {
+                            if (role.getRolecode().equals("150") || role.getRolecode().equals("500") || role.getRolecode().equals("400") ||
+                                    role.getRolecode().equals("700") || role.getRolecode().equals("1000") || role.getRolecode().equals("2000")) {
                                 judgeIsAddUser(list, personnelUser, personneluser);
                             }
                         }
@@ -287,7 +288,8 @@ public class PersonnelUserController {
             List<UserRoleKey> roleList = userRoleService.selectUserRoleByUserCode(user.getUsercode());
             if (roleList.size() > 0) {
                 for (UserRoleKey role : roleList) {
-                    if (role.getRolecode().equals("150") || role.getRolecode().equals("500") || role.getRolecode().equals("400") || role.getRolecode().equals("700")) {
+                    if (role.getRolecode().equals("150") || role.getRolecode().equals("500") || role.getRolecode().equals("400") ||
+                            role.getRolecode().equals("700") || role.getRolecode().equals("1000") || role.getRolecode().equals("2000")) {
                         flag = true;
                         break;
                     }
@@ -383,7 +385,8 @@ public class PersonnelUserController {
                 List<UserRoleKey> roleList = userRoleService.selectUserRoleByUserCode(user.getUsercode());
                 if (roleList.size() > 0) {
                     for (UserRoleKey role : roleList) {
-                        if (role.getRolecode().equals("150") || role.getRolecode().equals("500") || role.getRolecode().equals("400") || role.getRolecode().equals("700")) {
+                        if (role.getRolecode().equals("150") || role.getRolecode().equals("500") || role.getRolecode().equals("400") ||
+                                role.getRolecode().equals("700") || role.getRolecode().equals("1000") || role.getRolecode().equals("2000")) {
                             //修改授权表人员信息
                             updateAuthorizationUser(personnelUser, map);
                             break;

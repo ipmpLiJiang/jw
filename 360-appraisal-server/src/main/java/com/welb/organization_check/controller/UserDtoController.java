@@ -78,6 +78,8 @@ public class UserDtoController {
     IEvaluationReportService evaluationReportService;
     @Autowired
     IResultReportService resultReportService;
+    @Resource
+    IBranchService branchService;
 
     @RequestMapping(value = "/scoreShengCheng", produces = "application/json;charset=utf-8")
     public Object scoreShengChengUser(HttpServletRequest req, String dbtype, String postType, String userCode) {
@@ -106,7 +108,9 @@ public class UserDtoController {
                             if (summaryList.size() != users.size()) {
                                 addMonthSummary(setTime.getYear(), setTime.getMonth(), users, dbtype);
                             }
-                            this.getShengCheng(setTime.getYear(), setTime.getMonth(), dbtype, postType, userCode);
+                            if(userCode!=null && !userCode.equals("")) {
+                                this.getShengCheng(setTime.getYear(), setTime.getMonth(), dbtype, postType, userCode);
+                            }
                             map.put("msg", "生成数据成功");
                             map.put("code", 0);
                         }
@@ -159,7 +163,7 @@ public class UserDtoController {
     }
 
     @RequestMapping(value = "/oneShengChengDelete", produces = "application/json;charset=utf-8")
-    public Object oneShengChengDelete1(HttpServletRequest req, String dbtype, String userCode) {
+    public Object oneShengChengDelete1(HttpServletRequest req, String dbtype, String userCode,String type) {
         ModelMap map = new ModelMap();
         String usercode = (String) req.getSession().getAttribute("usercode");
         String state = (String) req.getSession().getAttribute("state");
@@ -172,12 +176,16 @@ public class UserDtoController {
                         MonthSummary monthSummary = summaryList.get(0);
                         if (monthSummary.getState().equals("0")) {
                             this.oneShengChengDelete(setTime.getYear(), setTime.getMonth(), dbtype, userCode);
-                            MonthSummary update = new MonthSummary();
-                            update.setSerialno(monthSummary.getSerialno());
-                            update.setState("0");
-                            update.setIsSc(0);
-                            update.setDbtype(dbtype);
-                            summaryService.updateByPrimaryKeySelective(update);
+                            if(type.equals("1")) {
+                                MonthSummary update = new MonthSummary();
+                                update.setSerialno(monthSummary.getSerialno());
+                                update.setState("0");
+                                update.setIsSc(0);
+                                update.setDbtype(dbtype);
+                                summaryService.updateByPrimaryKeySelective(update);
+                            } else {
+                                summaryService.deleteByPrimaryKey(monthSummary.getSerialno(),dbtype);
+                            }
                             map.put("msg", "删除数据成功.");
                             map.put("code", 0);
                         } else {
@@ -278,7 +286,7 @@ public class UserDtoController {
         }
         PageHelper.startPage(pageNum, pageSize);
         List<UserDto> userDtos = dtoService.selectUserDtoLike(dto, "bpfr");
-
+        this.handleUsersMsg(userDtos);
         //getStationName(userDtos);
         PageInfo<UserDto> pageInfo = new PageInfo<>(userDtos);
         userDtos = pageInfo.getList();
@@ -286,6 +294,21 @@ public class UserDtoController {
         map.put("msg", "查询评分汇总列表成功");
         map.put("data", userDtos);
         map.put("code", 0);
+    }
+
+    private void handleUsersMsg(List<UserDto> userDtos) {
+        if (userDtos.size() > 0) {
+            for (int i = 0; i < userDtos.size(); i++) {
+                //查找用户对应的支部
+                Branch branch = branchService.selectByPrimaryKey(userDtos.get(i).getBranchcode());
+                if (branch != null) {
+                    userDtos.get(i).setBranchname(branch.getBranchname());
+                } else {
+                    userDtos.get(i).setBranchname("");
+                }
+
+            }
+        }
     }
 
     private void getShengCheng(String year, String month, String dbtype, String postType, String userCode) {
@@ -1548,6 +1571,7 @@ public class UserDtoController {
                 historieList = historyService.selectHistoryList(history, qrcode, postType, isDq);
                 PageInfo<ScoreHistory> pageInfo = new PageInfo<>(historieList);
                 historieList = pageInfo.getList();
+                this.handleUsersMsgH(historieList);
                 map.put("totalPages", pageInfo.getTotal());
                 map.put("msg", "查询历史评分成功");
                 map.put("data", historieList);
@@ -1565,6 +1589,21 @@ public class UserDtoController {
         }
         return map;
 
+    }
+
+    private void handleUsersMsgH(List<ScoreHistory> scoreHistoryList) {
+        if (scoreHistoryList.size() > 0) {
+            for (int i = 0; i < scoreHistoryList.size(); i++) {
+                //查找用户对应的支部
+                Branch branch = branchService.selectByPrimaryKey(scoreHistoryList.get(i).getBranchcode());
+                if (branch != null) {
+                    scoreHistoryList.get(i).setBranchname(branch.getBranchname());
+                } else {
+                    scoreHistoryList.get(i).setBranchname("");
+                }
+
+            }
+        }
     }
 
     //生成被打分人数据，自动生成 默认评分此处不执行

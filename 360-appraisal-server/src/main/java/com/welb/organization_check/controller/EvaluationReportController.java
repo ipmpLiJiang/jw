@@ -59,6 +59,8 @@ public class EvaluationReportController {
     IManualSetTimeService setTimeService;
     @Autowired
     IUserScoreDtoService userScoreDtoService;
+    @Resource
+    IBranchService branchService;
 
     @RequestMapping(value = "/list", produces = "application/json;charset=utf-8")
     public Object selectReport(HttpServletRequest req, String usercode, String year, String month, String dbtype) {
@@ -525,6 +527,7 @@ public class EvaluationReportController {
 
                     PageInfo<UserEvaluationDto> pageInfo = new PageInfo<>(evaluationReports);
                     evaluationReports = pageInfo.getList();
+                    this.handleUsersMsgE(evaluationReports);
                     map.put("totalPages", pageInfo.getTotal());
                     map.put("msg", "查询成功");
                     map.put("data", evaluationReports);
@@ -543,6 +546,21 @@ public class EvaluationReportController {
             map.put("code", 810);
         }
         return map;
+    }
+
+    private void handleUsersMsgE(List<UserEvaluationDto> userEvaluationDtoList) {
+        if (userEvaluationDtoList.size() > 0) {
+            for (int i = 0; i < userEvaluationDtoList.size(); i++) {
+                //查找用户对应的支部
+                Branch branch = branchService.selectByPrimaryKey(userEvaluationDtoList.get(i).getBranchcode());
+                if (branch != null) {
+                    userEvaluationDtoList.get(i).setBranchname(branch.getBranchname());
+                } else {
+                    userEvaluationDtoList.get(i).setBranchname("");
+                }
+
+            }
+        }
     }
 
     private void manualSelectAllReport(UserEvaluationDto evaluationDto, String dbtype) throws ParseException {
@@ -596,6 +614,7 @@ public class EvaluationReportController {
                     evaluation.setMoneycard(dto1.getMoneycard());
                     evaluation.setStationname(dto1.getStationname());
                     evaluation.setDepartmentname(dto1.getDepartmentname());
+                    evaluation.setBranchcode(dto1.getBranchcode());
                     evaluation.setMserialno(dto1.getSerialno());
                 }
             }

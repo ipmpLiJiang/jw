@@ -52,6 +52,8 @@ public class UserSummaryDtoController {
     IScoreHistoryService historyService;
     @Resource
     IUserDtoService userDtoService;
+    @Resource
+    IBranchService branchService;
 
     /**
      * 查询首页待评分人数据列表
@@ -324,6 +326,14 @@ public class UserSummaryDtoController {
                     dto.setScoreState(flowScorringScorredcode.get(0).getScoreState());
                 } else {
                     dto.setScoreState("1");
+                }
+            }
+            if(user.getBranchcode()!=null && !user.getBranchcode().equals("")) {
+                Branch branch = branchService.selectByPrimaryKey(user.getBranchcode());
+                if (branch != null) {
+                    dto.setBranchname(branch.getBranchname());
+                } else {
+                    dto.setBranchname("");
                 }
             }
         }

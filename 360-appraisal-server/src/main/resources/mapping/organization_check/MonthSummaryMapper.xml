@@ -278,7 +278,6 @@
          and ur.UserCode=m.EmployeeCode
         <if test="dbtype != null and dbtype !='' and dbtype!='1'">
             and r.RoleCode=ur.RoleCode
-            and r.RoleCode in("100","150","200","300","50")
         </if>
         <if test="postType != null and postType !=''">
             and u.postType = #{postType}

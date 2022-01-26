@@ -19,6 +19,8 @@
         <result column="DutyType" property="dutyType" jdbcType="VARCHAR"/>
         <result column="ScoreType" property="scoreType" jdbcType="VARCHAR"/>
         <result column="postType" property="postType" jdbcType="VARCHAR"/>
+        <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
+        <result column="branchcode" property="branchcode" jdbcType="VARCHAR"/>
     </resultMap>
 
     <select id="selectUserScoreBadDto" resultMap="BaseResultMap">
@@ -34,6 +36,8 @@
         u.stationcode,
         u.moneycard,
         u.postType,
+        u.dbbk,
+        u.branchcode,
         sf.ScoredCode,
         sf.ScorringCode,
         sf.ScoreType,
@@ -68,6 +72,9 @@
         </if>
         <if test='dbbk != null and dbbk!=""'>
             AND u.dbbk = #{dbbk}
+        </if>
+        <if test='branchcode != null and branchcode!=""'>
+            AND u.branchcode = #{branchcode}
         </if>
         AND !ISNULL(sd.cpsm) and LENGTH(sd.cpsm) > 0
         order by u.usercode,sf.ScoreType

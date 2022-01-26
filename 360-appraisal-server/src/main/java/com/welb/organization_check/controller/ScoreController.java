@@ -346,7 +346,7 @@ public class ScoreController {
                             continue;
                         }
                     } else {
-                        if (!user.getRolecode().equals("300") && !user.getRolecode().equals("150")) {
+                        if (!user.getRolecode().equals("300") && !user.getRolecode().equals("150") && !user.getRolecode().equals("1000") && !user.getRolecode().equals("2000")) {
                             temp1 = true;
                             sb1.append(username + "(" + moneycard + "-" + scoretype + ")").append(";");
                             continue;
@@ -481,7 +481,7 @@ public class ScoreController {
                     List<Score> dutyScoreList = scoreService.findScoreScorringInList(score, scorringcodes);
                     List<Score> createList = new ArrayList<>();
                     for (User u : userqueryList) {
-                        if (!u.getRolecode().equals("300") && !u.getRolecode().equals("150")) {
+                        if (!u.getRolecode().equals("300") && !u.getRolecode().equals("150") && !u.getRolecode().equals("1000") && !u.getRolecode().equals("2000")) {
                             temp = true;
                             userMsg = u.getUsername() + "(" + u.getMoneycard() + "-" + scoreType + ")";
                             if (sb.indexOf(userMsg) == -1) {

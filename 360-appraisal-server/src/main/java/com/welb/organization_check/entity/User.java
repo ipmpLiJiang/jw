@@ -48,6 +48,8 @@ public class User {
         roles.put("300","普通用户");
         roles.put("400","考勤超级管理员");
         roles.put("500","考勤管理员");
+        roles.put("1000","党办管理员");
+        roles.put("2000","院领导");
 
         dbbks.put("1","组织委员纪检委员");
         dbbks.put("2","宣传委员青年委员");

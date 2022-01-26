@@ -469,4 +469,8 @@
     <delete id="deleteDbtype">
         delete from score where dbtype = #{dbtype}
     </delete>
+
+    <delete id="deleteByScorredCodeAndDbtype">
+        delete from score where ScorredCode = #{scorredcode} and dbtype = #{dbtype}
+    </delete>
 </mapper>

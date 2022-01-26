@@ -1213,7 +1213,7 @@ public class MobileController {
             List<Role> roles = roleService.selectRoleListByUserCode(usercode);
             if (roles.size() > 0) {
                 for (Role role : roles) {
-                    if (role.getRolecode().equals("50") || role.getRolecode().equals("100") ||
+                    if (role.getRolecode().equals("50") || role.getRolecode().equals("100") || role.getRolecode().equals("1000") || role.getRolecode().equals("2000") ||
                             role.getRolecode().equals("150") || role.getRolecode().equals("200") || role.getRolecode().equals("300")) {
 //                        List<UserSummaryDto> summarys = new ArrayList<>();
                         ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", dbtype);
@@ -1250,7 +1250,7 @@ public class MobileController {
             List<Role> roles = roleService.selectRoleListByUserCode(summaryDto.getUsercode());
             if (roles.size() > 0) {
                 for (Role role : roles) {
-                    if (role.getRolecode().equals("50") || role.getRolecode().equals("100") ||
+                    if (role.getRolecode().equals("50") || role.getRolecode().equals("100") || role.getRolecode().equals("1000") || role.getRolecode().equals("2000") ||
                             role.getRolecode().equals("150") || role.getRolecode().equals("200") || role.getRolecode().equals("300")) {
                         String state = (String) req.getSession().getAttribute("state");
                         ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", summaryDto.getDbtype());
@@ -1442,8 +1442,8 @@ public class MobileController {
                 boolean isOrganization = false;
                 boolean isMedicalEthics = false;
                 for (Role role : roles) {
-                    if (role.getRolecode().equals("50") || role.getRolecode().equals("100") ||
-                            role.getRolecode().equals("150") || role.getRolecode().equals("200") ||
+                    if (role.getRolecode().equals("50") || role.getRolecode().equals("100") || role.getRolecode().equals("1000") ||
+                            role.getRolecode().equals("2000") || role.getRolecode().equals("150") || role.getRolecode().equals("200") ||
                             role.getRolecode().equals("300")) {
                         //组织部
                         isOrganization = true;
@@ -1605,8 +1605,9 @@ public class MobileController {
             if (roles.size() > 0) {
                 boolean existPermission = false;
                 for (Role role : roles) {
-                    if (role.getRolecode().equals("50") || role.getRolecode().equals("100") ||
-                            role.getRolecode().equals("150") || role.getRolecode().equals("200") || role.getRolecode().equals("300") || role.getRolecode().equals("700")) {
+                    if (role.getRolecode().equals("50") || role.getRolecode().equals("100") || role.getRolecode().equals("1000") ||
+                            role.getRolecode().equals("2000") || role.getRolecode().equals("150") || role.getRolecode().equals("200") ||
+                            role.getRolecode().equals("300") || role.getRolecode().equals("700")) {
                         existPermission = true;
                         break;
                     }

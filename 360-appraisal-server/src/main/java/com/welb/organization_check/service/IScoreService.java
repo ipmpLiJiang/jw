@@ -133,4 +133,6 @@ public interface  IScoreService {
     List<Score> findScoreDutyScorringUserList(String scorredCode,String dutycode,String scoretype,String dbtype);
 
     int deleteDbtype(String dbtype);
+
+    int deleteByScorredCodeAndDbtype(String scorredcode,String dbtype);
 }

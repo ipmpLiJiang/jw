@@ -55,6 +55,7 @@
         <result column="MinCompareLast" property="mincomparelast" jdbcType="DOUBLE"/>
         <result column="MinCompareMark" property="mincomparemark" jdbcType="DOUBLE"/>
         <result column="Plan" property="plan" jdbcType="DOUBLE"/>
+        <result column="BranchCode" jdbcType="VARCHAR" property="branchcode"/>
         <result column="dbtype" property="dbtype" jdbcType="VARCHAR"/>
         <result column="dbbk" property="dbbk" jdbcType="VARCHAR"/>
         <result column="UserName" property="username" jdbcType="VARCHAR"/>
@@ -374,7 +375,7 @@
     <!--糊查询所有报告-->
     <select id="selectAllEvaluationReportLike" resultMap="BaseResultMap1">
         select e.Id,e.Year,e.Month,e.TotalScore,e.AvgScore,e.ZdScore,e.SumMbAvgScore,e.DfScore,e.MbScore,e.ZfScore,e.Plan,
-        u.UserCode,u.UserName,e.BasicScore,e.KeyScore,e.state,u.dbbk
+        u.UserCode,u.UserName,e.BasicScore,e.KeyScore,e.state,u.dbbk,u.branchcode
         from evaluationreport e,user u,role r,user_role ur
         <where>
             <if test="evaluationDto.username!=null and evaluationDto.username!=''">
@@ -390,10 +391,13 @@
                 and e.dbtype=#{evaluationDto.dbtype,jdbcType=VARCHAR}
             </if>
             <if test="evaluationDto.dbbk != null and evaluationDto.dbbk!=''">
-                and e.dbbk=#{evaluationDto.dbbk,jdbcType=VARCHAR}
+                and u.dbbk=#{evaluationDto.dbbk,jdbcType=VARCHAR}
             </if>
             <if test="evaluationDto.postType != null and evaluationDto.postType!=''">
                 and u.postType=#{evaluationDto.postType,jdbcType=VARCHAR}
+            </if>
+            <if test="evaluationDto.branchcode != null and evaluationDto.branchcode!=''">
+                and u.branchcode=#{evaluationDto.branchcode,jdbcType=VARCHAR}
             </if>
             and u.UserCode=e.UserCode
             and e.UserCode=ur.UserCode

@@ -6,15 +6,27 @@ import com.welb.organization_check.entity.ManualSetTime;
 import com.welb.organization_check.entity.ScoreDetail;
 import com.welb.organization_check.entity.ScoreFlow;
 import com.welb.organization_check.entity.User;
+import com.welb.organization_check.info.Info;
 import com.welb.organization_check.service.*;
+import net.sf.json.JSONObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -317,6 +329,263 @@ public class ScoreFlowController {
 
         return list;
     }
+
+    @RequestMapping(value = "/export", produces = "application/json;charset=utf-8")
+    public void exportExcelData1(HttpServletResponse response, String info) {
+        //json字符串转对象
+        JSONObject jsonObject = JSONObject.fromObject(info);
+        Info info1 = (Info) JSONObject.toBean(jsonObject, Info.class);
+        if (info1.getYear() == null || info1.getMonth() == null || info1.getYear().equals("") || info1.getMonth().equals("")) {
+            ManualSetTime setTime = setTimeService.selectManualByYearAndMonth("", "", info1.getDbtype());
+            info1.setYear(setTime.getYear());
+            info1.setMonth(setTime.getMonth());
+        }
+        List<ScoreFlow> flowList = scoreFlowService.selectSummaryFlowByYMTOrPTList(info1.getYear(), info1.getMonth(),
+                info1.getDbtype(), info1.getPostType(), null);
+
+        List<ScoreFlowScorringTjDto> list = new ArrayList<>();
+        List<ScoreFlowScorringTjDto> abcDetail = new ArrayList<>();
+        List<ScoreFlowScorringTjDto> efDetail = new ArrayList<>();
+        List<ScoreFlowScorringTjDto> dDetail = new ArrayList<>();
+        if (flowList.size() > 0) {
+            String pt = info1.getPostType();
+            ScoreFlowScorringTjDto dto1 = new ScoreFlowScorringTjDto();
+            dto1.setNum(1);
+            dto1.setScoreProj(pt.equals("3") ? "行政后勤科室" : pt.equals("2") ? "临床科主任" : "临床护士长");
+            dto1.setPosttype(pt);
+            this.getFlowABCDEFPostTypeList(flowList, dto1, dto1.getPosttype());
+            list.add(dto1);
+
+            List<ScoreDetail> detailList = scoreDetailService.selectDetailByInFSerialNoList(info1.getYear(), info1.getMonth(),
+                    info1.getDbtype(), info1.getPostType(), null);
+
+            List<ScoreDetail> abcDetailList = detailList.stream().filter(s -> s.getScoretype().equals("A") ||
+                    s.getScoretype().equals("B") || s.getScoretype().equals("C")).collect(Collectors.toList());
+
+            List<ScoreFlow> queryFlowList = flowList.stream().filter(s -> s.getScoretype().equals("A") ||
+                    s.getScoretype().equals("B") || s.getScoretype().equals("C")).collect(Collectors.toList());
+
+            abcDetail = this.getScorringTjDto(queryFlowList, abcDetailList);
+            for (ScoreFlowScorringTjDto item : abcDetail) {
+                User userQuery = new User();
+                userQuery.setUsercode(item.getScorringcode());
+                User user = userService.selectUserBuGwByMoneyCard(userQuery);
+                if (user != null)
+                    item.setScorringname(user.getUsername());
+            }
+            if (abcDetail.size() > 0) {
+                abcDetail = abcDetail.stream().sorted(Comparator.comparing(ScoreFlowScorringTjDto::getYcyrs).reversed()).collect(Collectors.toList());
+            }
+
+            List<ScoreDetail> dDetailList = detailList.stream().filter(s -> s.getScoretype().equals("D")).collect(Collectors.toList());
+            queryFlowList = flowList.stream().filter(s -> s.getScoretype().equals("D")).collect(Collectors.toList());
+
+            dDetail = this.getScorringTjDto(queryFlowList, dDetailList);
+            for (ScoreFlowScorringTjDto item : dDetail) {
+                User userQuery = new User();
+                userQuery.setUsercode(item.getScorringcode());
+                User user = userService.selectUserBuGwByMoneyCard(userQuery);
+                if (user != null)
+                    item.setScorringname(user.getUsername());
+            }
+            if (dDetail.size() > 0) {
+                dDetail = dDetail.stream().sorted(Comparator.comparing(ScoreFlowScorringTjDto::getYcyrs).reversed()).collect(Collectors.toList());
+            }
+
+            List<ScoreDetail> efDetailList = detailList.stream().filter(s -> s.getScoretype().equals("E") ||
+                    s.getScoretype().equals("F")).collect(Collectors.toList());
+
+            queryFlowList = flowList.stream().filter(s -> s.getScoretype().equals("E") ||
+                    s.getScoretype().equals("F")).collect(Collectors.toList());
+
+            efDetail = this.getScorringTjDto(queryFlowList, efDetailList);
+            for (ScoreFlowScorringTjDto item : efDetail) {
+                User userQuery = new User();
+                userQuery.setUsercode(item.getScorringcode());
+                User user = userService.selectUserBuGwByMoneyCard(userQuery);
+                if (user != null)
+                    item.setScorringname(user.getUsername());
+            }
+            if (efDetail.size() > 0) {
+                efDetail = efDetail.stream().sorted(Comparator.comparing(ScoreFlowScorringTjDto::getYcyrs).reversed()).collect(Collectors.toList());
+            }
+        }
+        // 创建ExportExcel对象
+        try {
+            // 獲取工作表
+            Workbook workbook = exportBigDataExcel(list, abcDetail, dDetail, efDetail);
+            // 完成下載
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            workbook.write(os);
+            String title = "";
+            if (info1.getPostType() != null && !info1.getPostType().equals("")) {
+                title = info1.getPostType().equals("3") ? "行政" : info1.getPostType().equals("2") ? "护士长" : "科主任";
+            }
+            title = !title.equals("") ? "-" + title : "";
+            downFile(os, response, info1.getYear() + "-" + info1.getMonth() + "测评打分情况统计表" + title + ".xlsx");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private SXSSFWorkbook exportBigDataExcel(List<ScoreFlowScorringTjDto> list, List<ScoreFlowScorringTjDto> abcDetail,
+                                             List<ScoreFlowScorringTjDto> dDetail, List<ScoreFlowScorringTjDto> efDetail) {
+        // 1.获取数据
+        // 2.创建工作簿
+        // 阈值，内存中的对象数量最大值，超过这个值会生成一个临时文件存放到硬盘中
+        SXSSFWorkbook wb = new SXSSFWorkbook(100);
+        Sheet sheet = wb.createSheet("sheet1");
+
+        Row titleRow1 = sheet.createRow(0);
+        Cell celXh = titleRow1.createCell(0);
+        celXh.setCellValue("序号");
+        Cell celDx = titleRow1.createCell(1);
+        celDx.setCellValue("被考核对象");
+        Cell celRs = titleRow1.createCell(2);
+        celRs.setCellValue("被考核人数(人)");
+        Cell celYcySj = titleRow1.createCell(3);
+        celYcySj.setCellValue("应参与 / 实际参与测评打分人数(人)");
+
+        Row titleRow2 = sheet.createRow(1);
+        Cell celYld = titleRow2.createCell(3);
+        celYld.setCellValue("院领导");
+        Cell celZchb = titleRow2.createCell(4);
+        celZchb.setCellValue("中层干部");
+        Cell celYg = titleRow2.createCell(5);
+        celYg.setCellValue("员工");
+
+        CellRangeAddress region = new CellRangeAddress(0, 0, 3, 5);
+        sheet.addMergedRegion(region);
+        CellRangeAddress region1 = new CellRangeAddress(0, 1, 0, 0);
+        sheet.addMergedRegion(region1);
+        CellRangeAddress region2 = new CellRangeAddress(0, 1, 1, 1);
+        sheet.addMergedRegion(region2);
+        CellRangeAddress region3 = new CellRangeAddress(0, 1, 2, 2);
+        sheet.addMergedRegion(region3);
+
+        String abcRs = "";
+        String efRs = "";
+        String dRs = "";
+
+        // 3.从集合中取数据并赋值
+        for (int i = 0; i < list.size(); i++) {
+            Row row = sheet.createRow(i + 2);
+            ScoreFlowScorringTjDto item = list.get(i);
+            row.createCell(0).setCellValue(i + 1);
+            row.createCell(1).setCellValue(item.getScoreProj());
+            row.createCell(2).setCellValue(item.getKhrs());
+            abcRs = item.getYcyABCrs() + " / " + item.getSjcyABCrs();
+            efRs = item.getYcyEFrs() + " / " + item.getSjcyEFrs();
+            dRs = item.getYcyDrs() + " / " + item.getSjcyDrs();
+            row.createCell(3).setCellValue(abcRs);
+            row.createCell(4).setCellValue(efRs);
+            row.createCell(5).setCellValue(dRs);
+        }
+
+        String[] titles = new String[]{"序号", "评分员工", "应考核人数(人)", "实际考核人数(人)", "应打分指标(条)", "实际打分指标(条)"};
+        int nRow = 4;
+
+        Row row0 = sheet.createRow(nRow);
+        row0.createCell(0).setCellValue("");
+
+        nRow = nRow + 1;
+        Row row01 = sheet.createRow(nRow);
+        row01.createCell(0).setCellValue("院领导(" + abcRs +")");
+
+        CellRangeAddress regionAbc = new CellRangeAddress(nRow, nRow, 0, 5);
+        sheet.addMergedRegion(regionAbc);
+
+        nRow = nRow + 1;
+        Row titleRowAbc = sheet.createRow(nRow);
+        for (int i = 0; i < titles.length; i++) {
+            Cell cell = titleRowAbc.createCell(i);
+            cell.setCellValue(titles[i]);
+        }
+
+        // 3.从集合中取数据并赋值
+        for (int i = 0; i < abcDetail.size(); i++) {
+            Row row = sheet.createRow(i + nRow + 1);
+            ScoreFlowScorringTjDto item = abcDetail.get(i);
+            row.createCell(0).setCellValue(i + 1);
+            row.createCell(1).setCellValue(item.getScorringname());
+            row.createCell(2).setCellValue(item.getYcyrs());
+            row.createCell(3).setCellValue(item.getSjcyrs());
+            row.createCell(4).setCellValue(item.getYcyzb());
+            row.createCell(5).setCellValue(item.getSjcyzb());
+        }
+        nRow = nRow+ abcDetail.size() + 1;
+        Row row10 = sheet.createRow(nRow);
+        row10.createCell(0).setCellValue("");
+        nRow = nRow + 1;
+
+        Row row11 = sheet.createRow(nRow);
+        row11.createCell(0).setCellValue("中层干部(" + efRs +")");
+        CellRangeAddress regionEf = new CellRangeAddress(nRow, nRow, 0, 5);
+        sheet.addMergedRegion(regionEf);
+
+        nRow = nRow + 1;
+        Row titleRowEf = sheet.createRow(nRow);
+        for (int i = 0; i < titles.length; i++) {
+            Cell cell = titleRowEf.createCell(i);
+            cell.setCellValue(titles[i]);
+        }
+        // 3.从集合中取数据并赋值
+        for (int i = 0; i < efDetail.size(); i++) {
+            Row row = sheet.createRow(i + nRow + 1);
+            ScoreFlowScorringTjDto item = efDetail.get(i);
+            row.createCell(0).setCellValue(i + 1);
+            row.createCell(1).setCellValue(item.getScorringname());
+            row.createCell(2).setCellValue(item.getYcyrs());
+            row.createCell(3).setCellValue(item.getSjcyrs());
+            row.createCell(4).setCellValue(item.getYcyzb());
+            row.createCell(5).setCellValue(item.getSjcyzb());
+        }
+
+        nRow = nRow +efDetail.size() + 1;
+
+        Row row20 = sheet.createRow(nRow );
+        row20.createCell(0).setCellValue("");
+        nRow = nRow + 1;
+
+        Row row21 = sheet.createRow(nRow );
+        row21.createCell(0).setCellValue("员工(" + dRs +")");
+        CellRangeAddress regionD = new CellRangeAddress(nRow, nRow, 0, 5);
+        sheet.addMergedRegion(regionD);
+
+        nRow = nRow + 1;
+        Row titleRowD = sheet.createRow(nRow);
+        for (int i = 0; i < titles.length; i++) {
+            Cell cell = titleRowD.createCell(i);
+            cell.setCellValue(titles[i]);
+        }
+        // 3.从集合中取数据并赋值
+        for (int i = 0; i < dDetail.size(); i++) {
+            Row row = sheet.createRow(i + nRow + 1);
+            ScoreFlowScorringTjDto item = dDetail.get(i);
+            row.createCell(0).setCellValue(i + 1);
+            row.createCell(1).setCellValue(item.getScorringname());
+            row.createCell(2).setCellValue(item.getYcyrs());
+            row.createCell(3).setCellValue(item.getSjcyrs());
+            row.createCell(4).setCellValue(item.getYcyzb());
+            row.createCell(5).setCellValue(item.getSjcyzb());
+        }
+
+        return wb;
+
+    }
+
+    private void downFile(ByteArrayOutputStream os, HttpServletResponse response, String fileName) throws IOException {
+        response.setContentType("application/octet-stream");
+        response.setCharacterEncoding("utf-8");
+        response.addHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes("gb2312"), "ISO8859-1"));
+        ServletOutputStream outputStream = response.getOutputStream();
+        os.writeTo(outputStream);
+        os.close();
+        outputStream.flush();
+
+    }
+
 
     /*
     @RequestMapping(value = "/scoreFlowDetailTjList1", produces = "application/json;charset=utf-8")
