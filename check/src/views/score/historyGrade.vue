@@ -9,7 +9,7 @@
           label-width="100px"
           show-overflow-tooltip="true"
         >
-          <el-col :span="6" v-if="dbtype==2">
+          <el-col :span="5" v-if="dbtype==2">
             <el-form-item label="所属岗位">
               <PostList
                 @childSelectDepartment="getSelectStation"
@@ -17,7 +17,26 @@
               ></PostList>
             </el-form-item>
           </el-col>
+          <el-col :span="4">
+            <el-form-item label="员工姓名">
+              <el-input
+                placeholder="请输入员工姓名"
+                v-model="search.username"
+                clearable
+                @keyup.enter.native="getList"
+              >
+              </el-input>
+            </el-form-item>
+          </el-col>
           <el-col :span="5" v-if="dbtype==1">
+            <el-form-item label="所属支部">
+              <BranchList
+                @childSelectBranch="getSelectBranch"
+                :selectedOptions="tempbranchcode"
+              ></BranchList>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4" v-if="dbtype==1">
             <el-form-item label="党内身份">
             <el-select
               v-model="search.dbbk"
@@ -35,20 +54,10 @@
             </el-select>
           </el-form-item>
           </el-col>
-          <el-col :span="5">
-            <el-form-item label="员工姓名">
-              <el-input
-                placeholder="请输入员工姓名"
-                v-model="search.username"
-                clearable
-                @keyup.enter.native="getList"
-              >
-              </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="5">
+          <el-col :span="4">
             <el-form-item label="年份">
               <el-date-picker
+                style="width:140px"
                 v-model="search.year"
                 type="year"
                 placeholder="选择年"
@@ -57,8 +66,8 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
-            <el-form-item label="季度">
+          <el-col :span="4">
+            <el-form-item label="评分季度">
               <el-select
                 v-model="search.month"
                 clearable
@@ -117,8 +126,7 @@
             </el-form-item>
           </el-col> -->
           <el-col
-            :span="6"
-            style="margin-top:20px;"
+            :span="4"
             v-if="dbtype=='1'?false:true"
           >
             <el-form-item label="岗位类型">
@@ -182,12 +190,14 @@
         </el-table-column>
         <el-table-column
           prop="departmentname"
+          v-if="dbtype==2"
           label="所属部门"
           show-overflow-tooltip
         >
         </el-table-column>
         <el-table-column
           prop="stationname"
+          v-if="dbtype==2"
           label="所属岗位"
           show-overflow-tooltip
         >
@@ -200,8 +210,15 @@
         >
         </el-table-column> -->
         <el-table-column
+          label="所属支部"
+          v-if="dbtype==1"
+          prop="branchname"
+          width="160px"
+        >
+        </el-table-column>
+        <el-table-column
           prop="dbbkName"
-          v-if="dbtype=='2'?false:true"
+          v-if="dbtype==1"
           label="党内身份"
         >
         </el-table-column>
@@ -228,9 +245,9 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="A"
+          label="A类"
           prop="ascore"
-          show-overflow-tooltip
+          width="70px"
         >
           <template slot-scope="scope">
             <el-button
@@ -241,9 +258,9 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="B"
+          label="B类"
           prop="bscore"
-          show-overflow-tooltip
+          width="70px"
         >
         <template slot-scope="scope">
             <el-button
@@ -254,9 +271,9 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="C"
+          label="C类"
           prop="cscore"
-          show-overflow-tooltip
+          width="70px"
         >
         <template slot-scope="scope">
             <el-button
@@ -267,9 +284,9 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="D"
+          label="D类"
           prop="dscore"
-          show-overflow-tooltip
+          width="70px"
         >
         <template slot-scope="scope">
             <el-button
@@ -280,9 +297,9 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="E"
+          label="E类"
           prop="score"
-          show-overflow-tooltip
+          width="70px"
         >
         <template slot-scope="scope">
             <el-button
@@ -293,9 +310,9 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="F"
+          label="F类"
           prop="score"
-          show-overflow-tooltip
+          width="70px"
         >
         <template slot-scope="scope">
             <el-button
@@ -432,6 +449,7 @@
 
 <script>
 import PostList from "../common/postList";
+import BranchList from "../common/branchList";
 import { getList } from "@/api/score/history";
 import AddQuarter from "../user/addQuarter";
 import AssessLook from "../common/assessLook";
@@ -441,6 +459,7 @@ export default {
   data() {
     return {
       quarterOptions: this.common.seasonOptions(),
+      tempbranchcode: [],
       status: [
         {
           value: "0",
@@ -504,7 +523,8 @@ export default {
         year: "",
         state: "",
         scorestatus: "",
-        dbbk: ""
+        dbbk: "",
+        branchcode: ''
       },
       tableData: [],
       stationcode: [""],
@@ -533,13 +553,18 @@ export default {
     PostList,
     AddQuarter,
     AssessLook,
-    AssessLook2
+    AssessLook2,
+    BranchList
   },
   mounted() {},
   created() {
     this.getList();
   },
   methods: {
+    //获取支部选择
+    getSelectBranch(data, row) {
+      this.search.branchcode = data === undefined ? '' : data;
+    },
     //关闭月结
     childClose(val) {
       this.dialogVisible = val;
@@ -647,6 +672,7 @@ export default {
       params.scorestatus = this.search.scorestatus;
       params.dbtype = this.dbtype;
       params.dbbk = this.search.dbbk
+      params.branchcode = this.search.branchcode
       new Promise((response, reject) => {
         getList(qs.stringify(params))
           .then((response) => {
@@ -685,8 +711,8 @@ export default {
       //   "history/exportHistoryScore?info=" +
       //   JSON.stringify(info);
       window.location.href =
-        // process.env.VUE_APP_ITEM_NAME +
-        "http://localhost:8080/" +
+        process.env.VUE_APP_ITEM_NAME +
+        // "http://localhost:8080/" +
         "history/exportHistoryScore?info=" +
         JSON.stringify(info);
     },

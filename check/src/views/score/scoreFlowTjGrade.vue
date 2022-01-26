@@ -88,7 +88,8 @@
           </el-table-column>
           <el-table-column
             prop="ycyDrs"
-            label="员工">
+            label="员工"
+            width="140">
             <template slot-scope="scope">
                 <el-button
                   v-if="scope.row.num!=4 && scope.row.ycyDrs!=0"
@@ -99,6 +100,20 @@
                 <p v-else>{{scope.row.ycyDrs}}&nbsp;/&nbsp;{{scope.row.sjcyDrs}}</p>
               </template>
           </el-table-column>
+        </el-table-column>
+        <el-table-column
+          label="导出"
+          show-overflow-tooltip
+        >
+          <template slot-scope="scope">
+            <el-button
+              @click="exportExcel(scope.row)"
+              type="text"
+              size="small"
+              v-if="scope.row.num!=4"
+            >导出excel</el-button>
+            <p v-else>&nbsp;</p>
+          </template>
         </el-table-column>
       </el-table>
       <el-pagination
@@ -225,10 +240,14 @@ export default {
       });
     },
     //导出
-    exportExcel() {
+    exportExcel(item) {
+      let info = this.search;
+      info.dbtype = this.dbtype;
+      info.postType = item.posttype
       window.location.href =
         process.env.VUE_APP_ITEM_NAME +
-        "history/exportHistoryScore?info=" +
+        // "http://localhost:8080/" +
+        "scoreflow/export?info=" +
         JSON.stringify(info);
     },
   },

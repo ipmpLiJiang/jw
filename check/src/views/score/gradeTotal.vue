@@ -7,7 +7,7 @@
           label-width="100px"
           show-overflow-tooltip="true"
         >
-          <el-col :span="6" v-if="dbtype==2">
+          <el-col :span="5" v-if="dbtype==2">
             <el-form-item label="所属岗位">
               <PostList
                 @childSelectDepartment="getSelectStation"
@@ -15,7 +15,26 @@
               ></PostList>
             </el-form-item>
           </el-col>
+          <el-col :span="4">
+            <el-form-item label="员工姓名">
+              <el-input
+                placeholder="请输入员工姓名"
+                v-model="search.username"
+                clearable
+                @keyup.enter.native="getList"
+              >
+              </el-input>
+            </el-form-item>
+          </el-col>
           <el-col :span="5" v-if="dbtype==1">
+            <el-form-item label="所属支部">
+              <BranchList
+                @childSelectBranch="getSelectBranch"
+                :selectedOptions="tempbranchcode"
+              ></BranchList>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4" v-if="dbtype==1">
             <el-form-item label="党内身份">
             <el-select
               v-model="search.dbbk"
@@ -33,18 +52,7 @@
             </el-select>
           </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="员工姓名">
-              <el-input
-                placeholder="请输入员工姓名"
-                v-model="search.username"
-                clearable
-                @keyup.enter.native="getList"
-              >
-              </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
+          <el-col :span="5">
             <el-form-item :label="khtitle+'状态'">
               <el-select
                 v-model="search.state"
@@ -61,7 +69,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6" v-if="dbtype=='1'?false:true">
+          <el-col :span="5" v-if="dbtype=='1'?false:true">
             <el-form-item label="岗位类型">
               <el-select
                 v-model="search.postType"
@@ -104,7 +112,7 @@
           type="primary"
           @click="scdata"
           :loading="searchLoading"
-        >生成/更改数据</el-button>
+        >生成被打分人</el-button>
         <el-button
           type="primary"
           @click="updateGradeZp"
@@ -168,21 +176,37 @@
           label="用户姓名"
           show-overflow-tooltip
         >
+        <template
+            slot-scope="scope"
+            v-if="scope.row.username"
+          >
+            {{scope.row.username}}({{scope.row.moneycard}})
+          </template>
         </el-table-column>
         <el-table-column
-          prop="moneycard"
-          label="账号"
+          prop="branchname"
+          v-if="dbtype==1"
+          label="所属支部"
+          width="160px"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="dbbkName"
+          v-if="dbtype==1"
+          label="党内身份"
           show-overflow-tooltip
         >
         </el-table-column>
         <el-table-column
           prop="departmentname"
+          v-if="dbtype==2"
           label="所属部门"
           show-overflow-tooltip
         >
         </el-table-column>
         <el-table-column
           prop="stationname"
+          v-if="dbtype==2"
           label="所属岗位"
           show-overflow-tooltip
         >
@@ -210,7 +234,8 @@
         </el-table-column>
         <el-table-column
           label="是否生成"
-          show-overflow-tooltip
+          align="center"
+          width="80px"
         >
           <template slot-scope="scope">
             {{scope.row.isSc==1?'是':'否'}}
@@ -219,6 +244,7 @@
         <el-table-column
           label="修改状态"
           align="center"
+          width="80px"
         >
           <template slot-scope="scope">
             <el-button
@@ -237,7 +263,7 @@
               @click="oneShengCheng(scope.row)"
               type="text"
               size="small"
-            >重新生成</el-button>
+            >生成默认打分</el-button>
           </template>
         </el-table-column>
         <el-table-column
@@ -246,10 +272,22 @@
         >
           <template slot-scope="scope">
             <el-button
-              @click="oneDelete(scope.row)"
+              @click="oneDelete(scope.row,1)"
               type="text"
               size="small"
-            >删除生成</el-button>
+            >删除默认打分</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="删除"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <el-button
+              @click="oneDelete(scope.row,2)"
+              type="text"
+              size="small"
+            >删除被打分人</el-button>
           </template>
         </el-table-column>
         <!-- <el-table-column
@@ -353,6 +391,7 @@
 
 <script>
 import PostList from "../common/postList";
+import BranchList from "../common/branchList";
 import {
   getList,
   updateFinishGradeBySerialNo,
@@ -377,6 +416,7 @@ export default {
   data() {
     return {
       dbtype: this.$store.state.user.user.dbtype,
+      tempbranchcode: [],
       khtitle: '季结',
       quarterOptions: [
         {
@@ -424,7 +464,8 @@ export default {
         username: "",
         state: "",
         postType: "",
-        dbbk: ""
+        dbbk: "",
+        branchcode: ''
       },
       dbbk: [
         {
@@ -471,13 +512,18 @@ export default {
   },
   components: {
     PostList,
-    AddQuarter
+    AddQuarter,
+    BranchList
   },
   mounted() {},
   created() {
     this.getList();
   },
   methods: {
+    //获取支部选择
+    getSelectBranch(data, row) {
+      this.search.branchcode = data === undefined ? '' : data;
+    },
     handleClose() {
       this.statusDialogVisible = false;
     },
@@ -559,6 +605,7 @@ export default {
       params.state = this.search.state;
       params.scorestatus = this.search.scorestatus;
       params.dbtype = this.dbtype
+      params.branchcode = this.search.branchcode;
       if (this.dbtype=='2' && this.search.postType !=null) {
         params.postType = this.search.postType
       } else {
@@ -726,7 +773,7 @@ export default {
         });
       }).catch(() => {});
     },
-    oneDelete(row){
+    oneDelete(row,type){
       this.$confirm(
         "此操作将删除数据, 是否继续?",
         "提示",
@@ -736,10 +783,11 @@ export default {
           type: "warning"
         }
       ).then(() => {
-        this.searchLoading = true;
-        this.tableLoading = true;
         let data = {dbtype: this.dbtype}
         data.userCode = row.usercode
+        data.type = type
+        this.searchLoading = true;
+        this.tableLoading = true;
         new Promise((response, reject) => {
           oneDelete(qs.stringify(data))
             .then(response => {

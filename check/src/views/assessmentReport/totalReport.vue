@@ -9,15 +9,11 @@
         <el-form
           label-width="100px"
           show-overflow-tooltip="true"
-          class="home-el-form"
         >
-          <el-col
-            :span="6"
-            style="display: flex;"
-          >
-            <el-form-item label="提交人姓名">
+          <el-col :span="4">
+            <el-form-item label="员工姓名">
               <el-input
-                placeholder="请输入名字"
+                placeholder="请输入员工姓名"
                 v-model="search.username"
                 clearable
                 @keyup.enter.native="getList"
@@ -25,19 +21,45 @@
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="5" v-if="dbtype==1">
+            <el-form-item label="所属支部">
+              <BranchList
+                @childSelectBranch="getSelectBranch"
+                :selectedOptions="tempbranchcode"
+              ></BranchList>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4" v-if="dbtype==1">
+            <el-form-item label="党内身份">
+              <el-select
+              v-model="search.dbbk"
+              placeholder="请选择"
+              clearable
+              style="width:100%;"
+            >
+              <el-option
+                v-for="item in dbbk"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
             <el-form-item label="年份">
               <el-date-picker
                 v-model="search.year"
                 type="year"
                 placeholder="选择年"
                 value-format="yyyy"
-                style="width:190px;"
+                style="width:140px;"
               >
               </el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="4">
             <el-form-item label="评分季度">
               <el-select
                 v-model="search.month"
@@ -55,7 +77,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6" v-if="dbtype=='1'?false:true">
+          <el-col :span="4" v-if="dbtype=='1'?false:true">
             <el-form-item label="岗位类型">
               <el-select
                 v-model="search.postType"
@@ -124,23 +146,33 @@
         </el-table-column>
         <el-table-column
           prop="departmentname"
+          v-if="dbtype==2"
           label="部门"
         >
         </el-table-column>
         <el-table-column
           prop="stationname"
+          v-if="dbtype==2"
           label="岗位"
         >
         </el-table-column>
         <el-table-column
+          label="所属支部"
+          v-if="dbtype==1"
+          prop="branchname"
+          width="160px"
+        >
+        </el-table-column>
+        <el-table-column
           prop="dbbkName"
-          v-if="dbtype=='2'?false:true"
+          v-if="dbtype==1"
           label="党内身份"
         >
         </el-table-column>
         <el-table-column
           prop="ascore"
-          label="A类得分"
+          label="A类"
+          width="70px"
         >
           <template slot-scope="scope">
             <el-button
@@ -152,7 +184,8 @@
         </el-table-column>
         <el-table-column
           prop="bscore"
-          label="B类得分"
+          label="B类"
+          width="70px"
         >
         <template slot-scope="scope">
             <el-button
@@ -164,7 +197,8 @@
         </el-table-column>
         <el-table-column
           prop="cscore"
-          label="C类得分"
+          label="C类"
+          width="70px"
         >
         <template slot-scope="scope">
             <el-button
@@ -176,7 +210,8 @@
         </el-table-column>
         <el-table-column
           prop="dscore"
-          label="D类得分"
+          label="D类"
+          width="70px"
         >
         <template slot-scope="scope">
             <el-button
@@ -188,7 +223,8 @@
         </el-table-column>
         <el-table-column
           prop="escore"
-          label="E类得分"
+          label="E类"
+          width="70px"
         >
         <template slot-scope="scope">
             <el-button
@@ -200,7 +236,8 @@
         </el-table-column>
         <el-table-column
           prop="fscore"
-          label="F类得分"
+          label="F类"
+          width="70px"
         >
         <template slot-scope="scope">
             <el-button
@@ -304,6 +341,7 @@
 
 <script>
 // import MessageCheck from "../common/messageCheck";
+import BranchList from "../common/branchList";
 import { selectAllReport,updateState,updateStateAll } from "@/api/assessmentReport/index";
 import { sendMessageUser } from "@/api/sms/sms";
 import AssessLook from "../common/assessLook";
@@ -313,11 +351,14 @@ export default {
   data() {
     return {
       paginationShow: true,
+      tempbranchcode: [],
       search: {
         username: "",
         year: "",
         month: "",
-        postType: ""
+        postType: "",
+        branchcode: '',
+        dbbk: ''
       },
       postTypeOptions: [{
           value: "1",
@@ -331,6 +372,16 @@ export default {
           value: "3",
           label: "行政"
       }],
+      dbbk: [
+        {
+          value: "3",
+          label: "党支部书记"
+        },
+        {
+          value: "4",
+          label: "党总支书记"
+        }
+      ],
       fromPath: '',
       tableData: [],
       checkBoxData: [],
@@ -353,7 +404,8 @@ export default {
   components: {
     // MessageCheck,
     AssessLook,
-    AssessLook2
+    AssessLook2,
+    BranchList
   },
   mounted() {},
   created() {
@@ -370,6 +422,10 @@ export default {
     into() {
       this.page.pageNum = 1;
       this.page.pageSize = 10;
+    },
+    //获取支部选择
+    getSelectBranch(data, row) {
+      this.search.branchcode = data === undefined ? '' : data;
     },
     //获取选中的值
     changeFun(val) {
@@ -575,6 +631,8 @@ export default {
       this.tableLoading = true
       params.username = this.search.username;
       params.dbtype = this.dbtype
+      params.branchcode = this.search.branchcode
+      params.dbbk = this.search.dbbk
       if (this.search.postType !=null) {
         params.postType = this.search.postType
       } else {
@@ -715,7 +773,7 @@ export default {
 .search {
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
   background: #fff;
-  padding: 20px;
+  padding: 15px 0px;
   margin: 20px;
   border-radius: 4px;
   .el-form-item {

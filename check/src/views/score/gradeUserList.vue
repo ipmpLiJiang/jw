@@ -141,6 +141,12 @@
       :uslDialogVisible="uslDialogVisible"
       :form="data"
     ></UserSelectList>
+    <UserDzbUpdateList
+      @childClose="childClose"
+      @childGetLists="getList"
+      :uslDzbDialogVisible="uslDzbDialogVisible"
+      :form="data"
+    ></UserDzbUpdateList>
     <!-- 短信模板选择 -->
     <!-- <MessageCheck
       @childClose="childClose"
@@ -156,6 +162,7 @@
 import PostList from "../common/postList";
 import UserList from "../common/userList";
 import UserSelectList from "../common/userSelectList";
+import UserDzbUpdateList from "../common/userDzbUpdateList";
 // import MessageCheck from "../common/messageCheck";
 import { getList, deleteScore,batchDelete } from "@/api/score/score";
 import { sendTopic } from "@/api/sms/sms";
@@ -178,18 +185,21 @@ export default {
       fullstationcode: [""],
       dialogVisible: false,
       uslDialogVisible: false,
+      uslDzbDialogVisible: false,
       data: {},
       tableLoading: true,
       messageDialogVisible: false,
       messageType: 4,
       checkUser: {},
+      dbtype: this.$store.state.user.user.dbtype,
       userArr:[]
     };
   },
   components: {
     PostList,
     UserList,
-    UserSelectList
+    UserSelectList,
+    UserDzbUpdateList
     // MessageCheck
   },
   mounted() {},
@@ -232,7 +242,7 @@ export default {
         return;
       }
       // 新增dbtype 是否党支部考核
-      data.dbtype = this.$store.state.user.user.dbtype
+      data.dbtype = this.dbtype
       this.tableLoading = true;
       new Promise((response, reject) => {
         getList(qs.stringify(data))
@@ -270,10 +280,20 @@ export default {
       this.dialogVisible = false;
       this.uslDialogVisible = false;
       this.messageDialogVisible = false;
+      this.uslDzbDialogVisible = false;
     },
     //设置评分人
-    addGrade(row, type) {
-      this.dialogVisible = true;
+    addGrade() {
+      if (this.dbtype == '2') {
+        this.data = {}
+        this.dialogVisible = true;
+      } else {
+        this.data = {
+          scorredcode: this.page.scorredcode,
+          scoretype: this.page.scoretype
+        }
+        this.uslDzbDialogVisible = true
+      }
     },
     //编辑评分人
     editScore(val) {

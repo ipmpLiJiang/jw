@@ -7,7 +7,7 @@
           label-width="100px"
           show-overflow-tooltip="true"
         >
-          <el-col :span="5">
+          <el-col :span="5" v-if="dbtype==2">
             <el-form-item label="所在岗位">
               <PostList
                 @childSelectDepartment="getSelectStation"
@@ -26,7 +26,33 @@
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="5" v-if="dbtype==1">
+            <el-form-item label="所属支部">
+              <BranchList
+                @childSelectBranch="getSelectBranch"
+                :selectedOptions="tempbranchcode"
+              ></BranchList>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5" v-if="dbtype==1">
+            <el-form-item label="党内身份">
+              <el-select
+                v-model="search.dbbk"
+                placeholder="请选择"
+                clearable
+                style="width:100%;"
+              >
+                <el-option
+                  v-for="item in dbbk"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5" v-if="dbtype==2">
             <el-form-item label="角色权限">
               <el-select
                 v-model="search.rolecode"
@@ -43,7 +69,7 @@
             </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="5" v-if="dbtype==2">
             <el-form-item label="岗位类型">
               <el-select
                 v-model="search.postType"
@@ -110,27 +136,38 @@
         </el-table-column> -->
         <el-table-column
           label="所属部门"
+          v-if="dbtype==2"
           prop="departmentname"
         >
         </el-table-column>
         <el-table-column
           label="所属岗位"
+          v-if="dbtype==2"
           prop="stationname"
         >
         </el-table-column>
         <el-table-column
           label="岗位类型"
+          v-if="dbtype==2"
           prop="postTypeName"
         >
         </el-table-column>
         <el-table-column
+          label="所属支部"
+          v-if="dbtype==1"
+          prop="branchname"
+        >
+        </el-table-column>
+        <el-table-column
           label="党内身份"
+          v-if="dbtype==1"
           prop="dbbkName"
         >
         </el-table-column>
         <el-table-column
-          label="所属支部"
-          prop="branchname"
+          label="群众关系"
+          v-if="dbtype==1"
+          prop="politicalname"
         >
         </el-table-column>
         <el-table-column
@@ -182,6 +219,7 @@
 
 <script>
 import PostList from "../common/postList";
+import BranchList from "../common/branchList";
 import { getList, deleteUser,resetPassword } from "@/api/people/people";
 import AddPeople from "./addPeople";
 import qs from "qs";
@@ -204,22 +242,52 @@ export default {
         stationcode: "",
         username: "",
         rolecode: "",
-        postType: ""
+        postType: "",
+        branchcode: '',
+        dbbk: ''
       },
+      dbbk: [
+        {
+          value: "1",
+          label: "组织委员纪检委员"
+        },
+        {
+          value: "2",
+          label: "宣传委员青年委员"
+        },
+        {
+          value: "3",
+          label: "党支部书记"
+        },
+        {
+          value: "4",
+          label: "党总支书记"
+        }
+      ],
+      dbtype: this.$store.state.user.user.dbtype,
       tableData: [],
       stationcode: [""],
       branchcode: [""],
+      tempbranchcode: [],
       roleOption: [{
-          value: "100",
-          label: "组织部"
+          value: "1000",
+          label: "党办管理员"
         },
+        {
+          value: "2000",
+          label: "院领导"
+        },
+        // {
+        //   value: "100",
+        //   label: "组织部"
+        // },
+        // {
+        //   value: "200",
+        //   label: "部门长"
+        // },
         {
           value: "150",
           label: "打分用户"
-        },
-        {
-          value: "200",
-          label: "部门长"
         },
         {
           value: "300",
@@ -249,7 +317,8 @@ export default {
   },
   components: {
     AddPeople,
-    PostList
+    PostList,
+    BranchList
   },
   mounted() {},
   created() {
@@ -260,6 +329,10 @@ export default {
     into() {
       this.page.pageNum = 1;
       this.page.pageSize = 10;
+    },
+    //获取支部选择
+    getSelectBranch(data, row) {
+      this.search.branchcode = data === undefined ? '' : data;
     },
     //设置每页多少条数据
     handleSizeChange(val) {
@@ -295,6 +368,8 @@ export default {
       }
       params.username = this.search.username;
       params.postType = this.search.postType
+      params.dbbk = this.search.dbbk
+      params.branchcode = this.search.branchcode
       
       new Promise((response, reject) => {
         getList(qs.stringify(params))

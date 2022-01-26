@@ -25,7 +25,7 @@
       </router-link> -->
       <el-submenu
         index="2"
-        v-if="role == '100' || role == '50'"
+        v-if="role == '100' || role == '50' || role == '1000'"
       >
         <template slot="title">
           <i class="el-icon-s-finance"></i>
@@ -46,7 +46,7 @@
       </el-submenu>
       <el-submenu
         index="3"
-        v-if="role == '100' || role == '50'"
+        v-if="role == '100' || role == '50' || role == '1000'"
       >
         <template slot="title">
           <i class="el-icon-s-custom"></i>
@@ -59,7 +59,7 @@
       </el-submenu>
       <el-submenu
         index="4"
-        v-if="role == '100' || role == '50'"
+        v-if="role == '100' || role == '50' || role == '1000'"
       >
         <template slot="title">
           <i class="el-icon-s-check"></i>
@@ -80,13 +80,13 @@
         <!-- <router-link to="/home/quarter">
           <el-menu-item index="/home/quarter">月度总结管理</el-menu-item>
         </router-link> -->
-        <router-link to="/home/leaderUser">
+        <router-link to="/home/leaderUser" v-if="role == '100' || role == '50'">
           <el-menu-item index="/home/leaderUser">打分用户管理</el-menu-item>
         </router-link>
       </el-submenu>
       <router-link
         to="/home/notice"
-        v-if="role == '100' || role == '50'"
+        v-if="role == '100' || role == '50' || role == '1000'"
       >
         <el-menu-item index="/home/notice">
           <i class="iconfont icon-gonggao"></i>
@@ -121,7 +121,7 @@
       </router-link> -->
        <el-submenu
         index="5"
-        v-if="role == '100' || role == '50' || role == '300' || role=='200' "
+        v-if="role == '100' || role == '50' || role == '300' || role=='200' || role == '2000' "
       >
         <template slot="title">
           <i class="el-icon-s-check"></i>
@@ -139,7 +139,7 @@
             <span slot="title">评估报告</span>
           </el-menu-item>
         </router-link>
-        <router-link v-else-if="role == '100' || role == '50'" to="/home/totalReport">
+        <router-link v-else-if="role == '100' || role == '50' || role == '2000'" to="/home/totalReport">
           <el-menu-item index="/home/totalReport">
             <i class="iconfont icon-pinggubaogao"></i>
             <span slot="title">评估报告</span>
@@ -148,16 +148,16 @@
         <router-link v-if="role == '100' || role == '50' || role=='200' " to="/home/historyGrade">
           <el-menu-item index="/home/historyGrade">历史评分管理</el-menu-item>
         </router-link>
-        <router-link v-if="role == '100' || role == '50' || role=='200' " to="/home/scoreBadGrade">
+        <router-link v-if="role == '100' || role == '50' || role=='200' || role == '2000' " to="/home/scoreBadGrade">
           <el-menu-item index="/home/scoreBadGrade">差评评分汇总</el-menu-item>
         </router-link>
-        <router-link v-if="role == '100' || role == '50' || role=='200' " to="/home/scoreDutySmTjGrade">
+        <router-link v-if="role == '100' || role == '50' || role=='200' || role == '2000' " to="/home/scoreDutySmTjGrade">
           <el-menu-item index="/home/scoreDutySmTjGrade">自评情况统计表</el-menu-item>
         </router-link>
-        <router-link v-if="role == '100' || role == '50' || role=='200' " to="/home/scoreFlowTjGrade">
+        <router-link v-if="role == '100' || role == '50' || role=='200' || role == '2000' " to="/home/scoreFlowTjGrade">
           <el-menu-item index="/home/scoreFlowTjGrade">测评打分情况统计表</el-menu-item>
         </router-link>
-        <router-link v-if="role == '100' || role == '50' || role=='200' " to="/home/scoreSortGrade">
+        <router-link v-if="role == '100' || role == '50' || role=='200' || role == '2000' " to="/home/scoreSortGrade">
           <el-menu-item index="/home/scoreSortGrade">评分排序汇总</el-menu-item>
         </router-link>
       </el-submenu>

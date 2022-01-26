@@ -9,7 +9,18 @@
           label-width="100px"
           show-overflow-tooltip="true"
         >
-          <el-col :span="6" v-if="dbtype==2">
+          <el-col :span="4">
+            <el-form-item label="员工姓名">
+              <el-input
+                placeholder="请输入员工姓名"
+                v-model="search.username"
+                clearable
+                @keyup.enter.native="getList"
+              >
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5" v-if="dbtype==2">
             <el-form-item label="所属岗位">
               <PostList
                 @childSelectDepartment="getSelectStation"
@@ -18,6 +29,14 @@
             </el-form-item>
           </el-col>
           <el-col :span="5" v-if="dbtype==1">
+            <el-form-item label="所属支部">
+              <BranchList
+                @childSelectBranch="getSelectBranch"
+                :selectedOptions="tempbranchcode"
+              ></BranchList>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4" v-if="dbtype==1">
             <el-form-item label="党内身份">
             <el-select
               v-model="search.dbbk"
@@ -35,29 +54,19 @@
             </el-select>
           </el-form-item>
           </el-col>
-          <el-col :span="5">
-            <el-form-item label="员工姓名">
-              <el-input
-                placeholder="请输入员工姓名"
-                v-model="search.username"
-                clearable
-                @keyup.enter.native="getList"
-              >
-              </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="5">
+          <el-col :span="4">
             <el-form-item label="年份">
               <el-date-picker
                 v-model="search.year"
                 type="year"
                 placeholder="选择年"
                 value-format="yyyy"
+                style="width:140px"
               >
               </el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="4">
             <el-form-item label="季度">
               <el-select
                 v-model="search.month"
@@ -74,7 +83,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5" v-if="dbtype=='1'?false:true" style="margin-top:20px;">
+          <el-col :span="4" v-if="dbtype=='1'?false:true">
             <el-form-item label="岗位类型">
               <el-select
                 v-model="search.postType"
@@ -182,12 +191,14 @@
 
 <script>
 import PostList from "../common/postList";
+import BranchList from "../common/branchList";
 import { getBadList } from "@/api/score/score";
 import qs from "qs";
 export default {
   data() {
     return {
       quarterOptions: this.common.seasonOptions(),
+      tempbranchcode: [],
       title: "",
       search: {
         stationcode: "",
@@ -195,7 +206,8 @@ export default {
         month: "",
         year: "",
         postType: "",
-        dbbk: ""
+        dbbk: "",
+        branchcode: ''
       },
       tableData: [],
       stationcode: [""],
@@ -234,7 +246,8 @@ export default {
     };
   },
   components: {
-    PostList
+    PostList,
+    BranchList
   },
   mounted() {},
   created() {
@@ -245,6 +258,10 @@ export default {
     into() {
       this.page.pageNum = 1;
       this.page.pageSize = 10;
+    },
+    //获取支部选择
+    getSelectBranch(data, row) {
+      this.search.branchcode = data === undefined ? '' : data;
     },
     //设置每页多少条数据
     handleSizeChange(val) {
@@ -284,9 +301,8 @@ export default {
       } else {
         params.postType = "";
       }
-      if(this.dbtype=='1' && this.search.dbbk !=null){
-        params.dbbk = this.search.dbbk
-      }
+      params.dbbk = this.search.dbbk
+      params.branchcode = this.search.branchcode
       this.searchLoading = true;
       params.username = this.search.username;
       params.dbtype = this.dbtype;
@@ -321,8 +337,8 @@ export default {
       let info = this.search;
       info.dbtype = this.dbtype;
       window.location.href =
-        // process.env.VUE_APP_ITEM_NAME +
-        "http://localhost:8080/" +
+        process.env.VUE_APP_ITEM_NAME +
+        // "http://localhost:8080/" +
         "scoreBad/export?info=" +
         JSON.stringify(info);
     },

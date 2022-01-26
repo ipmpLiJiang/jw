@@ -187,8 +187,8 @@ export default {
       let info = this.search;
       info.dbtype = this.dbtype;
       window.location.href =
-        // process.env.VUE_APP_ITEM_NAME +
-        "http://localhost:8080/" +
+        process.env.VUE_APP_ITEM_NAME +
+        // "http://localhost:8080/" +
         "scoredutysm/export?info=" +
         JSON.stringify(info);
     },

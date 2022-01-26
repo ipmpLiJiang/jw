@@ -20,7 +20,7 @@
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="5" v-if="dbtype==2">
             <el-form-item label="岗位">
               <PostList
                 @childSelectDepartment="getSelectStation"
@@ -86,14 +86,28 @@
         </el-table-column>
         <el-table-column
           prop="stationname"
+          v-if="dbtype==2"
           label="所属岗位"
           show-overflow-tooltip
         >
         </el-table-column>
         <el-table-column
           prop="departmentname"
+          v-if="dbtype==2"
           label="所属部门"
           show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          label="所属支部"
+          v-if="dbtype==1"
+          prop="branchname"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="dbbkName"
+          v-if="dbtype==1"
+          label="党内身份"
         >
         </el-table-column>
         <el-table-column

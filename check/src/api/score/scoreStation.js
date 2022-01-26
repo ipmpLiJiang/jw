@@ -108,3 +108,11 @@ export function shengChengScore(data) {
         data: data
     })
 }
+
+export function shengChengUserScore(data) {
+    return fetch({
+        url: 'scoreStation/shengChengUserScore',
+        method: 'post',
+        data: data
+    })
+}

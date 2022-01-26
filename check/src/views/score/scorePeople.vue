@@ -9,7 +9,7 @@
           label-width="100px"
           show-overflow-tooltip="true"
         >
-          <el-col :span="5">
+          <el-col :span="5" v-if="dbtype==2">
             <el-form-item label="所属岗位">
               <PostList
                 @childSelectDepartment="getSelectStation"
@@ -28,7 +28,33 @@
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="5" v-if="dbtype==1">
+            <el-form-item label="所属支部">
+              <BranchList
+                @childSelectBranch="getSelectBranch"
+                :selectedOptions="tempbranchcode"
+              ></BranchList>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4" v-if="dbtype==1">
+            <el-form-item label="党内身份">
+              <el-select
+              v-model="search.dbbk"
+              placeholder="请选择"
+              clearable
+              style="width:100%;"
+            >
+              <el-option
+                v-for="item in dbbk"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5" v-if="dbtype==2">
             <el-form-item label="角色权限">
               <el-select
                 v-model="search.rolecode"
@@ -45,7 +71,7 @@
             </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="5" v-if="dbtype==2">
             <el-form-item label="岗位类型">
               <el-select
                 v-model="search.postType"
@@ -77,6 +103,20 @@
         v-loading="tableLoading"
       >
         <el-table-column
+          label="操作"
+          align="center"
+          v-if="dbtype=='2'?true:false"
+          width="70"
+        >
+          <template slot-scope="scope">
+            <el-button
+              @click="shengCheng(scope.row)"
+              type="text"
+              size="small"
+            >生成</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="username"
           label="员工姓名"
           show-overflow-tooltip
@@ -90,13 +130,29 @@
         </el-table-column>
         <el-table-column
           prop="departmentname"
+          v-if="dbtype==2"
           label="所属部门"
           show-overflow-tooltip
         >
         </el-table-column>
         <el-table-column
           prop="stationname"
+          v-if="dbtype==2"
           label="所属岗位"
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          prop="branchname"
+          v-if="dbtype==1"
+          label="所属支部"
+          width="160px"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="dbbkName"
+          v-if="dbtype==1"
+          label="党内身份"
           show-overflow-tooltip
         >
         </el-table-column>
@@ -254,19 +310,24 @@
 <script>
 import PostList from "../common/postList";
 import SetWeight from "../common/setWeight";
+import BranchList from "../common/branchList";
 // import MessageCheck from "../common/messageCheck";
 import { getList,exportExcel } from "@/api/people/people";
+import { shengChengUserScore } from "@/api/score/scoreStation";
 import { sendMessageUser } from "@/api/sms/sms";
 import qs from "qs";
 export default {
   data() {
     return {
       title: "",
+      tempbranchcode: [],
       search: {
         stationcode: "",
         username: "",
         rolecode: "",
-        postType: ""
+        postType: "",
+        branchcode: '',
+        dbbk: ''
       },
       postTypeOptions: [{
           value: "1",
@@ -280,6 +341,16 @@ export default {
           value: "3",
           label: "行政"
         }],
+      dbbk: [
+        {
+          value: "3",
+          label: "党支部书记"
+        },
+        {
+          value: "4",
+          label: "党总支书记"
+        }
+      ],
       tableData: [],
       stationcode: [""],
       page: {
@@ -288,16 +359,24 @@ export default {
       },
       total: 0,
       roleOption: [{
-          value: "100",
-          label: "组织部"
+          value: "1000",
+          label: "党办管理员"
         },
+        {
+          value: "2000",
+          label: "院领导"
+        },
+        // {
+        //   value: "100",
+        //   label: "组织部"
+        // },
+        // {
+        //   value: "200",
+        //   label: "部门长"
+        // },
         {
           value: "150",
           label: "打分用户"
-        },
-        {
-          value: "200",
-          label: "部门长"
         },
         {
           value: "300",
@@ -316,7 +395,8 @@ export default {
   },
   components: {
     PostList,
-    SetWeight
+    SetWeight,
+    BranchList
     // MessageCheck,
   },
   mounted() {},
@@ -328,6 +408,10 @@ export default {
     into() {
       this.page.pageNum = 1;
       this.page.pageSize = 10;
+    },
+    //获取支部选择
+    getSelectBranch(data, row) {
+      this.search.branchcode = data === undefined ? '' : data;
     },
     //设置每页多少条数据
     handleSizeChange(val) {
@@ -360,6 +444,8 @@ export default {
       params.postType = this.search.postType
       params.dbtype = this.dbtype
       params.username = this.search.username;
+      params.dbbk = this.search.dbbk
+      params.branchcode = this.search.branchcode
       new Promise((response, reject) => {
         getList(qs.stringify(params))
           .then((response) => {
@@ -378,6 +464,44 @@ export default {
             reject(error);
           });
       });
+    },
+    shengCheng (row) {
+      this.$confirm("此操作将生成人员评分关系, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let data = {
+            dbtype: this.dbtype,
+            usercode: row.usercode
+          };
+          new Promise((response, reject) => {
+            shengChengUserScore(qs.stringify(data))
+              .then(response => {
+                if (response.data.code == 0) {
+                  this.$message({
+                    message: response.data.msg,
+                    type: "success"
+                  });
+                } else {
+                  this.$message({
+                    message: response.data.msg,
+                    type: "error"
+                  });
+                }
+              })
+              .catch(error => {
+                reject(error);
+              });
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
     //获取岗位选择
     getSelectStation(data, row) {

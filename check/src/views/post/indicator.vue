@@ -15,7 +15,7 @@
             ></PostList>
           </el-form-item>
         </el-col>
-        <el-col :span="5" v-if="dbtype==1">
+        <el-col :span="4" v-if="dbtype==1">
             <el-form-item label="党内身份">
             <el-select
               v-model="search.dbbk"
@@ -73,7 +73,7 @@
         <el-table-column
           prop="dbbkName"
           label="党内身份"
-          v-if="dbtype=='2'?false:true"
+          v-if="dbtype==1"
           show-overflow-tooltip
         >
         </el-table-column>

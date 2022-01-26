@@ -157,3 +157,10 @@ export function getFlowDetailTjList(data) {
         data: data
     })
 }
+export function getUserDzbList(data) {
+    return fetch({
+        url: 'user/dzblist',
+        method: 'post',
+        data: data
+    })
+}

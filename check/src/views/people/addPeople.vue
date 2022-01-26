@@ -335,36 +335,44 @@ export default {
       this.tempbranchcode = [];
     }
 
-    if (
-      this.$store.state.user.user.rolecode == "100" ||
-      this.$store.state.user.user.rolecode == "50"
-    ) {
+    // if (
+    //   this.$store.state.user.user.rolecode == "100" ||
+    //   this.$store.state.user.user.rolecode == "50"
+    // ) {
       this.roleOption = [
         {
-          value: "100",
-          label: "组织部"
+          value: "1000",
+          label: "党办管理员"
         },
+        {
+          value: "2000",
+          label: "院领导"
+        },
+        // {
+        //   value: "100",
+        //   label: "组织部"
+        // },
+        // {
+        //   value: "200",
+        //   label: "部门长"
+        // },
         {
           value: "150",
           label: "打分用户"
-        },
-        {
-          value: "200",
-          label: "部门长"
         },
         {
           value: "300",
           label: "普通用户"
         }
       ];
-    } else {
-      this.roleOption = [
-        {
-          value: "400",
-          label: "人事处"
-        }
-      ];
-    }
+    // } else {
+    //   this.roleOption = [
+    //     {
+    //       value: "400",
+    //       label: "人事处"
+    //     }
+    //   ];
+    // }
   },
   methods: {
     into() {},
@@ -471,7 +479,6 @@ export default {
     },
     //获取支部选择
     getSelectBranch(data, row) {
-      debugger
       this.form.branchcode = data === undefined ? '' : data;
       this.form.fullbranchcode = row.join(",");
     },

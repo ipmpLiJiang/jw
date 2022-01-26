@@ -17,7 +17,7 @@
               ></PostList>
             </el-form-item>
           </el-col>
-          <el-col :span="5" v-if="dbtype==1">
+          <el-col :span="4" v-if="dbtype==1">
             <el-form-item label="党内身份">
             <el-select
               v-model="search.dbbk"
@@ -387,8 +387,8 @@ export default {
       let info = this.search;
       info.dbtype = this.dbtype;
       window.location.href =
-        // process.env.VUE_APP_ITEM_NAME +
-        "http://localhost:8080/" +
+        process.env.VUE_APP_ITEM_NAME +
+        // "http://localhost:8080/" +
         "scoreSort/export?info=" +
         JSON.stringify(info);
     },
